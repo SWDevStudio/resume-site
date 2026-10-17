@@ -1,0 +1,8 @@
+*.md
+.nuxt
+.output
+dist
+coverage
+public/fonts
+package-lock.json
+.vscode/tailwind.css-data.json
