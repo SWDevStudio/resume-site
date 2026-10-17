@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@theme {
+  --font-head: "Righteous", sans-serif;
+  --font-body: "Martian Mono", monospace;
+  --font-button: "Martian Mono", monospace;
+}
+
+:lang(ru) {
+  --font-head: "Montserrat Alternates", sans-serif;
+}
