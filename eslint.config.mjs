@@ -1,4 +1,50 @@
 import withNuxt from "./.nuxt/eslint.config.mjs";
 import prettier from "eslint-config-prettier/flat";
+import css from "@eslint/css";
+import betterTailwindcss from "eslint-plugin-better-tailwindcss";
+import { tailwind4 } from "tailwind-csstree";
 
-export default withNuxt(prettier);
+const codeFiles = ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx,vue}"];
+
+const tailwind = betterTailwindcss.configs["recommended-error"];
+
+const tailwindSettings = {
+  "better-tailwindcss": {
+    entryPoint: "app/assets/css/main.css",
+  },
+};
+
+const tailwindRules = {
+  ...tailwind.rules,
+  // Prettier сам схлопывает class в одну строку, поэтому перенос строк правилом конфликтует с ним
+  "better-tailwindcss/enforce-consistent-line-wrapping": "off",
+};
+
+export default withNuxt(
+  prettier,
+  {
+    name: "tailwind/classes",
+    files: codeFiles,
+    plugins: tailwind.plugins,
+    settings: tailwindSettings,
+    rules: tailwindRules,
+  },
+  {
+    name: "tailwind/apply",
+    files: ["**/*.css"],
+    plugins: { ...tailwind.plugins, css },
+    language: "css/css",
+    languageOptions: {
+      customSyntax: tailwind4,
+      tolerant: true,
+    },
+    settings: tailwindSettings,
+    rules: tailwindRules,
+  },
+).onResolved((configs) =>
+  // Правила JS из Nuxt-конфига не должны попадать на .css: у языка css/css нет нужного API
+  configs.map((config) => {
+    const isGlobalIgnores = Object.keys(config).every((key) => key === "name" || key === "ignores");
+    return config.files || isGlobalIgnores ? config : { ...config, files: codeFiles };
+  }),
+);

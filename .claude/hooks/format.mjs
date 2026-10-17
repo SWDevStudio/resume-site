@@ -4,7 +4,7 @@ import { createRequire } from "node:module";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-const LINTABLE = new Set([".ts", ".mts", ".cts", ".js", ".mjs", ".cjs", ".vue"]);
+const LINTABLE = new Set([".ts", ".mts", ".cts", ".js", ".mjs", ".cjs", ".vue", ".css"]);
 
 const root = path.resolve(process.env.CLAUDE_PROJECT_DIR ?? process.cwd());
 
@@ -32,9 +32,10 @@ function runRootBin(pkgName, args) {
   const pkg = JSON.parse(readFileSync(pkgJsonPath, "utf8"));
   const bin = typeof pkg.bin === "string" ? pkg.bin : pkg.bin?.[pkgName];
   if (!bin) return;
-  spawnSync(process.execPath, [path.resolve(path.dirname(pkgJsonPath), bin), ...args], {
+  return spawnSync(process.execPath, [path.resolve(path.dirname(pkgJsonPath), bin), ...args], {
     cwd: root,
-    stdio: "ignore",
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
   });
 }
 
@@ -53,6 +54,8 @@ async function formatWithPrettier(file) {
   if (formatted !== source) writeFileSync(file, formatted);
 }
 
+let lintReport = "";
+
 try {
   const input = readStdin();
   const raw = input.tool_input?.file_path;
@@ -60,12 +63,20 @@ try {
     const file = path.resolve(root, raw);
     if (file !== root && isInsideRoot(file) && existsSync(file)) {
       if (LINTABLE.has(path.extname(file))) {
-        runRootBin("eslint", ["--fix", file]);
+        const result = runRootBin("eslint", ["--fix", "--no-warn-ignored", file]);
+        if (result && result.status !== 0) {
+          lintReport = `${result.stdout ?? ""}${result.stderr ?? ""}`.trim();
+        }
       }
       await formatWithPrettier(file);
     }
   }
 } catch (error) {
   console.error(`format hook: ${error.message}`);
+}
+
+if (lintReport) {
+  console.error(`ESLint: ошибки, которые не исправились автоматически:\n${lintReport}`);
+  process.exit(2);
 }
 process.exit(0);
