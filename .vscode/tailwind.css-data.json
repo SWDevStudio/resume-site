@@ -1,0 +1,50 @@
+{
+  "version": 1.1,
+  "atDirectives": [
+    {
+      "name": "@theme",
+      "description": "Объявляет дизайн-токены (цвета, шрифты, брейкпоинты), из которых Tailwind генерирует утилиты.",
+      "references": [{ "name": "Tailwind CSS", "url": "https://tailwindcss.com/docs/functions-and-directives" }]
+    },
+    {
+      "name": "@source",
+      "description": "Добавляет или исключает файлы, в которых Tailwind ищет классы.",
+      "references": [{ "name": "Tailwind CSS", "url": "https://tailwindcss.com/docs/functions-and-directives" }]
+    },
+    {
+      "name": "@utility",
+      "description": "Объявляет собственную утилиту, которая работает с вариантами (hover:, md: и т. д.).",
+      "references": [{ "name": "Tailwind CSS", "url": "https://tailwindcss.com/docs/functions-and-directives" }]
+    },
+    {
+      "name": "@variant",
+      "description": "Применяет вариант Tailwind (dark, hover, md…) к стилям внутри блока.",
+      "references": [{ "name": "Tailwind CSS", "url": "https://tailwindcss.com/docs/functions-and-directives" }]
+    },
+    {
+      "name": "@custom-variant",
+      "description": "Объявляет собственный вариант.",
+      "references": [{ "name": "Tailwind CSS", "url": "https://tailwindcss.com/docs/functions-and-directives" }]
+    },
+    {
+      "name": "@apply",
+      "description": "Встраивает стили утилит в селектор.",
+      "references": [{ "name": "Tailwind CSS", "url": "https://tailwindcss.com/docs/functions-and-directives" }]
+    },
+    {
+      "name": "@reference",
+      "description": "Подключает тему и утилиты для @apply и @variant, не добавляя их CSS в результат. Нужен в <style> компонентов.",
+      "references": [{ "name": "Tailwind CSS", "url": "https://tailwindcss.com/docs/functions-and-directives" }]
+    },
+    {
+      "name": "@plugin",
+      "description": "Подключает JS-плагин Tailwind, например daisyui.",
+      "references": [{ "name": "Tailwind CSS", "url": "https://tailwindcss.com/docs/functions-and-directives" }]
+    },
+    {
+      "name": "@config",
+      "description": "Подключает JS-конфиг в стиле Tailwind v3.",
+      "references": [{ "name": "Tailwind CSS", "url": "https://tailwindcss.com/docs/functions-and-directives" }]
+    }
+  ]
+}

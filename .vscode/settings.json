@@ -1,0 +1,33 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "prettier.requireConfig": true,
+  "eslint.validate": ["javascript", "typescript", "vue"],
+  "files.eol": "\n",
+
+  "tailwindCSS.experimental.configFile": "app/assets/css/main.css",
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "css.customData": [".vscode/tailwind.css-data.json"],
+  "path-intellisense.mappings": {
+    "@/": "${workspaceFolder}/app",
+    "~/": "${workspaceFolder}/app"
+  },
+  "path-intellisense.autoSlashAfterDirectory": true,
+  "path-intellisense.autoTriggerNextSuggestion": true,
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": "meta.at-rule.utility.body.tailwind meta.at-rule.header.css",
+        "settings": { "foreground": "#d7ba7d" }
+      }
+    ]
+  }
+}
