@@ -20,6 +20,8 @@
   --color-brand: var(--color-accent);
   --color-brand-ink: var(--color-accent-ink);
 
+  --color-success: oklch(81.8% 0.174 160.5);
+
   --gradient-cta-from: #ff1e43;
   --gradient-cta-via: #dc0eaa;
   --gradient-cta-to: #bf00ff;

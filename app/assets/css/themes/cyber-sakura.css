@@ -19,6 +19,8 @@
   --color-brand: var(--color-secondary);
   --color-brand-ink: var(--color-secondary-ink);
 
+  --color-success: oklch(68.8% 0.152 156.7);
+
   --gradient-cta-from: #ff8fb8;
   --gradient-cta-via: #a57bff;
   --gradient-cta-to: #5e9bff;
