@@ -1,11 +1,25 @@
 @import "tailwindcss";
+@import "./components/btn.css";
+@import "./themes/torii-synth.css";
+@import "./themes/cyber-sakura.css";
 
 @theme {
   --font-head: "Righteous", sans-serif;
   --font-body: "Martian Mono", monospace;
   --font-button: "Martian Mono", monospace;
+
+  --default-transition-duration: 400ms;
+  --default-transition-timing-function: var(--ease-in-out);
 }
 
 :lang(ru) {
   --font-head: "Montserrat Alternates", sans-serif;
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    @apply transition-colors;
+  }
 }
