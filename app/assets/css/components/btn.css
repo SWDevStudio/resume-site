@@ -1,0 +1,297 @@
+@property --btn-cta-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --btn-cta-via {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --btn-cta-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@utility btn {
+  --btn-slant: 16.17deg;
+  --btn-radius: 0rem;
+  --btn-padding-y: --spacing(3.25) --spacing(4);
+  --btn-corner: 28%;
+  --btn-frame-tl-br: 0rem;
+  --btn-frame-tr-bl: var(--btn-border);
+  --btn-dash: linear-gradient(#000 0 0);
+  --btn-dash-position: left calc(var(--btn-inset) * 2 + --spacing(3)) top --spacing(2);
+  --btn-slashes-position: right calc(var(--btn-inset) * 2 + --spacing(3)) bottom --spacing(1.75);
+  --btn-accent-deco: var(--color-secondary);
+  --btn-gradient-ink: #09090c;
+  --btn-gradient-deco: rgb(9 9 12 / 55%);
+  --btn-gradient-glow: drop-shadow(
+    0 0 --spacing(3.5) color-mix(in oklch, var(--color-accent) 45%, transparent)
+  );
+
+  :where([data-theme="cyber-sakura"]) & {
+    --btn-slant: 12.95deg;
+    --btn-radius: --spacing(3);
+    --btn-padding-y: --spacing(4) --spacing(2.75);
+    --btn-corner: 32%;
+    --btn-frame-tl-br: var(--btn-border);
+    --btn-frame-tr-bl: 0rem;
+    --btn-dash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 2' preserveAspectRatio='none'%3E%3Crect width='24' height='2' rx='1'/%3E%3C/svg%3E");
+    --btn-dash-position: left --spacing(6) bottom --spacing(1.25);
+    --btn-slashes-position: right --spacing(6) top --spacing(1.75);
+    --btn-accent-deco: var(--color-primary);
+    --btn-gradient-ink: #fff;
+    --btn-gradient-deco: rgb(255 255 255 / 70%);
+    --btn-gradient-glow: drop-shadow(
+      0 --spacing(2.5) --spacing(5) color-mix(in oklch, var(--color-accent) 40%, transparent)
+    );
+  }
+
+  --btn-height: --spacing(14);
+  --btn-padding-x: --spacing(7);
+  --btn-font-size: --spacing(3.5);
+  --btn-color: var(--color-brand);
+  --btn-ink: var(--color-brand-ink);
+  --btn-deco: var(--color-primary);
+  --btn-glow: var(--glow-accent);
+  --btn-fill: 8%;
+  --btn-fill-hover: 16%;
+  --btn-border: --spacing(0.75);
+  --btn-dash-size: --spacing(6) --spacing(0.5);
+  --btn-slashes: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 7'%3E%3Cpath d='M1,7 L5,0 M9,7 L13,0 M17,7 L21,0' fill='none' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E");
+  --btn-inset: calc(var(--btn-height) * tan(var(--btn-slant)) / 2);
+  --btn-gutter: calc(var(--btn-inset) + var(--btn-padding-x));
+
+  @apply relative isolate inline-flex h-(--btn-height) cursor-pointer appearance-none items-center justify-center gap-3;
+  @apply font-button text-(length:--btn-font-size) leading-none font-normal tracking-[.2em] whitespace-nowrap text-(--btn-ink) uppercase;
+  font-stretch: 75%;
+  filter: var(--btn-glow);
+  padding-block: var(--btn-padding-y);
+  padding-inline: var(--btn-gutter) calc(var(--btn-gutter) - 0.3em);
+  min-width: calc(var(--btn-gutter) * 2 + --spacing(11));
+  transition-property: color, text-decoration-color, filter, opacity, padding, min-width;
+
+  &::before,
+  &::after {
+    @apply absolute inset-y-0 -z-1;
+    content: "";
+  }
+
+  &::before {
+    inset-inline: var(--btn-inset);
+    border-radius: var(--btn-radius);
+    background-color: color-mix(in oklab, var(--btn-color) var(--btn-fill), transparent);
+    transform: skewX(calc(var(--btn-slant) * -1));
+    transition-property: inset, border-radius, background-color, transform;
+  }
+
+  &::after {
+    @apply inset-x-0;
+    background-color: var(--btn-deco);
+    mask-image: var(--btn-dash), var(--btn-slashes);
+    mask-position: var(--btn-dash-position), var(--btn-slashes-position);
+    mask-size:
+      var(--btn-dash-size),
+      --spacing(5.5) --spacing(1.75);
+    mask-repeat: no-repeat;
+    transition-property: background-color, mask-position;
+  }
+
+  @variant hover {
+    --btn-fill: var(--btn-fill-hover);
+  }
+
+  &:disabled {
+    @apply btn-disabled;
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before,
+    &::after {
+      @apply transition-none;
+    }
+  }
+}
+
+@utility btn-frame {
+  @apply pointer-events-none absolute inset-y-0 -z-1;
+  inset-inline: var(--btn-inset);
+  transform: skewX(calc(var(--btn-slant) * -1));
+  transition-property: inset, transform;
+
+  &::before,
+  &::after {
+    @apply absolute inset-0;
+    content: "";
+    border: 0 solid var(--btn-color);
+    border-radius: var(--btn-radius);
+    transition-property: border-color, border-width, border-radius, clip-path;
+  }
+
+  &::before {
+    border-width: var(--btn-border) var(--btn-frame-tr-bl) 0 var(--btn-frame-tl-br);
+    clip-path: inset(0 0 calc(100% - var(--btn-corner)) 0);
+  }
+
+  &::after {
+    border-width: 0 var(--btn-frame-tl-br) var(--btn-border) var(--btn-frame-tr-bl);
+    clip-path: inset(calc(100% - var(--btn-corner)) 0 0 0);
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before,
+    &::after {
+      @apply transition-none;
+    }
+  }
+}
+
+@utility btn-primary {
+  --btn-color: var(--color-primary);
+  --btn-ink: var(--color-primary-ink);
+  --btn-deco: var(--color-brand);
+  --btn-glow: var(--glow-primary);
+}
+
+@utility btn-secondary {
+  --btn-color: var(--color-secondary);
+  --btn-ink: var(--color-secondary-ink);
+  --btn-deco: var(--color-primary);
+  --btn-glow: none;
+}
+
+@utility btn-accent {
+  --btn-color: var(--color-accent);
+  --btn-ink: var(--color-accent-ink);
+  --btn-deco: var(--btn-accent-deco);
+  --btn-glow: var(--glow-accent);
+}
+
+@utility btn-gradient {
+  --btn-ink: var(--btn-gradient-ink);
+  --btn-deco: var(--btn-gradient-deco);
+  --btn-glow: var(--btn-gradient-glow);
+  --btn-border: 0rem;
+  --btn-dash-size: --spacing(11.25) --spacing(0.625);
+
+  &::before {
+    --btn-cta-from: var(--gradient-cta-from);
+    --btn-cta-via: var(--gradient-cta-via);
+    --btn-cta-to: var(--gradient-cta-to);
+    background-image: linear-gradient(
+      90deg,
+      var(--btn-cta-from),
+      var(--btn-cta-via) 55%,
+      var(--btn-cta-to)
+    );
+    transition-property:
+      inset, border-radius, transform, --btn-cta-from, --btn-cta-via, --btn-cta-to;
+  }
+}
+
+@utility btn-ghost {
+  --btn-ink: var(--color-brand-ink);
+  --btn-glow: none;
+  --btn-border: 0rem;
+
+  @apply min-w-0 gap-2.5 p-0 btn-sm;
+
+  &::before,
+  &::after {
+    @apply hidden;
+  }
+}
+
+@utility btn-link {
+  --btn-ink: var(--color-base-content);
+  --btn-glow: none;
+  --btn-border: 0rem;
+
+  @apply min-w-0 p-0 tracking-normal normal-case underline decoration-primary btn-sm;
+  text-decoration-thickness: --spacing(0.5);
+  text-underline-offset: --spacing(1.5);
+  font-family: inherit;
+  font-weight: inherit;
+  font-stretch: inherit;
+
+  &::before,
+  &::after {
+    @apply hidden;
+  }
+}
+
+@utility btn-square {
+  --btn-height: --spacing(12);
+  --btn-ink: var(--color-brand-ink);
+  --btn-glow: none;
+  --btn-border: 0rem;
+  --btn-fill: 0%;
+  --btn-fill-hover: 8%;
+
+  @apply w-(--btn-height) min-w-0 p-0;
+
+  &::before {
+    inset: 0;
+    border: --spacing(0.25) solid color-mix(in oklab, var(--color-accent) 50%, transparent);
+    border-radius: var(--radius-selector);
+    background-color: color-mix(in oklab, var(--btn-color) var(--btn-fill), var(--color-base-300));
+    transform: none;
+    clip-path: polygon(
+      var(--cut-field) 0,
+      100% 0,
+      100% calc(100% - var(--cut-field)),
+      calc(100% - var(--cut-field)) 100%,
+      0 100%,
+      0 var(--cut-field)
+    );
+    transition-property: border-color, border-radius, background-color, clip-path;
+  }
+
+  &::after {
+    @apply hidden;
+  }
+}
+
+@utility btn-block {
+  @apply w-full;
+}
+
+@utility btn-xs {
+  --btn-height: --spacing(9);
+  --btn-padding-x: --spacing(5.5);
+  --btn-font-size: --spacing(2.75);
+}
+
+@utility btn-sm {
+  --btn-height: --spacing(11);
+  --btn-padding-x: --spacing(6.5);
+  --btn-font-size: --spacing(3);
+}
+
+@utility btn-md {
+  --btn-height: --spacing(14);
+  --btn-padding-x: --spacing(7);
+  --btn-font-size: --spacing(3.5);
+}
+
+@utility btn-lg {
+  --btn-height: --spacing(16);
+  --btn-padding-x: --spacing(7.5);
+  --btn-font-size: --spacing(3.75);
+}
+
+@utility btn-xl {
+  --btn-height: --spacing(18);
+  --btn-padding-x: --spacing(8);
+  --btn-font-size: --spacing(4);
+}
+
+@utility btn-disabled {
+  @apply pointer-events-none opacity-40;
+}
