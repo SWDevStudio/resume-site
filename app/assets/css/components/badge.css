@@ -1,0 +1,88 @@
+@utility badge {
+  --badge-base-line: color-mix(in oklab, var(--color-accent) 45%, transparent);
+  --badge-ghost-line: color-mix(in oklab, var(--color-primary) 45%, transparent);
+  --badge-primary-tint: 8%;
+  --badge-accent-tint: 10%;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --badge-base-line: color-mix(in oklab, var(--color-accent) 60%, transparent);
+    --badge-ghost-line: color-mix(in oklab, var(--color-accent) 70%, transparent);
+    --badge-primary-tint: 10%;
+    --badge-accent-tint: 14%;
+  }
+
+  --badge-line: var(--badge-base-line);
+  --badge-fill: var(--color-base-300);
+  --badge-ink: var(--color-base-content);
+  --badge-border: --spacing(0.25);
+
+  @apply relative isolate inline-flex items-center gap-2 whitespace-nowrap;
+  @apply font-body leading-3.5 font-light tracking-[.06em] text-(--badge-ink);
+  font-size: --spacing(3);
+  padding-block: calc(var(--badge-border) + --spacing(1.5));
+  padding-inline: calc(var(--badge-border) + --spacing(3.5));
+
+  &::before,
+  &::after {
+    @apply absolute -z-1;
+    content: "";
+    border-radius: var(--radius-selector);
+    clip-path: polygon(
+      var(--cut-selector) 0,
+      100% 0,
+      100% calc(100% - var(--cut-selector)),
+      calc(100% - var(--cut-selector)) 100%,
+      0 100%,
+      0 var(--cut-selector)
+    );
+    transition-property: background-color, border-radius, clip-path;
+  }
+
+  &::before {
+    @apply inset-0;
+    background-color: var(--badge-line);
+  }
+
+  &::after {
+    inset: var(--badge-border);
+    background-color: var(--badge-fill);
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before,
+    &::after {
+      @apply transition-none;
+    }
+  }
+}
+
+@utility badge-primary {
+  --badge-line: var(--color-primary);
+  --badge-fill: color-mix(
+    in srgb,
+    var(--color-primary) var(--badge-primary-tint),
+    var(--color-base-200)
+  );
+  --badge-ink: var(--color-primary-ink);
+}
+
+@utility badge-secondary {
+  --badge-line: var(--color-secondary);
+  --badge-fill: color-mix(in srgb, var(--color-secondary) 8%, var(--color-base-200));
+  --badge-ink: var(--color-secondary-ink);
+}
+
+@utility badge-accent {
+  --badge-line: var(--color-accent);
+  --badge-fill: color-mix(
+    in srgb,
+    var(--color-accent) var(--badge-accent-tint),
+    var(--color-base-200)
+  );
+  --badge-ink: var(--color-accent-ink);
+}
+
+@utility badge-ghost {
+  --badge-line: var(--badge-ghost-line);
+}
