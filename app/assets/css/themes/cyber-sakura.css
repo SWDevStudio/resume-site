@@ -1,0 +1,32 @@
+[data-theme="cyber-sakura"] {
+  --color-base-100: oklch(96.1% 0.011 308.3);
+  --color-base-200: oklch(98.5% 0.006 308.4);
+  --color-base-300: oklch(94.7% 0.02 308.2);
+  --color-base-content: oklch(22.4% 0.065 298.7);
+
+  --color-primary: oklch(73.2% 0.181 358.9);
+  --color-primary-content: oklch(22.4% 0.065 298.7);
+  --color-primary-ink: #b8326a;
+
+  --color-secondary: oklch(63.7% 0.195 259.5);
+  --color-secondary-content: oklch(20.7% 0.061 267.1);
+  --color-secondary-ink: #1f5fd1;
+
+  --color-accent: oklch(75.9% 0.147 301);
+  --color-accent-content: oklch(22.4% 0.065 298.7);
+  --color-accent-ink: #6a3fb5;
+
+  --color-brand: var(--color-secondary);
+  --color-brand-ink: var(--color-secondary-ink);
+
+  --gradient-cta-from: #ff8fb8;
+  --gradient-cta-via: #a57bff;
+  --gradient-cta-to: #5e9bff;
+
+  --glow-primary: none;
+  --glow-accent: none;
+
+  --radius-selector: 2rem;
+  --cut-selector: 0;
+  --cut-field: 0rem;
+}

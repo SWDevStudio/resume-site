@@ -1,0 +1,43 @@
+/* Тема по умолчанию: токены лежат в :root, остальные темы переопределяют их через [data-theme] */
+@theme static {
+  --color-base-100: oklch(14.1% 0.007 285.5);
+  --color-base-200: oklch(18% 0.019 294.7);
+  --color-base-300: oklch(21% 0.026 294.7);
+  --color-base-content: oklch(98.8% 0.013 106.6);
+
+  --color-primary: oklch(64% 0.246 21.4);
+  --color-primary-content: oklch(14.1% 0.007 285.5);
+  --color-primary-ink: #ff1e43;
+
+  --color-secondary: oklch(81.8% 0.171 77.9);
+  --color-secondary-content: oklch(14.1% 0.007 285.5);
+  --color-secondary-ink: #ffb300;
+
+  --color-accent: oklch(60.9% 0.303 312.9);
+  --color-accent-content: oklch(100% 0 0);
+  --color-accent-ink: #d36bff;
+
+  --color-brand: var(--color-accent);
+  --color-brand-ink: var(--color-accent-ink);
+
+  --gradient-cta-from: #ff1e43;
+  --gradient-cta-via: #dc0eaa;
+  --gradient-cta-to: #bf00ff;
+  --gradient-cta: linear-gradient(
+    90deg,
+    var(--gradient-cta-from),
+    var(--gradient-cta-via) 55%,
+    var(--gradient-cta-to)
+  );
+
+  --glow-primary: drop-shadow(
+    0 0 --spacing(1.5) color-mix(in oklch, var(--color-primary) 55%, transparent)
+  );
+  --glow-accent: drop-shadow(
+    0 0 --spacing(1.5) color-mix(in oklch, var(--color-accent) 55%, transparent)
+  );
+
+  --radius-selector: 0rem;
+  --cut-selector: --spacing(1.5);
+  --cut-field: --spacing(2);
+}
