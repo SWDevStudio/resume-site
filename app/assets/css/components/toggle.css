@@ -1,0 +1,106 @@
+@utility toggle {
+  --toggle-width: --spacing(13);
+  --toggle-height: --spacing(7);
+  --toggle-border: --spacing(0.375);
+  --toggle-padding: --spacing(0.75);
+  --toggle-size: --spacing(5);
+  --toggle-radius: var(--radius-selector);
+  --toggle-cut: var(--cut-selector);
+  --toggle-thumb-radius: 0rem;
+  --toggle-thumb-cut: --spacing(1);
+  --toggle-fill-checked: 8%;
+  --toggle-ring-width: --spacing(0.5);
+  --toggle-ring-gap: --spacing(0.5);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --toggle-thumb-radius: 50%;
+    --toggle-thumb-cut: 0rem;
+    --toggle-fill-checked: 10%;
+  }
+
+  --toggle-color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+  --toggle-border-color: var(--toggle-color);
+  --toggle-ring: var(--color-primary-ink);
+  --toggle-fill: 0%;
+  --toggle-offset: var(--toggle-padding);
+  --toggle-bleed: 0rem;
+  --toggle-bleed-diagonal: calc(var(--toggle-bleed) * 0.4142);
+
+  @apply relative inline-block shrink-0 cursor-pointer appearance-none;
+  @apply h-(--toggle-height) w-(--toggle-width);
+  border: var(--toggle-border) solid var(--toggle-border-color);
+  border-radius: var(--toggle-radius);
+  background-color: color-mix(in oklab, var(--color-primary) var(--toggle-fill), transparent);
+  outline: var(--toggle-ring-width) solid transparent;
+  outline-offset: var(--toggle-ring-gap);
+  clip-path: polygon(
+    calc(var(--toggle-cut) - var(--toggle-bleed-diagonal)) calc(var(--toggle-bleed) * -1),
+    calc(100% + var(--toggle-bleed)) calc(var(--toggle-bleed) * -1),
+    calc(100% + var(--toggle-bleed)) calc(100% - var(--toggle-cut) + var(--toggle-bleed-diagonal)),
+    calc(100% - var(--toggle-cut) + var(--toggle-bleed-diagonal)) calc(100% + var(--toggle-bleed)),
+    calc(var(--toggle-bleed) * -1) calc(100% + var(--toggle-bleed)),
+    calc(var(--toggle-bleed) * -1) calc(var(--toggle-cut) - var(--toggle-bleed-diagonal))
+  );
+  transition-property:
+    border-color, background-color, border-radius, clip-path, outline-color, opacity;
+
+  &::before {
+    @apply absolute top-(--toggle-padding) left-(--toggle-offset) size-(--toggle-size);
+    content: "";
+    background-color: var(--toggle-color);
+    border-radius: var(--toggle-thumb-radius);
+    clip-path: polygon(
+      var(--toggle-thumb-cut) 0,
+      100% 0,
+      100% calc(100% - var(--toggle-thumb-cut)),
+      calc(100% - var(--toggle-thumb-cut)) 100%,
+      0 100%,
+      0 var(--toggle-thumb-cut)
+    );
+    transition-property: background-color, border-radius, clip-path, left;
+  }
+
+  @variant checked {
+    --toggle-color: var(--color-primary);
+    --toggle-fill: var(--toggle-fill-checked);
+    --toggle-offset: calc(100% - var(--toggle-padding) - var(--toggle-size));
+  }
+
+  @variant focus-visible {
+    --toggle-bleed: calc(var(--toggle-ring-gap) + var(--toggle-ring-width));
+    outline-color: var(--toggle-ring);
+  }
+
+  &:disabled {
+    @apply toggle-disabled;
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before {
+      @apply transition-none;
+    }
+  }
+}
+
+@utility toggle-field {
+  @apply flex min-w-0 flex-col gap-2;
+
+  & > label {
+    @apply inline-flex cursor-pointer items-center gap-3 self-start text-sm leading-[normal] font-light;
+    @apply has-disabled:cursor-default has-disabled:text-base-content/40;
+  }
+
+  & > p {
+    @apply text-xs leading-[normal] text-error-ink;
+  }
+}
+
+@utility toggle-error {
+  --toggle-border-color: var(--color-error);
+  --toggle-ring: var(--color-error);
+}
+
+@utility toggle-disabled {
+  @apply btn-disabled;
+}

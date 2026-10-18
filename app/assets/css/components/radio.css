@@ -1,0 +1,104 @@
+@utility radio {
+  --radio-radius: 0rem;
+  --radio-cut: --spacing(1);
+  --radio-error-glow: drop-shadow(
+    0 0 --spacing(1.5) color-mix(in oklch, var(--color-error) 55%, transparent)
+  );
+
+  :where([data-theme="cyber-sakura"]) & {
+    --radio-radius: 50%;
+    --radio-cut: 0rem;
+    --radio-error-glow: none;
+  }
+
+  --radio-color: var(--color-primary);
+  --radio-ring: var(--color-primary-ink);
+  --radio-glow: var(--glow-primary);
+  --radio-clip: polygon(
+    var(--radio-cut) 0,
+    100% 0,
+    100% calc(100% - var(--radio-cut)),
+    calc(100% - var(--radio-cut)) 100%,
+    0 100%,
+    0 var(--radio-cut)
+  );
+
+  @apply relative inline-block size-5 shrink-0 cursor-pointer appearance-none;
+  @apply rounded-(--radio-radius) bg-transparent;
+  outline-color: var(--radio-ring);
+  outline-offset: --spacing(0.5);
+  transition-property: border-radius, outline-color, filter, opacity;
+
+  &::before,
+  &::after {
+    @apply absolute inset-0 rounded-(--radio-radius);
+    content: "";
+    clip-path: var(--radio-clip);
+  }
+
+  &::before {
+    border: --spacing(0.375) solid var(--radio-color);
+    transition-property: border-color, border-radius, clip-path;
+  }
+
+  &::after {
+    @apply m-auto size-2.5 bg-(--radio-color) opacity-0;
+    transition-property: background-color, border-radius, clip-path, opacity;
+  }
+
+  @variant checked {
+    &::after {
+      @apply opacity-100;
+    }
+  }
+
+  @variant focus-visible {
+    outline-style: solid;
+    outline-width: --spacing(0.5);
+    filter: var(--radio-glow);
+  }
+
+  &:disabled {
+    @apply radio-disabled;
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before,
+    &::after {
+      @apply transition-none;
+    }
+  }
+}
+
+@utility radio-error {
+  --radio-color: var(--color-error);
+  --radio-ring: var(--color-error);
+  --radio-glow: var(--radio-error-glow);
+}
+
+@utility radio-disabled {
+  @apply btn-disabled;
+}
+
+@utility radio-field {
+  @apply flex min-w-0 flex-col gap-2;
+
+  & > legend {
+    @apply mb-2 text-sm leading-[normal] font-normal;
+  }
+
+  & > div {
+    @apply flex flex-col gap-3.5;
+  }
+
+  & > div > label {
+    @apply inline-flex cursor-pointer items-center gap-3 self-start;
+    @apply text-sm leading-[normal] font-light;
+    @apply has-disabled:cursor-default has-disabled:text-base-content/40;
+  }
+
+  & > p {
+    @apply text-xs leading-[normal] text-error-ink;
+  }
+}
