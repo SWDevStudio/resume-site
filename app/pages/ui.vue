@@ -35,7 +35,7 @@
 
       <main class="px-8 pt-8 pb-24">
         <p
-          v-if="baseName(route) === 'ui'"
+          v-if="isIndex"
           class="text-base-content/60"
         >
           Выберите компонент в меню.
@@ -47,6 +47,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { NuxtLinkLocale, NuxtPage } from "#components";
 import { useRoute, useRouteBaseName, useRouter } from "#imports";
 import UiButton from "~/components/ui/UiButton/UiButton.vue";
@@ -55,6 +56,7 @@ import { useTheme } from "~/composables/useTheme";
 const { toggle } = useTheme();
 const route = useRoute();
 const baseName = useRouteBaseName();
+const isIndex = computed(() => baseName(route) === "ui");
 
 const items = Array.from(
   new Map(
