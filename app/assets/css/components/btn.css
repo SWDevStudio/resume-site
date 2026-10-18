@@ -265,7 +265,7 @@
 @utility btn-xs {
   --btn-height: --spacing(9);
   --btn-padding-x: --spacing(5.5);
-  --btn-font-size: --spacing(2.75);
+  --btn-font-size: --spacing(3);
 }
 
 @utility btn-sm {
@@ -283,7 +283,7 @@
 @utility btn-lg {
   --btn-height: --spacing(16);
   --btn-padding-x: --spacing(7.5);
-  --btn-font-size: --spacing(3.75);
+  --btn-font-size: --spacing(4);
 }
 
 @utility btn-xl {
