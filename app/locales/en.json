@@ -1,0 +1,11 @@
+{
+  "locale": {
+    "name": "English"
+  },
+  "nav": {
+    "catalog": "UI catalog"
+  },
+  "theme": {
+    "toggle": "Switch theme"
+  }
+}
