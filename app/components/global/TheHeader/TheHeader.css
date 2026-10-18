@@ -1,0 +1,358 @@
+@reference "~/assets/css/main.css";
+
+.the-header {
+  --the-header-logo-ink: var(--color-primary-ink);
+  --the-header-logo-glow: 0 0 --spacing(2.5)
+    color-mix(in oklab, var(--color-primary) 70%, transparent);
+  --the-header-menu-line: color-mix(in oklab, var(--color-accent) 45%, transparent);
+  --the-header-menu-radius: var(--radius-field);
+  --the-header-menu-shadow:
+    0 --spacing(3) --spacing(7.5) rgb(0 0 0 / 50%),
+    0 0 --spacing(4) color-mix(in oklab, var(--color-accent) 12%, transparent);
+  --the-header-item-radius: 0rem;
+  --the-header-burger-radius: 0rem;
+  --the-header-burger-skew: -8.53deg;
+  --the-header-burger-corner: 25%;
+  --the-header-burger-edge: 0rem;
+  --the-header-burger-inset: --spacing(1);
+  --the-header-panel-shift: --spacing(-2);
+  --the-header-panel-scale: 1;
+  --the-header-panel-clip-open: inset(--spacing(-12));
+  --the-header-panel-clip-closed: inset(0rem 0rem 100% 0rem);
+  --the-header-burger-turn: 90deg;
+  --the-header-burger-zoom: 1;
+  --the-header-burger-menu-mask: url("./media/burger-torii-synth.svg");
+  --the-header-burger-close-mask: url("./media/close-torii-synth.svg");
+
+  :where([data-theme="cyber-sakura"]) & {
+    --the-header-logo-ink: var(--color-base-content);
+    --the-header-logo-glow: 0 0 --spacing(2.5) transparent;
+    --the-header-menu-line: color-mix(in oklab, var(--color-accent) 55%, transparent);
+    --the-header-menu-shadow:
+      0 --spacing(3.5) --spacing(8) color-mix(in oklab, var(--color-accent) 28%, transparent),
+      0 0 --spacing(4) transparent;
+    --the-header-item-radius: --spacing(2.25);
+    --the-header-burger-radius: --spacing(3);
+    --the-header-burger-skew: 0deg;
+    --the-header-burger-corner: 50%;
+    --the-header-burger-edge: var(--the-header-burger-border);
+    --the-header-burger-inset: --spacing(0.25);
+    --the-header-panel-shift: --spacing(-3);
+    --the-header-panel-scale: 0.96;
+    --the-header-panel-clip-closed: inset(--spacing(-12));
+    --the-header-burger-turn: 45deg;
+    --the-header-burger-zoom: 0.5;
+    --the-header-burger-menu-mask: url("./media/burger-cyber-sakura.svg");
+    --the-header-burger-close-mask: url("./media/close-cyber-sakura.svg");
+  }
+
+  --the-header-muted: color-mix(in oklab, var(--color-base-content) 72%, transparent);
+  --the-header-item-tint: color-mix(in oklab, var(--color-primary) 10%, transparent);
+  --the-header-burger-border: --spacing(0.5);
+
+  @apply relative isolate z-10 w-full bg-base-100 font-body font-light text-base-content;
+  container-type: inline-size;
+}
+
+.the-header-float {
+  @apply absolute inset-x-0 top-0 bg-transparent;
+}
+
+.the-header-fixed {
+  @apply fixed inset-x-0 top-0 z-50 bg-base-100/85 backdrop-blur-md;
+}
+
+.the-header-bar {
+  --the-header-tool-size: --spacing(8);
+
+  @apply flex flex-wrap items-center justify-between;
+  gap: --spacing(4) --spacing(10);
+  padding-block: --spacing(6);
+
+  @container (width >= theme(--breakpoint-md)) {
+    --the-header-tool-size: --spacing(6);
+    column-gap: --spacing(6);
+    padding-block: --spacing(8);
+  }
+
+  @container (width >= theme(--breakpoint-lg)) {
+    column-gap: --spacing(10);
+    padding-block: --spacing(10);
+  }
+}
+
+.the-header-logo {
+  @apply font-normal no-underline;
+  font-size: --spacing(5);
+  letter-spacing: --spacing(0.5);
+  color: var(--the-header-logo-ink);
+  text-shadow: var(--the-header-logo-glow);
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property: color, text-shadow, outline-color;
+
+  & > span {
+    color: var(--color-primary);
+  }
+
+  @variant focus-visible {
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.the-header-end {
+  @apply flex items-center;
+  gap: --spacing(3);
+
+  @container (width >= theme(--breakpoint-md)) {
+    gap: --spacing(5);
+  }
+
+  @container (width >= theme(--breakpoint-lg)) {
+    gap: --spacing(9);
+  }
+}
+
+.the-header-nav {
+  @apply absolute z-10 origin-top;
+  inset-inline: --spacing(5);
+  top: 100%;
+  padding: --spacing(1.5);
+  border: --spacing(0.25) solid var(--the-header-menu-line);
+  border-radius: var(--the-header-menu-radius);
+  background-color: var(--color-base-200);
+  box-shadow: var(--the-header-menu-shadow);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(var(--the-header-panel-shift)) scale(var(--the-header-panel-scale));
+  clip-path: var(--the-header-panel-clip-closed);
+  transition-property:
+    background-color, border-color, border-radius, box-shadow, opacity, visibility, transform,
+    clip-path;
+
+  & > ul {
+    @apply m-0 flex list-none flex-col p-0;
+  }
+
+  @container (width >= theme(--breakpoint-md)) {
+    @apply static block;
+    padding: 0rem;
+    border-color: transparent;
+    border-width: 0rem;
+    background-color: transparent;
+    box-shadow: none;
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+    transition-property: none;
+
+    & > ul {
+      @apply flex-row flex-wrap;
+      gap: --spacing(2) --spacing(5);
+    }
+  }
+
+  @container (width >= theme(--breakpoint-lg)) {
+    & > ul {
+      column-gap: --spacing(8);
+    }
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.the-header-nav-open {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  clip-path: var(--the-header-panel-clip-open);
+
+  @container (width >= theme(--breakpoint-md)) {
+    clip-path: none;
+  }
+}
+
+.the-header-link {
+  --the-header-link-line: transparent;
+  --the-header-link-tint: transparent;
+
+  @apply flex items-center uppercase no-underline;
+  height: --spacing(11);
+  padding-inline: --spacing(3);
+  border-radius: var(--the-header-item-radius);
+  border-bottom: --spacing(0.5) solid var(--the-header-link-line);
+  background-color: var(--the-header-link-tint);
+  font-size: --spacing(3.5);
+  letter-spacing: --spacing(0.375);
+  color: var(--the-header-muted);
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property: color, background-color, border-color, border-radius, outline-color;
+
+  &[aria-current="page"] {
+    --the-header-link-tint: var(--the-header-item-tint);
+    color: var(--color-base-content);
+  }
+
+  @variant hover {
+    color: var(--color-base-content);
+  }
+
+  @variant focus-visible {
+    outline-color: var(--color-brand);
+  }
+
+  @container (width >= theme(--breakpoint-md)) {
+    @apply inline;
+    height: auto;
+    padding-block: 0rem --spacing(1);
+    padding-inline: 0rem;
+    border-radius: 0rem;
+
+    &[aria-current="page"] {
+      --the-header-link-line: var(--color-primary);
+      --the-header-link-tint: transparent;
+    }
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.the-header-tool {
+  @apply relative flex shrink-0 cursor-pointer appearance-none items-center justify-center;
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property: color, outline-color;
+
+  @variant focus-visible {
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.the-header-burger {
+  @apply relative isolate flex shrink-0 cursor-pointer appearance-none items-center justify-center;
+  width: --spacing(12);
+  height: --spacing(11);
+  color: var(--color-primary);
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property: color, outline-color;
+
+  &::before {
+    @apply absolute -z-1;
+    content: "";
+    inset-block: --spacing(0.25);
+    inset-inline: var(--the-header-burger-inset);
+    border-radius: var(--the-header-burger-radius);
+    background-color: color-mix(in oklab, var(--color-brand) 8%, transparent);
+    transform: skewX(var(--the-header-burger-skew));
+    transition-property: inset, border-radius, background-color, transform;
+  }
+
+  @variant focus-visible {
+    outline-color: var(--color-brand);
+  }
+
+  @container (width >= theme(--breakpoint-md)) {
+    @apply hidden;
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before {
+      @apply transition-none;
+    }
+  }
+}
+
+.the-header-burger-frame {
+  @apply pointer-events-none absolute -z-1;
+  inset-block: --spacing(0.25);
+  inset-inline: var(--the-header-burger-inset);
+  transform: skewX(var(--the-header-burger-skew));
+  transition-property: inset, transform;
+
+  &::before,
+  &::after {
+    @apply absolute inset-0;
+    content: "";
+    border: 0 solid var(--color-brand);
+    border-radius: var(--the-header-burger-radius);
+    transition-property: border-color, border-width, border-radius, clip-path;
+  }
+
+  &::before {
+    border-width: var(--the-header-burger-border) var(--the-header-burger-border) 0
+      var(--the-header-burger-edge);
+    clip-path: inset(0 0 calc(100% - var(--the-header-burger-corner)) 0);
+  }
+
+  &::after {
+    border-width: 0 var(--the-header-burger-edge) var(--the-header-burger-border)
+      var(--the-header-burger-border);
+    clip-path: inset(calc(100% - var(--the-header-burger-corner)) 0 0 0);
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before,
+    &::after {
+      @apply transition-none;
+    }
+  }
+}
+
+.the-header-burger-icon {
+  @apply relative shrink-0;
+  width: --spacing(5.5);
+  height: --spacing(4);
+
+  &::before,
+  &::after {
+    @apply absolute inset-0 bg-current mask-contain mask-center mask-no-repeat;
+    content: "";
+    transition-property: opacity, transform, background-color;
+  }
+
+  &::before {
+    mask-image: var(--the-header-burger-menu-mask);
+  }
+
+  &::after {
+    opacity: 0;
+    transform: rotate(calc(var(--the-header-burger-turn) * -1)) scale(var(--the-header-burger-zoom));
+    mask-image: var(--the-header-burger-close-mask);
+  }
+
+  @variant motion-reduce {
+    &::before,
+    &::after {
+      @apply transition-none;
+    }
+  }
+}
+
+.the-header-burger[aria-expanded="true"] .the-header-burger-icon {
+  &::before {
+    opacity: 0;
+    transform: rotate(var(--the-header-burger-turn)) scale(var(--the-header-burger-zoom));
+  }
+
+  &::after {
+    opacity: 1;
+    transform: none;
+  }
+}

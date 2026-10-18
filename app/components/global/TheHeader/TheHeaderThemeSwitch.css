@@ -1,0 +1,42 @@
+@reference "~/assets/css/main.css";
+
+.the-header-theme {
+  width: var(--the-header-tool-size);
+  height: var(--the-header-tool-size);
+}
+
+.the-header-theme-icon {
+  --the-header-theme-scale: 1;
+  --the-header-theme-bleed: calc(
+    (var(--the-header-theme-scale) - 1) / 2 * var(--the-header-tool-size)
+  );
+
+  @apply pointer-events-none absolute block max-w-none;
+  top: calc(--spacing(0.5) - var(--the-header-theme-bleed));
+  left: calc(--spacing(0.5) - var(--the-header-theme-bleed));
+  width: calc(var(--the-header-tool-size) * var(--the-header-theme-scale));
+  height: calc(var(--the-header-tool-size) * var(--the-header-theme-scale));
+  transition-property: opacity;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.the-header-theme-icon-dark {
+  --the-header-theme-scale: 2;
+
+  @apply opacity-100;
+
+  :where([data-theme="cyber-sakura"]) & {
+    @apply opacity-0;
+  }
+}
+
+.the-header-theme-icon-light {
+  @apply opacity-0;
+
+  :where([data-theme="cyber-sakura"]) & {
+    @apply opacity-100;
+  }
+}

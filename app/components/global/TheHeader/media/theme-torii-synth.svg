@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-12 -12 48 48" width="48" height="48">
+  <defs>
+    <filter id="theme-torii-synth-glow" x="-12" y="-12" width="48" height="48" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow in="SourceGraphic" dx="0" dy="0" stdDeviation="2.5" flood-color="#FF1E43" flood-opacity=".85" result="inner" />
+      <feDropShadow in="inner" dx="0" dy="0" stdDeviation="6" flood-color="#BF00FF" flood-opacity=".45" />
+    </filter>
+    <radialGradient id="theme-torii-synth-glow-fill" cx=".5" cy=".7" r=".65">
+      <stop offset="0" stop-color="#FFE066" />
+      <stop offset=".45" stop-color="#FFB300" stop-opacity=".85" />
+      <stop offset="1" stop-color="#FF1E43" stop-opacity=".25" />
+    </radialGradient>
+  </defs>
+  <path d="M7.4 8.2C5 10 3.4 13 3.3 17.1L5.4 16.3L7.6 17.6L9.8 16.6L11 19.8L12 18.7L13 19.8L14.2 16.6L16.4 17.6L18.6 16.3L20.7 17.1C20.6 13 19 10 16.6 8.2Z" fill="url(#theme-torii-synth-glow-fill)" />
+  <g fill="none" stroke="#FF1E43" stroke-width=".4" stroke-opacity=".75">
+    <path d="M10.4 8.8C9.3 11 8.9 13.4 9.1 15.6M13.6 8.8C14.7 11 15.1 13.4 14.9 15.6" />
+    <path d="M8.8 8.6C7.1 10.6 6.2 13 6.1 15.8M15.2 8.6C16.9 10.6 17.8 13 17.9 15.8" />
+    <path d="M6.2 11.4Q12 10.2 17.8 11.4M4.7 14.4Q12 13 19.3 14.4" />
+  </g>
+  <g fill="none" stroke="#FF7A00" stroke-width=".45">
+    <path d="M12 11.4L9.7 17M12 11.4V17.6M12 11.4L14.3 17" />
+  </g>
+  <g fill="#FFE066">
+    <circle cx="9.7" cy="17" r=".4" />
+    <circle cx="12" cy="17.6" r=".4" />
+    <circle cx="14.3" cy="17" r=".4" />
+  </g>
+  <g fill="none" stroke="#FF1E43" stroke-width="1.2" stroke-linecap="square" stroke-linejoin="miter" filter="url(#theme-torii-synth-glow)">
+    <path d="M7.6 5.4H16.4V7.8H7.6Z" />
+    <path d="M7 7.4C5.6 7.9 4.6 8.9 4.2 10.3M17 7.4C18.4 7.9 19.4 8.9 19.8 10.3" />
+    <path d="M7.4 8.2C5 10 3.4 13 3.3 17.1L5.4 16.3L7.6 17.6L9.8 16.6L11 19.8L12 18.7L13 19.8L14.2 16.6L16.4 17.6L18.6 16.3L20.7 17.1C20.6 13 19 10 16.6 8.2Z" />
+    <path d="M12 20V22.4" />
+  </g>
+  <g fill="none" stroke="#FF1E43" stroke-width=".55" stroke-opacity=".9">
+    <ellipse cx="12" cy="1.5" rx=".65" ry="1" />
+    <ellipse cx="12" cy="3.6" rx=".65" ry="1" />
+  </g>
+  <path d="M8.4 6.6H15.6" stroke="#FFB300" stroke-width=".35" opacity=".8" />
+  <circle cx="9" cy="6.6" r=".28" fill="#FFB300" />
+  <circle cx="12" cy="6.6" r=".28" fill="#FFB300" />
+  <circle cx="15" cy="6.6" r=".28" fill="#FFB300" />
+  <path d="M11.3 22.6L10.9 23.6M12 22.7V23.8M12.7 22.6L13.1 23.6" stroke="#FFB300" stroke-width=".35" />
+  <circle cx="12" cy="22.6" r=".75" fill="#FFB300" />
+</svg>

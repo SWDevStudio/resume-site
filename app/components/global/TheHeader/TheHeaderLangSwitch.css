@@ -1,0 +1,195 @@
+@reference "~/assets/css/main.css";
+
+.the-header-lang-globe,
+.the-header-lang-chevron,
+.the-header-lang-hatch,
+.the-header-menu-check {
+  @apply mask-contain mask-center mask-no-repeat;
+}
+
+.the-header-lang {
+  --the-header-underline-radius: 0rem;
+  --the-header-underline-glow: 0 0 --spacing(1.5)
+    color-mix(in oklab, var(--color-primary) 70%, transparent);
+  --the-header-underline-open: calc(100% - --spacing(6.5));
+  --the-header-hatch-opacity: 1;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --the-header-underline-radius: --spacing(0.5);
+    --the-header-underline-glow: 0 0 --spacing(1.5) transparent;
+    --the-header-underline-open: calc(100% - --spacing(2));
+    --the-header-hatch-opacity: 0;
+  }
+
+  @apply relative flex-none;
+}
+
+.the-header-lang-trigger {
+  @apply gap-1.5 px-1;
+  height: var(--the-header-tool-size);
+  font-size: --spacing(3);
+  font-weight: 300;
+  letter-spacing: 0.14em;
+  color: var(--the-header-muted);
+}
+
+.the-header-lang-code {
+  color: var(--color-base-content);
+}
+
+.the-header-lang-globe {
+  @apply size-3.5 shrink-0 bg-current;
+  mask-image: url("./media/globe-torii-synth.svg");
+
+  :where([data-theme="cyber-sakura"]) & {
+    mask-image: url("./media/globe-cyber-sakura.svg");
+  }
+
+  @container (width >= theme(--breakpoint-md)) and (width < theme(--breakpoint-lg)) {
+    @apply hidden;
+  }
+}
+
+.the-header-lang-chevron {
+  @apply size-2.5 shrink-0 bg-current;
+  mask-image: url("./media/chevron-torii-synth.svg");
+  transition-property: transform, background-color;
+
+  :where([data-theme="cyber-sakura"]) & {
+    mask-image: url("./media/chevron-cyber-sakura.svg");
+  }
+
+  [aria-expanded="true"] > & {
+    transform: rotate(180deg);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.the-header-lang-bar {
+  @apply absolute bg-primary;
+  left: --spacing(1);
+  bottom: --spacing(-0.75);
+  width: --spacing(3.5);
+  height: --spacing(0.5);
+  border-radius: var(--the-header-underline-radius);
+  box-shadow: var(--the-header-underline-glow);
+  transition-property: width, background-color, border-radius, box-shadow;
+
+  [aria-expanded="true"] > & {
+    width: var(--the-header-underline-open);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.the-header-lang-hatch {
+  @apply pointer-events-none absolute;
+  right: --spacing(0.5);
+  bottom: --spacing(-1);
+  width: --spacing(3.5);
+  height: --spacing(1.25);
+  background-color: var(--color-brand);
+  mask-image: url("./media/hatch.svg");
+  opacity: var(--the-header-hatch-opacity);
+  transition-property: opacity, background-color;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.the-header-menu {
+  @apply absolute right-0 z-10 m-0 origin-top-right list-none;
+  top: calc(100% + --spacing(2));
+  min-width: --spacing(44);
+  padding: --spacing(1.5);
+  border: --spacing(0.25) solid var(--the-header-menu-line);
+  border-radius: var(--the-header-menu-radius);
+  background-color: var(--color-base-200);
+  box-shadow: var(--the-header-menu-shadow);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(var(--the-header-panel-shift)) scale(var(--the-header-panel-scale));
+  clip-path: var(--the-header-panel-clip-closed);
+  transition-property:
+    background-color, border-color, border-radius, box-shadow, opacity, visibility, transform,
+    clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.the-header-menu-open {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  clip-path: var(--the-header-panel-clip-open);
+}
+
+.the-header-menu-item {
+  @apply flex w-full cursor-pointer appearance-none items-center text-left;
+  gap: --spacing(3);
+  height: --spacing(9);
+  padding-inline: --spacing(3);
+  border-radius: var(--the-header-item-radius);
+  color: var(--the-header-muted);
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: calc(--spacing(0.5) * -1);
+  transition-property: color, background-color, border-radius, outline-color;
+
+  &[aria-current="true"] {
+    background-color: var(--the-header-item-tint);
+    color: var(--color-base-content);
+  }
+
+  @variant hover {
+    color: var(--color-base-content);
+  }
+
+  @variant focus-visible {
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.the-header-menu-code {
+  @apply shrink-0;
+  width: --spacing(5.5);
+  font-size: --spacing(3);
+  letter-spacing: 0.12em;
+  color: var(--the-header-muted);
+}
+
+.the-header-menu-name {
+  @apply grow;
+  font-size: --spacing(3.5);
+  letter-spacing: 0.02em;
+}
+
+.the-header-menu-check {
+  @apply size-3 shrink-0 bg-primary;
+  mask-image: url("./media/check-torii-synth.svg");
+  opacity: 0;
+  transition-property: opacity, background-color;
+
+  :where([data-theme="cyber-sakura"]) & {
+    mask-image: url("./media/check-cyber-sakura.svg");
+  }
+
+  [aria-current="true"] > & {
+    opacity: 1;
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
