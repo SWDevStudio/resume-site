@@ -27,4 +27,42 @@
   ::after {
     @apply transition-colors;
   }
+
+  html {
+    @apply bg-base-100;
+  }
+
+  ::-webkit-scrollbar {
+    width: --spacing(3);
+    height: --spacing(3);
+  }
+
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-clip-padding;
+    border: --spacing(1) solid transparent;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: var(--scrollbar-track);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-thumb-hover);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+
+  @supports not selector(::-webkit-scrollbar) {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    }
+  }
 }
