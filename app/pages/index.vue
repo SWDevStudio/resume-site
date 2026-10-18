@@ -5,11 +5,11 @@
     >
       <span class="font-head text-2xl">Sawa UI</span>
       <div class="flex items-center gap-8">
-        <NuxtLink
+        <NuxtLinkLocale
           v-if="isDev"
           class="btn btn-ghost"
           to="/ui"
-          >UI-каталог</NuxtLink
+          >UI-каталог</NuxtLinkLocale
         >
         <UiButton
           class="btn-sm"
@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { NuxtLink } from "#components";
+import { NuxtLinkLocale } from "#components";
 import UiButton from "~/components/ui/UiButton/UiButton.vue";
 import { useTheme } from "~/composables/useTheme";
 
