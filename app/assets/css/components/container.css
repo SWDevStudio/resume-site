@@ -1,0 +1,17 @@
+@utility container {
+  @apply mx-auto;
+  max-width: --spacing(310);
+  padding-inline: --spacing(5);
+
+  @variant md {
+    padding-inline: --spacing(8);
+  }
+
+  @variant lg {
+    padding-inline: --spacing(10);
+  }
+}
+
+@utility container-wide {
+  max-width: --spacing(320);
+}

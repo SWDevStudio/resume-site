@@ -8,6 +8,7 @@
 @import "./components/checkbox.css";
 @import "./components/radio.css";
 @import "./components/toggle.css";
+@import "./components/container.css";
 @import "./themes/torii-synth.css";
 @import "./themes/cyber-sakura.css";
 
@@ -33,6 +34,7 @@
 
   html {
     @apply bg-base-100;
+    font-size: clamp(100%, min(100vw / 90, 100svh / 56.25), 177.78%);
   }
 
   ::-webkit-scrollbar {
