@@ -1,0 +1,766 @@
+@property --skill-tile-fill-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --skill-tile-fill-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --skill-tile-mark-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --skill-tile-mark-via {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --skill-tile-mark-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@keyframes skill-tile-glitch-leave {
+  0% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: none;
+    filter: none;
+  }
+
+  16.67% {
+    opacity: 1;
+    clip-path: inset(0 0 58% 0);
+    transform: translateX(--spacing(-1.75));
+    filter: var(--skill-tile-split);
+  }
+
+  33.33% {
+    opacity: 1;
+    clip-path: inset(42% 0 0 0);
+    transform: translateX(--spacing(1.5));
+    filter: var(--skill-tile-split-flip);
+  }
+
+  50% {
+    opacity: 0.85;
+    clip-path: inset(0 0 0 0);
+    transform: translateX(--spacing(-0.75)) skewX(-12deg);
+    filter: var(--skill-tile-split);
+  }
+
+  66.67% {
+    opacity: 1;
+    clip-path: inset(18% 0 48% 0);
+    transform: translateX(--spacing(2.25));
+    filter: var(--skill-tile-split-flip);
+  }
+
+  83.33% {
+    opacity: 0.6;
+    clip-path: inset(66% 0 10% 0);
+    transform: translateX(--spacing(-2.5));
+    filter: var(--skill-tile-split);
+  }
+
+  100% {
+    opacity: 0;
+    clip-path: inset(0 0 0 0);
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes skill-tile-glitch-enter {
+  0% {
+    opacity: 0;
+    clip-path: inset(0 0 0 0);
+    transform: none;
+    filter: none;
+  }
+
+  14.29% {
+    opacity: 1;
+    clip-path: inset(58% 0 0 0);
+    transform: translateX(--spacing(1.75));
+    filter: var(--skill-tile-split-flip);
+  }
+
+  28.57% {
+    opacity: 1;
+    clip-path: inset(0 0 42% 0);
+    transform: translateX(--spacing(-1.5));
+    filter: var(--skill-tile-split);
+  }
+
+  42.86% {
+    opacity: 0;
+    clip-path: inset(0 0 0 0);
+    transform: none;
+    filter: none;
+  }
+
+  57.14% {
+    opacity: 1;
+    clip-path: inset(52% 0 0 0);
+    transform: translateX(--spacing(-2));
+    filter: var(--skill-tile-split-flip);
+  }
+
+  71.43% {
+    opacity: 1;
+    clip-path: inset(0 0 34% 0);
+    transform: translateX(--spacing(1.25)) skewX(10deg);
+    filter: var(--skill-tile-split);
+  }
+
+  85.71% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: translateX(--spacing(-0.5));
+    filter: var(--skill-tile-split-flip);
+  }
+
+  100% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes skill-tile-bars {
+  0% {
+    opacity: 0;
+    background-position:
+      0 0,
+      0 0;
+    transform: none;
+  }
+
+  9% {
+    opacity: 1;
+    background-position:
+      0 0,
+      0 0;
+    transform: translateX(--spacing(-1));
+  }
+
+  27% {
+    opacity: 1;
+    background-position:
+      0 --spacing(-6.5),
+      0 --spacing(0.25);
+    transform: translateX(--spacing(1.25));
+  }
+
+  45% {
+    opacity: 0.5;
+    background-position:
+      0 --spacing(-14.5),
+      0 --spacing(0.5);
+    transform: translateX(--spacing(-0.5));
+  }
+
+  63% {
+    opacity: 1;
+    background-position:
+      0 --spacing(-3.5),
+      0 0;
+    transform: translateX(--spacing(1.5));
+  }
+
+  81% {
+    opacity: 0.8;
+    background-position:
+      0 --spacing(-20),
+      0 --spacing(0.25);
+    transform: translateX(--spacing(-1.25));
+  }
+
+  100% {
+    opacity: 0;
+    background-position:
+      0 0,
+      0 0;
+    transform: none;
+  }
+}
+
+@keyframes skill-tile-soft-leave {
+  0% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: none;
+    filter: none;
+  }
+
+  8.33% {
+    opacity: 0.45;
+    clip-path: inset(0 0 0 0);
+    transform: translateX(--spacing(0.25));
+    filter: drop-shadow(--spacing(-0.375) 0 0 var(--skill-tile-glitch-a))
+      drop-shadow(--spacing(0.375) 0 0 var(--skill-tile-glitch-b));
+  }
+
+  15% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: none;
+    filter: none;
+  }
+
+  21.67% {
+    opacity: 0.6;
+    clip-path: inset(0 0 0 0);
+    transform: translateX(--spacing(-0.25));
+    filter: drop-shadow(--spacing(0.375) 0 0 var(--skill-tile-glitch-a))
+      drop-shadow(--spacing(-0.375) 0 0 var(--skill-tile-glitch-b));
+  }
+
+  28.33%,
+  41.67% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: none;
+    filter: none;
+  }
+
+  58.33% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: translateX(--spacing(-0.5));
+    filter: drop-shadow(--spacing(-0.5) 0 0 var(--skill-tile-glitch-a))
+      drop-shadow(--spacing(0.5) 0 0 var(--skill-tile-glitch-b));
+  }
+
+  70.83% {
+    opacity: 1;
+    clip-path: inset(0 0 52% 0);
+    transform: translateX(--spacing(0.75));
+    filter: drop-shadow(--spacing(0.5) 0 0 var(--skill-tile-glitch-a))
+      drop-shadow(--spacing(-0.5) 0 0 var(--skill-tile-glitch-b));
+  }
+
+  83.33% {
+    opacity: 0.6;
+    clip-path: inset(46% 0 0 0);
+    transform: translateX(--spacing(-0.5));
+    filter: drop-shadow(--spacing(-0.5) 0 0 var(--skill-tile-glitch-a))
+      drop-shadow(--spacing(0.5) 0 0 var(--skill-tile-glitch-b)) blur(--spacing(0.25));
+  }
+
+  100% {
+    opacity: 0;
+    clip-path: inset(0 0 0 0);
+    transform: translateY(--spacing(-0.75));
+    filter: blur(--spacing(0.75));
+  }
+}
+
+@keyframes skill-tile-soft-enter {
+  0% {
+    opacity: 0;
+    clip-path: inset(0 0 0 0);
+    transform: none;
+    filter: blur(--spacing(0.75));
+  }
+
+  26.67% {
+    opacity: 0.5;
+    clip-path: inset(50% 0 0 0);
+    transform: translateX(--spacing(0.75));
+    filter: drop-shadow(--spacing(0.5) 0 0 var(--skill-tile-glitch-a))
+      drop-shadow(--spacing(-0.5) 0 0 var(--skill-tile-glitch-b)) blur(--spacing(0.375));
+  }
+
+  46.67% {
+    opacity: 0.85;
+    clip-path: inset(0 0 46% 0);
+    transform: translateX(--spacing(-0.5));
+    filter: drop-shadow(--spacing(-0.5) 0 0 var(--skill-tile-glitch-a))
+      drop-shadow(--spacing(0.5) 0 0 var(--skill-tile-glitch-b));
+  }
+
+  66.67% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: translateX(--spacing(0.25));
+    filter: drop-shadow(--spacing(0.5) 0 0 var(--skill-tile-glitch-a))
+      drop-shadow(--spacing(-0.5) 0 0 var(--skill-tile-glitch-b));
+  }
+
+  100% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes skill-tile-soft-bars {
+  0% {
+    opacity: 0;
+    background-position:
+      0 0,
+      0 0;
+    transform: none;
+  }
+
+  6.25% {
+    opacity: 0.4;
+    background-position:
+      0 --spacing(-2.5),
+      0 --spacing(0.25);
+    transform: translateX(--spacing(0.25));
+  }
+
+  12.5%,
+  37.5% {
+    opacity: 0;
+    background-position:
+      0 0,
+      0 0;
+    transform: none;
+  }
+
+  50% {
+    opacity: 1;
+    background-position:
+      0 0,
+      0 0;
+    transform: translateX(--spacing(-0.75));
+  }
+
+  66.67% {
+    opacity: 0.75;
+    background-position:
+      0 --spacing(-4.5),
+      0 --spacing(0.25);
+    transform: translateX(--spacing(0.75));
+  }
+
+  83.33% {
+    opacity: 0.45;
+    background-position:
+      0 --spacing(-10),
+      0 --spacing(0.5);
+    transform: translateX(--spacing(-0.5));
+  }
+
+  100% {
+    opacity: 0;
+    background-position:
+      0 --spacing(-10),
+      0 --spacing(0.5);
+    transform: none;
+  }
+}
+
+@keyframes skill-tile-sheen {
+  0% {
+    opacity: 0;
+    background-position: 130% 0;
+  }
+
+  22.22%,
+  77.78% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    background-position: -30% 0;
+  }
+}
+
+@utility skill-tile {
+  --skill-tile-border: --spacing(0.3);
+  --skill-tile-inset: --spacing(0.5);
+  --skill-tile-radius: 0rem;
+  --skill-tile-cut-start: --spacing(2.5);
+  --skill-tile-cut-end: --spacing(4.5);
+  --skill-tile-shape: polygon(
+    var(--skill-tile-cut-start) 0,
+    100% 0,
+    100% calc(100% - var(--skill-tile-cut-end)),
+    calc(100% - var(--skill-tile-cut-end)) 100%,
+    0 100%,
+    0 var(--skill-tile-cut-start)
+  );
+  --skill-tile-badge-base: #0e0c14;
+  --skill-tile-badge-mono: #0e0c14;
+  --skill-tile-badge-fill: var(--skill-tile-badge-base);
+  --skill-tile-icon-size: --spacing(9);
+  --skill-tile-side: var(--color-accent);
+  --skill-tile-side-opacity: 1;
+  --skill-tile-glitch-a: color-mix(in oklab, var(--color-primary) 90%, transparent);
+  --skill-tile-glitch-b: color-mix(in oklab, var(--color-accent) 90%, transparent);
+  --skill-tile-split: drop-shadow(--spacing(-0.75) 0 0 var(--skill-tile-glitch-a))
+    drop-shadow(--spacing(0.75) 0 0 var(--skill-tile-glitch-b));
+  --skill-tile-split-flip: drop-shadow(--spacing(0.75) 0 0 var(--skill-tile-glitch-a))
+    drop-shadow(--spacing(-0.75) 0 0 var(--skill-tile-glitch-b));
+  --skill-tile-duration: var(--default-transition-duration);
+  --skill-tile-timing: steps(1, end);
+  --skill-tile-leave-name: skill-tile-glitch-leave;
+  --skill-tile-enter-name: skill-tile-glitch-enter;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --skill-tile-inset: --spacing(0.15);
+    --skill-tile-radius: --spacing(6);
+    --skill-tile-cut-start: 0rem;
+    --skill-tile-cut-end: 0rem;
+    --skill-tile-badge-base: var(--color-base-300);
+    --skill-tile-badge-mono: var(--color-base-content);
+    --skill-tile-side-opacity: 0;
+    --skill-tile-glitch-a: color-mix(in oklab, var(--color-primary) 70%, transparent);
+    --skill-tile-glitch-b: color-mix(in oklab, var(--color-secondary) 55%, transparent);
+    --skill-tile-timing: var(--default-transition-timing-function);
+    --skill-tile-leave-name: skill-tile-soft-leave;
+    --skill-tile-enter-name: skill-tile-soft-enter;
+  }
+
+  @apply relative isolate block h-31 w-27 flex-none font-body;
+
+  &::before,
+  &::after {
+    @apply pointer-events-none absolute w-0.5;
+    content: "";
+    background-color: var(--skill-tile-side);
+    mask-image: repeating-linear-gradient(
+      180deg,
+      #000 0 --spacing(0.75),
+      transparent --spacing(0.75) --spacing(1.5)
+    );
+    opacity: var(--skill-tile-side-opacity);
+    transition-property: background-color, opacity;
+  }
+
+  &::before {
+    @apply top-13 left-1 h-7;
+  }
+
+  &::after {
+    @apply top-10 left-25.5 h-8;
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before,
+    &::after {
+      @apply transition-none;
+    }
+  }
+}
+
+@utility skill-tile-frame {
+  --skill-tile-line: color-mix(in oklab, var(--color-accent) 55%, transparent);
+  --skill-tile-fill-start: var(--color-base-300);
+  --skill-tile-fill-end: var(--color-base-300);
+  --skill-tile-glow: drop-shadow(0 0 0 transparent);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --skill-tile-line: color-mix(in oklab, var(--color-accent) 60%, transparent);
+    --skill-tile-fill-start: #ffffff;
+    --skill-tile-fill-end: #f6eefb;
+    --skill-tile-glow: drop-shadow(
+      0 --spacing(1.5) --spacing(4) color-mix(in oklab, var(--color-accent) 18%, transparent)
+    );
+  }
+
+  @apply pointer-events-none absolute inset-0 -z-1;
+  filter: var(--skill-tile-glow);
+  transition-property: filter;
+
+  &::before,
+  &::after {
+    @apply absolute;
+    content: "";
+    clip-path: var(--skill-tile-shape);
+  }
+
+  &::before {
+    inset: calc(var(--skill-tile-inset) - var(--skill-tile-border) / 2);
+    border-radius: var(--skill-tile-radius);
+    background-color: var(--skill-tile-line);
+    transition-property: inset, border-radius, background-color, clip-path;
+  }
+
+  &::after {
+    --skill-tile-fill-from: var(--skill-tile-fill-start);
+    --skill-tile-fill-to: var(--skill-tile-fill-end);
+
+    inset: calc(var(--skill-tile-inset) + var(--skill-tile-border) / 2);
+    border-radius: calc(var(--skill-tile-radius) - var(--skill-tile-border));
+    background-image: linear-gradient(
+      160deg,
+      var(--skill-tile-fill-from),
+      var(--skill-tile-fill-to)
+    );
+    transition-property:
+      inset, border-radius, clip-path, --skill-tile-fill-from, --skill-tile-fill-to;
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before,
+    &::after {
+      @apply transition-none;
+    }
+  }
+}
+
+@utility skill-tile-deco {
+  --skill-tile-mark-start: var(--color-accent);
+  --skill-tile-mark-middle: var(--color-accent);
+  --skill-tile-mark-end: var(--color-accent);
+  --skill-tile-mark-left: --spacing(16.5);
+  --skill-tile-mark-top: --spacing(1.375);
+  --skill-tile-mark-width: --spacing(7.5);
+  --skill-tile-mark-height: --spacing(0.75);
+  --skill-tile-mark-radius: 0rem;
+  --skill-tile-mark-rotate: 0deg;
+  --skill-tile-mark-opacity: 1;
+  --skill-tile-mark-mask: linear-gradient(
+    90deg,
+    #000 0 --spacing(3.5),
+    transparent --spacing(3.5) --spacing(4.75),
+    #000 --spacing(4.75)
+  );
+  --skill-tile-bar-left: --spacing(10.5);
+  --skill-tile-bar-top: --spacing(28.875);
+  --skill-tile-bar-width: --spacing(6);
+  --skill-tile-bar-radius: 0rem;
+  --skill-tile-bar-opacity: 1;
+  --skill-tile-bar-mask: repeating-linear-gradient(
+    90deg,
+    #000 0 --spacing(0.5),
+    transparent --spacing(0.5) --spacing(1)
+  );
+
+  :where([data-theme="cyber-sakura"]) & {
+    --skill-tile-mark-start: #ffe3f1;
+    --skill-tile-mark-middle: #f9a9d6;
+    --skill-tile-mark-end: #c9a6ff;
+    --skill-tile-mark-left: --spacing(20.5);
+    --skill-tile-mark-top: --spacing(3);
+    --skill-tile-mark-width: --spacing(3);
+    --skill-tile-mark-height: --spacing(2);
+    --skill-tile-mark-radius: 85% 8% 85% 8%;
+    --skill-tile-mark-rotate: 25deg;
+    --skill-tile-mark-opacity: 0.85;
+    --skill-tile-mark-mask: linear-gradient(#000 0 0);
+    --skill-tile-bar-left: --spacing(10);
+    --skill-tile-bar-top: --spacing(27.75);
+    --skill-tile-bar-width: --spacing(7);
+    --skill-tile-bar-radius: --spacing(0.75);
+    --skill-tile-bar-opacity: 0.7;
+    --skill-tile-bar-mask: linear-gradient(#000 0 0);
+  }
+
+  @apply pointer-events-none absolute inset-0;
+
+  &::before,
+  &::after {
+    @apply absolute;
+    content: "";
+  }
+
+  &::before {
+    --skill-tile-mark-from: var(--skill-tile-mark-start);
+    --skill-tile-mark-via: var(--skill-tile-mark-middle);
+    --skill-tile-mark-to: var(--skill-tile-mark-end);
+
+    left: var(--skill-tile-mark-left);
+    top: var(--skill-tile-mark-top);
+    width: var(--skill-tile-mark-width);
+    height: var(--skill-tile-mark-height);
+    border-radius: var(--skill-tile-mark-radius);
+    background-image: linear-gradient(
+      135deg,
+      var(--skill-tile-mark-from),
+      var(--skill-tile-mark-via) 55%,
+      var(--skill-tile-mark-to)
+    );
+    mask-image: var(--skill-tile-mark-mask);
+    opacity: var(--skill-tile-mark-opacity);
+    transform: rotate(var(--skill-tile-mark-rotate));
+    transition-property:
+      left, top, width, height, border-radius, opacity, transform, --skill-tile-mark-from,
+      --skill-tile-mark-via, --skill-tile-mark-to;
+  }
+
+  &::after {
+    @apply h-0.75;
+    left: var(--skill-tile-bar-left);
+    top: var(--skill-tile-bar-top);
+    width: var(--skill-tile-bar-width);
+    border-radius: var(--skill-tile-bar-radius);
+    background-color: var(--color-primary);
+    mask-image: var(--skill-tile-bar-mask);
+    opacity: var(--skill-tile-bar-opacity);
+    transition-property: left, top, width, border-radius, opacity, background-color;
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before,
+    &::after {
+      @apply transition-none;
+    }
+  }
+}
+
+@utility skill-tile-layer {
+  @apply absolute inset-0 flex flex-col items-center justify-center gap-3;
+  transform-origin: 50% 42%;
+}
+
+@utility skill-tile-enter {
+  animation: var(--skill-tile-enter-name) var(--skill-tile-duration) var(--skill-tile-timing) both;
+
+  @variant motion-reduce {
+    @apply animate-none;
+  }
+}
+
+@utility skill-tile-leave {
+  animation: var(--skill-tile-leave-name) var(--skill-tile-duration) var(--skill-tile-timing) both;
+
+  @variant motion-reduce {
+    @apply hidden animate-none;
+  }
+}
+
+@utility skill-tile-full {
+  --skill-tile-icon-size: --spacing(13);
+}
+
+@utility skill-tile-mono {
+  --skill-tile-badge-fill: var(--skill-tile-badge-mono);
+}
+
+@utility skill-tile-badge {
+  --skill-tile-badge-radius: 0rem;
+  --skill-tile-badge-cut: --spacing(3);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --skill-tile-badge-radius: 50%;
+    --skill-tile-badge-cut: 0rem;
+  }
+
+  @apply relative flex size-13 flex-none items-center justify-center overflow-hidden;
+  background-color: var(--skill-tile-badge-fill);
+  border-radius: var(--skill-tile-badge-radius);
+  clip-path: polygon(
+    var(--skill-tile-badge-cut) 0,
+    100% 0,
+    100% calc(100% - var(--skill-tile-badge-cut)),
+    calc(100% - var(--skill-tile-badge-cut)) 100%,
+    0 100%,
+    0 var(--skill-tile-badge-cut)
+  );
+  transition-property: background-color, border-radius, clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+@utility skill-tile-icon {
+  @apply block size-(--skill-tile-icon-size) object-contain;
+}
+
+@utility skill-tile-label {
+  @apply font-body font-normal tracking-[.02em] whitespace-nowrap text-base-content;
+  font-size: --spacing(3);
+  line-height: normal;
+}
+
+@utility skill-tile-fx {
+  @apply pointer-events-none absolute opacity-0;
+  inset: var(--skill-tile-inset);
+  clip-path: var(--skill-tile-shape);
+  mix-blend-mode: screen;
+  background-image:
+    linear-gradient(
+      180deg,
+      transparent 0 22%,
+      color-mix(in oklab, var(--color-primary) 55%, transparent) 22% 25%,
+      transparent 25% 57%,
+      color-mix(in oklab, var(--color-accent) 60%, transparent) 57% 59%,
+      transparent 59% 78%,
+      color-mix(in oklab, var(--color-secondary) 35%, transparent) 78% 79%,
+      transparent 79%
+    ),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0 --spacing(0.5),
+      color-mix(in oklab, var(--color-base-content) 7%, transparent) --spacing(0.5) --spacing(0.75)
+    );
+  background-size:
+    100% 100%,
+    100% --spacing(0.75);
+  animation: skill-tile-bars var(--skill-tile-duration) var(--skill-tile-timing) both;
+
+  :where([data-theme="cyber-sakura"]) & {
+    @apply inset-0 overflow-hidden;
+    clip-path: none;
+    mix-blend-mode: normal;
+    background-image: none;
+    border-radius: var(--skill-tile-radius);
+    animation: none;
+
+    &::before,
+    &::after {
+      @apply absolute inset-0 opacity-0;
+      content: "";
+    }
+
+    &::before {
+      background-image:
+        linear-gradient(
+          180deg,
+          transparent 0 30%,
+          color-mix(in oklab, var(--color-primary) 28%, transparent) 31% 33%,
+          transparent 34% 61%,
+          color-mix(in oklab, var(--color-secondary) 22%, transparent) 62% 63%,
+          transparent 64%
+        ),
+        repeating-linear-gradient(
+          180deg,
+          transparent 0 --spacing(0.75),
+          color-mix(in oklab, var(--color-accent) 10%, transparent) --spacing(0.75) --spacing(1)
+        );
+      background-size:
+        100% 100%,
+        100% --spacing(1);
+      animation: skill-tile-soft-bars var(--skill-tile-duration) var(--skill-tile-timing) both;
+    }
+
+    &::after {
+      background-image: linear-gradient(
+        105deg,
+        transparent 30%,
+        color-mix(in oklab, var(--color-primary) 15%, transparent) 42%,
+        color-mix(in oklab, var(--color-accent) 18%, transparent) 50%,
+        color-mix(in oklab, var(--color-secondary) 13%, transparent) 58%,
+        transparent 70%
+      );
+      background-size: 260% 100%;
+      animation: skill-tile-sheen var(--skill-tile-duration) var(--skill-tile-timing) both;
+    }
+  }
+
+  @variant motion-reduce {
+    @apply hidden animate-none;
+  }
+}
