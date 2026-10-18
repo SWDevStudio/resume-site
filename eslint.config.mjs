@@ -24,6 +24,16 @@ const tailwindRules = {
 export default withNuxt(
   prettier,
   {
+    name: "typescript/module-augmentation",
+    files: codeFiles,
+    rules: {
+      "@typescript-eslint/no-empty-object-type": [
+        "error",
+        { allowInterfaces: "with-single-extends" },
+      ],
+    },
+  },
+  {
     name: "stylistic/type-literals",
     files: codeFiles,
     plugins: { "@stylistic": stylistic },
