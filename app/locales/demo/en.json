@@ -1,0 +1,22 @@
+{
+  "title": "Language switch",
+  "lead": "Pick a language below: all visible text on the screen will fall apart into atoms, and once the backend replies it will gather again in the chosen language.",
+  "static": {
+    "heading": "Static text",
+    "paragraph": "This paragraph lives in the interface dictionary. Its translation is already in the browser, so all it has to do is wait until the cloud gathers into new words.",
+    "list": {
+      "first": "First list item",
+      "second": "Second list item",
+      "third": "Third list item"
+    }
+  },
+  "remote": {
+    "heading": "Backend reply",
+    "pending": "Request in flight…",
+    "language": "Reply language",
+    "delay": "Reply delay, ms"
+  },
+  "switch": {
+    "heading": "Interface language"
+  }
+}
