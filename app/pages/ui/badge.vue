@@ -27,7 +27,10 @@
           class="flex flex-col items-start gap-3"
         >
           <UiBadge>
-            <span class="status" :class="status.modifier" />
+            <span
+              class="status"
+              :class="status.modifier"
+            />
             {{ status.label }}
           </UiBadge>
           <figcaption>
