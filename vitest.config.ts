@@ -9,6 +9,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "~": fileURLToPath(new URL("./app", import.meta.url)),
+      "#components": fileURLToPath(new URL("./test/stubs/nuxt-components.ts", import.meta.url)),
     },
   },
   test: {
