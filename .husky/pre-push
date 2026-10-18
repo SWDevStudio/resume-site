@@ -1,2 +1,4 @@
+command -v git-lfs >/dev/null 2>&1 || { echo >&2 "git-lfs не найден в PATH: установите Git LFS (https://git-lfs.com)"; exit 2; }
+git lfs pre-push "$@"
 npm run format:check
 npm run lint
