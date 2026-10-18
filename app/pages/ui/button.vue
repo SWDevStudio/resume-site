@@ -10,7 +10,11 @@
           :key="variant.caption"
           class="flex flex-col items-start gap-3"
         >
-          <UiButton :class="variant.modifier" type="button">Projects</UiButton>
+          <UiButton
+            :class="variant.modifier"
+            type="button"
+            >Projects</UiButton
+          >
           <figcaption>
             <code class="text-xs text-brand-ink">{{ variant.caption }}</code>
           </figcaption>
@@ -21,8 +25,16 @@
     <div class="flex flex-col gap-6">
       <h2 class="text-sm tracking-[.3em] text-base-content/60 uppercase">Размеры</h2>
       <div class="flex flex-wrap items-end gap-x-6 gap-y-10">
-        <figure v-for="size in sizes" :key="size.caption" class="flex flex-col items-start gap-3">
-          <UiButton :class="size.modifier" type="button">{{ size.label }}</UiButton>
+        <figure
+          v-for="size in sizes"
+          :key="size.caption"
+          class="flex flex-col items-start gap-3"
+        >
+          <UiButton
+            :class="size.modifier"
+            type="button"
+            >{{ size.label }}</UiButton
+          >
           <figcaption>
             <code class="text-xs text-brand-ink">{{ size.caption }}</code>
           </figcaption>
@@ -34,13 +46,21 @@
       <h2 class="text-sm tracking-[.3em] text-base-content/60 uppercase">Состояния</h2>
       <div class="flex flex-wrap items-start gap-x-6 gap-y-10">
         <figure class="flex flex-col items-start gap-3">
-          <UiButton type="button" disabled>Send message</UiButton>
+          <UiButton
+            type="button"
+            disabled
+            >Send message</UiButton
+          >
           <figcaption>
             <code class="text-xs text-brand-ink">btn :disabled</code>
           </figcaption>
         </figure>
         <figure class="flex flex-col items-start gap-3">
-          <UiButton class="btn-disabled btn-primary" type="button">Send message</UiButton>
+          <UiButton
+            class="btn-disabled btn-primary"
+            type="button"
+            >Send message</UiButton
+          >
           <figcaption>
             <code class="text-xs text-brand-ink">btn btn-primary btn-disabled</code>
           </figcaption>
@@ -52,7 +72,10 @@
       <h2 class="text-sm tracking-[.3em] text-base-content/60 uppercase">Без рамки и иконки</h2>
       <div class="flex flex-wrap items-start gap-x-12 gap-y-10">
         <figure class="flex flex-col items-start gap-3">
-          <a class="btn btn-ghost" href="#">
+          <a
+            class="btn btn-ghost"
+            href="#"
+          >
             Live site
             <svg
               class="size-4"
@@ -70,7 +93,11 @@
           </figcaption>
         </figure>
         <figure class="flex flex-col items-start gap-3">
-          <a class="btn btn-link" href="#">Read case &lt;/&gt;</a>
+          <a
+            class="btn btn-link"
+            href="#"
+            >Read case &lt;/&gt;</a
+          >
           <figcaption>
             <code class="text-xs text-brand-ink">btn btn-link</code>
           </figcaption>
@@ -106,13 +133,20 @@
     <div class="flex flex-col gap-6">
       <h2 class="text-sm tracking-[.3em] text-base-content/60 uppercase">Во всю ширину</h2>
       <figure class="flex max-w-sm flex-col items-start gap-3">
-        <UiButton class="btn-block btn-primary" type="button">Send message</UiButton>
+        <UiButton
+          class="btn-block btn-primary"
+          type="button"
+          >Send message</UiButton
+        >
         <figcaption>
           <code class="text-xs text-brand-ink">btn btn-primary btn-block</code>
         </figcaption>
       </figure>
       <figure class="flex flex-col items-start gap-3">
-        <a class="btn btn-block btn-gradient" href="#">
+        <a
+          class="btn btn-block btn-gradient"
+          href="#"
+        >
           My latest projects
           <svg
             class="size-4"
