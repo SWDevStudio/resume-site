@@ -3,9 +3,20 @@
     "name": "English"
   },
   "nav": {
-    "catalog": "UI catalog"
+    "catalog": "UI catalog",
+    "home": "Home",
+    "about": "About",
+    "portfolio": "Portfolio",
+    "blog": "Blog",
+    "contact": "Contact"
   },
   "theme": {
     "toggle": "Switch theme"
+  },
+  "header": {
+    "nav": "Main navigation",
+    "menu": "Open menu",
+    "menuClose": "Close menu",
+    "language": "Language: {name}"
   }
 }
