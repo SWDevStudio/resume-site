@@ -1,0 +1,80 @@
+@utility textarea {
+  --textarea-bg: color-mix(in oklab, var(--color-base-100) 55%, transparent);
+  --textarea-line: color-mix(in oklab, var(--color-primary) 50%, transparent);
+  --textarea-line-focus: var(--color-primary);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --textarea-bg: rgb(255 255 255 / 85%);
+  }
+
+  @apply block h-30 w-full resize-none px-4.5 py-3.5 font-body text-sm leading-[normal] font-light text-base-content outline-hidden;
+  @apply placeholder:text-base-content/45;
+  border: --spacing(0.25) solid var(--textarea-line);
+  border-radius: var(--radius-field);
+  background-color: var(--textarea-bg);
+  clip-path: polygon(
+    var(--cut-field) 0,
+    100% 0,
+    100% calc(100% - var(--cut-field)),
+    calc(100% - var(--cut-field)) 100%,
+    0 100%,
+    0 var(--cut-field)
+  );
+  transition-property: color, background-color, border-color, border-radius, clip-path, opacity;
+
+  &::placeholder {
+    @apply transition-colors;
+  }
+
+  &::-webkit-scrollbar-track {
+    margin-block: max(var(--radius-field), var(--cut-field));
+  }
+
+  @variant focus {
+    border-color: var(--textarea-line-focus);
+  }
+
+  &:disabled {
+    @apply textarea-disabled;
+  }
+
+  @variant motion-reduce {
+    &,
+    &::placeholder {
+      @apply transition-none;
+    }
+  }
+}
+
+@utility textarea-field {
+  @apply flex min-w-0 flex-col gap-2;
+
+  & > label {
+    @apply text-sm leading-[normal] font-normal;
+  }
+
+  & > div {
+    transition-property: filter;
+
+    @variant focus-within {
+      filter: var(--glow-primary);
+    }
+
+    @variant motion-reduce {
+      @apply transition-none;
+    }
+  }
+
+  & > p {
+    @apply text-xs leading-[normal] text-error-ink;
+  }
+}
+
+@utility textarea-error {
+  --textarea-line: var(--color-error);
+  --textarea-line-focus: var(--color-error);
+}
+
+@utility textarea-disabled {
+  @apply btn-disabled;
+}

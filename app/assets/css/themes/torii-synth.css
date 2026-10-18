@@ -20,7 +20,15 @@
   --color-brand: var(--color-accent);
   --color-brand-ink: var(--color-accent-ink);
 
+  --color-info: oklch(78.2% 0.139 229.2);
+  --color-info-content: oklch(14.1% 0.007 285.5);
   --color-success: oklch(81.8% 0.174 160.5);
+  --color-success-content: oklch(14.1% 0.007 285.5);
+  --color-warning: oklch(72.4% 0.187 48.9);
+  --color-warning-content: oklch(14.1% 0.007 285.5);
+  --color-error: oklch(69.7% 0.198 12.9);
+  --color-error-content: oklch(14.1% 0.007 285.5);
+  --color-error-ink: #ff5c7a;
 
   --gradient-cta-from: #ff1e43;
   --gradient-cta-via: #dc0eaa;
@@ -39,7 +47,12 @@
     0 0 --spacing(1.5) color-mix(in oklch, var(--color-accent) 55%, transparent)
   );
 
+  --scrollbar-thumb: color-mix(in oklab, var(--color-primary) 60%, transparent);
+  --scrollbar-thumb-hover: var(--color-primary);
+  --scrollbar-track: color-mix(in oklab, var(--color-accent) 22%, transparent);
+
   --radius-selector: 0rem;
+  --radius-field: 0rem;
   --cut-selector: --spacing(1.5);
   --cut-field: --spacing(2);
 }

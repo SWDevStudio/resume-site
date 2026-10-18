@@ -5,8 +5,18 @@
     >
       <span class="font-head text-2xl">Sawa UI</span>
       <div class="flex items-center gap-8">
-        <NuxtLink v-if="isDev" class="btn btn-ghost" to="/ui">UI-каталог</NuxtLink>
-        <UiButton class="btn-sm" type="button" @click="toggle">Сменить тему</UiButton>
+        <NuxtLink
+          v-if="isDev"
+          class="btn btn-ghost"
+          to="/ui"
+          >UI-каталог</NuxtLink
+        >
+        <UiButton
+          class="btn-sm"
+          type="button"
+          @click="toggle"
+          >Сменить тему</UiButton
+        >
       </div>
     </header>
   </div>

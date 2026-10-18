@@ -1,0 +1,84 @@
+@utility checkbox {
+  --checkbox-radius: 0rem;
+  --checkbox-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='M1 5L4.5 8.5L11 1'/%3E%3C/svg%3E");
+  --checkbox-error-glow: drop-shadow(
+    0 0 --spacing(1.5) color-mix(in oklch, var(--color-error) 55%, transparent)
+  );
+
+  :where([data-theme="cyber-sakura"]) & {
+    --checkbox-radius: --spacing(1.5);
+    --checkbox-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 5L4.5 8.5L11 1'/%3E%3C/svg%3E");
+    --checkbox-error-glow: none;
+  }
+
+  --checkbox-color: var(--color-primary);
+  --checkbox-ink: var(--color-primary-content);
+  --checkbox-glow: var(--glow-primary);
+  --checkbox-ring: var(--color-primary-ink);
+
+  @apply relative inline-block size-5 shrink-0 cursor-pointer appearance-none;
+  @apply rounded-(--checkbox-radius) border-(--checkbox-color) bg-transparent;
+  border-width: --spacing(0.375);
+  outline-color: var(--checkbox-ring);
+  outline-offset: --spacing(0.5);
+  transition-property:
+    border-color, border-radius, background-color, outline-color, filter, opacity;
+
+  &::before {
+    @apply absolute inset-0 m-auto h-2.5 w-3 bg-(--checkbox-ink) opacity-0;
+    content: "";
+    mask-image: var(--checkbox-mark);
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    transition-property: background-color, opacity;
+  }
+
+  @variant checked {
+    @apply bg-(--checkbox-color);
+
+    &::before {
+      @apply opacity-100;
+    }
+  }
+
+  @variant focus-visible {
+    outline-style: solid;
+    outline-width: --spacing(0.5);
+    filter: var(--checkbox-glow);
+  }
+
+  &:disabled {
+    @apply checkbox-disabled;
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before {
+      @apply transition-none;
+    }
+  }
+}
+
+@utility checkbox-field {
+  @apply flex min-w-0 flex-col gap-2;
+
+  & > label {
+    @apply inline-flex cursor-pointer items-center gap-3 self-start text-sm leading-[normal] font-light;
+    @apply has-disabled:cursor-default has-disabled:text-base-content/40;
+  }
+
+  & > p {
+    @apply text-xs leading-[normal] text-error-ink;
+  }
+}
+
+@utility checkbox-error {
+  --checkbox-color: var(--color-error);
+  --checkbox-ink: var(--color-error-content);
+  --checkbox-glow: var(--checkbox-error-glow);
+  --checkbox-ring: var(--color-error);
+}
+
+@utility checkbox-disabled {
+  @apply btn-disabled;
+}

@@ -1,6 +1,7 @@
 import withNuxt from "./.nuxt/eslint.config.mjs";
 import prettier from "eslint-config-prettier/flat";
 import css from "@eslint/css";
+import stylistic from "@stylistic/eslint-plugin";
 import betterTailwindcss from "eslint-plugin-better-tailwindcss";
 import { tailwind4 } from "tailwind-csstree";
 
@@ -22,6 +23,17 @@ const tailwindRules = {
 
 export default withNuxt(
   prettier,
+  {
+    name: "stylistic/type-literals",
+    files: codeFiles,
+    plugins: { "@stylistic": stylistic },
+    rules: {
+      "@stylistic/object-curly-newline": [
+        "error",
+        { TSTypeLiteral: { minProperties: 2, consistent: true } },
+      ],
+    },
+  },
   {
     name: "tailwind/classes",
     files: codeFiles,

@@ -19,7 +19,15 @@
   --color-brand: var(--color-secondary);
   --color-brand-ink: var(--color-secondary-ink);
 
+  --color-info: oklch(78.2% 0.121 222.5);
+  --color-info-content: oklch(22.4% 0.065 298.7);
   --color-success: oklch(68.8% 0.152 156.7);
+  --color-success-content: oklch(25.8% 0.043 159.3);
+  --color-warning: oklch(77.9% 0.144 50.8);
+  --color-warning-content: oklch(22.4% 0.065 298.7);
+  --color-error: oklch(59% 0.195 23.7);
+  --color-error-content: oklch(100% 0 0);
+  --color-error-ink: #a7011e;
 
   --gradient-cta-from: #ff8fb8;
   --gradient-cta-via: #a57bff;
@@ -28,7 +36,12 @@
   --glow-primary: none;
   --glow-accent: none;
 
+  --scrollbar-thumb: color-mix(in oklab, var(--color-primary) 60%, transparent);
+  --scrollbar-thumb-hover: var(--color-primary);
+  --scrollbar-track: color-mix(in oklab, var(--color-accent) 22%, transparent);
+
   --radius-selector: 2rem;
+  --radius-field: --spacing(3.5);
   --cut-selector: 0rem;
   --cut-field: 0rem;
 }

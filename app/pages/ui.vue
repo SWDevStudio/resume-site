@@ -3,7 +3,11 @@
     <aside
       class="flex shrink-0 flex-col gap-6 border-b border-base-300 p-6 md:sticky md:top-0 md:h-screen md:w-60 md:border-r md:border-b-0 md:py-8"
     >
-      <NuxtLink class="font-head text-2xl" to="/ui">Sawa UI</NuxtLink>
+      <NuxtLink
+        class="font-head text-2xl"
+        to="/ui"
+        >Sawa UI</NuxtLink
+      >
       <nav class="flex flex-wrap gap-x-4 gap-y-2 md:flex-col">
         <NuxtLink
           v-for="item in items"
@@ -21,11 +25,21 @@
       <header
         class="sticky top-0 z-10 flex items-center justify-end bg-base-100/85 px-8 py-4 backdrop-blur-md"
       >
-        <UiButton class="btn-sm" type="button" @click="toggle">Сменить тему</UiButton>
+        <UiButton
+          class="btn-sm"
+          type="button"
+          @click="toggle"
+          >Сменить тему</UiButton
+        >
       </header>
 
       <main class="px-8 pt-8 pb-24">
-        <p v-if="route.name === 'ui'" class="text-base-content/60">Выберите компонент в меню.</p>
+        <p
+          v-if="route.name === 'ui'"
+          class="text-base-content/60"
+        >
+          Выберите компонент в меню.
+        </p>
         <NuxtPage />
       </main>
     </div>
