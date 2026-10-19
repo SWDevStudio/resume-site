@@ -170,7 +170,7 @@ describe("behavior", () => {
     setTheme("torii-synth");
   });
 
-  it("renders the heading, the cv button and three social links", async () => {
+  it("renders the heading, the cv button and four social links", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
     const hero = screen.container.querySelector<HTMLElement>(".home-hero")!;
     const parts = [...hero.querySelectorAll(".home-hero-title > span")].map((item) =>
@@ -187,6 +187,7 @@ describe("behavior", () => {
       "Telegram",
       "LinkedIn",
       "GitHub",
+      "YouTube",
     ]);
     expect(links.every((link) => link.getAttribute("href")?.startsWith("https://"))).toBe(true);
     expect(cta.classList.contains("btn")).toBe(true);

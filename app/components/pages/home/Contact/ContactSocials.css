@@ -97,3 +97,8 @@
   --home-contact-social-night: url("./media/social-github-torii-synth.webp");
   --home-contact-social-day: url("./media/social-github-cyber-sakura.webp");
 }
+
+.home-contact-social-youtube {
+  --home-contact-social-night: url("./media/social-youtube-torii-synth.webp");
+  --home-contact-social-day: url("./media/social-youtube-cyber-sakura.webp");
+}

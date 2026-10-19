@@ -81,3 +81,8 @@
   --home-hero-social-night: url("./media/social-github-torii-synth.webp");
   --home-hero-social-day: url("./media/social-github-cyber-sakura.webp");
 }
+
+.home-hero-social-youtube {
+  --home-hero-social-night: url("./media/social-youtube-torii-synth.webp");
+  --home-hero-social-day: url("./media/social-youtube-cyber-sakura.webp");
+}
