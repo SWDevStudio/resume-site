@@ -1,8 +1,5 @@
 <template>
-  <header
-    class="the-header"
-    :class="headerClass"
-  >
+  <header class="the-header">
     <div
       ref="barRef"
       class="the-header-bar container"
@@ -33,7 +30,6 @@
               <NuxtLinkLocale
                 class="the-header-link"
                 :to="link.to"
-                :aria-current="link.current"
               >
                 {{ link.label }}
               </NuxtLinkLocale>
@@ -78,15 +74,6 @@ import { NuxtLinkLocale } from "#components";
 import TheHeaderLangSwitch from "./TheHeaderLangSwitch.vue";
 import TheHeaderThemeSwitch from "./TheHeaderThemeSwitch.vue";
 
-const props = withDefaults(
-  defineProps<{
-    active?: "home" | "about" | "portfolio" | "blog" | "contact" | "none";
-    float?: boolean;
-    fixed?: boolean;
-  }>(),
-  { active: "none", float: false, fixed: false },
-);
-
 const items = [
   { key: "home", label: "nav.home", to: "/" },
   { key: "about", label: "nav.about", to: { path: "/", hash: "#about" } },
@@ -102,11 +89,6 @@ const barRef = ref<HTMLElement>();
 const langRef = ref<InstanceType<typeof TheHeaderLangSwitch>>();
 const [menuOpen, toggleMenu] = useToggle(false);
 
-const headerClass = computed(() => ({
-  "the-header-float": props.float && !props.fixed,
-  "the-header-fixed": props.fixed,
-}));
-
 const navClass = computed(() => ({ "the-header-nav-open": menuOpen.value }));
 
 const links = computed(() =>
@@ -114,7 +96,6 @@ const links = computed(() =>
     key: item.key,
     to: item.to,
     label: t(item.label),
-    current: item.key === props.active ? ("page" as const) : undefined,
   })),
 );
 

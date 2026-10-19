@@ -29,9 +29,6 @@ interface HeaderCase {
   name: string;
   width: string;
   locale?: Locale;
-  active?: "home" | "about" | "portfolio" | "blog" | "contact" | "none";
-  float?: boolean;
-  fixed?: boolean;
   underlay?: boolean;
   open?: "lang" | "menu";
   wrapper?: string;
@@ -52,84 +49,57 @@ const viewports: Record<string, Viewport> = {
 const themes = ["torii-synth", "cyber-sakura"];
 
 const cases: HeaderCase[] = [
-  { name: "desktop", width: "w-360", active: "home" },
-  { name: "desktop-blog", width: "w-360", active: "blog" },
-  { name: "desktop-en", width: "w-360", locale: "en", active: "contact" },
-  { name: "desktop-lang-open", width: "w-360", active: "home", open: "lang", wrapper: "pb-40" },
-  { name: "desktop-float", width: "w-360", active: "home", float: true, wrapper: "h-32" },
+  { name: "desktop", width: "w-360", underlay: true },
+  { name: "desktop-blog", width: "w-360", underlay: true },
+  { name: "desktop-en", width: "w-360", locale: "en", underlay: true },
   {
-    name: "desktop-fixed",
+    name: "desktop-lang-open",
     width: "w-360",
-    active: "home",
-    fixed: true,
-    underlay: true,
-    wrapper: "h-48 transform-gpu",
-  },
-  {
-    name: "desktop-fixed-lang-open",
-    width: "w-360",
-    active: "home",
-    fixed: true,
     underlay: true,
     open: "lang",
-    wrapper: "h-72 transform-gpu",
+    wrapper: "h-72",
   },
-  { name: "tablet", width: "w-192", active: "home" },
-  { name: "tablet-lang-open", width: "w-192", active: "home", open: "lang", wrapper: "pb-40" },
-  { name: "mobile", width: "w-97.5", active: "home" },
+  { name: "tablet", width: "w-192", underlay: true },
+  {
+    name: "tablet-lang-open",
+    width: "w-192",
+    underlay: true,
+    open: "lang",
+    wrapper: "h-72",
+  },
+  { name: "mobile", width: "w-97.5", underlay: true },
   {
     name: "mobile-menu-open",
     width: "w-97.5",
-    active: "portfolio",
-    open: "menu",
-    wrapper: "pb-80",
-  },
-  { name: "mobile-lang-open", width: "w-97.5", active: "home", open: "lang", wrapper: "pb-40" },
-  {
-    name: "mobile-fixed",
-    width: "w-97.5",
-    active: "home",
-    fixed: true,
-    underlay: true,
-    wrapper: "h-48 transform-gpu",
-  },
-  {
-    name: "mobile-fixed-menu-open",
-    width: "w-97.5",
-    active: "portfolio",
-    fixed: true,
     underlay: true,
     open: "menu",
-    wrapper: "h-96 transform-gpu",
+    wrapper: "h-96",
+  },
+  {
+    name: "mobile-lang-open",
+    width: "w-97.5",
+    underlay: true,
+    open: "lang",
+    wrapper: "h-72",
   },
 ];
 
 const switchCases: HeaderCase[] = [
-  { name: "desktop", width: "w-360", active: "home" },
-  { name: "desktop-lang-open", width: "w-360", active: "home", open: "lang", wrapper: "pb-40" },
-  { name: "mobile", width: "w-97.5", active: "home" },
+  { name: "desktop", width: "w-360", underlay: true },
+  {
+    name: "desktop-lang-open",
+    width: "w-360",
+    underlay: true,
+    open: "lang",
+    wrapper: "h-72",
+  },
+  { name: "mobile", width: "w-97.5", underlay: true },
   {
     name: "mobile-menu-open",
     width: "w-97.5",
-    active: "portfolio",
+    underlay: true,
     open: "menu",
-    wrapper: "pb-80",
-  },
-  {
-    name: "desktop-fixed",
-    width: "w-360",
-    active: "home",
-    fixed: true,
-    underlay: true,
-    wrapper: "h-48 transform-gpu",
-  },
-  {
-    name: "mobile-fixed",
-    width: "w-97.5",
-    active: "home",
-    fixed: true,
-    underlay: true,
-    wrapper: "h-48 transform-gpu",
+    wrapper: "h-96",
   },
 ];
 
@@ -172,7 +142,13 @@ async function renderCase(item: HeaderCase) {
     () =>
       h(
         "div",
-        { class: ["relative bg-base-100 font-body text-base-content", item.width, item.wrapper] },
+        {
+          class: [
+            "relative transform-gpu bg-base-100 font-body text-base-content",
+            item.width,
+            item.wrapper ?? "h-48",
+          ],
+        },
         [
           item.underlay
             ? h("div", { class: "absolute inset-0 flex" }, [
@@ -181,7 +157,7 @@ async function renderCase(item: HeaderCase) {
                 h("div", { class: "grow bg-accent" }),
               ])
             : null,
-          h(TheHeader, { active: item.active, float: item.float, fixed: item.fixed }),
+          h(TheHeader),
           item.reference
             ? h("div", { class: "container" }, h("div", { class: "container-probe h-4" }))
             : null,
@@ -235,15 +211,6 @@ describe("behavior", () => {
 
   afterEach(() => {
     finishAnimations();
-  });
-
-  it("marks the active link with aria-current", async () => {
-    const screen = await renderCase({ name: "x", width: "w-360", active: "blog" });
-    const links = [...screen.container.querySelectorAll(".the-header-link")];
-
-    expect(links).toHaveLength(5);
-    expect(links.filter((link) => link.getAttribute("aria-current") === "page")).toHaveLength(1);
-    expect(links[3]?.getAttribute("aria-current")).toBe("page");
   });
 
   it("opens and closes the mobile menu", async () => {
@@ -514,18 +481,10 @@ describe("behavior", () => {
     });
   });
 
-  it("lets fixed win over float", async () => {
-    const screen = await renderCase({
-      name: "x",
-      width: "w-360",
-      float: true,
-      fixed: true,
-      wrapper: "h-32 transform-gpu",
-    });
+  it("fixes the header to the top of the page", async () => {
+    const screen = await renderCase({ name: "x", width: "w-360" });
     const header = screen.container.querySelector<HTMLElement>(".the-header")!;
 
-    expect(header.classList.contains("the-header-fixed")).toBe(true);
-    expect(header.classList.contains("the-header-float")).toBe(false);
     expect(getComputedStyle(header).position).toBe("fixed");
     expect(getComputedStyle(header).containerType).toBe("inline-size");
   });
@@ -575,8 +534,8 @@ describe.each(themes)("%s menu transition", (theme) => {
     const screen = await renderCase({
       name: "mobile-menu-mid",
       width: "w-97.5",
-      active: "portfolio",
-      wrapper: "pb-80",
+      underlay: true,
+      wrapper: "h-96",
     });
     screen.container.getBoundingClientRect();
     screen.container.querySelector<HTMLElement>(".the-header-burger")!.click();
