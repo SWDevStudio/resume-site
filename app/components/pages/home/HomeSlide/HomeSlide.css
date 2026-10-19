@@ -1,0 +1,57 @@
+@reference "~/assets/css/main.css";
+
+.home-slide {
+  @apply relative isolate flex flex-col;
+  min-height: max(100svh, var(--home-slide-height, --spacing(225)));
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.home-slide-short {
+  min-height: 0;
+  scroll-snap-align: end;
+}
+
+.home-slide-body {
+  @apply relative flex w-full flex-1 flex-col;
+  padding-top: var(--home-header-offset);
+  padding-bottom: --spacing(16);
+
+  @variant md {
+    padding-bottom: --spacing(20);
+  }
+
+  @variant lg {
+    padding-bottom: --spacing(25);
+  }
+}
+
+:root:has(.home-slide) {
+  --home-header-height: 0rem;
+  --home-header-offset: --spacing(23);
+  scroll-padding-top: var(--home-header-height);
+
+  @variant md {
+    --home-header-offset: --spacing(23.5);
+  }
+
+  @variant lg {
+    --home-header-offset: --spacing(27.5);
+  }
+
+  @variant motion-safe {
+    scroll-behavior: smooth;
+  }
+}
+
+:root:has(.home-slide) .the-header {
+  @variant lg {
+    @apply absolute bg-transparent backdrop-blur-none;
+  }
+}
+
+@media (width >= theme(--breakpoint-lg)) and (height >= 50rem) {
+  :root:has(.home-slide) {
+    scroll-snap-type: y mandatory;
+  }
+}
