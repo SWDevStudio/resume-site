@@ -18,5 +18,18 @@
     "menu": "Open menu",
     "menuClose": "Close menu",
     "language": "Language: {name}"
+  },
+  "footer": {
+    "tagline": "Fullstack developer · fast, thoughtful web products",
+    "navLabel": "Footer",
+    "nav": {
+      "home": "Home",
+      "about": "About",
+      "skills": "Skills",
+      "projects": "Projects",
+      "contact": "Contact"
+    },
+    "copyright": "© {year} Michael · SW-DEV. All rights reserved.",
+    "top": "Back to top"
   }
 }
