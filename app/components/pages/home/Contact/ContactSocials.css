@@ -1,0 +1,99 @@
+@reference "~/assets/css/main.css";
+
+.home-contact-socials {
+  --home-contact-social-size: --spacing(12);
+  --home-contact-social-icon: --spacing(7.5);
+  --home-contact-social-gap: --spacing(3);
+
+  @apply flex;
+  gap: var(--home-contact-social-gap);
+}
+
+.home-contact-social {
+  --home-contact-social-line: color-mix(in oklab, var(--color-primary) 45%, transparent);
+  --home-contact-social-fill: color-mix(in oklab, var(--color-base-300) 90%, transparent);
+  --home-contact-social-cut: --spacing(2);
+  --home-contact-social-radius: 0rem;
+  --home-contact-social-night-opacity: 1;
+  --home-contact-social-day-opacity: 0;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-contact-social-line: color-mix(in oklab, var(--color-accent) 60%, transparent);
+    --home-contact-social-fill: rgb(255 255 255 / 80%);
+    --home-contact-social-cut: 0rem;
+    --home-contact-social-radius: 50%;
+    --home-contact-social-night-opacity: 0;
+    --home-contact-social-day-opacity: 1;
+  }
+
+  @apply relative block shrink-0;
+  width: var(--home-contact-social-size);
+  height: var(--home-contact-social-size);
+  border: --spacing(0.25) solid var(--home-contact-social-line);
+  border-radius: var(--home-contact-social-radius);
+  background-color: var(--home-contact-social-fill);
+  clip-path: polygon(
+    var(--home-contact-social-cut) 0,
+    100% 0,
+    100% calc(100% - var(--home-contact-social-cut)),
+    calc(100% - var(--home-contact-social-cut)) 100%,
+    0 100%,
+    0 var(--home-contact-social-cut)
+  );
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property:
+    border-color, background-color, border-radius, clip-path, transform, outline-color;
+
+  &::before,
+  &::after {
+    @apply absolute inset-0 m-auto bg-center bg-no-repeat;
+    content: "";
+    width: var(--home-contact-social-icon);
+    height: var(--home-contact-social-icon);
+    background-size: contain;
+    transition-property: opacity;
+  }
+
+  &::before {
+    background-image: var(--home-contact-social-night);
+    opacity: var(--home-contact-social-night-opacity);
+  }
+
+  &::after {
+    background-image: var(--home-contact-social-day);
+    opacity: var(--home-contact-social-day-opacity);
+  }
+
+  @variant hover {
+    border-color: var(--color-primary);
+    transform: scale(1.08);
+  }
+
+  @variant focus-visible {
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before,
+    &::after {
+      @apply transition-none;
+    }
+  }
+}
+
+.home-contact-social-telegram {
+  --home-contact-social-night: url("./media/social-telegram-torii-synth.webp");
+  --home-contact-social-day: url("./media/social-telegram-cyber-sakura.webp");
+}
+
+.home-contact-social-linkedin {
+  --home-contact-social-night: url("./media/social-linkedin-torii-synth.webp");
+  --home-contact-social-day: url("./media/social-linkedin-cyber-sakura.webp");
+}
+
+.home-contact-social-github {
+  --home-contact-social-night: url("./media/social-github-torii-synth.webp");
+  --home-contact-social-day: url("./media/social-github-cyber-sakura.webp");
+}
