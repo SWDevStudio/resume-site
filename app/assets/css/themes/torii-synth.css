@@ -53,6 +53,8 @@
 
   --radius-selector: 0rem;
   --radius-field: 0rem;
+  --radius-box: 0rem;
   --cut-selector: --spacing(1.5);
   --cut-field: --spacing(2);
+  --cut-box: --spacing(4.5);
 }
