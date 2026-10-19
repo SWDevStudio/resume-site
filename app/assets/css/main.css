@@ -9,6 +9,8 @@
 @import "./components/radio.css";
 @import "./components/toggle.css";
 @import "./components/container.css";
+@import "./components/alert.css";
+@import "./components/toast.css";
 @import "./themes/torii-synth.css";
 @import "./themes/cyber-sakura.css";
 

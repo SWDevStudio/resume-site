@@ -1,0 +1,44 @@
+@utility toast {
+  --toast-width: --spacing(95);
+  --toast-gutter: --spacing(4);
+
+  @apply pointer-events-none fixed z-50 flex flex-col gap-3 font-body font-light text-base-content;
+  width: min(var(--toast-width), calc(100% - var(--toast-gutter) * 2));
+  inset-inline: auto var(--toast-gutter);
+  inset-block: auto var(--toast-gutter);
+  margin-inline: 0rem;
+  margin-block: 0rem;
+
+  & > * {
+    @apply pointer-events-auto;
+  }
+}
+
+@utility toast-start {
+  inset-inline: var(--toast-gutter) auto;
+  margin-inline: 0rem;
+}
+
+@utility toast-center {
+  inset-inline: 0rem;
+  margin-inline: auto;
+}
+
+@utility toast-end {
+  inset-inline: auto var(--toast-gutter);
+  margin-inline: 0rem;
+}
+
+@utility toast-top {
+  inset-block: var(--toast-gutter) auto;
+}
+
+@utility toast-middle {
+  @apply h-fit;
+  inset-block: 0rem;
+  margin-block: auto;
+}
+
+@utility toast-bottom {
+  inset-block: auto var(--toast-gutter);
+}
