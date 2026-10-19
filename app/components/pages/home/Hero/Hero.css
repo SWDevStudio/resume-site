@@ -132,6 +132,13 @@
   @apply overflow-hidden;
 }
 
+.home-hero-paused,
+.home-hero-paused *,
+.home-hero-paused ::before,
+.home-hero-paused ::after {
+  animation-play-state: paused !important;
+}
+
 .home-hero-night,
 .home-hero-day {
   @apply pointer-events-none absolute inset-0;

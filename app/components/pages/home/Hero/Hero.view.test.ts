@@ -72,7 +72,7 @@ function createApp(locale: Locale) {
   return createI18n({ legacy: false, locale, messages: { ru, en } });
 }
 
-async function renderCase(item: Pick<HeroCase, "width" | "height" | "locale">) {
+async function renderCase(item: Pick<HeroCase, "width" | "height" | "locale">, loaded = true) {
   await page.viewport(item.width, item.height);
   const locale = item.locale ?? "en";
   document.documentElement.lang = locale;
@@ -81,7 +81,21 @@ async function renderCase(item: Pick<HeroCase, "width" | "height" | "locale">) {
     { global: { plugins: [createApp(locale)] } },
   );
   screen.container.getBoundingClientRect();
+  if (loaded) {
+    await expect
+      .poll(() => screen.container.querySelectorAll(".home-hero-night, .home-hero-day").length)
+      .toBe(2);
+  }
   return screen;
+}
+
+async function whileLoading(run: () => Promise<void>) {
+  Object.defineProperty(document, "readyState", { configurable: true, get: () => "loading" });
+  try {
+    await run();
+  } finally {
+    Reflect.deleteProperty(document, "readyState");
+  }
 }
 
 function box(screen: Awaited<ReturnType<typeof renderCase>>, selector: string) {
@@ -378,6 +392,48 @@ describe("behavior", () => {
     });
   });
 
+  it("mounts the inactive layer only after the page has loaded", async () => {
+    document.documentElement.dataset.theme = "torii-synth";
+    await whileLoading(async () => {
+      const screen = await renderCase({ width: 1440, height: 900 }, false);
+      await nextTick();
+
+      expect(screen.container.querySelector(".home-hero-night")).not.toBeNull();
+      expect(screen.container.querySelector(".home-hero-day")).toBeNull();
+      expect(running("home-hero-wind")).toHaveLength(0);
+
+      window.dispatchEvent(new Event("load"));
+      await expect.poll(() => screen.container.querySelector(".home-hero-day")).not.toBeNull();
+      expect(running("home-hero-wind")).toHaveLength(30);
+    });
+  });
+
+  it("mounts the layer of a theme switched on before the page has loaded", async () => {
+    document.documentElement.dataset.theme = "torii-synth";
+    await whileLoading(async () => {
+      const screen = await renderCase({ width: 1440, height: 900 }, false);
+      document.documentElement.dataset.theme = "cyber-sakura";
+
+      await expect.poll(() => screen.container.querySelector(".home-hero-day")).not.toBeNull();
+      expect(screen.container.querySelector(".home-hero-night")).not.toBeNull();
+    });
+  });
+
+  it("pauses the decor of the inactive layer", async () => {
+    document.documentElement.dataset.theme = "torii-synth";
+    await renderCase({ width: 1440, height: 900 });
+
+    expect(running("home-hero-firefly").every((item) => item.playState === "running")).toBe(true);
+    expect(running("home-hero-wind").every((item) => item.playState === "paused")).toBe(true);
+    expect(running("home-hero-flip").every((item) => item.playState === "paused")).toBe(true);
+
+    document.documentElement.dataset.theme = "cyber-sakura";
+    await expect
+      .poll(() => running("home-hero-wind").every((item) => item.playState === "running"))
+      .toBe(true);
+    expect(running("home-hero-firefly").every((item) => item.playState === "paused")).toBe(true);
+  });
+
   it("renders on the server", async () => {
     const app = createSSRApp({ render: () => h(Hero) });
     app.use(createApp("en"));
@@ -387,6 +443,8 @@ describe("behavior", () => {
     expect(html).toContain("home-hero-title");
     expect(html).toContain("Download my CV");
     expect(html.match(/home-hero-firefly /g)).toHaveLength(18);
-    expect(html.match(/home-hero-petal-leaf/g)).toHaveLength(30);
+    expect(html).toContain("home-hero-night");
+    expect(html).not.toContain("home-hero-day");
+    expect(html).not.toContain("home-hero-petal-leaf");
   });
 });
