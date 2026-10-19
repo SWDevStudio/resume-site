@@ -1,0 +1,40 @@
+@reference "~/assets/css/main.css";
+
+.the-footer-top {
+  @apply inline-flex items-center tracking-[.2em] text-primary-ink uppercase no-underline;
+  gap: --spacing(2.5);
+  min-height: --spacing(11);
+  font-size: --spacing(3);
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property: color, outline-color;
+
+  @variant focus-visible {
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.the-footer-top-icon {
+  @apply h-auto shrink-0;
+  width: --spacing(3);
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  transition-property: transform;
+
+  :where([data-theme="cyber-sakura"]) & {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .the-footer-top:hover & {
+    transform: translateY(--spacing(-0.5));
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}

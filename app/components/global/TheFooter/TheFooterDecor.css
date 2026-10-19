@@ -1,0 +1,113 @@
+@reference "~/assets/css/main.css";
+
+@property --the-footer-line-edge {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --the-footer-line-mid {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.the-footer-decor {
+  @apply pointer-events-none absolute inset-0 overflow-hidden;
+}
+
+.the-footer-line {
+  --the-footer-line-edge: var(--color-primary);
+  --the-footer-line-mid: var(--color-secondary);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --the-footer-line-edge: var(--color-secondary);
+    --the-footer-line-mid: var(--color-primary);
+  }
+
+  @apply absolute inset-x-0 top-0;
+  height: --spacing(0.5);
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    var(--the-footer-line-edge) 20%,
+    var(--the-footer-line-mid) 50%,
+    var(--the-footer-line-edge) 80%,
+    transparent
+  );
+  transition-property: --the-footer-line-edge, --the-footer-line-mid;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.the-footer-day {
+  @apply absolute inset-0;
+  opacity: var(--the-footer-day);
+  visibility: var(--the-footer-day-visibility);
+  transition-property: opacity, visibility;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.the-footer-petal {
+  @apply absolute opacity-80;
+  top: var(--the-footer-petal-top);
+  left: var(--the-footer-petal-left);
+  width: var(--the-footer-petal-width);
+  height: var(--the-footer-petal-height);
+  border-radius: 85% 8% 85% 8%;
+  background-image: linear-gradient(135deg, #ffe3f1, #f9a9d6 55%, #c9a6ff);
+  transform: rotate(var(--the-footer-petal-turn));
+}
+
+.the-footer-petal:nth-child(1) {
+  --the-footer-petal-left: 6%;
+  --the-footer-petal-top: --spacing(15);
+  --the-footer-petal-width: --spacing(3.5);
+  --the-footer-petal-height: --spacing(2.25);
+  --the-footer-petal-turn: 20deg;
+}
+
+.the-footer-petal:nth-child(2) {
+  --the-footer-petal-left: 14%;
+  --the-footer-petal-top: --spacing(50);
+  --the-footer-petal-width: --spacing(2.5);
+  --the-footer-petal-height: --spacing(1.5);
+  --the-footer-petal-turn: -30deg;
+}
+
+.the-footer-petal:nth-child(3) {
+  --the-footer-petal-left: 88%;
+  --the-footer-petal-top: --spacing(10);
+  --the-footer-petal-width: --spacing(4);
+  --the-footer-petal-height: --spacing(2.5);
+  --the-footer-petal-turn: 60deg;
+}
+
+.the-footer-petal:nth-child(4) {
+  --the-footer-petal-left: 94%;
+  --the-footer-petal-top: --spacing(42.5);
+  --the-footer-petal-width: --spacing(2.75);
+  --the-footer-petal-height: --spacing(1.75);
+  --the-footer-petal-turn: 110deg;
+}
+
+.the-footer-petal:nth-child(5) {
+  --the-footer-petal-left: 72%;
+  --the-footer-petal-top: --spacing(57.5);
+  --the-footer-petal-width: --spacing(2.25);
+  --the-footer-petal-height: --spacing(1.25);
+  --the-footer-petal-turn: -15deg;
+}
+
+.the-footer-petal:nth-child(6) {
+  --the-footer-petal-left: 30%;
+  --the-footer-petal-top: --spacing(62.5);
+  --the-footer-petal-width: --spacing(3);
+  --the-footer-petal-height: --spacing(1.75);
+  --the-footer-petal-turn: 40deg;
+}

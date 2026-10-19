@@ -1,0 +1,39 @@
+@reference "~/assets/css/main.css";
+
+.the-footer-brand {
+  @apply flex flex-col;
+  gap: --spacing(2.5);
+}
+
+.the-footer-logo {
+  --the-footer-logo-ink: var(--color-primary-ink);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --the-footer-logo-ink: var(--color-base-content);
+  }
+
+  @apply self-start font-normal no-underline;
+  font-size: --spacing(6);
+  letter-spacing: --spacing(0.5);
+  color: var(--the-footer-logo-ink);
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property: color, outline-color;
+
+  & > .the-footer-logo-dash {
+    @apply text-primary;
+  }
+
+  @variant focus-visible {
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.the-footer-tagline {
+  @apply tracking-[.04em] text-base-content/60;
+  font-size: --spacing(3.5);
+}

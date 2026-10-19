@@ -1,0 +1,58 @@
+@reference "~/assets/css/main.css";
+
+.the-footer {
+  --the-footer-day: 0;
+  --the-footer-day-visibility: hidden;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --the-footer-day: 1;
+    --the-footer-day-visibility: visible;
+  }
+
+  @apply relative isolate overflow-hidden bg-base-100 leading-[normal] font-light;
+  scroll-snap-align: end;
+  scroll-snap-stop: always;
+}
+
+.the-footer-body {
+  @apply relative w-full;
+  padding-top: --spacing(12);
+  padding-bottom: --spacing(7);
+
+  @variant md {
+    padding-top: --spacing(14);
+    padding-bottom: --spacing(8);
+  }
+
+  @variant lg {
+    padding-top: --spacing(16);
+    padding-bottom: --spacing(9);
+  }
+}
+
+.the-footer-main {
+  @apply flex flex-col;
+  gap: --spacing(10);
+}
+
+.the-footer-row {
+  @apply flex flex-wrap items-center justify-between;
+  gap: --spacing(7) --spacing(12);
+}
+
+.the-footer .the-footer-socials {
+  --home-contact-social-size: --spacing(11);
+  --home-contact-social-icon: --spacing(6.5);
+  --home-contact-social-gap: --spacing(2.5);
+}
+
+.the-footer-rule {
+  @apply bg-base-content/12;
+  height: --spacing(0.25);
+}
+
+.the-footer-bottom {
+  @apply flex flex-wrap items-center justify-between tracking-[.08em] text-base-content/60;
+  gap: --spacing(4);
+  font-size: --spacing(3);
+}
