@@ -51,9 +51,11 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { NuxtLinkLocale, NuxtPage } from "#components";
-import { useRoute, useRouteBaseName, useRouter } from "#imports";
+import { definePageMeta, useRoute, useRouteBaseName, useRouter } from "#imports";
 import UiButton from "~/components/ui/UiButton/UiButton.vue";
 import { useTheme } from "~/composables/useTheme";
+
+definePageMeta({ layout: false });
 
 const { toggle } = useTheme();
 const route = useRoute();

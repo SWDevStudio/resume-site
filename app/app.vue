@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NuxtPage, NuxtRouteAnnouncer } from "#components";
+import { NuxtLayout, NuxtPage, NuxtRouteAnnouncer } from "#components";
 import { useHead } from "#imports";
 import { useLocale } from "~/composables/useLocale";
 import { useTheme } from "~/composables/useTheme";
@@ -12,6 +12,8 @@ useHead({ htmlAttrs: { lang: locale } });
 <template>
   <div class="min-h-screen bg-base-100">
     <NuxtRouteAnnouncer />
-    <NuxtPage />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
   </div>
 </template>
