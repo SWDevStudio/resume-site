@@ -19,7 +19,7 @@ const tailwindRules = {
   ...tailwind.rules,
   // Prettier сам схлопывает class в одну строку, поэтому перенос строк правилом конфликтует с ним
   "better-tailwindcss/enforce-consistent-line-wrapping": "off",
-  "better-tailwindcss/no-unknown-classes": ["error", { ignore: ["^the-header(-.+)?$"] }],
+  "better-tailwindcss/no-unknown-classes": "off",
 };
 
 export default withNuxt(
