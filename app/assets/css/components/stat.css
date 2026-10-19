@@ -1,0 +1,30 @@
+@utility stats {
+  @apply flex flex-wrap gap-7;
+}
+
+@utility stat {
+  --stat-ink: var(--color-primary-ink);
+
+  @apply flex flex-col gap-1;
+}
+
+@utility stat-primary {
+  --stat-ink: var(--color-primary-ink);
+}
+
+@utility stat-secondary {
+  --stat-ink: var(--color-secondary-ink);
+}
+
+@utility stat-accent {
+  --stat-ink: var(--color-accent-ink);
+}
+
+@utility stat-value {
+  @apply font-head leading-[normal] font-normal text-(--stat-ink);
+  font-size: --spacing(10);
+}
+
+@utility stat-title {
+  @apply text-xs tracking-[.14em] text-base-content/66;
+}
