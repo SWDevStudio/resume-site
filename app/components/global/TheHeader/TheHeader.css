@@ -49,8 +49,13 @@
   --the-header-muted: color-mix(in oklab, var(--color-base-content) 72%, transparent);
   --the-header-item-tint: color-mix(in oklab, var(--color-primary) 10%, transparent);
   --the-header-burger-border: --spacing(0.5);
+  --the-header-blur: --spacing(3);
 
-  @apply fixed inset-x-0 top-0 isolate z-50 bg-base-100/85 font-body font-light text-base-content backdrop-blur-md;
+  @variant lg {
+    --the-header-blur: --spacing(0.5);
+  }
+
+  @apply fixed inset-x-0 top-0 isolate z-50 bg-base-100/85 font-body font-light text-base-content backdrop-blur-(--the-header-blur);
   container-type: inline-size;
 }
 
@@ -69,7 +74,7 @@
 
   @container (width >= theme(--breakpoint-lg)) {
     column-gap: --spacing(10);
-    padding-block: --spacing(10);
+    padding-block: --spacing(5);
   }
 }
 

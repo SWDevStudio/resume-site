@@ -44,12 +44,6 @@
   }
 }
 
-:root:has(.home-slide) .the-header {
-  @variant lg {
-    @apply absolute bg-transparent backdrop-blur-none;
-  }
-}
-
 @media (width >= theme(--breakpoint-lg)) and (height >= 50rem) {
   :root:has(.home-slide) {
     scroll-snap-type: y mandatory;
