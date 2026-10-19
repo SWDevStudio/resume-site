@@ -1,0 +1,222 @@
+@reference "~/assets/css/main.css";
+
+.home-about-decor {
+  --home-about-glow-a-left: calc(50% - --spacing(47.5));
+  --home-about-glow-a-top: auto;
+  --home-about-glow-a-bottom: --spacing(10);
+  --home-about-glow-a-size: --spacing(95);
+  --home-about-glow-b-left: 0%;
+  --home-about-glow-b-top: --spacing(65);
+  --home-about-glow-b-size: --spacing(75);
+  --home-about-pattern-left: auto;
+  --home-about-pattern-right: --spacing(1.5);
+  --home-about-pattern-top: auto;
+  --home-about-pattern-bottom: --spacing(6);
+  --home-about-pattern-width: --spacing(60);
+  --home-about-pattern-height: --spacing(32.5);
+  --home-about-crane-left: auto;
+  --home-about-crane-right: --spacing(5);
+  --home-about-crane-top: --spacing(3);
+
+  @variant md {
+    --home-about-glow-a-left: calc(50% - --spacing(75));
+    --home-about-glow-a-top: --spacing(100);
+    --home-about-glow-a-bottom: auto;
+    --home-about-glow-a-size: --spacing(150);
+    --home-about-glow-b-top: --spacing(15);
+    --home-about-glow-b-size: --spacing(95);
+    --home-about-pattern-left: --spacing(5);
+    --home-about-pattern-right: auto;
+    --home-about-pattern-bottom: --spacing(12.5);
+    --home-about-pattern-width: --spacing(80);
+    --home-about-pattern-height: --spacing(42.5);
+    --home-about-crane-right: --spacing(9);
+    --home-about-crane-top: --spacing(8.5);
+  }
+
+  @variant lg {
+    --home-about-glow-a-left: calc(50% + --spacing(10));
+    --home-about-glow-a-top: --spacing(30);
+    --home-about-glow-a-size: --spacing(165);
+    --home-about-glow-b-left: calc(50% - --spacing(175));
+    --home-about-glow-b-top: --spacing(107.5);
+    --home-about-glow-b-size: --spacing(110);
+    --home-about-pattern-left: calc(50% - --spacing(165));
+    --home-about-pattern-top: --spacing(157.5);
+    --home-about-pattern-bottom: auto;
+    --home-about-pattern-width: --spacing(150);
+    --home-about-pattern-height: --spacing(62.5);
+    --home-about-crane-top: --spacing(6.5);
+  }
+
+  @apply pointer-events-none absolute inset-0 overflow-hidden;
+}
+
+.home-about-night,
+.home-about-day {
+  @apply absolute inset-0;
+  transition-property: opacity, visibility;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-about-night {
+  --home-about-glow-a-color: 191 0 255;
+  --home-about-glow-b-color: 255 30 67;
+  --home-about-glow-a-opacity: 0.288;
+  --home-about-glow-b-opacity: 0.192;
+  --home-about-pattern-image: url("./media/asanoha-torii-synth.svg");
+  --home-about-pattern-tile: --spacing(14) --spacing(24.2475);
+  --home-about-pattern-opacity: 0.3;
+
+  @variant md {
+    --home-about-glow-b-opacity: 0.208;
+  }
+
+  @variant lg {
+    --home-about-glow-a-opacity: 0.32;
+    --home-about-glow-b-opacity: 0.224;
+    --home-about-pattern-opacity: 0.32;
+  }
+
+  opacity: var(--home-about-night);
+  visibility: var(--home-about-night-visibility);
+}
+
+.home-about-day {
+  --home-about-glow-a-color: 165 123 255;
+  --home-about-glow-b-color: 255 112 166;
+  --home-about-glow-a-opacity: 0.2448;
+  --home-about-glow-b-opacity: 0.1632;
+  --home-about-pattern-image: url("./media/waves-cyber-sakura.svg");
+  --home-about-pattern-tile: --spacing(150) --spacing(62.5);
+  --home-about-pattern-opacity: 0.42;
+
+  @variant md {
+    --home-about-glow-b-opacity: 0.1768;
+  }
+
+  @variant lg {
+    --home-about-glow-a-opacity: 0.256;
+    --home-about-glow-b-opacity: 0.192;
+  }
+
+  opacity: var(--home-about-day);
+  visibility: var(--home-about-day-visibility);
+}
+
+.home-about-glow {
+  @apply absolute rounded-full;
+}
+
+.home-about-glow-a {
+  top: var(--home-about-glow-a-top);
+  bottom: var(--home-about-glow-a-bottom);
+  left: var(--home-about-glow-a-left);
+  width: var(--home-about-glow-a-size);
+  height: var(--home-about-glow-a-size);
+  opacity: var(--home-about-glow-a-opacity);
+  background: radial-gradient(
+    circle closest-side,
+    rgb(var(--home-about-glow-a-color)) 0%,
+    rgb(var(--home-about-glow-a-color) / 45%) 45%,
+    rgb(var(--home-about-glow-a-color) / 0%) 100%
+  );
+}
+
+.home-about-glow-b {
+  top: var(--home-about-glow-b-top);
+  left: var(--home-about-glow-b-left);
+  width: var(--home-about-glow-b-size);
+  height: var(--home-about-glow-b-size);
+  opacity: var(--home-about-glow-b-opacity);
+  background: radial-gradient(
+    circle closest-side,
+    rgb(var(--home-about-glow-b-color)) 0%,
+    rgb(var(--home-about-glow-b-color) / 45%) 45%,
+    rgb(var(--home-about-glow-b-color) / 0%) 100%
+  );
+}
+
+.home-about-pattern {
+  @apply absolute;
+  top: var(--home-about-pattern-top);
+  right: var(--home-about-pattern-right);
+  bottom: var(--home-about-pattern-bottom);
+  left: var(--home-about-pattern-left);
+  width: var(--home-about-pattern-width);
+  height: var(--home-about-pattern-height);
+  opacity: var(--home-about-pattern-opacity);
+  background-image: var(--home-about-pattern-image);
+  background-size: var(--home-about-pattern-tile);
+  mask-image: radial-gradient(
+    ellipse 55% 55% at 50% 50%,
+    #000 0%,
+    rgb(0 0 0 / 45%) 55%,
+    rgb(0 0 0 / 0%) 100%
+  );
+}
+
+.home-about-night .home-about-pattern {
+  @apply bg-repeat;
+}
+
+.home-about-day .home-about-pattern {
+  @apply bg-no-repeat;
+}
+
+.home-about-crane {
+  @apply absolute max-w-none;
+  top: var(--home-about-crane-top);
+  left: var(--home-about-crane-left);
+  right: var(--home-about-crane-right);
+  width: var(--home-about-crane-width);
+  height: var(--home-about-crane-height);
+  transition-property: opacity, visibility;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-about-crane-night {
+  --home-about-crane-width: --spacing(24);
+  --home-about-crane-height: --spacing(26.75);
+  opacity: var(--home-about-night);
+  visibility: var(--home-about-night-visibility);
+
+  @variant md {
+    --home-about-crane-width: --spacing(35);
+    --home-about-crane-height: --spacing(39);
+  }
+
+  @variant lg {
+    --home-about-crane-left: calc(50% - --spacing(32.5));
+    --home-about-crane-right: auto;
+    --home-about-crane-width: --spacing(45);
+    --home-about-crane-height: --spacing(50.25);
+  }
+}
+
+.home-about-crane-day {
+  --home-about-crane-width: --spacing(25.5);
+  --home-about-crane-height: --spacing(27.75);
+  mix-blend-mode: multiply;
+  opacity: var(--home-about-day);
+  visibility: var(--home-about-day-visibility);
+
+  @variant md {
+    --home-about-crane-width: --spacing(37);
+    --home-about-crane-height: --spacing(40.25);
+  }
+
+  @variant lg {
+    --home-about-crane-left: calc(50% - --spacing(35));
+    --home-about-crane-right: auto;
+    --home-about-crane-top: --spacing(5.5);
+    --home-about-crane-width: --spacing(47.5);
+    --home-about-crane-height: --spacing(51.75);
+  }
+}

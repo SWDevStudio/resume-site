@@ -1,0 +1,148 @@
+@reference "~/assets/css/main.css";
+
+@property --home-about-role-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --home-about-role-via {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --home-about-role-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.home-about {
+  --home-about-night: 1;
+  --home-about-day: 0;
+  --home-about-night-visibility: visible;
+  --home-about-day-visibility: hidden;
+  --home-about-title-size: --spacing(10.5);
+  --home-about-title-scale: 1;
+  --home-about-role-size: --spacing(6.5);
+  --home-about-text-size: --spacing(4);
+  --home-about-gap: --spacing(11);
+
+  @variant md {
+    --home-about-title-size: --spacing(15);
+    --home-about-role-size: --spacing(8.5);
+    --home-about-text-size: --spacing(4.5);
+    --home-about-gap: --spacing(14);
+  }
+
+  @variant lg {
+    --home-about-title-size: --spacing(19);
+    --home-about-role-size: --spacing(10.5);
+    --home-about-gap: --spacing(16);
+  }
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-about-night: 0;
+    --home-about-day: 1;
+    --home-about-night-visibility: hidden;
+    --home-about-day-visibility: visible;
+  }
+
+  @apply overflow-hidden bg-base-100;
+}
+
+.home-about > .home-slide-body {
+  padding-top: max(var(--home-header-offset), --spacing(30));
+  padding-bottom: --spacing(16);
+
+  @variant md {
+    padding-top: var(--home-header-offset);
+    padding-bottom: --spacing(20);
+  }
+
+  @variant lg {
+    padding-bottom: var(--home-header-offset);
+  }
+}
+
+.home-about-grid {
+  @apply flex flex-1 flex-wrap items-center justify-center;
+  gap: var(--home-about-gap);
+
+  @variant lg {
+    @apply justify-between;
+  }
+}
+
+.home-about-text {
+  @apply flex min-w-0 flex-col;
+  flex: 1 1 --spacing(130);
+  max-width: --spacing(160);
+  gap: --spacing(6.5);
+}
+
+.home-about-label {
+  @apply font-body font-light tracking-[.3em] text-primary-ink uppercase;
+  font-size: --spacing(3.5);
+  line-height: 1.6;
+}
+
+.home-about-heading {
+  @apply flex flex-col;
+  gap: --spacing(2.5);
+}
+
+.home-about-title {
+  @apply m-0 font-head font-normal;
+  font-size: calc(var(--home-about-title-size) * var(--home-about-title-scale));
+  line-height: 1.02;
+  letter-spacing: --spacing(0.25);
+}
+
+.home-about-name {
+  @apply text-primary-ink;
+}
+
+.home-about-role {
+  --home-about-role-from: var(--color-primary);
+  --home-about-role-via: color-mix(in srgb, var(--color-primary) 45%, var(--color-accent));
+  --home-about-role-to: var(--color-accent);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-about-role-via: #8f6cff;
+    --home-about-role-to: var(--color-secondary);
+  }
+
+  @apply m-0 bg-clip-text font-head font-normal text-transparent;
+  font-size: var(--home-about-role-size);
+  line-height: 1.1;
+  background-image: linear-gradient(
+    90deg,
+    var(--home-about-role-from),
+    var(--home-about-role-via) 55%,
+    var(--home-about-role-to)
+  );
+  transition-property: --home-about-role-from, --home-about-role-via, --home-about-role-to;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-about-description {
+  @apply m-0 text-base-content/72;
+  max-width: 54ch;
+  font-family: "Share Tech Mono", ui-monospace, monospace;
+  font-size: var(--home-about-text-size);
+  line-height: 1.7;
+}
+
+:lang(ru) .home-about {
+  --home-about-title-scale: 0.7;
+  --home-about-text-size: --spacing(4);
+}
+
+:lang(ru) .home-about-description {
+  @apply font-body font-light;
+}

@@ -1,0 +1,30 @@
+@reference "~/assets/css/main.css";
+
+.home-about-actions {
+  @apply flex flex-wrap items-center;
+  gap: --spacing(5);
+  margin-top: --spacing(2.5);
+}
+
+.home-about-action {
+  --btn-height: --spacing(15);
+
+  @apply w-full;
+
+  @variant md {
+    width: --spacing(62.5);
+  }
+}
+
+.home-about-action-icon {
+  @apply relative shrink-0;
+  width: --spacing(4.5);
+}
+
+.home-about-action-icon-chat {
+  aspect-ratio: 18 / 16;
+}
+
+.home-about-action-icon-arrow {
+  aspect-ratio: 18 / 12;
+}
