@@ -1,0 +1,260 @@
+@reference "~/assets/css/main.css";
+
+.home-hero-night {
+  --home-hero-floor: #0b0910;
+  --home-hero-grid: url("./media/floor-torii-synth.svg");
+  --home-hero-grid-size: --spacing(14) --spacing(24.2475);
+  --home-hero-grid-opacity: 0.32;
+  --home-hero-fade-top: linear-gradient(180deg, #110a1c 0%, rgb(11 9 16 / 0%) 100%);
+  --home-hero-fade-bottom: linear-gradient(0deg, #09090c 0%, rgb(9 9 12 / 0%) 100%);
+  --home-hero-horizon: linear-gradient(
+    90deg,
+    rgb(255 30 67 / 0%),
+    #ff1e43 20%,
+    #ffb300 50%,
+    #ff1e43 80%,
+    rgb(255 30 67 / 0%)
+  );
+  --home-hero-horizon-glow: 0 0 --spacing(4.5) --spacing(0.5) rgb(255 30 67 / 55%);
+  --home-hero-scrim: radial-gradient(
+    ellipse 36% 50% at 53% 50%,
+    rgb(9 9 12 / 62%) 0%,
+    rgb(9 9 12 / 0%) 100%
+  );
+
+  background:
+    radial-gradient(ellipse 55% 40% at var(--home-hero-sx) 54%, #2a0a33 0%, rgb(9 9 12 / 0%) 70%),
+    linear-gradient(180deg, #09090c 0%, #110a1c 54%, #09090c 100%);
+}
+
+.home-hero-forest {
+  @apply absolute;
+  top: --spacing(40.5);
+  left: --spacing(-106.5);
+  width: --spacing(203.5);
+  height: --spacing(82.5);
+}
+
+.home-hero-gate {
+  @apply absolute opacity-60;
+  top: --spacing(27.75);
+  left: --spacing(-55.25);
+  width: --spacing(98.75);
+  height: --spacing(96.5);
+  filter: saturate(1.1) brightness(0.78);
+}
+
+.home-hero-pool {
+  @apply absolute;
+  top: --spacing(100);
+  left: 0;
+  width: --spacing(180);
+  height: --spacing(60);
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    rgb(255 30 67 / 13%) 0%,
+    rgb(255 30 67 / 0%) 100%
+  );
+  transform: translateX(-50%);
+}
+
+.home-hero-reflection {
+  @apply absolute;
+  top: --spacing(120.75);
+  left: --spacing(-55.25);
+  width: --spacing(98.75);
+  height: --spacing(96.5);
+  opacity: 0.14;
+  filter: blur(--spacing(0.5));
+  mask-image: linear-gradient(180deg, transparent 35%, #000 100%);
+  transform: scaleY(-1);
+}
+
+.home-hero-lamp-pool {
+  @apply absolute;
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    rgb(255 79 120 / 16%) 0%,
+    rgb(255 79 120 / 0%) 100%
+  );
+  transform: translateX(-50%);
+}
+
+.home-hero-lamp-pool-left {
+  top: --spacing(118);
+  left: --spacing(-47);
+  width: --spacing(45);
+  height: --spacing(14);
+}
+
+.home-hero-lamp-pool-right {
+  top: --spacing(118.5);
+  left: --spacing(41.75);
+  width: --spacing(32.5);
+  height: --spacing(10);
+}
+
+.home-hero-lamp-beam {
+  @apply absolute;
+  top: --spacing(123.5);
+  background: linear-gradient(180deg, rgb(255 79 120 / 25%) 0%, rgb(255 79 120 / 0%) 100%);
+  filter: blur(--spacing(1));
+  transform: translateX(-50%);
+}
+
+.home-hero-lamp-beam-left {
+  left: --spacing(-47);
+  width: --spacing(3.5);
+  height: --spacing(35);
+}
+
+.home-hero-lamp-beam-right {
+  left: --spacing(41.75);
+  width: --spacing(2.5);
+  height: --spacing(25);
+}
+
+.home-hero-lantern {
+  @apply absolute opacity-55;
+}
+
+.home-hero-lantern-left {
+  top: --spacing(101);
+  left: --spacing(-52.5);
+  width: --spacing(11);
+  height: --spacing(22);
+}
+
+.home-hero-lantern-right {
+  top: --spacing(106);
+  left: --spacing(37.5);
+  width: --spacing(8.5);
+  height: --spacing(17);
+  transform: scaleX(-1);
+}
+
+.home-hero-pine {
+  @apply absolute;
+  filter: blur(--spacing(0.5));
+}
+
+.home-hero-pine-left {
+  top: --spacing(-35);
+  left: var(--home-hero-pine-left);
+  width: --spacing(75);
+  height: --spacing(175);
+}
+
+.home-hero-pine-right {
+  top: --spacing(-25);
+  right: var(--home-hero-pine-right);
+  width: --spacing(67.5);
+  height: --spacing(160);
+}
+
+.home-hero-fireflies {
+  @apply absolute inset-x-0 top-0;
+  height: --spacing(105);
+}
+
+.home-hero-firefly {
+  --home-hero-firefly-color: #ffe2a0;
+  --home-hero-firefly-glow: 0 0 --spacing(2) --spacing(0.5) rgb(255 179 0 / 70%);
+
+  @apply absolute rounded-full;
+  top: --spacing(var(--home-hero-y));
+  left: var(--home-hero-x);
+  width: --spacing(var(--home-hero-size));
+  height: --spacing(var(--home-hero-size));
+  background-color: var(--home-hero-firefly-color);
+  box-shadow: var(--home-hero-firefly-glow);
+  animation:
+    var(--home-hero-move) var(--home-hero-duration) ease-in-out var(--home-hero-delay) infinite,
+    home-hero-blink var(--home-hero-blink-duration) ease-in-out var(--home-hero-blink-delay)
+      infinite;
+
+  @variant motion-reduce {
+    @apply animate-none opacity-70;
+  }
+}
+
+.home-hero-firefly-rose {
+  --home-hero-firefly-color: #ffc2d2;
+  --home-hero-firefly-glow: 0 0 --spacing(2) --spacing(0.5) rgb(255 79 120 / 60%);
+}
+
+.home-hero-firefly-large {
+  --home-hero-firefly-glow: 0 0 --spacing(2.5) --spacing(0.75) rgb(255 179 0 / 65%);
+}
+
+.home-hero-firefly-rose.home-hero-firefly-large {
+  --home-hero-firefly-glow: 0 0 --spacing(2.5) --spacing(0.75) rgb(255 79 120 / 60%);
+}
+
+@keyframes home-hero-firefly-a {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(--spacing(10), --spacing(-7.5));
+  }
+
+  50% {
+    transform: translate(--spacing(20), --spacing(2.5));
+  }
+
+  75% {
+    transform: translate(--spacing(7.5), --spacing(10));
+  }
+}
+
+@keyframes home-hero-firefly-b {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  30% {
+    transform: translate(--spacing(-12.5), --spacing(5));
+  }
+
+  60% {
+    transform: translate(--spacing(-5), --spacing(-10));
+  }
+}
+
+@keyframes home-hero-firefly-c {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  20% {
+    transform: translate(--spacing(7.5), --spacing(7.5));
+  }
+
+  45% {
+    transform: translate(--spacing(-7.5), --spacing(12.5));
+  }
+
+  70% {
+    transform: translate(--spacing(-15), 0);
+  }
+}
+
+@keyframes home-hero-blink {
+  0%,
+  100% {
+    opacity: 0.12;
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  60% {
+    opacity: 0.8;
+  }
+}

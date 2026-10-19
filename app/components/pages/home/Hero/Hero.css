@@ -1,0 +1,237 @@
+@reference "~/assets/css/main.css";
+
+@property --home-hero-stroke {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0;
+}
+
+.home-hero {
+  --home-slide-height: --spacing(195);
+  --home-hero-sx: 50%;
+  --home-hero-sk: 0.6;
+  --home-hero-pine-left: --spacing(-59);
+  --home-hero-pine-right: --spacing(-53.5);
+  --home-hero-b1-left: --spacing(-11.5);
+  --home-hero-b1-top: --spacing(10);
+  --home-hero-b1-width: --spacing(52.5);
+  --home-hero-b1-height: --spacing(65.25);
+  --home-hero-b2-right: 0rem;
+  --home-hero-b2-top: --spacing(59);
+  --home-hero-b2-width: --spacing(27.5);
+  --home-hero-b2-height: --spacing(37.5);
+  --home-hero-b3-display: none;
+  --home-hero-b3-left: --spacing(-10);
+  --home-hero-b3-top: --spacing(140);
+  --home-hero-b3-width: --spacing(37.5);
+  --home-hero-b3-height: --spacing(34.75);
+  --home-hero-title-left: --spacing(5);
+  --home-hero-title-size: --spacing(13);
+  --home-hero-title-indent: --spacing(9);
+  --home-hero-title-scale: 1;
+  --home-hero-rail-top: auto;
+  --home-hero-rail-right: --spacing(5);
+  --home-hero-rail-bottom: --spacing(9);
+  --home-hero-rail-left: --spacing(5);
+  --home-hero-rail-direction: row;
+  --home-hero-rail-gap: --spacing(3.5);
+  --home-hero-line-width: auto;
+  --home-hero-line-height: --spacing(0.5);
+  --home-hero-cta-left: --spacing(5);
+  --home-hero-cta-bottom: --spacing(28);
+  --home-hero-cta-width: calc(100% - --spacing(10));
+
+  @variant md {
+    --home-slide-height: --spacing(225);
+    --home-hero-sk: 0.9;
+    --home-hero-pine-left: --spacing(-50);
+    --home-hero-pine-right: --spacing(-45);
+    --home-hero-b1-left: --spacing(-15);
+    --home-hero-b1-width: --spacing(85);
+    --home-hero-b1-height: --spacing(105.75);
+    --home-hero-b2-top: --spacing(140);
+    --home-hero-b2-width: --spacing(47.5);
+    --home-hero-b2-height: --spacing(65);
+    --home-hero-b3-display: block;
+    --home-hero-b3-left: --spacing(-14);
+    --home-hero-b3-top: --spacing(147.5);
+    --home-hero-b3-width: --spacing(57.5);
+    --home-hero-b3-height: --spacing(53.5);
+    --home-hero-title-left: --spacing(14);
+    --home-hero-title-size: --spacing(21);
+    --home-hero-title-indent: --spacing(19);
+    --home-hero-rail-top: --spacing(42.5);
+    --home-hero-rail-right: --spacing(10);
+    --home-hero-rail-bottom: --spacing(27.5);
+    --home-hero-rail-left: auto;
+    --home-hero-rail-direction: column;
+    --home-hero-rail-gap: --spacing(5);
+    --home-hero-line-width: --spacing(0.5);
+    --home-hero-line-height: auto;
+    --home-hero-cta-left: --spacing(14);
+    --home-hero-cta-bottom: --spacing(26);
+    --home-hero-cta-width: --spacing(85);
+  }
+
+  @variant lg {
+    --home-hero-sx: 30%;
+    --home-hero-sk: 1;
+    --home-hero-pine-left: --spacing(-43);
+    --home-hero-pine-right: --spacing(-38);
+    --home-hero-b1-left: --spacing(-11);
+    --home-hero-b1-top: --spacing(12.5);
+    --home-hero-b1-width: --spacing(104.5);
+    --home-hero-b1-height: --spacing(130);
+    --home-hero-b2-right: --spacing(1);
+    --home-hero-b2-top: --spacing(139);
+    --home-hero-b2-width: --spacing(52.5);
+    --home-hero-b2-height: --spacing(71.75);
+    --home-hero-b3-top: --spacing(143.5);
+    --home-hero-b3-width: --spacing(67.25);
+    --home-hero-b3-height: --spacing(62.5);
+    --home-hero-title-left: --spacing(79.25);
+    --home-hero-title-size: clamp(--spacing(10), 7.8vw, --spacing(28.08));
+    --home-hero-title-indent: clamp(--spacing(10), 12vw, --spacing(43.2));
+    --home-hero-rail-right: clamp(--spacing(4), 10%, --spacing(36));
+    --home-hero-cta-left: clamp(--spacing(5), 12%, --spacing(43.2));
+  }
+
+  --home-hero-night: 1;
+  --home-hero-day: 0;
+  --home-hero-night-visibility: visible;
+  --home-hero-day-visibility: hidden;
+  --home-hero-stroke: --spacing(0.75);
+  --home-hero-fill-brand: 8%;
+  --home-hero-fill-primary: 8%;
+  --home-hero-glow-brand: drop-shadow(0 0 --spacing(1.5) var(--color-brand))
+    drop-shadow(0 0 --spacing(4.5) color-mix(in oklab, var(--color-brand) 60%, transparent));
+  --home-hero-glow-primary: drop-shadow(0 0 --spacing(1.5) var(--color-primary))
+    drop-shadow(0 0 --spacing(4.5) color-mix(in oklab, var(--color-primary) 60%, transparent));
+  --home-hero-rail-glow: 0 0 --spacing(2.5) var(--color-primary);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-hero-night: 0;
+    --home-hero-day: 1;
+    --home-hero-night-visibility: hidden;
+    --home-hero-day-visibility: visible;
+    --home-hero-stroke: --spacing(1);
+    --home-hero-fill-brand: 12%;
+    --home-hero-fill-primary: 14%;
+    --home-hero-glow-brand: drop-shadow(
+        0 0 --spacing(2) color-mix(in oklab, var(--color-brand) 55%, transparent)
+      )
+      drop-shadow(0 0 --spacing(4.5) transparent);
+    --home-hero-glow-primary: drop-shadow(
+        0 0 --spacing(2) color-mix(in oklab, var(--color-primary) 60%, transparent)
+      )
+      drop-shadow(0 0 --spacing(4.5) transparent);
+    --home-hero-rail-glow: 0 0 --spacing(2)
+      color-mix(in oklab, var(--color-primary) 70%, transparent);
+  }
+
+  @apply overflow-hidden;
+}
+
+.home-hero-night,
+.home-hero-day {
+  @apply pointer-events-none absolute inset-0;
+  transition-property: opacity, visibility;
+
+  & img {
+    @apply max-w-none;
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-hero-night {
+  opacity: var(--home-hero-night);
+  visibility: var(--home-hero-night-visibility);
+}
+
+.home-hero-day {
+  opacity: var(--home-hero-day);
+  visibility: var(--home-hero-day-visibility);
+}
+
+.home-hero-sky {
+  @apply absolute top-0 left-0 w-full;
+  height: --spacing(122.5);
+}
+
+.home-hero-scene {
+  @apply absolute top-0 size-0;
+  left: var(--home-hero-sx);
+  transform: scale(var(--home-hero-sk));
+  transform-origin: 0 --spacing(122.5);
+}
+
+.home-hero-horizon {
+  @apply absolute inset-x-0 opacity-35;
+  top: --spacing(122.25);
+  height: --spacing(0.5);
+  background: var(--home-hero-horizon);
+  box-shadow: var(--home-hero-horizon-glow);
+}
+
+.home-hero-scrim {
+  @apply absolute inset-x-0;
+  top: --spacing(65);
+  height: --spacing(100);
+  background: var(--home-hero-scrim);
+}
+
+.home-hero-title {
+  @apply pointer-events-none absolute top-0 m-0 font-normal uppercase;
+  font-family: "Righteous", sans-serif;
+  left: var(--home-hero-title-left);
+  height: --spacing(225);
+  font-size: calc(var(--home-hero-title-size) * var(--home-hero-title-scale));
+  line-height: 1.02;
+  letter-spacing: --spacing(0.5);
+}
+
+.home-hero-title-top,
+.home-hero-title-bottom {
+  @apply absolute block whitespace-nowrap;
+  -webkit-text-stroke-width: var(--home-hero-stroke);
+  transition-property:
+    color,
+    -webkit-text-stroke-color,
+    --home-hero-stroke,
+    filter;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-hero-title-top {
+  @apply left-0;
+  bottom: --spacing(105.5);
+  color: color-mix(in oklab, var(--color-brand) var(--home-hero-fill-brand), transparent);
+  -webkit-text-stroke-color: var(--color-brand);
+  filter: var(--home-hero-glow-brand);
+}
+
+.home-hero-title-bottom {
+  top: --spacing(126.5);
+  left: var(--home-hero-title-indent);
+  color: color-mix(in oklab, var(--color-primary) var(--home-hero-fill-primary), transparent);
+  -webkit-text-stroke-color: var(--color-primary);
+  filter: var(--home-hero-glow-primary);
+}
+
+.home-hero-cta {
+  @apply absolute;
+  bottom: var(--home-hero-cta-bottom);
+  left: var(--home-hero-cta-left);
+  width: var(--home-hero-cta-width);
+}
+
+.home-hero-cta-icon {
+  @apply relative size-3.5 shrink-0 bg-current mask-contain mask-center mask-no-repeat;
+  mask-image: url("./media/cta-arrow.svg");
+}

@@ -1,0 +1,35 @@
+@reference "~/assets/css/main.css";
+
+.home-hero-floor {
+  @apply absolute inset-x-0 bottom-0 overflow-hidden;
+  top: --spacing(122.5);
+  background-color: var(--home-hero-floor);
+}
+
+.home-hero-floor-plane {
+  @apply absolute top-0;
+  left: -50%;
+  width: 200%;
+  height: --spacing(105);
+  transform: perspective(--spacing(105)) rotateX(64deg);
+  transform-origin: 50% 0;
+}
+
+.home-hero-floor-grid {
+  @apply size-full;
+  opacity: var(--home-hero-grid-opacity);
+  background-image: var(--home-hero-grid);
+  background-size: var(--home-hero-grid-size);
+}
+
+.home-hero-floor-fade-top {
+  @apply absolute inset-x-0 top-0;
+  height: --spacing(40);
+  background: var(--home-hero-fade-top);
+}
+
+.home-hero-floor-fade-bottom {
+  @apply absolute inset-x-0 bottom-0;
+  height: --spacing(50);
+  background: var(--home-hero-fade-bottom);
+}
