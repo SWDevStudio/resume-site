@@ -277,6 +277,7 @@ describe("behavior", () => {
       "Telegram",
       "LinkedIn",
       "GitHub",
+      "YouTube",
     ]);
     for (const item of socials) {
       expect(item.getAttribute("href")).toMatch(/^https:\/\//);

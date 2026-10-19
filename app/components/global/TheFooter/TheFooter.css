@@ -37,7 +37,7 @@
 
 .the-footer-row {
   @apply flex flex-wrap items-center justify-between;
-  gap: --spacing(7) --spacing(12);
+  gap: --spacing(7) --spacing(8);
 }
 
 .the-footer .the-footer-socials {
