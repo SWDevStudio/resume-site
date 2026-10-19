@@ -9,6 +9,10 @@
 @import "./components/radio.css";
 @import "./components/toggle.css";
 @import "./components/container.css";
+@import "./components/card.css";
+@import "./components/folder.css";
+@import "./components/panel.css";
+@import "./components/feature.css";
 @import "./components/alert.css";
 @import "./components/toast.css";
 @import "./themes/torii-synth.css";

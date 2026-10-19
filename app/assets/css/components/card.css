@@ -1,0 +1,280 @@
+@property --card-media-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --card-media-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@utility card {
+  --card-border: --spacing(0.25);
+  --card-pad-top: --spacing(10);
+  --card-pad-inline: --spacing(6.5);
+  --card-pad-bottom: --spacing(6.5);
+  --card-gap: --spacing(3.5);
+  --card-min-height: 0rem;
+  --card-title-size: --spacing(6.5);
+  --card-title-tracking: 0em;
+  --card-mark-top: 0rem;
+  --card-mark-right: 0rem;
+  --card-mark-width: 0rem;
+  --card-mark-height: 0rem;
+  --card-mark-color: var(--color-primary);
+  --card-mark-mask: linear-gradient(#000 0 0);
+  --card-side-top: 0rem;
+  --card-side-left: 0rem;
+  --card-side-width: 0rem;
+  --card-side-height: 0rem;
+  --card-side-color: var(--color-primary);
+  --card-side-radius: 0rem;
+  --card-foot-color: var(--color-primary);
+  --card-foot-position: right 0rem bottom 0rem;
+  --card-foot-size: 0rem 0rem;
+
+  @apply relative isolate flex flex-col;
+  min-height: var(--card-min-height);
+
+  @variant hover {
+    --card-line: var(--card-line-hover);
+    --card-glow: var(--card-glow-hover);
+  }
+
+  @variant focus-within {
+    --card-line: var(--card-line-hover);
+    --card-glow: var(--card-glow-hover);
+  }
+}
+
+@utility card-frame {
+  @apply pointer-events-none absolute inset-0 -z-1;
+  filter: var(--card-glow);
+  transition-property: filter;
+
+  &::before,
+  &::after {
+    @apply absolute;
+    content: "";
+    border-radius: var(--radius-box);
+    clip-path: polygon(
+      var(--cut-box) 0,
+      100% 0,
+      100% calc(100% - var(--cut-box)),
+      calc(100% - var(--cut-box)) 100%,
+      0 100%,
+      0 var(--cut-box)
+    );
+    transition-property: background-color, border-radius, clip-path;
+  }
+
+  &::before {
+    @apply inset-0;
+    --card-e: 0rem;
+    background-color: var(--card-line);
+  }
+
+  &::after {
+    --card-e: var(--card-border);
+    inset: var(--card-border);
+    border-radius: calc(var(--radius-box) - var(--card-border));
+    clip-path: polygon(
+      calc(var(--cut-box) - var(--card-border) * 0.586) 0,
+      100% 0,
+      100% calc(100% - var(--cut-box) + var(--card-border) * 0.586),
+      calc(100% - var(--cut-box) + var(--card-border) * 0.586) 100%,
+      0 100%,
+      0 calc(var(--cut-box) - var(--card-border) * 0.586)
+    );
+    background-color: var(--card-fill);
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before,
+    &::after {
+      @apply transition-none;
+    }
+  }
+}
+
+@utility card-deco {
+  @apply pointer-events-none absolute inset-0;
+
+  &::before,
+  &::after {
+    @apply absolute;
+    content: "";
+  }
+
+  &::before {
+    top: var(--card-mark-top);
+    right: var(--card-mark-right);
+    width: var(--card-mark-width);
+    height: var(--card-mark-height);
+    background-color: var(--card-mark-color);
+    mask-image: var(--card-mark-mask);
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    transition-property: top, right, width, height, background-color;
+  }
+
+  &::after {
+    top: var(--card-side-top);
+    left: var(--card-side-left);
+    width: var(--card-side-width);
+    height: var(--card-side-height);
+    border-radius: var(--card-side-radius);
+    background-color: var(--card-side-color);
+    transition-property: top, left, width, height, border-radius, background-color;
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before,
+    &::after {
+      @apply transition-none;
+    }
+  }
+}
+
+@utility card-body {
+  @apply relative flex flex-1 flex-col;
+  gap: var(--card-gap);
+  padding: var(--card-pad-top) var(--card-pad-inline) var(--card-pad-bottom);
+
+  &::before {
+    @apply pointer-events-none absolute inset-0;
+    content: "";
+    background-color: var(--card-foot-color);
+    mask-image: linear-gradient(#000 0 0);
+    mask-repeat: no-repeat;
+    mask-position: var(--card-foot-position);
+    mask-size: var(--card-foot-size);
+    transition-property: background-color, mask-position, mask-size;
+  }
+
+  @variant motion-reduce {
+    &::before {
+      @apply transition-none;
+    }
+  }
+}
+
+@utility card-head {
+  @apply flex flex-col gap-1.5;
+}
+
+@utility card-title {
+  @apply font-head font-normal;
+  font-size: var(--card-title-size);
+  letter-spacing: var(--card-title-tracking);
+  line-height: 1.15;
+}
+
+@utility card-index {
+  @apply text-primary-ink;
+}
+
+@utility card-subtitle {
+  @apply font-body font-light tracking-[.14em] text-primary-ink;
+  font-size: --spacing(3);
+}
+
+@utility card-text {
+  @apply text-sm leading-[1.6] text-base-content/66;
+}
+
+@utility card-tags {
+  @apply flex flex-wrap gap-1.5;
+}
+
+@utility card-tag {
+  --card-tag-line: color-mix(in oklab, var(--color-primary) 60%, transparent);
+  --card-tag-fill: color-mix(in oklab, var(--color-primary) 8%, transparent);
+  --card-tag-radius: 0rem;
+  --card-tag-cut: --spacing(1.25);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --card-tag-line: color-mix(in oklab, var(--color-primary) 75%, transparent);
+    --card-tag-fill: color-mix(in oklab, var(--color-primary) 10%, transparent);
+    --card-tag-radius: --spacing(10);
+    --card-tag-cut: 0rem;
+  }
+
+  @apply px-2.5 py-0.75 font-body text-xs/normal font-light text-base-content;
+  border: --spacing(0.25) solid var(--card-tag-line);
+  border-radius: var(--card-tag-radius);
+  background-color: var(--card-tag-fill);
+  clip-path: polygon(
+    var(--card-tag-cut) 0,
+    100% 0,
+    100% calc(100% - var(--card-tag-cut)),
+    calc(100% - var(--card-tag-cut)) 100%,
+    0 100%,
+    0 var(--card-tag-cut)
+  );
+  transition-property: color, background-color, border-color, border-radius, clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+@utility card-media {
+  --card-media-start: var(--color-primary);
+  --card-media-end: color-mix(in oklab, var(--color-primary) 25%, transparent);
+  --card-media-cut: --spacing(3.5);
+  --card-media-radius: 0rem;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --card-media-end: color-mix(in srgb, var(--color-primary) 43%, white);
+    --card-media-cut: 0rem;
+    --card-media-radius: --spacing(4.5);
+  }
+
+  --card-media-from: var(--card-media-start);
+  --card-media-to: var(--card-media-end);
+
+  @apply relative h-60 shrink-0;
+  padding: --spacing(0.25);
+  border-radius: var(--card-media-radius);
+  background-image: linear-gradient(135deg, var(--card-media-from), var(--card-media-to));
+  clip-path: polygon(
+    var(--card-media-cut) 0,
+    100% 0,
+    100% calc(100% - var(--card-media-cut)),
+    calc(100% - var(--card-media-cut)) 100%,
+    0 100%,
+    0 var(--card-media-cut)
+  );
+  transition-property: border-radius, clip-path, --card-media-from, --card-media-to;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+@utility card-media-inner {
+  @apply h-full overflow-hidden;
+  border-radius: calc(var(--card-media-radius) - --spacing(0.25));
+  clip-path: polygon(
+    calc(var(--card-media-cut) - --spacing(0.125)) 0,
+    100% 0,
+    100% calc(100% - var(--card-media-cut) + --spacing(0.125)),
+    calc(100% - var(--card-media-cut) + --spacing(0.125)) 100%,
+    0 100%,
+    0 calc(var(--card-media-cut) - --spacing(0.125))
+  );
+  transition-property: border-radius, clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+@utility card-media-image {
+  @apply block size-full object-cover;
+}

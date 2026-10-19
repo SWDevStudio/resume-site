@@ -1,0 +1,128 @@
+@utility folder {
+  @apply card;
+  --folder-line: color-mix(in oklab, var(--color-primary) 60%, transparent);
+  --folder-line-hover: var(--color-primary);
+  --folder-fill: color-mix(in oklab, var(--color-base-200) 95%, transparent);
+  --folder-glow: drop-shadow(
+    0 0 --spacing(4) color-mix(in oklab, var(--color-primary) 14%, transparent)
+  );
+  --folder-glow-hover: drop-shadow(
+    0 0 --spacing(5) color-mix(in oklab, var(--color-primary) 30%, transparent)
+  );
+  --card-border: --spacing(0.375);
+  --card-line: var(--folder-line);
+  --card-line-hover: var(--folder-line-hover);
+  --card-fill: var(--folder-fill);
+  --card-glow: var(--folder-glow);
+  --card-glow-hover: var(--folder-glow-hover);
+  --card-pad-top: --spacing(10.5);
+  --card-title-size: --spacing(7);
+  --card-mark-top: --spacing(2);
+  --card-mark-right: --spacing(7.75);
+  --card-mark-width: --spacing(11);
+  --card-mark-height: --spacing(1.5);
+  --card-mark-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 6'%3E%3Cpath d='M0 6L6 0H20L14 6ZM24 6L30 0H44L38 6Z'/%3E%3C/svg%3E");
+  --card-side-top: --spacing(24);
+  --card-side-width: --spacing(0.75);
+  --card-side-height: --spacing(13.5);
+  --card-foot-color: color-mix(in oklab, var(--color-primary) 60%, transparent);
+  --card-foot-position: right --spacing(8.75) bottom --spacing(2);
+  --card-foot-size: --spacing(32.5) --spacing(0.5);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --folder-line: color-mix(in oklab, var(--color-primary) 75%, transparent);
+    --folder-fill: rgb(255 255 255 / 88%);
+    --folder-glow: drop-shadow(
+      0 --spacing(3.5) --spacing(6.5) color-mix(in oklab, var(--color-primary) 22%, transparent)
+    );
+    --folder-glow-hover: drop-shadow(
+      0 --spacing(4.5) --spacing(8) color-mix(in oklab, var(--color-primary) 36%, transparent)
+    );
+    --card-mark-top: --spacing(2.125);
+    --card-mark-right: --spacing(4.625);
+    --card-mark-width: --spacing(8.75);
+    --card-mark-height: --spacing(1.75);
+    --card-mark-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 35 7'%3E%3Ccircle cx='3.5' cy='3.5' r='3.5'/%3E%3Ccircle cx='17.5' cy='3.5' r='3.5' fill-opacity='.6'/%3E%3Ccircle cx='31.5' cy='3.5' r='3.5' fill-opacity='.3'/%3E%3C/svg%3E");
+    --card-side-height: 0rem;
+    --card-foot-size: 0rem 0rem;
+  }
+
+  & .card-frame {
+    &::before,
+    &::after {
+      inset: 0;
+      border-radius: 0rem;
+      clip-path: shape(
+        from calc(--spacing(3.5) + var(--card-e) * 0.414) calc(0rem + var(--card-e) * 1),
+        line to calc(--spacing(31.5) - var(--card-e) * 0.414) calc(0rem + var(--card-e) * 1),
+        curve to calc(--spacing(34) - var(--card-e) * 0.707)
+          calc(--spacing(2.5) + var(--card-e) * 0.707) with
+          calc(--spacing(34) - var(--card-e) * 0.707) calc(--spacing(2.5) + var(--card-e) * 0.707),
+        curve to calc(--spacing(36.5) - var(--card-e) * 0.414)
+          calc(--spacing(5) + var(--card-e) * 1) with calc(--spacing(36.5) - var(--card-e) * 0.414)
+          calc(--spacing(5) + var(--card-e) * 1),
+        line to calc(100% - var(--card-e) * 1) calc(--spacing(5) + var(--card-e) * 1),
+        curve to calc(100% - var(--card-e) * 1) --spacing(11) with calc(100% - var(--card-e) * 1)
+          --spacing(11),
+        line to calc(100% - var(--card-e) * 1) calc(100% - --spacing(6) - var(--card-e) * 0.414),
+        curve to calc(100% - --spacing(6) - var(--card-e) * 0.414) calc(100% - var(--card-e) * 1)
+          with calc(100% - --spacing(6) - var(--card-e) * 0.414) calc(100% - var(--card-e) * 1),
+        line to calc(100% - --spacing(46.75) + var(--card-e) * 0.343) calc(100% - var(--card-e) * 1),
+        line to calc(100% - --spacing(51.25) + var(--card-e) * 0.343)
+          calc(100% - --spacing(3.5) - var(--card-e) * 1),
+        line to calc(--spacing(6) + var(--card-e) * 0.414)
+          calc(100% - --spacing(3.5) - var(--card-e) * 1),
+        curve to calc(0rem + var(--card-e) * 1) calc(100% - --spacing(9.5) - var(--card-e) * 0.414)
+          with calc(0rem + var(--card-e) * 1) calc(100% - --spacing(9.5) - var(--card-e) * 0.414),
+        line to calc(0rem + var(--card-e) * 1) calc(--spacing(3.5) + var(--card-e) * 0.414),
+        curve to calc(--spacing(3.5) + var(--card-e) * 0.414) calc(0rem + var(--card-e) * 1) with
+          calc(--spacing(3.5) + var(--card-e) * 0.414) calc(0rem + var(--card-e) * 1),
+        close
+      );
+    }
+  }
+
+  :where([data-theme="cyber-sakura"]) & .card-frame {
+    &::before,
+    &::after {
+      clip-path: shape(
+        from --spacing(5.5) calc(0rem + var(--card-e) * 1),
+        line to --spacing(28.5) calc(0rem + var(--card-e) * 1),
+        curve to --spacing(34.75) calc(--spacing(2.5) + var(--card-e) * 1) with --spacing(32.5)
+          calc(0rem + var(--card-e) * 1),
+        curve to --spacing(41) calc(--spacing(5) + var(--card-e) * 1) with --spacing(37)
+          calc(--spacing(5) + var(--card-e) * 1),
+        line to calc(100% - --spacing(6)) calc(--spacing(5) + var(--card-e) * 1),
+        curve to calc(100% - var(--card-e) * 1) --spacing(11) with calc(100% - var(--card-e) * 1)
+          calc(--spacing(5) + var(--card-e) * 1),
+        line to calc(100% - var(--card-e) * 1) calc(100% - --spacing(6)),
+        curve to calc(100% - --spacing(6)) calc(100% - var(--card-e) * 1) with
+          calc(100% - var(--card-e) * 1) calc(100% - var(--card-e) * 1),
+        line to calc(100% - --spacing(46.75)) calc(100% - var(--card-e) * 1),
+        line to calc(100% - --spacing(51.25)) calc(100% - var(--card-e) * 1),
+        line to --spacing(6) calc(100% - var(--card-e) * 1),
+        curve to calc(0rem + var(--card-e) * 1) calc(100% - --spacing(6)) with
+          calc(0rem + var(--card-e) * 1) calc(100% - var(--card-e) * 1),
+        line to calc(0rem + var(--card-e) * 1) --spacing(6),
+        curve to --spacing(5.5) calc(0rem + var(--card-e) * 1) with calc(0rem + var(--card-e) * 1)
+          calc(0rem + var(--card-e) * 1),
+        close
+      );
+    }
+  }
+
+  & .card-title {
+    @apply flex items-baseline;
+    column-gap: --spacing(3);
+    font-weight: inherit;
+  }
+
+  & .card-index {
+    @apply font-body;
+    font-size: --spacing(3.5);
+  }
+}
+
+@utility folder-actions {
+  @apply mt-auto flex items-center justify-between gap-3;
+}

@@ -1,0 +1,62 @@
+@utility feature {
+  --feature-title-size: --spacing(6.5);
+
+  @apply flex min-w-0 flex-col;
+}
+
+@utility feature-head {
+  --card-title-size: var(--feature-title-size);
+  --card-title-tracking: 0em;
+
+  margin-bottom: --spacing(4);
+}
+
+@utility feature-box {
+  @apply card;
+  --feature-line: color-mix(in oklab, var(--color-primary) 45%, transparent);
+  --feature-line-hover: var(--color-primary);
+  --feature-fill: var(--color-base-200);
+  --feature-glow: drop-shadow(0 0 0 transparent);
+  --feature-glow-hover: drop-shadow(
+    0 0 --spacing(4) color-mix(in oklab, var(--color-primary) 18%, transparent)
+  );
+  --card-line: var(--feature-line);
+  --card-line-hover: var(--feature-line-hover);
+  --card-fill: var(--feature-fill);
+  --card-glow: var(--feature-glow);
+  --card-glow-hover: var(--feature-glow-hover);
+  --card-pad-top: --spacing(10);
+  --card-side-top: --spacing(4.5);
+  --card-side-width: --spacing(0.75);
+  --card-side-height: --spacing(6.5);
+  --card-side-color: var(--color-primary-ink);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --feature-line: color-mix(in oklab, var(--color-accent) 60%, transparent);
+    --feature-line-hover: var(--color-accent);
+    --feature-fill: rgb(255 255 255 / 85%);
+    --feature-glow-hover: drop-shadow(
+      0 --spacing(2.5) --spacing(5) color-mix(in oklab, var(--color-accent) 22%, transparent)
+    );
+    --card-side-radius: 0rem --spacing(0.75) --spacing(0.75) 0rem;
+  }
+}
+
+@utility feature-label {
+  @apply absolute font-body font-light tracking-[.06em] text-base-content/66;
+  top: --spacing(3);
+  right: --spacing(4.5);
+  font-size: --spacing(3);
+}
+
+@utility feature-prompt {
+  @apply text-base-content;
+  font-family: "Share Tech Mono", ui-monospace, monospace;
+  font-size: --spacing(4);
+  line-height: 1.75;
+
+  &::before {
+    @apply text-primary-ink;
+    content: "> ";
+  }
+}
