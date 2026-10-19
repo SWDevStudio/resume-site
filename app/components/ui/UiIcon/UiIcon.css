@@ -1,0 +1,10 @@
+@reference "~/assets/css/main.css";
+
+.ui-icon {
+  @apply block shrink-0 bg-current mask-contain mask-center mask-no-repeat;
+  mask-image: var(--ui-icon-torii-synth);
+
+  :where([data-theme="cyber-sakura"]) & {
+    mask-image: var(--ui-icon-cyber-sakura);
+  }
+}
