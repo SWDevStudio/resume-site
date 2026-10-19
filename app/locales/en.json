@@ -19,6 +19,11 @@
     "menuClose": "Close menu",
     "language": "Language: {name}"
   },
+  "home": {
+    "hero": {
+      "cv": "Download my CV"
+    }
+  },
   "footer": {
     "tagline": "Fullstack developer · fast, thoughtful web products",
     "navLabel": "Footer",
