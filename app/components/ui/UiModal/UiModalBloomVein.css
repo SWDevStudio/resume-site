@@ -1,0 +1,16 @@
+@reference "~/assets/css/main.css";
+
+.modal-bloom-vein-line {
+  @apply absolute w-[120%];
+  top: 50%;
+  left: -10%;
+  height: --spacing(0.375);
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--color-primary) 16%, transparent) 30%,
+    color-mix(in oklab, var(--color-accent) 14%, transparent) 70%,
+    transparent
+  );
+  rotate: -48deg;
+}

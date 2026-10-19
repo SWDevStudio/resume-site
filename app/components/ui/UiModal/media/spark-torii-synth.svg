@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-120 -60 240 820" width="240" height="820">
+<defs>
+<linearGradient id="line" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#FF1F43" stop-opacity="0"/>
+<stop offset=".12" stop-color="#FF1F43"/>
+<stop offset=".5" stop-color="#BF01FF"/>
+<stop offset=".88" stop-color="#FF1F43"/>
+<stop offset="1" stop-color="#FF1F43" stop-opacity="0"/>
+</linearGradient>
+<linearGradient id="flash" x1="0" y1="0" x2="1" y2="0">
+<stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/>
+<stop offset=".5" stop-color="#FFFFFF" stop-opacity=".9"/>
+<stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+</linearGradient>
+<radialGradient id="halo" cx="0" cy="350" r="60" gradientUnits="userSpaceOnUse">
+<stop offset="0" stop-color="#BF00FF" stop-opacity=".45"/>
+<stop offset=".55" stop-color="#FF1E43" stop-opacity=".15"/>
+<stop offset="1" stop-color="#FF1E43" stop-opacity="0"/>
+</radialGradient>
+<filter id="blur-near" filterUnits="userSpaceOnUse" x="-120" y="-60" width="240" height="820">
+<feGaussianBlur stdDeviation="6"/>
+</filter>
+<filter id="blur-far" filterUnits="userSpaceOnUse" x="-120" y="-60" width="240" height="820">
+<feGaussianBlur stdDeviation="17"/>
+</filter>
+<filter id="blur-soft" filterUnits="userSpaceOnUse" x="-120" y="-60" width="240" height="820">
+<feGaussianBlur stdDeviation=".4"/>
+</filter>
+</defs>
+<rect x="-1" y="0" width="2" height="700" fill="#FF1E43" fill-opacity=".6" filter="url(#blur-far)"/>
+<rect x="-1" y="0" width="2" height="700" fill="#BF01FF" filter="url(#blur-near)"/>
+<rect x="-1" y="0" width="2" height="700" fill="url(#line)"/>
+<rect x="-.5" y="70" width="1" height="560" fill="#FFFFFF" fill-opacity=".85"/>
+<rect x="-110" y="349" width="220" height="2" fill="url(#flash)" filter="url(#blur-soft)"/>
+<rect x="-60" y="290" width="120" height="120" fill="url(#halo)"/>
+<path d="M-10 -4H10V2H8V-2H-8V2H-10Z" fill="#FF1F43"/>
+<path d="M-10 704H10V698H8V702H-8V698H-10Z" fill="#FF1F43"/>
+</svg>

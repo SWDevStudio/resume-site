@@ -1,0 +1,46 @@
+@reference "~/assets/css/main.css";
+
+@keyframes modal-bloom-peel-in {
+  0%,
+  58.333% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-bloom-peel-out {
+  0%,
+  28.571% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.modal-bloom-skin {
+  @apply z-3;
+}
+
+.modal-bloom-peel {
+  @apply absolute inset-0 opacity-0;
+  background-image:
+    radial-gradient(ellipse 40% 34% at 62% 34%, rgb(255 255 255 / 55%), transparent 70%),
+    linear-gradient(45deg, #ff8fbf 0%, #f6b3e2 32%, #d7b4ff 62%, #a9d6ff 100%);
+}
+
+:where([data-theme="cyber-sakura"]) .modal[data-state="opening"] .modal-bloom-peel {
+  animation: modal-bloom-peel-in 720ms linear both;
+}
+
+:where([data-theme="cyber-sakura"]) .modal[data-state="closing"] .modal-bloom-peel {
+  animation: modal-bloom-peel-out 504ms linear both;
+}
+
+.modal-bloom-peel-veins {
+  @apply absolute inset-0 size-full max-w-none;
+}

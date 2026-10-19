@@ -16,6 +16,7 @@
 @import "./components/alert.css";
 @import "./components/toast.css";
 @import "./components/stat.css";
+@import "./components/modal.css";
 @import "./themes/torii-synth.css";
 @import "./themes/cyber-sakura.css";
 
@@ -44,6 +45,11 @@
   [data-theme-instant] ::before,
   [data-theme-instant] ::after {
     transition: none !important;
+  }
+
+  html:has([data-lock-scroll="true"]) {
+    overflow: hidden;
+    scrollbar-gutter: stable;
   }
 
   html {

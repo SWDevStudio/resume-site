@@ -1,0 +1,100 @@
+@reference "~/assets/css/main.css";
+
+.modal-close {
+  --modal-close-ink: var(--color-primary);
+  --modal-close-line: color-mix(in oklab, var(--color-primary) 55%, transparent);
+  --modal-close-line-hover: var(--color-primary);
+  --modal-close-fill: color-mix(in oklab, var(--color-primary) 8%, transparent);
+  --modal-close-fill-hover: color-mix(in oklab, var(--color-primary) 22%, transparent);
+  --modal-close-glow: none;
+  --modal-close-glow-hover: drop-shadow(
+    0 0 --spacing(2) color-mix(in oklab, var(--color-primary) 55%, transparent)
+  );
+  --modal-close-shadow: 0 0 0 0 transparent;
+  --modal-close-shadow-hover: 0 0 0 0 transparent;
+  --modal-close-radius: 0rem;
+  --modal-close-cut: --spacing(2);
+  --modal-close-icon: url("./media/close-torii-synth.svg");
+
+  :where([data-theme="cyber-sakura"]) & {
+    --modal-close-ink: var(--color-secondary-ink);
+    --modal-close-line: color-mix(in oklab, var(--color-accent) 60%, transparent);
+    --modal-close-line-hover: var(--color-accent);
+    --modal-close-fill: rgb(255 255 255 / 90%);
+    --modal-close-fill-hover: #fff;
+    --modal-close-shadow: 0 --spacing(1.5) --spacing(4)
+      color-mix(in oklab, var(--color-accent) 25%, transparent);
+    --modal-close-shadow-hover: 0 --spacing(2.5) --spacing(5)
+      color-mix(in oklab, var(--color-accent) 45%, transparent);
+    --modal-close-radius: 50%;
+    --modal-close-cut: 0rem;
+    --modal-close-icon: url("./media/close-cyber-sakura.svg");
+  }
+
+  @apply absolute isolate inline-grid cursor-pointer appearance-none place-items-center border-0 bg-transparent p-0 outline-hidden;
+  width: var(--modal-close-size);
+  height: var(--modal-close-size);
+  top: calc(var(--modal-close-y) - var(--modal-pad-top));
+  right: calc(var(--modal-close-x) - var(--modal-pad-inline));
+  border-radius: var(--modal-close-radius);
+  box-shadow: var(--modal-close-shadow);
+  filter: var(--modal-close-glow);
+  transition-property:
+    top, right, width, height, border-radius, box-shadow, filter, outline-color, scale;
+
+  &::before {
+    @apply pointer-events-none absolute inset-0 -z-1;
+    content: "";
+    border: --spacing(0.25) solid var(--modal-close-line);
+    border-radius: var(--modal-close-radius);
+    background-color: var(--modal-close-fill);
+    clip-path: polygon(
+      var(--modal-close-cut) 0,
+      100% 0,
+      100% calc(100% - var(--modal-close-cut)),
+      calc(100% - var(--modal-close-cut)) 100%,
+      0 100%,
+      0 var(--modal-close-cut)
+    );
+    transition-property: background-color, border-color, border-radius, clip-path;
+  }
+
+  @variant hover {
+    --modal-close-line: var(--modal-close-line-hover);
+    --modal-close-fill: var(--modal-close-fill-hover);
+    --modal-close-glow: var(--modal-close-glow-hover);
+    --modal-close-shadow: var(--modal-close-shadow-hover);
+  }
+
+  @variant focus-visible {
+    outline: --spacing(0.5) solid var(--modal-close-ink);
+    outline-offset: --spacing(0.5);
+  }
+
+  @variant active {
+    scale: 0.92;
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before {
+      @apply transition-none;
+    }
+  }
+}
+
+.modal-close-icon {
+  @apply block size-4 bg-(--modal-close-ink);
+  mask-image: var(--modal-close-icon);
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  transition-property: background-color, transform;
+
+  .modal-close:hover > & {
+    transform: rotate(90deg);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}

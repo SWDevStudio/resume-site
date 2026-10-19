@@ -1,0 +1,379 @@
+@reference "~/assets/css/main.css";
+
+@keyframes modal-bloom-box-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.02);
+    border-radius: 50% 10% 50% 10%;
+  }
+
+  14.706% {
+    opacity: 1;
+    transform: scale(0.2);
+    border-radius: 50% 10% 50% 10%;
+  }
+
+  35.294% {
+    opacity: 1;
+    transform: scale(0.2);
+    border-radius: 50% 10% 50% 10%;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    border-radius: var(--modal-radius-lg) var(--modal-radius-sm) var(--modal-radius-lg)
+      var(--modal-radius-sm);
+  }
+}
+
+@keyframes modal-bloom-box-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    border-radius: var(--modal-radius-lg) var(--modal-radius-sm) var(--modal-radius-lg)
+      var(--modal-radius-sm);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+
+  54.023%,
+  77.011% {
+    opacity: 1;
+    transform: scale(0.2);
+    border-radius: 50% 10% 50% 10%;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.02);
+    border-radius: 50% 10% 50% 10%;
+  }
+}
+
+@keyframes modal-bloom-edge-in {
+  0%,
+  35.294% {
+    border-radius: 50% 10% 50% 10%;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  100% {
+    border-radius: var(--modal-radius-lg) var(--modal-radius-sm) var(--modal-radius-lg)
+      var(--modal-radius-sm);
+  }
+}
+
+@keyframes modal-bloom-edge-out {
+  0% {
+    border-radius: var(--modal-radius-lg) var(--modal-radius-sm) var(--modal-radius-lg)
+      var(--modal-radius-sm);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+
+  54.023%,
+  100% {
+    border-radius: 50% 10% 50% 10%;
+  }
+}
+
+@keyframes modal-bloom-inner-in {
+  0%,
+  35.294% {
+    border-radius: 50% 10% 50% 10%;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  100% {
+    border-radius: var(--modal-radius-lg-inner) var(--modal-radius-sm-inner)
+      var(--modal-radius-lg-inner) var(--modal-radius-sm-inner);
+  }
+}
+
+@keyframes modal-bloom-inner-out {
+  0% {
+    border-radius: var(--modal-radius-lg-inner) var(--modal-radius-sm-inner)
+      var(--modal-radius-lg-inner) var(--modal-radius-sm-inner);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+
+  54.023%,
+  100% {
+    border-radius: 50% 10% 50% 10%;
+  }
+}
+
+@keyframes modal-bloom-content-in {
+  0%,
+  76.471% {
+    opacity: 0;
+    transform: translateY(--spacing(2));
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes modal-bloom-content-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-bloom-halo-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  22.727%,
+  54.545% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.4);
+  }
+}
+
+@keyframes modal-bloom-halo-out {
+  0%,
+  19.54% {
+    opacity: 0;
+    transform: scale(1.4);
+  }
+
+  54.023%,
+  77.011% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes modal-bloom-grow-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+
+  14.706%,
+  35.294% {
+    opacity: 1;
+    transform: scale(0.4);
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes modal-bloom-grow-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+
+  54.023%,
+  77.011% {
+    opacity: 1;
+    transform: scale(0.4);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+}
+
+@keyframes modal-bloom-base-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes modal-bloom-base-out {
+  0%,
+  77.011% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+.modal-bloom {
+  @apply -z-1;
+}
+
+.modal-bloom-anchor {
+  @apply absolute bottom-0 left-0 size-0;
+  transform-origin: 0 0;
+  scale: var(--modal-decor-scale);
+}
+
+.modal-bloom-halo,
+.modal-bloom-grow,
+.modal-bloom-base {
+  @apply absolute inset-0;
+  transform-origin: 0 0;
+}
+
+.modal-bloom-halo {
+  @apply opacity-0;
+  transform-origin: --spacing(16) --spacing(-18);
+}
+
+:where([data-theme="cyber-sakura"]) .modal[data-state="opening"] {
+  & .modal-bloom-halo {
+    animation: modal-bloom-halo-in 660ms linear both;
+  }
+
+  & .modal-bloom-grow {
+    animation: modal-bloom-grow-in 1020ms linear both;
+  }
+
+  & .modal-bloom-base {
+    animation: modal-bloom-base-in 150ms linear both;
+  }
+}
+
+:where([data-theme="cyber-sakura"]) .modal[data-state="closing"] {
+  & .modal-bloom-halo {
+    animation: modal-bloom-halo-out 1044ms linear both;
+  }
+
+  & .modal-bloom-grow {
+    animation: modal-bloom-grow-out 1044ms linear both;
+  }
+
+  & .modal-bloom-base {
+    animation: modal-bloom-base-out 1044ms linear both;
+  }
+}
+
+.modal-bloom-art {
+  @apply absolute max-w-none;
+  top: --spacing(-130);
+  left: --spacing(-80);
+  width: --spacing(210);
+  height: --spacing(170);
+  filter: drop-shadow(0 0 --spacing(1.5) rgb(91 227 255 / 45%))
+    drop-shadow(0 --spacing(2.5) --spacing(6) rgb(193 153 255 / 50%));
+}
+
+.modal-bloom-glow {
+  @apply absolute;
+  top: --spacing(-73);
+  left: --spacing(-39);
+  width: --spacing(110);
+  height: --spacing(110);
+  background-image: radial-gradient(
+    circle closest-side,
+    rgb(255 156 194 / 40%),
+    rgb(193 153 255 / 18%) 50%,
+    transparent
+  );
+}
+
+.modal-bloom-ring {
+  @apply absolute rounded-full;
+  border: --spacing(0.25) solid;
+}
+
+.modal-bloom-ring-near {
+  top: --spacing(-43);
+  left: --spacing(-9);
+  width: --spacing(50);
+  height: --spacing(50);
+  border-color: rgb(193 153 255 / 45%);
+}
+
+.modal-bloom-ring-mid {
+  top: --spacing(-54.25);
+  left: --spacing(-20.25);
+  width: --spacing(72.5);
+  height: --spacing(72.5);
+  border-color: rgb(193 153 255 / 28%);
+}
+
+.modal-bloom-ring-far {
+  top: --spacing(-66.75);
+  left: --spacing(-32.75);
+  width: --spacing(97.5);
+  height: --spacing(97.5);
+  border-color: rgb(193 153 255 / 15%);
+}
+
+.modal-bloom-status {
+  @apply absolute hidden whitespace-nowrap text-accent-ink;
+  top: --spacing(-20);
+  left: --spacing(33.5);
+  font-size: --spacing(3);
+  line-height: normal;
+  letter-spacing: 0.24em;
+
+  @variant md {
+    @apply block;
+  }
+}
+
+:where([data-theme="cyber-sakura"]) .modal[data-state="opening"] .modal-box {
+  animation: modal-bloom-box-in 1020ms linear both;
+}
+
+:where([data-theme="cyber-sakura"]) .modal[data-state="opening"] .modal-box::before {
+  animation: modal-bloom-edge-in 1020ms linear both;
+}
+
+:where([data-theme="cyber-sakura"]) .modal[data-state="opening"] .modal-inner {
+  animation: modal-bloom-inner-in 1020ms linear both;
+}
+
+:where([data-theme="cyber-sakura"]) .modal[data-state="opening"] .modal-body {
+  animation: modal-bloom-content-in 1020ms linear both;
+}
+
+:where([data-theme="cyber-sakura"]) .modal[data-state="closing"]::backdrop {
+  animation: modal-overlay-out 480ms linear 684ms both;
+}
+
+:where([data-theme="cyber-sakura"]) .modal[data-state="closing"] .modal-box {
+  animation: modal-bloom-box-out 1044ms linear both;
+}
+
+:where([data-theme="cyber-sakura"]) .modal[data-state="closing"] .modal-box::before {
+  animation: modal-bloom-edge-out 1044ms linear both;
+}
+
+:where([data-theme="cyber-sakura"]) .modal[data-state="closing"] .modal-inner {
+  animation: modal-bloom-inner-out 1044ms linear both;
+}
+
+:where([data-theme="cyber-sakura"]) .modal[data-state="closing"] .modal-body {
+  animation: modal-bloom-content-out 144ms linear both;
+}

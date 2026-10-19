@@ -1,0 +1,95 @@
+@reference "~/assets/css/main.css";
+
+@keyframes modal-bloom-shards-in {
+  0%,
+  77.778% {
+    opacity: 0;
+    transform: translate(--spacing(-3.5), --spacing(3.5));
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes modal-bloom-shards-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+
+  to {
+    opacity: 0;
+    transform: translate(--spacing(-3.5), --spacing(3.5));
+  }
+}
+
+.modal-bloom-front {
+  @apply z-2;
+}
+
+:where([data-theme="cyber-sakura"]) .modal[data-state="opening"] .modal-bloom-shards {
+  animation: modal-bloom-shards-in 1080ms linear both;
+}
+
+:where([data-theme="cyber-sakura"]) .modal[data-state="closing"] .modal-bloom-shards {
+  animation: modal-bloom-shards-out 204ms linear both;
+}
+
+.modal-bloom-shards {
+  @apply absolute inset-0;
+}
+
+.modal-bloom-shard {
+  @apply absolute hidden max-w-none;
+
+  @variant md {
+    @apply block;
+  }
+}
+
+.modal-bloom-shard-1 {
+  top: 41.6%;
+  left: --spacing(-10);
+  width: --spacing(4);
+  height: --spacing(3);
+  rotate: 30deg;
+  opacity: 0.75;
+}
+
+.modal-bloom-shard-2 {
+  top: 65.2%;
+  left: --spacing(-18.5);
+  width: --spacing(3);
+  height: --spacing(2.5);
+  rotate: -20deg;
+  opacity: 0.65;
+}
+
+.modal-bloom-shard-3 {
+  top: calc(100% + --spacing(2));
+  left: 65.6%;
+  width: --spacing(3);
+  height: --spacing(2.25);
+  rotate: 110deg;
+  opacity: 0.6;
+}
+
+.modal-bloom-shard-4 {
+  top: 36%;
+  left: calc(100% + --spacing(3));
+  width: --spacing(3.5);
+  height: --spacing(2.5);
+  rotate: 80deg;
+  opacity: 0.6;
+}
+
+.modal-bloom-shard-5 {
+  top: 5.5%;
+  left: calc(100% - --spacing(4));
+  width: --spacing(2.75);
+  height: --spacing(2);
+  rotate: -30deg;
+  opacity: 0.5;
+}

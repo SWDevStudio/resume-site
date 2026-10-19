@@ -1,0 +1,89 @@
+@reference "~/assets/css/main.css";
+
+@keyframes modal-holo-spark-in {
+  0% {
+    opacity: 1;
+    transform: scaleY(0);
+  }
+
+  28.674% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  45.161% {
+    opacity: 0.35;
+    transform: scaleY(1);
+  }
+
+  53.763% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  62.366% {
+    opacity: 0.5;
+    transform: scaleY(1);
+  }
+
+  70.968% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes modal-holo-spark-out {
+  0%,
+  42.553% {
+    opacity: 0;
+    transform: scaleY(1);
+  }
+
+  57.447% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scaleY(0);
+  }
+}
+
+.modal-holo-spark {
+  @apply opacity-0;
+  transform-origin: 50% 50%;
+}
+
+:where(:root:not([data-theme="cyber-sakura"])) .modal[data-state="opening"] .modal-holo-spark {
+  animation: modal-holo-spark-in 558ms linear both;
+}
+
+:where(:root:not([data-theme="cyber-sakura"])) .modal[data-state="closing"] .modal-holo-spark {
+  animation: modal-holo-spark-out 564ms linear both;
+}
+
+.modal-holo-spark-line {
+  @apply absolute top-1/2 left-1/2 max-w-none -translate-1/2;
+  width: --spacing(60);
+  height: --spacing(205);
+}
+
+.modal-holo-spark-label {
+  @apply absolute hidden whitespace-nowrap text-accent-ink;
+  top: calc(50% + --spacing(3.5));
+  left: calc(50% + --spacing(5.25));
+  font-family: "Share Tech Mono", ui-monospace, monospace;
+  font-size: --spacing(3);
+  line-height: normal;
+  letter-spacing: 0.2em;
+
+  @variant md {
+    @apply block;
+  }
+}

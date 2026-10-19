@@ -1,0 +1,95 @@
+@reference "~/assets/css/main.css";
+
+.modal-holo-scan {
+  @apply absolute inset-0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgb(252 252 242 / 3.5%) 0 --spacing(0.25),
+    transparent --spacing(0.25) --spacing(0.75)
+  );
+}
+
+.modal-holo-hair {
+  @apply absolute inset-y-0 left-1/2 opacity-60;
+  width: --spacing(0.25);
+  background-image: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in oklab, var(--color-accent) 35%, transparent),
+    transparent
+  );
+}
+
+.modal-holo-corner {
+  @apply absolute size-5;
+}
+
+.modal-holo-corner-tl {
+  top: --spacing(2.5);
+  left: --spacing(2.5);
+}
+
+.modal-holo-corner-tr {
+  top: --spacing(2.5);
+  right: --spacing(2.5);
+  rotate: 90deg;
+}
+
+.modal-holo-corner-br {
+  right: --spacing(2.5);
+  bottom: --spacing(2.5);
+  rotate: 180deg;
+}
+
+.modal-holo-corner-bl {
+  bottom: --spacing(2.5);
+  left: --spacing(2.5);
+  rotate: 270deg;
+}
+
+.modal-holo-hud {
+  @apply absolute flex items-center text-accent-ink;
+  top: calc(var(--modal-pad-top) + --spacing(1));
+  left: var(--modal-pad-inline);
+  height: --spacing(10);
+  gap: --spacing(2.5);
+  font-family: "Share Tech Mono", ui-monospace, monospace;
+  font-size: --spacing(3.5);
+  letter-spacing: 0.14em;
+}
+
+.modal-holo-pip {
+  @apply block size-2 bg-secondary;
+  box-shadow: 0 0 --spacing(2) var(--color-secondary);
+}
+
+.modal-holo-ticks {
+  @apply absolute hidden max-w-none;
+  top: calc(var(--modal-pad-top) + --spacing(5.75));
+  right: calc(var(--modal-pad-inline) + --spacing(13.5));
+  width: --spacing(42.5);
+  height: --spacing(0.5);
+
+  @variant md {
+    @apply block;
+  }
+}
+
+.modal-holo-foot {
+  @apply absolute flex justify-between text-base-content/45;
+  right: var(--modal-pad-inline);
+  bottom: var(--modal-pad-bottom);
+  left: var(--modal-pad-inline);
+  font-family: "Share Tech Mono", ui-monospace, monospace;
+  font-size: --spacing(3);
+  line-height: --spacing(3.5);
+  letter-spacing: 0.14em;
+}
+
+.modal-holo-foot-coords {
+  @apply hidden;
+
+  @variant md {
+    @apply inline;
+  }
+}

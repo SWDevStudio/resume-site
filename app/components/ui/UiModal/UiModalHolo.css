@@ -1,0 +1,118 @@
+@reference "~/assets/css/main.css";
+
+@keyframes modal-holo-screen-in {
+  0% {
+    clip-path: inset(0 50% 0 50%);
+    filter: brightness(2.2);
+  }
+
+  26.667% {
+    clip-path: inset(0 50% 0 50%);
+    filter: brightness(2.2);
+    animation-timing-function: cubic-bezier(0.7, 0, 0.2, 1);
+  }
+
+  80% {
+    clip-path: inset(0 0 0 0);
+    filter: brightness(1.4);
+  }
+
+  86% {
+    clip-path: inset(0 0 0 0);
+    filter: brightness(0.7);
+  }
+
+  93% {
+    clip-path: inset(0 0 0 0);
+    filter: brightness(1.15);
+  }
+
+  100% {
+    clip-path: inset(0 0 0 0);
+    filter: brightness(1);
+  }
+}
+
+@keyframes modal-holo-screen-out {
+  0% {
+    clip-path: inset(0 0 0 0);
+    filter: brightness(1);
+    animation-timing-function: cubic-bezier(0.7, 0, 0.2, 1);
+  }
+
+  100% {
+    clip-path: inset(0 50% 0 50%);
+    filter: brightness(2);
+  }
+}
+
+@keyframes modal-holo-content-in {
+  0%,
+  75.269% {
+    opacity: 0;
+  }
+
+  86.022% {
+    opacity: 0.6;
+  }
+
+  91.398% {
+    opacity: 0.15;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-holo-content-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.modal-holo {
+  @apply -z-1;
+}
+
+.modal-holo-line {
+  @apply absolute left-1/2;
+  top: --spacing(-11.5);
+  bottom: --spacing(-11.5);
+  width: --spacing(0.5);
+  margin-left: --spacing(-0.25);
+  background-image: linear-gradient(
+    180deg,
+    transparent,
+    var(--color-accent) 18%,
+    transparent 30%,
+    transparent 70%,
+    var(--color-accent) 82%,
+    transparent
+  );
+  box-shadow: 0 0 --spacing(2.5) var(--color-accent);
+}
+
+:where(:root:not([data-theme="cyber-sakura"])) .modal[data-state="opening"] .modal-screen {
+  animation: modal-holo-screen-in 600ms linear both;
+}
+
+:where(:root:not([data-theme="cyber-sakura"])) .modal[data-state="opening"] .modal-body {
+  animation: modal-holo-content-in 558ms linear both;
+}
+
+:where(:root:not([data-theme="cyber-sakura"])) .modal[data-state="closing"]::backdrop {
+  animation: modal-overlay-out 564ms linear both;
+}
+
+:where(:root:not([data-theme="cyber-sakura"])) .modal[data-state="closing"] .modal-screen {
+  animation: modal-holo-screen-out 264ms linear both;
+}
+
+:where(:root:not([data-theme="cyber-sakura"])) .modal[data-state="closing"] .modal-body {
+  animation: modal-holo-content-out 84ms linear both;
+}

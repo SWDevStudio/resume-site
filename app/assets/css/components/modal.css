@@ -1,0 +1,429 @@
+@property --modal-edge-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --modal-edge-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --modal-edge-via {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --modal-edge-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --modal-accent-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --modal-accent-via {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --modal-accent-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --modal-veil-in {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --modal-veil-out {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --modal-scan {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@keyframes modal-overlay-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-overlay-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@utility modal {
+  --modal-gutter-top: --spacing(6);
+  --modal-gutter-bottom: --spacing(6);
+  --modal-gutter-start: --spacing(4);
+  --modal-gutter-end: --spacing(4);
+  --modal-title-scale: 1;
+  --modal-decor-scale: 0.35;
+  --modal-width-wide: --spacing(150);
+  --modal-width: calc(100% - var(--modal-gutter-start) - var(--modal-gutter-end));
+  --modal-shift-x: calc((var(--modal-gutter-start) - var(--modal-gutter-end)) / 2);
+  --modal-shift-y: calc((var(--modal-gutter-top) - var(--modal-gutter-bottom)) / 2);
+  --modal-border: --spacing(0.375);
+  --modal-cut: --spacing(5.5);
+  --modal-cut-inner: --spacing(5.25);
+  --modal-radius-lg: 0rem;
+  --modal-radius-sm: 0rem;
+  --modal-radius-lg-inner: 0rem;
+  --modal-radius-sm-inner: 0rem;
+  --modal-pad-top: --spacing(4.5);
+  --modal-pad-inline: --spacing(5);
+  --modal-pad-bottom: --spacing(7.5);
+  --modal-bar-height: --spacing(14.75);
+  --modal-bar-gap: --spacing(5.5);
+  --modal-bar-line: --spacing(0.25);
+  --modal-foot-height: --spacing(9);
+  --modal-close-size: --spacing(10);
+  --modal-close-x: var(--modal-pad-inline);
+  --modal-close-y: calc(var(--modal-pad-top) + --spacing(1));
+  --modal-scroll-inset: --spacing(1);
+  --modal-glow: drop-shadow(
+      0 0 --spacing(4.5) color-mix(in oklab, var(--color-accent) 45%, transparent)
+    )
+    drop-shadow(0 0 --spacing(12) color-mix(in oklab, var(--color-primary) 18%, transparent));
+  --modal-box-shadow: 0 0 0 0 transparent, 0 0 0 0 transparent;
+  --modal-title-shadow:
+    --spacing(-0.375) 0 0 color-mix(in oklab, var(--color-info) 55%, transparent),
+    --spacing(0.375) 0 0 color-mix(in oklab, var(--color-primary) 55%, transparent);
+
+  @variant md {
+    --modal-width: var(--modal-width-wide);
+    --modal-shift-x: 0rem;
+    --modal-shift-y: 0rem;
+    --modal-decor-scale: 0.65;
+    --modal-pad-inline: --spacing(8.5);
+  }
+
+  @variant lg {
+    --modal-decor-scale: 1;
+  }
+
+  :where([data-theme="cyber-sakura"]) & {
+    --modal-width-wide: --spacing(160);
+    --modal-gutter-top: --spacing(6);
+    --modal-gutter-bottom: --spacing(12);
+    --modal-gutter-start: --spacing(10);
+    --modal-cut: 0rem;
+    --modal-cut-inner: 0rem;
+    --modal-radius-lg: --spacing(24);
+    --modal-radius-sm: --spacing(5);
+    --modal-radius-lg-inner: calc(var(--modal-radius-lg) - var(--modal-border));
+    --modal-radius-sm-inner: calc(var(--modal-radius-sm) - var(--modal-border));
+    --modal-pad-top: --spacing(14);
+    --modal-pad-inline: --spacing(7);
+    --modal-pad-bottom: --spacing(10);
+    --modal-bar-height: 0rem;
+    --modal-bar-gap: 0rem;
+    --modal-bar-line: 0rem;
+    --modal-foot-height: 0rem;
+    --modal-close-size: --spacing(11);
+    --modal-close-x: --spacing(4);
+    --modal-close-y: --spacing(4);
+    --modal-scroll-inset: --spacing(10);
+    --modal-glow: none;
+    --modal-box-shadow:
+      0 --spacing(7.5) --spacing(20) color-mix(in oklab, var(--color-accent) 45%, transparent),
+      0 --spacing(2) --spacing(6) color-mix(in oklab, var(--color-primary) 18%, transparent);
+    --modal-title-shadow: 0 0 0 transparent, 0 0 0 transparent;
+
+    @variant md {
+      --modal-shift-x: --spacing(10);
+      --modal-shift-y: --spacing(-12);
+      --modal-radius-lg: --spacing(45);
+      --modal-radius-sm: --spacing(7.5);
+      --modal-pad-top: --spacing(15);
+      --modal-pad-inline: --spacing(18);
+      --modal-pad-bottom: --spacing(18);
+      --modal-close-x: --spacing(5.5);
+      --modal-close-y: --spacing(5.5);
+      --modal-scroll-inset: --spacing(14);
+    }
+  }
+
+  @apply fixed inset-0 m-0 size-full max-h-none max-w-none overflow-clip border-0 bg-transparent p-0 font-body font-light text-base-content;
+
+  &[open] {
+    @apply grid;
+  }
+
+  &::backdrop {
+    --modal-veil-in: rgb(9 9 12 / 62%);
+    background-color: transparent;
+    --modal-veil-out: rgb(5 4 8 / 90%);
+    --modal-scan: rgb(252 252 242 / 2.5%);
+    background-image:
+      radial-gradient(ellipse 60% 70% at 50% 50%, var(--modal-veil-in), var(--modal-veil-out)),
+      repeating-linear-gradient(
+        0deg,
+        var(--modal-scan) 0 --spacing(0.25),
+        transparent --spacing(0.25) --spacing(1)
+      );
+    backdrop-filter: blur(--spacing(1.5)) saturate(0.8);
+    transition-property: --modal-veil-in, --modal-veil-out, --modal-scan, backdrop-filter;
+  }
+
+  :where([data-theme="cyber-sakura"]) &::backdrop {
+    --modal-veil-in: rgb(244 240 248 / 35%);
+    --modal-veil-out: rgb(32 19 53 / 42%);
+    --modal-scan: rgb(252 252 242 / 0%);
+    backdrop-filter: blur(--spacing(2.5)) saturate(1.1);
+  }
+
+  &[data-state="opening"]::backdrop {
+    animation: modal-overlay-in 240ms linear both;
+  }
+
+  @variant motion-reduce {
+    &,
+    &::backdrop,
+    & *,
+    & *::before,
+    & *::after {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+}
+
+@utility modal-layer {
+  @apply pointer-events-none absolute inset-0;
+  transition-property: opacity, visibility;
+
+  :where([data-theme="cyber-sakura"]) &.modal-layer-torii,
+  :where(:root:not([data-theme="cyber-sakura"])) &.modal-layer-sakura {
+    @apply invisible opacity-0;
+  }
+
+  &.modal-layer-late {
+    @starting-style {
+      opacity: 0;
+    }
+  }
+
+  :where([data-theme="cyber-sakura"]) &.modal-layer-torii,
+  :where([data-theme="cyber-sakura"]) &.modal-layer-torii *,
+  :where(:root:not([data-theme="cyber-sakura"])) &.modal-layer-sakura,
+  :where(:root:not([data-theme="cyber-sakura"])) &.modal-layer-sakura * {
+    animation: none !important;
+  }
+}
+
+@utility modal-screen {
+  @apply absolute inset-0 grid place-items-center;
+}
+
+@utility modal-window {
+  @apply relative isolate flex flex-col;
+  width: var(--modal-width);
+  max-height: calc(100svh - var(--modal-gutter-top) - var(--modal-gutter-bottom));
+  translate: var(--modal-shift-x) var(--modal-shift-y);
+  filter: var(--modal-glow);
+  transition-property: width, translate, filter;
+}
+
+@utility modal-box {
+  @apply relative flex min-h-0 flex-col;
+  padding: var(--modal-border);
+  border-radius: var(--modal-radius-lg) var(--modal-radius-sm) var(--modal-radius-lg)
+    var(--modal-radius-sm);
+  box-shadow: var(--modal-box-shadow);
+  transform-origin: 0 100%;
+  transition-property: padding, border-radius, box-shadow;
+
+  &::before {
+    --modal-edge-angle: 120deg;
+    --modal-edge-from: var(--color-primary);
+    --modal-edge-via: var(--color-accent);
+    --modal-edge-to: var(--color-primary);
+    @apply pointer-events-none absolute inset-0;
+    content: "";
+    border-radius: var(--modal-radius-lg) var(--modal-radius-sm) var(--modal-radius-lg)
+      var(--modal-radius-sm);
+    background-image: linear-gradient(
+      var(--modal-edge-angle),
+      var(--modal-edge-from),
+      var(--modal-edge-via) 55%,
+      var(--modal-edge-to)
+    );
+    clip-path: polygon(
+      var(--modal-cut) 0,
+      100% 0,
+      100% calc(100% - var(--modal-cut)),
+      calc(100% - var(--modal-cut)) 100%,
+      0 100%,
+      0 var(--modal-cut)
+    );
+    transition-property:
+      --modal-edge-angle, --modal-edge-from, --modal-edge-via, --modal-edge-to, border-radius,
+      clip-path;
+  }
+
+  :where([data-theme="cyber-sakura"]) &::before {
+    --modal-edge-angle: 135deg;
+    --modal-edge-from: #ff9cc2;
+    --modal-edge-via: var(--color-accent);
+    --modal-edge-to: #9fd8ff;
+  }
+}
+
+@utility modal-inner {
+  @apply relative isolate flex min-h-0 flex-1 flex-col overflow-hidden;
+  padding: var(--modal-pad-top) var(--modal-pad-inline)
+    calc(var(--modal-pad-bottom) + var(--modal-foot-height));
+  border-radius: max(0rem, var(--modal-radius-lg-inner)) max(0rem, var(--modal-radius-sm-inner))
+    max(0rem, var(--modal-radius-lg-inner)) max(0rem, var(--modal-radius-sm-inner));
+  clip-path: polygon(
+    var(--modal-cut-inner) 0,
+    100% 0,
+    100% calc(100% - var(--modal-cut-inner)),
+    calc(100% - var(--modal-cut-inner)) 100%,
+    0 100%,
+    0 var(--modal-cut-inner)
+  );
+  transition-property: padding, border-radius, clip-path;
+
+  &::before,
+  &::after {
+    @apply pointer-events-none absolute inset-0 -z-1;
+    content: "";
+    transition-property: opacity;
+  }
+
+  &::before {
+    background-image:
+      linear-gradient(
+        115deg,
+        transparent 28%,
+        color-mix(in oklab, var(--color-accent) 10%, transparent) 44%,
+        color-mix(in oklab, var(--color-info) 7%, transparent) 52%,
+        transparent 66%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--color-base-200) 86%, transparent),
+        color-mix(in oklab, var(--color-base-100) 92%, transparent)
+      );
+  }
+
+  &::after {
+    @apply opacity-0;
+    background-color: rgb(255 255 255 / 92%);
+    background-image:
+      radial-gradient(ellipse 70% 50% at 0% 100%, rgb(255 156 194 / 24%), transparent 70%),
+      radial-gradient(ellipse 60% 50% at 100% 0%, rgb(159 216 255 / 20%), transparent 70%);
+  }
+
+  :where([data-theme="cyber-sakura"]) &::before {
+    @apply opacity-0;
+  }
+
+  :where([data-theme="cyber-sakura"]) &::after {
+    @apply opacity-100;
+  }
+}
+
+@utility modal-bar {
+  @apply relative z-2 box-border shrink-0;
+  height: var(--modal-bar-height);
+  margin-bottom: var(--modal-bar-gap);
+  border-bottom: var(--modal-bar-line) solid
+    color-mix(in oklab, var(--color-primary) 30%, transparent);
+  transition-property: height, margin-bottom, border-bottom-width;
+}
+
+@utility modal-body {
+  @apply relative z-1 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain;
+  gap: --spacing(5.5);
+  margin-inline: calc(var(--modal-pad-inline) * -1);
+  margin-block: --spacing(-2);
+  padding-inline: var(--modal-pad-inline);
+  padding-block: --spacing(2);
+  transition-property: margin-inline, padding-inline;
+
+  & > * {
+    @apply shrink-0;
+  }
+
+  &::-webkit-scrollbar-track {
+    margin-block: var(--modal-scroll-inset);
+  }
+}
+
+@utility modal-head {
+  @apply flex flex-col;
+  gap: --spacing(2.5);
+}
+
+@utility modal-label {
+  @apply font-body leading-[normal] font-light tracking-[.3em] text-primary-ink uppercase;
+  font-size: --spacing(3.5);
+}
+
+@utility modal-title {
+  @apply m-0 font-head font-normal;
+  font-size: calc(--spacing(10) * var(--modal-title-scale));
+  line-height: 1.05;
+  text-shadow: var(--modal-title-shadow);
+  transition-property: color, text-shadow;
+}
+
+@utility modal-accent {
+  --modal-accent-from: var(--color-primary-ink);
+  --modal-accent-via: color-mix(in srgb, var(--color-primary-ink) 45%, var(--color-accent));
+  --modal-accent-to: var(--color-accent);
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(
+    90deg,
+    var(--modal-accent-from),
+    var(--modal-accent-via) 55%,
+    var(--modal-accent-to)
+  );
+  text-shadow: none;
+  transition-property: --modal-accent-from, --modal-accent-via, --modal-accent-to;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --modal-accent-from: var(--color-primary);
+    --modal-accent-via: #8f6cff;
+    --modal-accent-to: var(--color-secondary);
+  }
+}
+
+@utility modal-description {
+  @apply m-0 leading-[1.7] text-base-content/66;
+  margin-top: --spacing(1);
+  font-size: --spacing(3.5);
+}
+
+:lang(ru) .modal {
+  --modal-title-scale: 0.75;
+}
