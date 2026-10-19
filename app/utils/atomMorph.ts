@@ -44,6 +44,7 @@ const MASK_SCALE = 2;
 const ALPHA_THRESHOLD = 110;
 const STYLE_ID = "atom-morph-style";
 const ASYNC_SELECTOR = "[data-atom-async]";
+const SKIP_SELECTOR = "[data-atom-skip]";
 const HIDDEN_ATTR = "data-atom-hidden";
 const SKIP_TAGS = new Set(["SCRIPT", "STYLE", "NOSCRIPT", "TEXTAREA", "OPTION"]);
 
@@ -271,6 +272,7 @@ function collectGlyphs(
     const node = walker.currentNode as Text;
     const element = node.parentElement;
     if (!element?.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })) continue;
+    if (element.closest(SKIP_SELECTOR)) continue;
     if ((element.closest(ASYNC_SELECTOR) !== null) !== (group === "async")) continue;
     if (allowed && !allowed.has(element)) continue;
 
