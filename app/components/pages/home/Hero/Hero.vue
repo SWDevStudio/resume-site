@@ -4,13 +4,11 @@
     class="home-hero"
     :contained="false"
   >
-    <HeroNight
-      v-if="nightShown"
-      :class="nightClass"
-    />
-    <HeroDay
-      v-if="dayShown"
-      :class="dayClass"
+    <component
+      :is="item.entry"
+      v-for="item in layers"
+      :key="item.theme"
+      :class="{ 'home-hero-paused': item.paused }"
     />
 
     <h1
@@ -28,9 +26,9 @@
       class="home-hero-cta btn-lg"
       type="button"
     >
-      <span
+      <UiIcon
+        name="arrow-down"
         class="home-hero-cta-icon"
-        aria-hidden="true"
       />
       {{ t("home.hero.cv") }}
     </UiButton>
@@ -38,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import UiIcon from "~/components/ui/UiIcon/UiIcon.vue";
 import { useI18n } from "vue-i18n";
 import HomeSlide from "~/components/pages/home/HomeSlide/HomeSlide.vue";
 import UiButton from "~/components/ui/UiButton/UiButton.vue";
@@ -48,11 +46,10 @@ import HeroNight from "./HeroNight.vue";
 import HeroSocials from "./HeroSocials.vue";
 
 const { t } = useI18n();
-const { day, nightShown, dayShown } = useThemeLayers();
-
-const nightClass = computed(() => ({ "home-hero-paused": day.value }));
-
-const dayClass = computed(() => ({ "home-hero-paused": !day.value }));
+const { layers } = useThemeLayers({
+  "torii-synth": HeroNight,
+  "cyber-sakura": HeroDay,
+});
 </script>
 
 <style src="./Hero.css" />

@@ -239,6 +239,5 @@
 }
 
 .home-hero-cta-icon {
-  @apply relative size-3.5 shrink-0 bg-current mask-contain mask-center mask-no-repeat;
-  mask-image: url("./media/cta-arrow.svg");
+  @apply relative size-3.5 shrink-0;
 }

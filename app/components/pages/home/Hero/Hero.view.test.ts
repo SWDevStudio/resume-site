@@ -3,13 +3,16 @@ import { renderToString } from "vue/server-renderer";
 import { createI18n } from "vue-i18n";
 import { cdp, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-vue";
-import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Locale } from "~/assets/const";
 import en from "~/locales/en.json";
 import ru from "~/locales/ru.json";
 import Hero from "./Hero.vue";
+import { setTheme } from "../../../../../test/mocks/useTheme";
 import "~/assets/css/fonts.css";
 import "~/assets/css/main.css";
+
+vi.mock("~/composables/useTheme", () => import("../../../../../test/mocks/useTheme"));
 
 interface HeroCase {
   name: string;
@@ -130,7 +133,7 @@ afterEach(async () => {
 
 describe.each(themes)("%s", (theme) => {
   beforeEach(() => {
-    document.documentElement.dataset.theme = theme;
+    setTheme(theme);
   });
 
   it.each(cases)("$name", async (item) => {
@@ -144,10 +147,10 @@ describe.each(themes)("%s", (theme) => {
 
 describe("theme switch", () => {
   it.each(switchCases)("$name", async (item) => {
-    document.documentElement.dataset.theme = "torii-synth";
+    setTheme("torii-synth");
     const screen = await renderCase(item);
     screen.container.getBoundingClientRect();
-    document.documentElement.dataset.theme = "cyber-sakura";
+    setTheme("cyber-sakura");
 
     const animations = document.getAnimations();
     expect(animations.length).toBeGreaterThan(0);
@@ -164,7 +167,7 @@ describe("theme switch", () => {
 
 describe("behavior", () => {
   beforeEach(() => {
-    document.documentElement.dataset.theme = "torii-synth";
+    setTheme("torii-synth");
   });
 
   it("renders the heading, the cv button and three social links", async () => {
@@ -305,7 +308,7 @@ describe("behavior", () => {
     expect(getComputedStyle(social, "::before").opacity).toBe("1");
     expect(getComputedStyle(social, "::after").opacity).toBe("0");
 
-    document.documentElement.dataset.theme = "cyber-sakura";
+    setTheme("cyber-sakura");
     expect(transitioning(night, "opacity")).toBe(true);
     expect(transitioning(day, "opacity")).toBe(true);
     expect(transitioning(night, "visibility")).toBe(true);
@@ -382,7 +385,7 @@ describe("behavior", () => {
 
       const title = screen.container.querySelector<HTMLElement>(".home-hero-title-top")!;
 
-      document.documentElement.dataset.theme = "cyber-sakura";
+      setTheme("cyber-sakura");
       await nextTick();
       expect(transitioning(night, "opacity")).toBe(false);
       expect(transitioning(title, "filter")).toBe(false);
@@ -393,7 +396,7 @@ describe("behavior", () => {
   });
 
   it("mounts the inactive layer only after the page has loaded", async () => {
-    document.documentElement.dataset.theme = "torii-synth";
+    setTheme("torii-synth");
     await whileLoading(async () => {
       const screen = await renderCase({ width: 1440, height: 900 }, false);
       await nextTick();
@@ -409,10 +412,10 @@ describe("behavior", () => {
   });
 
   it("mounts the layer of a theme switched on before the page has loaded", async () => {
-    document.documentElement.dataset.theme = "torii-synth";
+    setTheme("torii-synth");
     await whileLoading(async () => {
       const screen = await renderCase({ width: 1440, height: 900 }, false);
-      document.documentElement.dataset.theme = "cyber-sakura";
+      setTheme("cyber-sakura");
 
       await expect.poll(() => screen.container.querySelector(".home-hero-day")).not.toBeNull();
       expect(screen.container.querySelector(".home-hero-night")).not.toBeNull();
@@ -420,14 +423,14 @@ describe("behavior", () => {
   });
 
   it("pauses the decor of the inactive layer", async () => {
-    document.documentElement.dataset.theme = "torii-synth";
+    setTheme("torii-synth");
     await renderCase({ width: 1440, height: 900 });
 
     expect(running("home-hero-firefly").every((item) => item.playState === "running")).toBe(true);
     expect(running("home-hero-wind").every((item) => item.playState === "paused")).toBe(true);
     expect(running("home-hero-flip").every((item) => item.playState === "paused")).toBe(true);
 
-    document.documentElement.dataset.theme = "cyber-sakura";
+    setTheme("cyber-sakura");
     await expect
       .poll(() => running("home-hero-wind").every((item) => item.playState === "running"))
       .toBe(true);
