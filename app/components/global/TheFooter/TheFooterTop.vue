@@ -4,20 +4,15 @@
     href="#top"
   >
     {{ t("footer.top") }}
-    <svg
+    <UiIcon
+      name="arrow-up"
       class="the-footer-top-icon"
-      viewBox="0 0 12 16"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.8"
-      aria-hidden="true"
-    >
-      <path d="M6 15V2M1 7L6 2L11 7" />
-    </svg>
+    />
   </a>
 </template>
 
 <script setup lang="ts">
+import UiIcon from "~/components/ui/UiIcon/UiIcon.vue";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();

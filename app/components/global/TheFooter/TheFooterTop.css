@@ -19,16 +19,10 @@
 }
 
 .the-footer-top-icon {
-  @apply h-auto shrink-0;
+  @apply shrink-0;
   width: --spacing(3);
-  stroke-linecap: square;
-  stroke-linejoin: miter;
   transition-property: transform;
-
-  :where([data-theme="cyber-sakura"]) & {
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
+  aspect-ratio: 12 / 16;
 
   .the-footer-top:hover & {
     transform: translateY(--spacing(-0.5));
