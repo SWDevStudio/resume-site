@@ -18,3 +18,10 @@ export const NuxtLinkLocale = defineComponent({
     };
   },
 });
+
+export const ClientOnly = defineComponent({
+  name: "ClientOnly",
+  setup(_, { slots }) {
+    return () => slots.default?.();
+  },
+});
