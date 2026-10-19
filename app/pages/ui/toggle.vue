@@ -39,8 +39,9 @@
           <FormToggle
             name="disabledOff"
             disabled
-            >Reduce motion</FormToggle
           >
+            Reduce motion
+          </FormToggle>
           <figcaption>
             <code class="text-xs text-brand-ink">toggle-field toggle :disabled</code>
           </figcaption>
@@ -49,8 +50,9 @@
           <FormToggle
             name="disabledOn"
             disabled
-            >Torii Synth / Cyber Sakura</FormToggle
           >
+            Torii Synth / Cyber Sakura
+          </FormToggle>
           <figcaption>
             <code class="text-xs text-brand-ink">toggle-field toggle :checked :disabled</code>
           </figcaption>

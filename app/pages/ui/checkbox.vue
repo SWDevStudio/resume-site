@@ -36,9 +36,9 @@
             I acknowledge and consent to the storage of my data
           </FormCheckbox>
           <figcaption>
-            <code class="text-xs text-brand-ink"
-              >checkbox-field checkbox checkbox-error :checked</code
-            >
+            <code class="text-xs text-brand-ink">
+              checkbox-field checkbox checkbox-error :checked
+            </code>
           </figcaption>
         </figure>
       </div>
@@ -51,8 +51,9 @@
           <FormCheckbox
             name="disabled"
             disabled
-            >Subscribe to updates</FormCheckbox
           >
+            Subscribe to updates
+          </FormCheckbox>
           <figcaption>
             <code class="text-xs text-brand-ink">checkbox-field checkbox :disabled</code>
           </figcaption>
@@ -61,8 +62,9 @@
           <FormCheckbox
             name="disabledChecked"
             disabled
-            >Subscribe to updates</FormCheckbox
           >
+            Subscribe to updates
+          </FormCheckbox>
           <figcaption>
             <code class="text-xs text-brand-ink">checkbox-field checkbox :disabled :checked</code>
           </figcaption>

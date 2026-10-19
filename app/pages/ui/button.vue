@@ -13,8 +13,9 @@
           <UiButton
             :class="variant.modifier"
             type="button"
-            >Projects</UiButton
           >
+            Projects
+          </UiButton>
           <figcaption>
             <code class="text-xs text-brand-ink">{{ variant.caption }}</code>
           </figcaption>
@@ -33,8 +34,9 @@
           <UiButton
             :class="size.modifier"
             type="button"
-            >{{ size.label }}</UiButton
           >
+            {{ size.label }}
+          </UiButton>
           <figcaption>
             <code class="text-xs text-brand-ink">{{ size.caption }}</code>
           </figcaption>
@@ -49,8 +51,9 @@
           <UiButton
             type="button"
             disabled
-            >Send message</UiButton
           >
+            Send message
+          </UiButton>
           <figcaption>
             <code class="text-xs text-brand-ink">btn :disabled</code>
           </figcaption>
@@ -59,8 +62,9 @@
           <UiButton
             class="btn-disabled btn-primary"
             type="button"
-            >Send message</UiButton
           >
+            Send message
+          </UiButton>
           <figcaption>
             <code class="text-xs text-brand-ink">btn btn-primary btn-disabled</code>
           </figcaption>
@@ -96,8 +100,9 @@
           <a
             class="btn btn-link"
             href="#"
-            >Read case &lt;/&gt;</a
           >
+            Read case &lt;/&gt;
+          </a>
           <figcaption>
             <code class="text-xs text-brand-ink">btn btn-link</code>
           </figcaption>
@@ -136,8 +141,9 @@
         <UiButton
           class="btn-block btn-primary"
           type="button"
-          >Send message</UiButton
         >
+          Send message
+        </UiButton>
         <figcaption>
           <code class="text-xs text-brand-ink">btn btn-primary btn-block</code>
         </figcaption>

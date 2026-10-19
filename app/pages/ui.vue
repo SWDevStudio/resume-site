@@ -6,8 +6,9 @@
       <NuxtLinkLocale
         class="font-head text-2xl"
         to="/ui"
-        >Sawa UI</NuxtLinkLocale
       >
+        Sawa UI
+      </NuxtLinkLocale>
       <nav class="flex flex-wrap gap-x-4 gap-y-2 md:flex-col">
         <NuxtLinkLocale
           v-for="item in items"
@@ -29,8 +30,9 @@
           class="btn-sm"
           type="button"
           @click="toggle"
-          >Сменить тему</UiButton
         >
+          Сменить тему
+        </UiButton>
       </header>
 
       <main class="px-8 pt-8 pb-24">

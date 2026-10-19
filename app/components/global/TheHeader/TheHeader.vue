@@ -12,7 +12,9 @@
         class="the-header-logo"
         to="/"
       >
-        SW<span>-</span>DEV
+        <span>SW</span>
+        <span class="the-header-logo-dash">-</span>
+        <span>DEV</span>
       </NuxtLinkLocale>
 
       <div class="the-header-end">

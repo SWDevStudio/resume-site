@@ -72,8 +72,9 @@
             :class="trigger.modifier"
             type="button"
             @click="trigger.run()"
-            >{{ trigger.label }}</UiButton
           >
+            {{ trigger.label }}
+          </UiButton>
           <figcaption>
             <code class="text-xs text-brand-ink">{{ trigger.caption }}</code>
           </figcaption>

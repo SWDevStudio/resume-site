@@ -27,8 +27,9 @@
             class="btn-primary btn-sm"
             type="button"
             @click="next"
-            >Следующий</UiButton
           >
+            Следующий
+          </UiButton>
           <UiButton
             v-for="skill in skills"
             :key="skill"
@@ -41,9 +42,9 @@
           </UiButton>
         </div>
         <figcaption>
-          <code class="text-xs text-brand-ink"
-            >skill-tile · :skill-name="SkillTile.{{ current }}"</code
-          >
+          <code class="text-xs text-brand-ink">
+            skill-tile · :skill-name="SkillTile.{{ current }}"
+          </code>
         </figcaption>
       </figure>
     </div>

@@ -6,8 +6,9 @@
     <label
       v-if="label"
       :for="id"
-      >{{ label }}</label
     >
+      {{ label }}
+    </label>
     <div>
       <textarea
         v-bind="bindings.control"

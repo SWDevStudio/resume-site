@@ -91,7 +91,7 @@
   outline-offset: --spacing(1);
   transition-property: color, text-shadow, outline-color;
 
-  & > span {
+  & > .the-header-logo-dash {
     color: var(--color-primary);
   }
 
