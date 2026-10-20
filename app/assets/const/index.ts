@@ -1,5 +1,6 @@
 import { DEFAULT_LOCALE, LOCALE_COOKIE, LOCALES, type Locale } from "./locale";
 import { CONTACT_CHANNELS, SOCIAL, SOCIAL_NETWORKS, type SocialKey } from "./social";
+import { Route } from "./route";
 import { DEFAULT_THEME, THEME, THEME_COLOR, THEMES, type ThemeId } from "./theme";
 
 export {
@@ -8,6 +9,7 @@ export {
   DEFAULT_THEME,
   LOCALE_COOKIE,
   LOCALES,
+  Route,
   SOCIAL,
   SOCIAL_NETWORKS,
   THEME,
