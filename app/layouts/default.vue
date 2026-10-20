@@ -1,7 +1,7 @@
 <template>
   <div class="font-body text-base-content">
     <TheHeader />
-    <main>
+    <main class="min-h-svh">
       <slot />
     </main>
     <TheFooter />
