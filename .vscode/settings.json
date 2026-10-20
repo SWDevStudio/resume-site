@@ -30,5 +30,14 @@
       }
     ]
   },
-  "i18n-ally.localesPaths": ["app/locales"]
+  "i18n-ally.localesPaths": ["app/locales"],
+  "i18n-ally.enabledParsers": ["json"],
+  "i18n-ally.enabledFrameworks": ["vue", "vue-i18n", "custom"],
+  "i18n-ally.dirStructure": "file",
+  "i18n-ally.pathMatcher": "{locale}.json",
+  "i18n-ally.namespace": false,
+  "i18n-ally.sourceLanguage": "ru",
+  "i18n-ally.displayLanguage": "ru",
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.usage.scanningIgnore": [".nuxt/**", ".output/**", ".vitest/**", ".cache/**", "dist/**"]
 }

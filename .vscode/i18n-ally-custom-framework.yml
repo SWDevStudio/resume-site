@@ -1,0 +1,9 @@
+languageIds:
+  - vue
+  - typescript
+
+usageMatchRegex:
+  - "[^\\w\\d]t\\(\\s*['\"`]([^'\"`$\\s]+)['\"`]"
+  - "<I18nT[^>]*?\\skeypath=['\"]([^'\"$\\s]+)['\"]"
+
+monopoly: false
