@@ -1,3 +1,8 @@
+@utility input-caret {
+  caret-shape: block;
+  caret-color: var(--color-primary);
+}
+
 @utility input {
   --input-bg: color-mix(in oklab, var(--color-base-100) 55%, transparent);
   --input-line: color-mix(in oklab, var(--color-primary) 50%, transparent);
@@ -8,7 +13,7 @@
   }
 
   @apply block h-13 w-full px-4.5 py-3.5 font-body text-sm font-light text-base-content outline-hidden;
-  @apply placeholder:text-base-content/45;
+  @apply input-caret placeholder:text-base-content/45;
   border: --spacing(0.25) solid var(--input-line);
   border-radius: var(--radius-field);
   background-color: var(--input-bg);
