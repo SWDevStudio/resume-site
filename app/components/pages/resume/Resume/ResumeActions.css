@@ -1,0 +1,61 @@
+@reference "~/assets/css/main.css";
+
+.resume-actions {
+  @apply grid grid-cols-2;
+  gap: --spacing(3);
+  margin-top: --spacing(1);
+
+  @variant md {
+    @apply flex flex-wrap;
+    gap: --spacing(3.5);
+    margin-top: --spacing(1.5);
+  }
+}
+
+.resume-action {
+  --btn-height: --spacing(12);
+  --btn-padding-x: --spacing(7);
+  --btn-font-size: --spacing(3);
+
+  @apply w-full tracking-[.3em];
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property:
+    color, text-decoration-color, filter, opacity, padding, min-width, outline-color;
+
+  @variant md {
+    --btn-height: --spacing(13);
+
+    @apply w-auto;
+  }
+
+  @variant active {
+    --btn-fill: 24%;
+  }
+
+  @variant focus-visible {
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.resume-action-pdf {
+  @apply btn-primary;
+}
+
+.resume-action-long {
+  @apply hidden;
+
+  @variant md {
+    @apply inline;
+  }
+}
+
+.resume-action-short {
+  @variant md {
+    @apply hidden;
+  }
+}

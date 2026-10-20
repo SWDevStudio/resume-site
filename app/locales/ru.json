@@ -146,6 +146,14 @@
       "projects": "Последние проекты"
     }
   },
+  "resume": {
+    "actions": {
+      "pdf": "СКАЧАТЬ PDF",
+      "md": "ДЛЯ LLM · MD",
+      "pdfAria": "Скачать резюме в формате PDF",
+      "mdAria": "Открыть резюме в формате Markdown для LLM"
+    }
+  },
   "footer": {
     "tagline": "быстрые и продуманные веб-продукты",
     "copyright": "© {year} Михаил · SOWA_DEV. Все права защищены.",

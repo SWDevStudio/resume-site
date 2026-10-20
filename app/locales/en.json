@@ -34,6 +34,14 @@
       "photoAlt": "Michael"
     }
   },
+  "resume": {
+    "actions": {
+      "pdf": "DOWNLOAD PDF",
+      "md": "FOR LLM · MD",
+      "pdfAria": "Download the resume as a PDF file",
+      "mdAria": "Open the resume as Markdown for LLMs"
+    }
+  },
   "footer": {
     "tagline": "fast, thoughtful web products",
     "copyright": "© {year} Michael · SOWA_DEV. All rights reserved.",
