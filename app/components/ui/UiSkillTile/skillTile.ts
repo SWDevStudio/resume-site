@@ -10,19 +10,25 @@ import htmlIcon from "./icons/html5.webp";
 import javaScriptIcon from "./icons/java-script.webp";
 import jestIcon from "./icons/jest.webp";
 import jiraIcon from "./icons/jira.webp";
+import kubernetesIcon from "./icons/kubernetes.webp";
 import laravelIcon from "./icons/laravel.webp";
+import mongoDbIcon from "./icons/mongodb.webp";
+import nestJsIcon from "./icons/nest-js.webp";
+import nginxIcon from "./icons/nginx.webp";
 import nextJsIcon from "./icons/next-js.webp";
 import nodeJsIcon from "./icons/node-js.webp";
 import nuxtIcon from "./icons/nuxt.webp";
 import postgreSqlIcon from "./icons/postgre-sql.webp";
 import prometheusIcon from "./icons/prometheus.webp";
 import reactIcon from "./icons/react.webp";
+import redisIcon from "./icons/redis.webp";
 import reduxIcon from "./icons/redux.webp";
 import rustIcon from "./icons/rust.webp";
 import sassIcon from "./icons/sass.webp";
 import storybookIcon from "./icons/storybook.webp";
 import tailwindIcon from "./icons/tailwind.webp";
 import tauriIcon from "./icons/tauri.webp";
+import terraformIcon from "./icons/terraform.webp";
 import typeScriptIcon from "./icons/type-script.webp";
 import viteIcon from "./icons/vite.webp";
 import vitestIcon from "./icons/vitest.webp";
@@ -60,6 +66,12 @@ export enum SkillTile {
   Tauri = "Tauri",
   GitLab = "GitLab",
   Git = "Git",
+  NestJs = "NestJs",
+  MongoDb = "MongoDb",
+  Kubernetes = "Kubernetes",
+  Redis = "Redis",
+  Terraform = "Terraform",
+  Nginx = "Nginx",
 }
 
 export interface SkillTileMeta {
@@ -100,4 +112,10 @@ export const SKILL_TILE_META: Record<SkillTile, SkillTileMeta> = {
   [SkillTile.Tauri]: { label: "Tauri", icon: tauriIcon },
   [SkillTile.GitLab]: { label: "GitLab", icon: gitLabIcon },
   [SkillTile.Git]: { label: "Git", icon: gitIcon },
+  [SkillTile.NestJs]: { label: "NestJS", icon: nestJsIcon },
+  [SkillTile.MongoDb]: { label: "MongoDB", icon: mongoDbIcon },
+  [SkillTile.Kubernetes]: { label: "Kubernetes", icon: kubernetesIcon },
+  [SkillTile.Redis]: { label: "Redis", icon: redisIcon },
+  [SkillTile.Terraform]: { label: "Terraform", icon: terraformIcon },
+  [SkillTile.Nginx]: { label: "Nginx", icon: nginxIcon },
 };
