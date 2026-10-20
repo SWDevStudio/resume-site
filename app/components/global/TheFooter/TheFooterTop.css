@@ -1,7 +1,9 @@
 @reference "~/assets/css/main.css";
 
 .the-footer-top {
-  @apply inline-flex items-center tracking-[.2em] text-primary-ink uppercase no-underline;
+  @apply inline-flex cursor-pointer items-center border-0 bg-transparent p-0 tracking-[.2em] text-primary-ink uppercase no-underline;
+  font: inherit;
+  text-align: inherit;
   gap: --spacing(2.5);
   min-height: --spacing(11);
   font-size: --spacing(3);

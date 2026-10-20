@@ -38,7 +38,6 @@ const customTransitions = [
   ".the-footer-day",
   ".the-footer-line",
   ".the-footer-logo",
-  ".the-footer-link",
   ".the-footer-top",
   ".the-footer-top-icon",
   ".home-contact-social",
@@ -151,8 +150,8 @@ const dictionaries = { en, ru };
 
 beforeAll(async () => {
   await page.viewport(1440, 900);
-  await document.fonts.load('400 1em "Martian Mono"', "SW-DEV Fullstack developer HOME ABOUT");
-  await document.fonts.load('300 1em "Martian Mono"', "© 2026 Michael BACK TO TOP Наверх Главная");
+  await document.fonts.load('400 1em "Martian Mono"', "SOWA_DEV Fullstack developer");
+  await document.fonts.load('300 1em "Martian Mono"', "© 2026 Michael BACK TO TOP Наверх");
   await cdp().send("Emulation.setScrollbarsHidden", { hidden: true });
 });
 
@@ -211,38 +210,82 @@ describe("behavior", () => {
     document.documentElement.dataset.theme = "torii-synth";
   });
 
-  it.each(["en", "ru"] as const)(
-    "renders the brand, the menu and the copyright in %s",
-    async (locale) => {
-      const screen = await renderCase({ width: 1440, height: 900, locale });
-      const slide = pick<HTMLElement>(screen, ".the-footer");
-      const dictionary = dictionaries[locale].footer;
+  it.each(["en", "ru"] as const)("renders the brand and the copyright in %s", async (locale) => {
+    const screen = await renderCase({ width: 1440, height: 900, locale });
+    const slide = pick<HTMLElement>(screen, ".the-footer");
+    const dictionary = dictionaries[locale].footer;
 
-      expect(slide.tagName).toBe("FOOTER");
-      expect(slide.id).toBe("footer");
-      expect(slide.classList.contains("home-slide")).toBe(false);
-      expect(text(pick(screen, ".the-footer-logo"))).toBe("SW-DEV");
-      expect(pick(screen, ".the-footer-tagline").textContent).toBe(dictionary.tagline);
-      expect(pick(screen, ".the-footer-nav").getAttribute("aria-label")).toBe(dictionary.navLabel);
-      expect(pickAll(screen, ".the-footer-link").map((item) => text(item))).toEqual([
-        dictionary.nav.home,
-        dictionary.nav.about,
-        dictionary.nav.skills,
-        dictionary.nav.projects,
-        dictionary.nav.contact,
-      ]);
-      expect(
-        pickAll<HTMLAnchorElement>(screen, ".the-footer-link").map((item) =>
-          item.getAttribute("href"),
-        ),
-      ).toEqual(["#top", "#about", "#skills", "#projects", "#contact"]);
-      expect(pick(screen, ".the-footer-logo").getAttribute("href")).toBe("#top");
-      expect(text(pick(screen, ".the-footer-top"))).toBe(dictionary.top);
-      expect(pick(screen, ".the-footer-top").getAttribute("href")).toBe("#top");
-      expect(pick(screen, ".the-footer-decor").getAttribute("aria-hidden")).toBe("true");
-      expect(pickAll(screen, ".the-footer-petal")).toHaveLength(6);
-    },
-  );
+    expect(slide.tagName).toBe("FOOTER");
+    expect(slide.id).toBe("footer");
+    expect(slide.classList.contains("home-slide")).toBe(false);
+    expect(text(pick(screen, ".the-footer-logo"))).toBe("SOWA_DEV");
+    expect(text(pick(screen, ".the-footer-tagline"))).toBe(
+      `Fullstack developer · ${dictionary.tagline}`,
+    );
+    expect(pick(screen, ".the-footer-tagline > [lang='en']").hasAttribute("data-atom-skip")).toBe(
+      true,
+    );
+    expect(screen.container.querySelector(".the-footer-nav")).toBeNull();
+    expect(screen.container.querySelector("nav")).toBeNull();
+    expect(pick(screen, ".the-footer-logo").getAttribute("href")).toBe("#top");
+    expect(text(pick(screen, ".the-footer-top"))).toBe(dictionary.top);
+    expect(pick(screen, ".the-footer-top").tagName).toBe("BUTTON");
+    expect(pick(screen, ".the-footer-top").getAttribute("type")).toBe("button");
+    expect(pick(screen, ".the-footer-top").hasAttribute("href")).toBe(false);
+    expect(pick(screen, ".the-footer-decor").getAttribute("aria-hidden")).toBe("true");
+    expect(pickAll(screen, ".the-footer-petal")).toHaveLength(6);
+  });
+
+  describe("back to top", () => {
+    const spacers: HTMLElement[] = [];
+
+    afterEach(() => {
+      for (const spacer of spacers.splice(0)) spacer.remove();
+    });
+
+    async function scrollDown() {
+      const spacer = document.createElement("div");
+      spacer.style.height = "3000px";
+      document.body.prepend(spacer);
+      spacers.push(spacer);
+      window.scrollTo({ top: 1200, behavior: "instant" });
+      await expect.poll(() => window.scrollY).toBe(1200);
+    }
+
+    it("scrolls the page to the top smoothly without any anchor on the page", async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+      await scrollDown();
+
+      expect(document.getElementById("top")).toBeNull();
+      pick<HTMLButtonElement>(screen, ".the-footer-top").click();
+
+      await expect.poll(() => window.scrollY, { timeout: 5000 }).toBe(0);
+    });
+
+    it("keeps the address and the hash unchanged on click", async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+      await scrollDown();
+      const href = window.location.href;
+      const hash = window.location.hash;
+
+      pick<HTMLButtonElement>(screen, ".the-footer-top").click();
+
+      await expect.poll(() => window.scrollY, { timeout: 5000 }).toBe(0);
+      expect(window.location.hash).toBe(hash);
+      expect(window.location.hash).not.toBe("#top");
+      expect(window.location.href).toBe(href);
+    });
+
+    it("scrolls instantly under reduced motion", async () => {
+      await setReducedMotion("reduce");
+      const screen = await renderCase({ width: 1440, height: 900 });
+      await scrollDown();
+
+      pick<HTMLButtonElement>(screen, ".the-footer-top").click();
+
+      expect(window.scrollY).toBe(0);
+    });
+  });
 
   it("shows the current year in the copyright", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
@@ -258,9 +301,13 @@ describe("behavior", () => {
     {
       year: 2031,
       locale: "en" as const,
-      expected: "© 2031 Michael · SW-DEV. All rights reserved.",
+      expected: "© 2031 Michael · SOWA_DEV. All rights reserved.",
     },
-    { year: 2027, locale: "ru" as const, expected: "© 2027 Михаил · SW-DEV. Все права защищены." },
+    {
+      year: 2027,
+      locale: "ru" as const,
+      expected: "© 2027 Михаил · SOWA_DEV. Все права защищены.",
+    },
   ])("takes the year $year from the clock in $locale", async ({ year, locale, expected }) => {
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(new Date(year, 5, 1));
@@ -297,7 +344,6 @@ describe("behavior", () => {
       near(box(screen, ".the-footer-logo").left, 140);
       near(size(screen, ".the-footer-logo"), 24);
       near(size(screen, ".the-footer-tagline"), 14);
-      near(size(screen, ".the-footer-link"), 14);
       near(size(screen, ".the-footer-copyright"), 12);
       near(size(screen, ".the-footer-top"), 12);
       near(box(screen, ".the-footer-top").right, 140);
@@ -305,75 +351,76 @@ describe("behavior", () => {
       near(box(screen, ".the-footer-rule").width, 1160);
       near(box(screen, ".the-footer-line").height, 2);
       near(box(screen, ".the-footer-line").width, 1440);
-      for (const selector of [".the-footer-brand", ".the-footer-nav", ".the-footer-socials"]) {
+      for (const selector of [".the-footer-brand", ".the-footer-socials"]) {
         const rect = pick(screen, selector).getBoundingClientRect();
         expect(rect.top, selector).toBeGreaterThanOrEqual(row.top - 1);
         expect(rect.bottom, selector).toBeLessThanOrEqual(row.bottom + 1);
       }
     });
 
-    it("keeps the tagline on one line and puts the socials under the brand on desktop", async () => {
+    it("keeps the tagline on one line and puts the socials beside the brand on desktop", async () => {
       const screen = await renderCase({ width: 1440, height: 900 });
       const brand = pick(screen, ".the-footer-brand").getBoundingClientRect();
-      const nav = pick(screen, ".the-footer-nav").getBoundingClientRect();
       const socials = pick(screen, ".the-footer-socials").getBoundingClientRect();
       const row = pick(screen, ".the-footer-row").getBoundingClientRect();
 
       expect(lines(pick(screen, ".the-footer-tagline"))).toBe(1);
-      expect(nav.left).toBeGreaterThanOrEqual(brand.right);
-      near(box(screen, ".the-footer-nav").right, 140);
-      near(nav.top + nav.height / 2, brand.top + brand.height / 2);
-      expect(socials.top).toBeGreaterThanOrEqual(brand.bottom);
-      near(box(screen, ".the-footer-socials").left, 140);
-      near(row.height, 127, 2);
-      near(box(screen, ".the-footer").height, 353, 2);
+      expect(socials.left).toBeGreaterThanOrEqual(brand.right);
+      near(box(screen, ".the-footer-socials").right, 140);
+      near(socials.top + socials.height / 2, brand.top + brand.height / 2);
+      near(row.height, 56, 2);
+      near(box(screen, ".the-footer").height, 281, 2);
+    });
+
+    it("has no footer navigation", async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+
+      expect(screen.container.querySelector("nav")).toBeNull();
+      expect(screen.container.querySelector(".the-footer-nav")).toBeNull();
+      expect(screen.container.querySelector(".the-footer-link")).toBeNull();
     });
 
     it.each([1024, 1280, 1920])("keeps the tagline on one line at %ipx", async (width) => {
       const screen = await renderCase({ width, height: 900 });
       const brand = pick(screen, ".the-footer-brand").getBoundingClientRect();
-      const nav = pick(screen, ".the-footer-nav").getBoundingClientRect();
+      const socials = pick(screen, ".the-footer-socials").getBoundingClientRect();
       const row = pick(screen, ".the-footer-row").getBoundingClientRect();
 
       expect(lines(pick(screen, ".the-footer-tagline"))).toBe(1);
       expect(brand.height).toBeLessThan(60);
-      expect(nav.right).toBeLessThanOrEqual(row.right + 1);
+      expect(socials.left).toBeGreaterThanOrEqual(brand.right);
+      expect(socials.right).toBeLessThanOrEqual(row.right + 1);
       expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(width);
     });
 
-    it("puts the menu and the socials under the brand on tablet", async () => {
+    it("puts the socials under the brand on tablet", async () => {
       const screen = await renderCase({ width: 768, height: 900 });
       const brand = pick(screen, ".the-footer-brand").getBoundingClientRect();
-      const nav = pick(screen, ".the-footer-nav").getBoundingClientRect();
       const socials = pick(screen, ".the-footer-socials").getBoundingClientRect();
 
       expect(lines(pick(screen, ".the-footer-tagline"))).toBe(1);
-      expect(nav.top).toBeGreaterThanOrEqual(brand.bottom);
-      near(nav.top + nav.height / 2, socials.top + socials.height / 2);
-      near(box(screen, ".the-footer-nav").left, 32);
-      near(box(screen, ".the-footer-socials").right, 32);
+      expect(socials.top).toBeGreaterThanOrEqual(brand.bottom);
+      near(box(screen, ".the-footer-brand").left, 32);
+      near(box(screen, ".the-footer-socials").left, 32);
       near(box(screen, ".the-footer-logo").top, 56);
       near(box(screen, ".the-footer-top").bottom, 32);
       near(box(screen, ".the-footer").height, 341, 2);
     });
 
-    it("stacks the brand, the menu and the socials on mobile", async () => {
+    it("stacks the brand and the socials on mobile", async () => {
       const screen = await renderCase({ width: 390, height: 780 });
       const brand = pick(screen, ".the-footer-brand").getBoundingClientRect();
-      const nav = pick(screen, ".the-footer-nav").getBoundingClientRect();
       const socials = pick(screen, ".the-footer-socials").getBoundingClientRect();
       const bottom = pick(screen, ".the-footer-bottom").getBoundingClientRect();
 
       expect(lines(pick(screen, ".the-footer-tagline"))).toBe(2);
-      expect(nav.top).toBeGreaterThanOrEqual(brand.bottom);
-      expect(socials.top).toBeGreaterThanOrEqual(nav.bottom);
+      expect(socials.top).toBeGreaterThanOrEqual(brand.bottom);
       expect(bottom.top).toBeGreaterThan(socials.bottom);
       near(box(screen, ".the-footer-brand").left, 20);
-      near(box(screen, ".the-footer-nav").left, 20);
       near(box(screen, ".the-footer-socials").left, 20);
       near(box(screen, ".the-footer-logo").top, 48);
       near(box(screen, ".the-footer-top").bottom, 28);
-      near(box(screen, ".the-footer").height, 462, 2);
+      near(box(screen, ".the-footer").height, 390, 2);
     });
 
     it("pads the section like the mockup on desktop", async () => {
@@ -381,7 +428,7 @@ describe("behavior", () => {
 
       near(box(screen, ".the-footer-logo").top, 64);
       near(box(screen, ".the-footer-top").bottom, 36);
-      near(box(screen, ".the-footer-rule").top - box(screen, ".the-footer-row").top, 127 + 40, 2);
+      near(box(screen, ".the-footer-rule").top - box(screen, ".the-footer-row").top, 56 + 40, 2);
       near(box(screen, ".the-footer-bottom").top - box(screen, ".the-footer-rule").top, 41);
     });
 
@@ -496,8 +543,7 @@ describe("behavior", () => {
     expect(html).toContain('id="footer"');
     expect(html).toContain("<footer");
     expect(html).not.toContain("home-slide");
-    expect(html).toContain("the-footer-link");
+    expect(html).not.toContain("the-footer-nav");
     expect(html).toContain(`© ${new Date().getFullYear()} Michael`);
-    expect(html).toContain('href="#contact"');
   });
 });

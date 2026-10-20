@@ -35,16 +35,8 @@
     }
   },
   "footer": {
-    "tagline": "Fullstack developer · fast, thoughtful web products",
-    "navLabel": "Footer",
-    "nav": {
-      "home": "Home",
-      "about": "About",
-      "skills": "Skills",
-      "projects": "Projects",
-      "contact": "Contact"
-    },
-    "copyright": "© {year} Michael · SW-DEV. All rights reserved.",
+    "tagline": "fast, thoughtful web products",
+    "copyright": "© {year} Michael · SOWA_DEV. All rights reserved.",
     "top": "Back to top"
   }
 }
