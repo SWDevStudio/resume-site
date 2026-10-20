@@ -7,10 +7,10 @@
     >
       <NuxtLinkLocale
         class="the-header-logo"
-        to="/"
+        :to="Route.home"
       >
-        <span>SW</span>
-        <span class="the-header-logo-dash">-</span>
+        <span>SOWA</span>
+        <span class="the-header-logo-dash">_</span>
         <span>DEV</span>
       </NuxtLinkLocale>
 
@@ -71,15 +71,15 @@ import { computed, ref, useId } from "vue";
 import { onClickOutside, useToggle } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import { NuxtLinkLocale } from "#components";
+import { Route } from "~/assets/const";
 import TheHeaderLangSwitch from "./TheHeaderLangSwitch.vue";
 import TheHeaderThemeSwitch from "./TheHeaderThemeSwitch.vue";
 
 const items = [
-  { key: "home", label: "nav.home", to: "/" },
-  { key: "about", label: "nav.about", to: { path: "/", hash: "#about" } },
-  { key: "portfolio", label: "nav.portfolio", to: { path: "/", hash: "#projects" } },
-  { key: "blog", label: "nav.blog", to: "/blog" },
-  { key: "contact", label: "nav.contact", to: { path: "/", hash: "#contact" } },
+  { key: "about", label: "nav.about", to: Route.about },
+  { key: "portfolio", label: "nav.portfolio", to: Route.resume },
+  { key: "blog", label: "nav.blog", to: Route.blog },
+  { key: "contact", label: "nav.contact", to: Route.contact },
 ] as const;
 
 const { t } = useI18n();

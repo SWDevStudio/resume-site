@@ -181,8 +181,8 @@ async function renderCase(item: HeaderCase) {
 
 beforeAll(async () => {
   await page.viewport(1440, 900);
-  await document.fonts.load('300 1em "Martian Mono"', "Главная Обо мне Портфолио Блог Контакты");
-  await document.fonts.load('400 1em "Martian Mono"', "SW-DEV");
+  await document.fonts.load('300 1em "Martian Mono"', "Обо мне Портфолио Блог Контакты");
+  await document.fonts.load('400 1em "Martian Mono"', "SOWA_DEV");
 });
 
 beforeEach(() => {
