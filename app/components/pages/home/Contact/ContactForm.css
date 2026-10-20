@@ -1,0 +1,123 @@
+@reference "~/assets/css/main.css";
+
+.home-contact-form {
+  --home-contact-cut: --spacing(5);
+  --home-contact-cut-inner: --spacing(4.9);
+  --home-contact-radius: 0rem;
+  --home-contact-radius-inner: 0rem;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-contact-cut: 0rem;
+    --home-contact-cut-inner: 0rem;
+    --home-contact-radius: --spacing(6);
+    --home-contact-radius-inner: --spacing(5.75);
+  }
+
+  @apply min-w-0 bg-primary;
+  padding: --spacing(0.25);
+  border-radius: var(--home-contact-radius);
+  clip-path: polygon(
+    var(--home-contact-cut) 0,
+    100% 0,
+    100% calc(100% - var(--home-contact-cut)),
+    calc(100% - var(--home-contact-cut)) 100%,
+    0 100%,
+    0 var(--home-contact-cut)
+  );
+  transition-property: background-color, border-radius, clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-contact-pane {
+  @apply flex h-full flex-col;
+  gap: --spacing(4);
+  padding: --spacing(5.5) --spacing(4.5) --spacing(6);
+  border-radius: var(--home-contact-radius-inner);
+  background-color: color-mix(in srgb, var(--color-primary) 8%, var(--color-base-100));
+  clip-path: polygon(
+    var(--home-contact-cut-inner) 0,
+    100% 0,
+    100% calc(100% - var(--home-contact-cut-inner)),
+    calc(100% - var(--home-contact-cut-inner)) 100%,
+    0 100%,
+    0 var(--home-contact-cut-inner)
+  );
+  transition-property: background-color, border-radius, clip-path;
+
+  @variant md {
+    padding: --spacing(7) --spacing(7.5) --spacing(7.5);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-contact-consent > label {
+  @apply items-start text-base-content/66;
+  font-family: "Share Tech Mono", ui-monospace, monospace;
+  line-height: 1.6;
+  transition-property: color;
+
+  & > input {
+    margin-top: --spacing(0.5);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-contact-actions {
+  @apply flex justify-end;
+  margin-top: --spacing(1.5);
+}
+
+.home-contact-submit {
+  @apply w-57.5;
+
+  &:disabled {
+    @apply opacity-70;
+  }
+}
+
+.home-contact-submit-icons {
+  @apply relative block shrink-0;
+  width: --spacing(4);
+  height: --spacing(4);
+}
+
+.home-contact-submit-arrow,
+.home-contact-submit-spinner {
+  @apply absolute inset-0 size-full;
+  transition-property: opacity;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-contact-submit-spinner {
+  @apply opacity-0;
+}
+
+.home-contact-submit[aria-busy="true"] {
+  & .home-contact-submit-arrow {
+    @apply opacity-0;
+  }
+
+  & .home-contact-submit-spinner {
+    @apply animate-spin opacity-100;
+
+    @variant motion-reduce {
+      @apply animate-none;
+    }
+  }
+}
+
+:lang(ru) .home-contact-consent > label {
+  @apply font-body font-light;
+}

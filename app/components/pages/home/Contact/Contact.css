@@ -1,0 +1,124 @@
+@reference "~/assets/css/main.css";
+
+@property --home-contact-accent-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --home-contact-accent-via {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --home-contact-accent-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.home-contact {
+  --home-contact-night: 1;
+  --home-contact-day: 0;
+  --home-contact-night-visibility: visible;
+  --home-contact-day-visibility: hidden;
+  --home-contact-title-size: --spacing(10);
+  --home-contact-title-scale: 1;
+  --home-contact-title-width: --spacing(57.5);
+
+  @variant md {
+    --home-contact-title-size: --spacing(14);
+    --home-contact-title-width: none;
+  }
+
+  @variant lg {
+    --home-contact-title-size: --spacing(16);
+  }
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-contact-night: 0;
+    --home-contact-day: 1;
+    --home-contact-night-visibility: hidden;
+    --home-contact-day-visibility: visible;
+  }
+
+  @apply overflow-hidden bg-base-100;
+}
+
+.home-contact > .home-slide-body {
+  @variant lg {
+    padding-bottom: --spacing(6);
+  }
+}
+
+.home-contact-main {
+  @apply flex flex-1 flex-col;
+  gap: --spacing(12);
+
+  @variant lg {
+    gap: --spacing(8);
+  }
+}
+
+.home-contact-head {
+  @apply flex flex-col;
+  gap: --spacing(3);
+}
+
+.home-contact-label {
+  @apply font-body font-light tracking-[.3em] text-primary-ink uppercase;
+  font-size: --spacing(3.5);
+  line-height: 1.6;
+}
+
+.home-contact-title {
+  @apply m-0 font-head font-normal;
+  max-width: var(--home-contact-title-width);
+  font-size: calc(var(--home-contact-title-size) * var(--home-contact-title-scale));
+  line-height: 1.05;
+}
+
+.home-contact-accent {
+  --home-contact-accent-from: var(--color-primary);
+  --home-contact-accent-via: color-mix(in srgb, var(--color-primary) 45%, var(--color-accent));
+  --home-contact-accent-to: var(--color-accent);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-contact-accent-via: #8f6cff;
+    --home-contact-accent-to: var(--color-secondary);
+  }
+
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(
+    90deg,
+    var(--home-contact-accent-from),
+    var(--home-contact-accent-via) 55%,
+    var(--home-contact-accent-to)
+  );
+  transition-property:
+    --home-contact-accent-from, --home-contact-accent-via, --home-contact-accent-to;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-contact-columns {
+  @apply grid;
+  gap: --spacing(14);
+
+  @variant lg {
+    grid-template-columns: minmax(0, --spacing(120)) minmax(0, --spacing(150));
+    justify-content: space-between;
+  }
+}
+
+:lang(ru) .home-contact {
+  --home-contact-title-scale: 0.72;
+  --home-contact-title-width: --spacing(66);
+
+  @variant md {
+    --home-contact-title-width: none;
+  }
+}

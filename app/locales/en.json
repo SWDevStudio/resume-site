@@ -32,6 +32,45 @@
       "projects": "Projects",
       "status": "Open to projects",
       "photoAlt": "Michael"
+    },
+    "contact": {
+      "label": "05 — Contact",
+      "titleTop": "Let's grow",
+      "titleAccent": "together",
+      "info": {
+        "title": "Drop me a message",
+        "text": "Have a project in mind, a site that needs a boost, or just a question? Write to me — I usually reply within a day.",
+        "online": "Find me online"
+      },
+      "channels": {
+        "email": "Email",
+        "telegram": "Telegram"
+      },
+      "form": {
+        "name": "Name*",
+        "namePlaceholder": "John Doe",
+        "email": "Email Address*",
+        "emailPlaceholder": "example{'@'}email.com",
+        "message": "Message",
+        "messagePlaceholder": "There is space for your project here",
+        "consent": "I acknowledge and consent to the storage of my submitted information",
+        "submit": "Send message",
+        "errors": {
+          "name": "Enter your name",
+          "email": "Enter your email",
+          "emailInvalid": "Enter a valid email",
+          "consent": "Consent to the storage of your data is required"
+        },
+        "success": {
+          "title": "Message sent",
+          "description": "Thank you! I will get back to you within a day."
+        },
+        "failure": {
+          "title": "Could not send the message",
+          "description": "Please try again in a moment or write to me by email."
+        }
+      },
+      "projects": "My latest projects"
     }
   },
   "resume": {

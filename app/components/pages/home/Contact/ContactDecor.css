@@ -1,0 +1,236 @@
+@reference "~/assets/css/main.css";
+
+.home-contact-decor {
+  --home-contact-glow-a-left: --spacing(1.25);
+  --home-contact-glow-a-top: --spacing(160);
+  --home-contact-glow-a-size: --spacing(95);
+  --home-contact-glow-b-left: 0rem;
+  --home-contact-glow-b-top: --spacing(45);
+  --home-contact-glow-b-size: --spacing(95);
+  --home-contact-glow-c-left: auto;
+  --home-contact-glow-c-right: 0rem;
+  --home-contact-glow-c-top: --spacing(2.5);
+  --home-contact-glow-c-size: --spacing(70);
+  --home-contact-pattern-left: --spacing(1);
+  --home-contact-pattern-top: auto;
+  --home-contact-pattern-bottom: --spacing(30);
+  --home-contact-pattern-width: --spacing(65);
+  --home-contact-pattern-height: --spacing(35);
+  --home-contact-koi-left: auto;
+  --home-contact-koi-right: --spacing(4);
+  --home-contact-koi-top: --spacing(10);
+
+  @variant md {
+    --home-contact-glow-a-left: calc(50% - --spacing(80));
+    --home-contact-glow-a-top: --spacing(130);
+    --home-contact-glow-a-size: --spacing(160);
+    --home-contact-glow-b-top: --spacing(45);
+    --home-contact-glow-b-size: --spacing(95);
+    --home-contact-glow-c-top: 0rem;
+    --home-contact-glow-c-size: --spacing(85);
+    --home-contact-pattern-left: --spacing(2.5);
+    --home-contact-pattern-bottom: --spacing(7.5);
+    --home-contact-pattern-width: --spacing(95);
+    --home-contact-pattern-height: --spacing(47.5);
+    --home-contact-koi-right: --spacing(7.5);
+    --home-contact-koi-top: --spacing(4);
+  }
+
+  @variant lg {
+    --home-contact-glow-a-left: calc(50% + 0rem);
+    --home-contact-glow-a-top: --spacing(42.5);
+    --home-contact-glow-a-size: --spacing(165);
+    --home-contact-glow-b-left: calc(50% - --spacing(185));
+    --home-contact-glow-b-top: --spacing(75);
+    --home-contact-glow-b-size: --spacing(110);
+    --home-contact-glow-c-left: calc(50% + --spacing(72.5));
+    --home-contact-glow-c-right: auto;
+    --home-contact-glow-c-top: --spacing(2.5);
+    --home-contact-glow-c-size: --spacing(95);
+    --home-contact-pattern-left: calc(50% - --spacing(180));
+    --home-contact-pattern-top: --spacing(150);
+    --home-contact-pattern-bottom: auto;
+    --home-contact-pattern-width: --spacing(150);
+    --home-contact-pattern-height: --spacing(75);
+    --home-contact-koi-left: calc(50% + --spacing(103));
+    --home-contact-koi-right: auto;
+    --home-contact-koi-top: --spacing(2);
+  }
+
+  @apply pointer-events-none absolute inset-0 overflow-hidden;
+}
+
+.home-contact-night,
+.home-contact-day {
+  @apply absolute inset-0;
+  transition-property: opacity, visibility;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-contact-night {
+  --home-contact-glow-a-color: 255 30 67;
+  --home-contact-glow-b-color: 191 0 255;
+  --home-contact-glow-c-color: 58 200 255;
+  --home-contact-glow-a-opacity: 0.224;
+  --home-contact-glow-b-opacity: 0;
+  --home-contact-glow-c-opacity: 0.192;
+  --home-contact-pattern-image: url("./media/asanoha-torii-synth.svg");
+  --home-contact-pattern-tile: --spacing(14) --spacing(24.2475);
+  --home-contact-pattern-shift: 0rem 0rem;
+  --home-contact-pattern-opacity: 0.3;
+
+  @variant md {
+    --home-contact-glow-b-opacity: 0.192;
+  }
+
+  opacity: var(--home-contact-night);
+  visibility: var(--home-contact-night-visibility);
+}
+
+.home-contact-day {
+  --home-contact-glow-a-color: 255 112 166;
+  --home-contact-glow-b-color: 165 123 255;
+  --home-contact-glow-c-color: 76 201 240;
+  --home-contact-glow-a-opacity: 0.1904;
+  --home-contact-glow-b-opacity: 0;
+  --home-contact-glow-c-opacity: 0.1632;
+  --home-contact-pattern-image: url("./media/waves-purple-cyber-sakura.svg");
+  --home-contact-pattern-tile: --spacing(13) --spacing(6.5);
+  --home-contact-pattern-shift: --spacing(6.5) --spacing(3.25);
+  --home-contact-pattern-opacity: 0.42;
+
+  @variant md {
+    --home-contact-glow-b-opacity: 0.1632;
+  }
+
+  @variant lg {
+    --home-contact-glow-a-opacity: 0.192;
+    --home-contact-glow-b-opacity: 0.176;
+    --home-contact-glow-c-opacity: 0.224;
+    --home-contact-pattern-image: url("./media/waves-blue-cyber-sakura.svg");
+    --home-contact-pattern-opacity: 0.34;
+  }
+
+  opacity: var(--home-contact-day);
+  visibility: var(--home-contact-day-visibility);
+}
+
+.home-contact-glow {
+  @apply absolute rounded-full;
+}
+
+.home-contact-glow-a {
+  top: var(--home-contact-glow-a-top);
+  left: var(--home-contact-glow-a-left);
+  width: var(--home-contact-glow-a-size);
+  height: var(--home-contact-glow-a-size);
+  opacity: var(--home-contact-glow-a-opacity);
+  background: radial-gradient(
+    circle closest-side,
+    rgb(var(--home-contact-glow-a-color)) 0%,
+    rgb(var(--home-contact-glow-a-color) / 45%) 45%,
+    rgb(var(--home-contact-glow-a-color) / 0%) 100%
+  );
+}
+
+.home-contact-glow-b {
+  top: var(--home-contact-glow-b-top);
+  left: var(--home-contact-glow-b-left);
+  width: var(--home-contact-glow-b-size);
+  height: var(--home-contact-glow-b-size);
+  opacity: var(--home-contact-glow-b-opacity);
+  background: radial-gradient(
+    circle closest-side,
+    rgb(var(--home-contact-glow-b-color)) 0%,
+    rgb(var(--home-contact-glow-b-color) / 45%) 45%,
+    rgb(var(--home-contact-glow-b-color) / 0%) 100%
+  );
+}
+
+.home-contact-glow-c {
+  top: var(--home-contact-glow-c-top);
+  right: var(--home-contact-glow-c-right);
+  left: var(--home-contact-glow-c-left);
+  width: var(--home-contact-glow-c-size);
+  height: var(--home-contact-glow-c-size);
+  opacity: var(--home-contact-glow-c-opacity);
+  background: radial-gradient(
+    circle closest-side,
+    rgb(var(--home-contact-glow-c-color)) 0%,
+    rgb(var(--home-contact-glow-c-color) / 45%) 45%,
+    rgb(var(--home-contact-glow-c-color) / 0%) 100%
+  );
+}
+
+.home-contact-pattern {
+  @apply absolute bg-repeat;
+  top: var(--home-contact-pattern-top);
+  bottom: var(--home-contact-pattern-bottom);
+  left: var(--home-contact-pattern-left);
+  width: var(--home-contact-pattern-width);
+  height: var(--home-contact-pattern-height);
+  opacity: var(--home-contact-pattern-opacity);
+  background-image: var(--home-contact-pattern-image);
+  background-position: var(--home-contact-pattern-shift);
+  background-size: var(--home-contact-pattern-tile);
+  mask-image: radial-gradient(
+    ellipse 55% 55% at 50% 50%,
+    #000 0%,
+    rgb(0 0 0 / 45%) 55%,
+    rgb(0 0 0 / 0%) 100%
+  );
+}
+
+.home-contact-koi {
+  @apply absolute max-w-none;
+  top: var(--home-contact-koi-top);
+  right: var(--home-contact-koi-right);
+  left: var(--home-contact-koi-left);
+  width: var(--home-contact-koi-width);
+  height: var(--home-contact-koi-height);
+  transition-property: opacity, visibility;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-contact-koi-night {
+  --home-contact-koi-width: --spacing(27);
+  --home-contact-koi-height: --spacing(36);
+  opacity: var(--home-contact-night);
+  visibility: var(--home-contact-night-visibility);
+
+  @variant md {
+    --home-contact-koi-width: --spacing(35);
+    --home-contact-koi-height: --spacing(46.75);
+  }
+
+  @variant lg {
+    --home-contact-koi-width: --spacing(37.5);
+    --home-contact-koi-height: --spacing(50);
+  }
+}
+
+.home-contact-koi-day {
+  --home-contact-koi-width: --spacing(28.5);
+  --home-contact-koi-height: --spacing(37.5);
+  mix-blend-mode: multiply;
+  opacity: var(--home-contact-day);
+  visibility: var(--home-contact-day-visibility);
+
+  @variant md {
+    --home-contact-koi-width: --spacing(37);
+    --home-contact-koi-height: --spacing(48.5);
+  }
+
+  @variant lg {
+    --home-contact-koi-left: calc(50% + --spacing(100));
+    --home-contact-koi-top: --spacing(2.5);
+    --home-contact-koi-width: --spacing(40);
+    --home-contact-koi-height: --spacing(52.5);
+  }
+}

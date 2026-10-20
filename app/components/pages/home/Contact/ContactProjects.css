@@ -1,0 +1,17 @@
+@reference "~/assets/css/main.css";
+
+.home-contact-projects {
+  --btn-height: --spacing(15.5);
+
+  margin-top: --spacing(2);
+
+  @variant lg {
+    margin-top: 0rem;
+  }
+}
+
+.home-contact-projects-icon {
+  @apply relative shrink-0;
+  width: --spacing(4.5);
+  aspect-ratio: 18 / 12;
+}

@@ -1,0 +1,116 @@
+@reference "~/assets/css/main.css";
+
+.home-contact-info {
+  @apply flex min-w-0 flex-col;
+  gap: --spacing(7);
+}
+
+.home-contact-subtitle {
+  @apply m-0 font-head font-normal;
+  font-size: --spacing(8);
+  line-height: 1.2;
+}
+
+.home-contact-text {
+  @apply m-0 text-base-content/66;
+  font-family: "Share Tech Mono", ui-monospace, monospace;
+  font-size: --spacing(4.5);
+  line-height: 1.7;
+}
+
+.home-contact-channels {
+  @apply m-0 flex list-none flex-col p-0;
+  gap: --spacing(5);
+}
+
+.home-contact-channel {
+  @apply flex items-center text-base-content no-underline;
+  gap: --spacing(4);
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property: color, outline-color;
+
+  @variant focus-visible {
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-contact-icon {
+  --btn-height: --spacing(11.5);
+  --btn-border: --spacing(0.5);
+  --btn-corner: 25%;
+  --btn-slant: 9.04deg;
+  --btn-radius: 0rem;
+  --btn-dash-size: --spacing(1.75) --spacing(0.375);
+  --btn-dash-position: left --spacing(3) top --spacing(1);
+  --btn-slashes-position: right --spacing(2.75) bottom --spacing(1);
+  --btn-slashes: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 7 3.5'%3E%3Cpath d='M0.5,3.5 L2.5,0 M4.5,3.5 L6.5,0' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E");
+
+  :where([data-theme="cyber-sakura"]) & {
+    --btn-radius: --spacing(1.75);
+    --btn-slant: 8.9deg;
+    --btn-dash-position: left --spacing(2.25) bottom --spacing(1);
+    --btn-slashes-position: right --spacing(1.75) top --spacing(1);
+  }
+
+  @apply w-12.5 min-w-0 p-0;
+  margin: --spacing(0.25);
+
+  &::after {
+    mask-size:
+      var(--btn-dash-size),
+      --spacing(1.75) --spacing(0.875);
+  }
+
+  .home-contact-channel:hover & {
+    --btn-fill: var(--btn-fill-hover);
+  }
+}
+
+.home-contact-icon-image {
+  aspect-ratio: 1 / 1;
+  @apply relative shrink-0;
+  width: --spacing(5.5);
+}
+
+.home-contact-channel-text {
+  @apply flex min-w-0 flex-col;
+  gap: --spacing(0.5);
+}
+
+.home-contact-channel-label {
+  @apply font-body font-light tracking-[.2em] text-base-content/66 uppercase;
+  font-size: --spacing(3);
+  line-height: 1.6;
+}
+
+.home-contact-channel-value {
+  @apply wrap-break-word text-base-content;
+  font-family: "Share Tech Mono", ui-monospace, monospace;
+  font-size: --spacing(4.5);
+  line-height: 1.6;
+  transition-property: color;
+
+  .home-contact-channel:hover & {
+    @apply text-primary-ink;
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-contact-online {
+  @apply flex flex-col;
+  gap: --spacing(3);
+  margin-top: --spacing(2);
+}
+
+:lang(ru) .home-contact-text {
+  @apply font-body font-light;
+  font-size: --spacing(4);
+}
