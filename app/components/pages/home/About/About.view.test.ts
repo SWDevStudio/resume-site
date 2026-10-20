@@ -193,7 +193,10 @@ describe("behavior", () => {
       `${en.home.about.greeting} ${en.home.about.name}`,
     );
     expect(pick(screen, ".home-about-name").textContent).toBe(en.home.about.name);
-    expect(pick(screen, ".home-about-role").textContent).toBe(en.home.about.role);
+    expect(pick(screen, ".home-about-role").textContent?.trim()).toBe("Fullstack Developer.");
+    expect(pick(screen, ".home-about-role").getAttribute("lang")).toBe("en");
+    expect(pick(screen, ".home-about-role").hasAttribute("data-atom-skip")).toBe(true);
+    expect(getComputedStyle(pick(screen, ".home-about-role")).fontFamily).toContain("Righteous");
     expect(pick(screen, ".home-about-description").textContent).toBe(en.home.about.description);
     expect(actions.map((item) => item.textContent?.trim())).toEqual([
       en.home.about.contact,
@@ -213,7 +216,10 @@ describe("behavior", () => {
 
     expect(pick(screen, ".home-about-label").textContent).toBe(ru.home.about.label);
     expect(pick(screen, ".home-about-name").textContent).toBe(ru.home.about.name);
-    expect(pick(screen, ".home-about-role").textContent).toBe(ru.home.about.role);
+    expect(pick(screen, ".home-about-role").textContent?.trim()).toBe("Fullstack Developer.");
+    expect(pick(screen, ".home-about-role").getAttribute("lang")).toBe("en");
+    expect(pick(screen, ".home-about-role").hasAttribute("data-atom-skip")).toBe(true);
+    expect(getComputedStyle(pick(screen, ".home-about-role")).fontFamily).toContain("Righteous");
     expect(pick(screen, ".home-about-description").textContent).toBe(ru.home.about.description);
     expect(pick(screen, ".home-about-status").textContent?.trim()).toBe(ru.home.about.status);
     expect(pick(screen, ".home-about-photo-image").getAttribute("alt")).toBe(

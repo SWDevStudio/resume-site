@@ -15,7 +15,13 @@
             {{ t("home.about.greeting") }}
             <span class="home-about-name">{{ t("home.about.name") }}</span>
           </h2>
-          <p class="home-about-role">{{ t("home.about.role") }}</p>
+          <p
+            class="home-about-role"
+            lang="en"
+            data-atom-skip
+          >
+            Fullstack Developer.
+          </p>
         </div>
         <p class="home-about-description">{{ t("home.about.description") }}</p>
         <AboutActions />

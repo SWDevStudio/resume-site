@@ -26,7 +26,6 @@
       "label": "01 — About me",
       "greeting": "Hi, I'm",
       "name": "Michael",
-      "role": "Fullstack Developer.",
       "description": "[Three or four sentences about you: how you got into development, what you build and for whom, the stack you enjoy most, and how you like to work with clients and teams.]",
       "contact": "Contact me",
       "projects": "Projects",
