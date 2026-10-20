@@ -29,5 +29,6 @@
         "settings": { "foreground": "#d7ba7d" }
       }
     ]
-  }
+  },
+  "i18n-ally.localesPaths": ["app/locales"]
 }
