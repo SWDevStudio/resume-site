@@ -106,3 +106,109 @@ describe("rem in conditions", () => {
     expect(color()).toBe("rgb(0, 0, 255)");
   });
 });
+
+describe("caret", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+    delete document.documentElement.dataset.theme;
+  });
+
+  function field(tag: string, className = "") {
+    const element = document.createElement(tag);
+    element.className = className;
+    document.body.append(element);
+    return element;
+  }
+
+  function primary() {
+    const probe = document.createElement("span");
+    probe.style.color = "var(--color-primary)";
+    document.body.append(probe);
+    return getComputedStyle(probe).color;
+  }
+
+  it.each([
+    { tag: "input", className: "input" },
+    { tag: "textarea", className: "textarea" },
+    { tag: "input", className: "input-caret" },
+  ])("is a block in the primary colour in $tag.$className", ({ tag, className }) => {
+    document.documentElement.dataset.theme = "torii-synth";
+    const style = getComputedStyle(field(tag, className));
+
+    expect(style.caretShape).toBe("block");
+    expect(style.caretColor).toBe(primary());
+  });
+
+  it("follows the theme", () => {
+    document.documentElement.dataset.theme = "cyber-sakura";
+
+    expect(getComputedStyle(field("input", "input")).caretColor).toBe(primary());
+  });
+
+  it.each(["input", "textarea"])("leaves a bare %s with the default caret", (tag) => {
+    document.documentElement.dataset.theme = "torii-synth";
+    const style = getComputedStyle(field(tag));
+
+    expect(style.caretShape).toBe("auto");
+    expect(style.caretColor).not.toBe(primary());
+  });
+});
+
+describe("scroll lock", () => {
+  let tall: HTMLElement;
+
+  beforeAll(() => {
+    tall = document.createElement("div");
+    tall.style.height = "3000px";
+    document.body.append(tall);
+  });
+
+  afterEach(() => {
+    for (const element of document.querySelectorAll("[data-lock-scroll]")) element.remove();
+  });
+
+  afterAll(() => {
+    tall.remove();
+  });
+
+  const root = () => getComputedStyle(document.documentElement);
+
+  function overlay(value: string) {
+    const element = document.createElement("div");
+    element.dataset.lockScroll = value;
+    document.body.append(element);
+    return element;
+  }
+
+  it("is off without a marked element", () => {
+    expect(root().overflow).not.toBe("hidden");
+    expect(root().scrollbarGutter).toBe("auto");
+  });
+
+  it("hides the page overflow and keeps the scrollbar gutter while an element is marked", () => {
+    const element = overlay("true");
+
+    expect(root().overflow).toBe("hidden");
+    expect(root().scrollbarGutter).toBe("stable");
+
+    element.remove();
+    expect(root().overflow).not.toBe("hidden");
+    expect(root().scrollbarGutter).toBe("auto");
+  });
+
+  it("stays locked until the last marked element is gone", () => {
+    const first = overlay("true");
+    const second = overlay("true");
+
+    first.remove();
+    expect(root().overflow).toBe("hidden");
+    second.remove();
+    expect(root().overflow).not.toBe("hidden");
+  });
+
+  it("ignores an element marked with another value", () => {
+    overlay("false");
+
+    expect(root().overflow).not.toBe("hidden");
+  });
+});
