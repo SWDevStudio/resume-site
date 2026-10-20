@@ -9,11 +9,13 @@ export default defineConfig({
   resolve: {
     alias: {
       "~": fileURLToPath(new URL("./app", import.meta.url)),
+      "#shared": fileURLToPath(new URL("./shared", import.meta.url)),
       "#components": fileURLToPath(new URL("./test/stubs/nuxt-components.ts", import.meta.url)),
+      "#imports": fileURLToPath(new URL("./test/stubs/nuxt-imports.ts", import.meta.url)),
     },
   },
   test: {
-    include: ["app/**/*.view.test.ts"],
+    include: ["app/**/*.view.test.ts", "shared/**/*.view.test.ts"],
     browser: {
       enabled: true,
       headless: true,
