@@ -91,7 +91,8 @@ function scheduleIdlePreload() {
     idleHandle = undefined;
     preload();
   };
-  if ("requestIdleCallback" in window) idleHandle = window.requestIdleCallback(run);
+  if (typeof window.requestIdleCallback === "function")
+    idleHandle = window.requestIdleCallback(run);
   else idleHandle = window.setTimeout(run, 2000);
 }
 
@@ -122,7 +123,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   stopLoadListener?.();
   if (idleHandle === undefined) return;
-  if ("cancelIdleCallback" in window) window.cancelIdleCallback(idleHandle);
+  if (typeof window.cancelIdleCallback === "function") window.cancelIdleCallback(idleHandle);
   else window.clearTimeout(idleHandle);
 });
 
