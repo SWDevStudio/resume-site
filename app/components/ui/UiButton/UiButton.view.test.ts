@@ -2,6 +2,7 @@ import { h, type VNodeChild } from "vue";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-vue";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { Route } from "~/assets/const";
 import UiButton from "./UiButton.vue";
 import "~/assets/css/fonts.css";
 import "~/assets/css/main.css";
@@ -75,5 +76,128 @@ describe.each(themes)("%s", (theme) => {
     await expect
       .element(page.elementLocator(screen.container.firstElementChild!))
       .toMatchScreenshot(`${theme}-${item.name}`);
+  });
+});
+
+describe("element", () => {
+  async function renderButton(props: Record<string, unknown>) {
+    const screen = await render(() => h(UiButton, props, () => "Projects"));
+    return screen.container.firstElementChild!;
+  }
+
+  it("renders a button without href and to", async () => {
+    const root = await renderButton({});
+
+    expect(root.tagName).toBe("BUTTON");
+    expect(root.classList.contains("btn")).toBe(true);
+    expect(root.hasAttribute("href")).toBe(false);
+    expect(root.hasAttribute("type")).toBe(false);
+    expect(root.hasAttribute("rel")).toBe(false);
+    expect(root.hasAttribute("target")).toBe(false);
+  });
+
+  it("keeps the frame layer and the slot in every mode", async () => {
+    const roots = [
+      await renderButton({}),
+      await renderButton({ href: "https://example.com" }),
+      await renderButton({ href: null }),
+      await renderButton({ to: "/projects" }),
+    ];
+
+    for (const root of roots) {
+      expect(root.classList.contains("btn")).toBe(true);
+      expect(root.firstElementChild!.classList.contains("btn-frame")).toBe(true);
+      expect(root.firstElementChild!.getAttribute("aria-hidden")).toBe("true");
+      expect(root.textContent).toBe("Projects");
+    }
+  });
+
+  it("passes attributes of a button to the root", async () => {
+    const root = await renderButton({ type: "button", disabled: true, class: "btn-primary" });
+
+    expect(root.tagName).toBe("BUTTON");
+    expect(root.getAttribute("type")).toBe("button");
+    expect(root.hasAttribute("disabled")).toBe(true);
+    expect(root.classList.contains("btn-primary")).toBe(true);
+  });
+
+  it("renders a link with the href", async () => {
+    const root = await renderButton({
+      href: "https://example.com",
+      "aria-label": "Open example",
+      download: "",
+      class: "btn-primary",
+    });
+
+    expect(root.tagName).toBe("A");
+    expect(root.getAttribute("href")).toBe("https://example.com");
+    expect(root.getAttribute("aria-label")).toBe("Open example");
+    expect(root.hasAttribute("download")).toBe(true);
+    expect(root.classList.contains("btn")).toBe(true);
+    expect(root.classList.contains("btn-primary")).toBe(true);
+  });
+
+  it("renders a link without the href when href is null", async () => {
+    const root = await renderButton({ href: null, "aria-disabled": "true" });
+
+    expect(root.tagName).toBe("A");
+    expect(root.hasAttribute("href")).toBe(false);
+    expect(root.getAttribute("aria-disabled")).toBe("true");
+  });
+
+  it("renders the router link when to is set", async () => {
+    const root = await renderButton({ to: "/projects", class: "btn-md" });
+
+    expect(root.tagName).toBe("A");
+    expect(root.getAttribute("href")).toBe("/projects");
+    expect(root.classList.contains("btn")).toBe(true);
+    expect(root.classList.contains("btn-md")).toBe(true);
+  });
+
+  it("accepts the string routes of Route", async () => {
+    const root = await renderButton({ to: Route.project("qwixit") });
+
+    expect(root.tagName).toBe("A");
+    expect(root.getAttribute("href")).toBe("/projects/qwixit");
+  });
+
+  it("accepts the path and hash routes of Route", async () => {
+    const root = await renderButton({ to: Route.about });
+
+    expect(root.tagName).toBe("A");
+    expect(root.getAttribute("href")).toBe("/#about");
+  });
+
+  it("prefers to over href", async () => {
+    const root = await renderButton({ to: "/projects", href: "https://example.com" });
+
+    expect(root.getAttribute("href")).toBe("/projects");
+  });
+
+  it("adds a safe rel to a link that opens a new tab", async () => {
+    const link = await renderButton({ href: "https://example.com", target: "_blank" });
+    const routed = await renderButton({ to: "/projects", target: "_blank" });
+
+    for (const root of [link, routed]) {
+      expect(root.getAttribute("target")).toBe("_blank");
+      expect(root.getAttribute("rel")).toBe("noopener noreferrer");
+    }
+  });
+
+  it("keeps the rel that was passed", async () => {
+    const root = await renderButton({
+      href: "https://example.com",
+      target: "_blank",
+      rel: "noopener",
+    });
+
+    expect(root.getAttribute("rel")).toBe("noopener");
+  });
+
+  it("does not add rel to a link in the same tab", async () => {
+    const root = await renderButton({ href: "https://example.com" });
+
+    expect(root.hasAttribute("rel")).toBe(false);
+    expect(root.hasAttribute("target")).toBe(false);
   });
 });

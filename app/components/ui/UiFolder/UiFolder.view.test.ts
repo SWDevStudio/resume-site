@@ -50,7 +50,7 @@ const folder = (shot?: () => VNode) =>
     {
       media: shot,
       actions: () => [
-        h("a", { class: "btn btn-link", href: "#" }, ["Read case", codeIcon()]),
+        h(UiButton, { class: "btn-link", href: "#" }, () => ["Read case", codeIcon()]),
         h(UiButton, { class: "btn-primary btn-sm", type: "button" }, () => "LIVE SITE"),
       ],
     },
