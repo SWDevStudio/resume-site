@@ -1,0 +1,47 @@
+# Michael Malakhov (SOWA_DEV)
+
+> Resume and portfolio of Michael Malakhov, Fullstack Developer: project case studies and a blog.
+> The resume is available as Markdown and PDF in Russian (ru) and English (en); the page
+> language is set by the path prefix (/ru, /en).
+
+## Resume (machine-readable)
+
+- [Resume, Markdown, English](/resume/en.md): best form for LLMs, plain text
+- [Resume, Markdown, Russian](/resume/ru.md): same content in Russian
+- [Resume, PDF, English](/resume/en.pdf): printable version
+- [Resume, PDF, Russian](/resume/ru.pdf): printable version in Russian
+
+## Pages
+
+- [Home, English](/en): about, skills, projects and contacts
+- [Home, Russian](/ru): same content in Russian
+- [Resume page, English](/en/resume): full resume with Markdown and PDF downloads
+- [Resume page, Russian](/ru/resume): same in Russian
+- [Project Qwixit, English](/en/projects/qwixit): case study
+- [Project Qwixit, Russian](/ru/projects/qwixit): case study in Russian
+- [Project Brendmart, English](/en/projects/brendmart): case study
+- [Project Brendmart, Russian](/ru/projects/brendmart): case study in Russian
+- [Project Pine Ridge, English](/en/projects/pine-ridge): case study
+- [Project Pine Ridge, Russian](/ru/projects/pine-ridge): case study in Russian
+- [Blog, English](/en/blog): articles, videos and open-source tools
+- [Blog, Russian](/ru/blog): same in Russian
+
+## Blog posts
+
+Each post is available under /en/blog/<slug> and /ru/blog/<slug>.
+
+- [Booking calendar in Next.js from scratch](/en/blog/booking-calendar-nextjs): video
+- [llms-txt-gen](/en/blog/llms-txt-gen): CLI tool that builds llms.txt from a sitemap
+- [SEO for LLMs in the AI era](/en/blog/seo-for-llms): article
+- [Lighthouse 100 in 30 minutes](/en/blog/lighthouse-100): video
+- [Headless or classic CMS](/en/blog/headless-or-classic-cms): article
+- [cwv-watch](/en/blog/cwv-watch): GitHub Action that reports Core Web Vitals on pull requests
+- [Core Web Vitals: a checklist for e-commerce](/en/blog/core-web-vitals-checklist): article
+
+## Optional
+
+- [Telegram](https://t.me/kotaroSWQ): @kotaroSWQ
+- [Email](mailto:swdevstudio@gmail.com): swdevstudio@gmail.com
+- [GitHub](https://github.com/SWDevStudio): source code
+- [LinkedIn](https://www.linkedin.com/in/%D0%BC%D0%B8%D1%85%D0%B0%D0%B8%D0%BB-malakhov-3809491b1/): profile
+- [YouTube](https://www.youtube.com/@swdevstudio): @swdevstudio
