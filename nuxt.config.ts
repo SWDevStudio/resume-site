@@ -10,6 +10,16 @@ export default defineNuxtConfig({
     autoImport: false,
   },
   components: false,
+  app: {
+    head: {
+      link: [
+        { rel: "icon", href: "/favicon.ico", sizes: "any" },
+        { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+        { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+        { rel: "manifest", href: "/site.webmanifest" },
+      ],
+    },
+  },
   vueuse: {
     ssrHandlers: true,
   },
