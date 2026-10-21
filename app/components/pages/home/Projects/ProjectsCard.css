@@ -1,0 +1,162 @@
+@reference "~/assets/css/main.css";
+
+.home-projects-card {
+  --card-min-height: --spacing(142.5);
+  --folder-fill: color-mix(in oklab, var(--color-base-200) 95%, var(--color-base-100));
+  --home-projects-accent: var(--color-primary);
+  --home-projects-ink: var(--color-primary-ink);
+  --home-projects-line: 60%;
+  --home-projects-soft: 8%;
+  --home-projects-glow-alpha: 14%;
+  --home-projects-glow-y: 0rem;
+  --home-projects-glow-blur: --spacing(4);
+  --home-projects-hover-alpha: 30%;
+  --home-projects-hover-y: 0rem;
+  --home-projects-hover-blur: --spacing(5);
+  --home-projects-btn-alpha: 55%;
+  --home-projects-media-end: color-mix(in oklab, var(--home-projects-accent) 25%, transparent);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --folder-fill: color-mix(in srgb, white 88%, var(--color-base-100));
+    --home-projects-line: 75%;
+    --home-projects-soft: 10%;
+    --home-projects-glow-alpha: 22%;
+    --home-projects-glow-y: --spacing(3.5);
+    --home-projects-glow-blur: --spacing(6.5);
+    --home-projects-hover-alpha: 36%;
+    --home-projects-hover-y: --spacing(4.5);
+    --home-projects-hover-blur: --spacing(8);
+    --home-projects-media-end: color-mix(in srgb, var(--home-projects-accent) 43%, white);
+  }
+
+  --home-projects-btn-glow: drop-shadow(
+    0 0 --spacing(1.5)
+      color-mix(in oklch, var(--home-projects-accent) var(--home-projects-btn-alpha), transparent)
+  );
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-projects-btn-glow: none;
+  }
+
+  --folder-line: color-mix(
+    in oklab,
+    var(--home-projects-accent) var(--home-projects-line),
+    transparent
+  );
+  --folder-line-hover: var(--home-projects-accent);
+  --folder-glow: drop-shadow(
+    0 var(--home-projects-glow-y) var(--home-projects-glow-blur)
+      color-mix(in oklab, var(--home-projects-accent) var(--home-projects-glow-alpha), transparent)
+  );
+  --folder-glow-hover: drop-shadow(
+    0 var(--home-projects-hover-y) var(--home-projects-hover-blur)
+      color-mix(in oklab, var(--home-projects-accent) var(--home-projects-hover-alpha), transparent)
+  );
+  --card-mark-color: var(--home-projects-accent);
+  --card-side-color: var(--home-projects-accent);
+  --card-foot-color: color-mix(in oklab, var(--home-projects-accent) 60%, transparent);
+  --card-media-start: var(--home-projects-accent);
+  --card-media-end: var(--home-projects-media-end);
+
+  & .card-index,
+  & .card-subtitle {
+    color: var(--home-projects-ink);
+  }
+
+  & .card-media {
+    height: auto;
+    aspect-ratio: 313 / 240;
+  }
+
+  & .card-text,
+  & .card-tag {
+    font-family: "Share Tech Mono", ui-monospace, monospace;
+  }
+
+  & .card-tag {
+    --card-tag-line: var(--folder-line);
+    --card-tag-fill: color-mix(
+      in oklab,
+      var(--home-projects-accent) var(--home-projects-soft),
+      transparent
+    );
+  }
+}
+
+.home-projects-card-secondary {
+  --home-projects-accent: var(--color-secondary);
+  --home-projects-ink: var(--color-secondary-ink);
+  --home-projects-line: 55%;
+  --home-projects-glow-alpha: 12%;
+  --home-projects-btn-alpha: 50%;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-projects-line: 60%;
+    --home-projects-soft: 8%;
+    --home-projects-glow-alpha: 18%;
+  }
+}
+
+.home-projects-card-accent {
+  --home-projects-accent: var(--color-accent);
+  --home-projects-ink: var(--color-accent-ink);
+  --home-projects-line: 65%;
+  --home-projects-soft: 10%;
+  --home-projects-glow-alpha: 16%;
+  --home-projects-btn-alpha: 60%;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-projects-line: 85%;
+    --home-projects-soft: 14%;
+    --home-projects-glow-alpha: 30%;
+    --card-media-start: #a57bff;
+    --home-projects-media-end: #dcc8ff;
+  }
+}
+
+:lang(ru) .home-projects-card {
+  & .card-text,
+  & .card-tag {
+    @apply font-body font-light;
+  }
+}
+
+.home-projects-read {
+  --btn-height: --spacing(10.5);
+  --btn-padding-x: --spacing(4);
+  --btn-deco: var(--btn-color);
+  --btn-glow: var(--home-projects-btn-glow);
+
+  @apply flex-none;
+  width: auto;
+}
+
+.home-projects-live {
+  @apply gap-2 tracking-[.06em];
+  font-family: var(--font-body);
+  text-decoration-color: var(--home-projects-accent);
+  text-underline-offset: --spacing(1.25);
+
+  &[aria-disabled="true"] {
+    @apply pointer-events-none opacity-50;
+  }
+}
+
+.home-projects-live-icon {
+  @apply shrink-0;
+  width: --spacing(3.25);
+  color: var(--home-projects-ink);
+  aspect-ratio: 14 / 14;
+}
+
+.home-projects-card {
+  @variant md {
+    @apply flex-none;
+    width: --spacing(82.5);
+  }
+
+  @variant xl {
+    @apply min-w-0 flex-1;
+    width: auto;
+  }
+}

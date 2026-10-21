@@ -1,0 +1,125 @@
+@reference "~/assets/css/main.css";
+
+@property --home-projects-accent-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --home-projects-accent-via {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --home-projects-accent-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.home-projects {
+  --home-projects-night: 1;
+  --home-projects-day: 0;
+  --home-projects-night-visibility: visible;
+  --home-projects-day-visibility: hidden;
+  --home-projects-title-size: --spacing(11);
+  --home-projects-title-scale: 1;
+
+  @variant md {
+    --home-projects-title-size: --spacing(14);
+  }
+
+  @variant lg {
+    --home-projects-title-size: --spacing(16);
+  }
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-projects-night: 0;
+    --home-projects-day: 1;
+    --home-projects-night-visibility: hidden;
+    --home-projects-day-visibility: visible;
+  }
+
+  @apply overflow-hidden bg-base-100;
+}
+
+.home-projects > .home-slide-body {
+  @variant lg {
+    padding-bottom: --spacing(8);
+  }
+}
+
+.home-projects-main {
+  @apply grid flex-1 content-start;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "head" "list" "action";
+  gap: --spacing(12);
+
+  @variant md {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "head action" "list list";
+  }
+
+  @variant lg {
+    gap: --spacing(8);
+  }
+}
+
+.home-projects-head {
+  @apply flex flex-col items-start;
+  grid-area: head;
+  gap: --spacing(3);
+}
+
+.home-projects-label {
+  @apply font-body font-light tracking-[.3em] text-primary-ink uppercase;
+  font-size: --spacing(3.5);
+  line-height: 1.6;
+}
+
+.home-projects-title {
+  @apply m-0 font-head font-normal;
+  font-size: calc(var(--home-projects-title-size) * var(--home-projects-title-scale));
+  line-height: 1.05;
+}
+
+.home-projects-accent {
+  --home-projects-accent-from: var(--color-primary);
+  --home-projects-accent-via: color-mix(in srgb, var(--color-primary) 45%, var(--color-accent));
+  --home-projects-accent-to: var(--color-accent);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-projects-accent-via: #8f6cff;
+    --home-projects-accent-to: var(--color-secondary);
+  }
+
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(
+    90deg,
+    var(--home-projects-accent-from),
+    var(--home-projects-accent-via) 55%,
+    var(--home-projects-accent-to)
+  );
+  transition-property:
+    --home-projects-accent-from, --home-projects-accent-via, --home-projects-accent-to;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-projects-description {
+  @apply m-0 text-base-content/68;
+  font-family: "Share Tech Mono", ui-monospace, monospace;
+  font-size: --spacing(4);
+  line-height: 1.6;
+}
+
+:lang(ru) .home-projects {
+  --home-projects-title-scale: 0.75;
+}
+
+:lang(ru) .home-projects-description {
+  @apply font-body font-light;
+}

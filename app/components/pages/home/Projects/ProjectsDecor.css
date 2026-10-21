@@ -1,0 +1,143 @@
+@reference "~/assets/css/main.css";
+
+.home-projects-decor {
+  --home-projects-glow-left: --spacing(1.25);
+  --home-projects-glow-top: --spacing(245);
+  --home-projects-glow-size: --spacing(95);
+  --home-projects-a-left: auto;
+  --home-projects-a-right: --spacing(1);
+  --home-projects-a-top: --spacing(2.5);
+  --home-projects-a-width: --spacing(57.5);
+  --home-projects-a-height: --spacing(35);
+  --home-projects-b-left: --spacing(1);
+  --home-projects-b-bottom: --spacing(4);
+  --home-projects-b-top: auto;
+  --home-projects-b-width: --spacing(62.5);
+  --home-projects-b-height: --spacing(37.5);
+
+  @variant md {
+    --home-projects-glow-left: 0rem;
+    --home-projects-glow-top: --spacing(95);
+    --home-projects-glow-size: --spacing(100);
+    --home-projects-a-right: --spacing(4);
+    --home-projects-a-top: --spacing(5);
+    --home-projects-a-width: --spacing(85);
+    --home-projects-a-height: --spacing(47.5);
+    --home-projects-b-left: --spacing(2.5);
+    --home-projects-b-width: --spacing(80);
+    --home-projects-b-height: --spacing(42.5);
+  }
+
+  @variant lg {
+    --home-projects-glow-left: calc(50% - --spacing(190));
+    --home-projects-glow-top: --spacing(125);
+    --home-projects-glow-size: --spacing(110);
+    --home-projects-a-left: calc(50% + --spacing(42.5));
+    --home-projects-a-right: auto;
+    --home-projects-a-top: --spacing(7.5);
+    --home-projects-a-width: --spacing(115);
+    --home-projects-a-height: --spacing(62.5);
+    --home-projects-b-left: calc(50% - --spacing(180));
+    --home-projects-b-top: --spacing(7.5);
+    --home-projects-b-bottom: auto;
+    --home-projects-b-width: --spacing(105);
+    --home-projects-b-height: --spacing(65);
+  }
+
+  @apply pointer-events-none absolute inset-0 overflow-hidden;
+}
+
+.home-projects-night,
+.home-projects-day {
+  @apply absolute inset-0;
+  transition-property: opacity, visibility;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-projects-night {
+  --home-projects-glow-color: 191 0 255;
+  --home-projects-glow-opacity: 0.208;
+  --home-projects-a-image: url("./media/asanoha-purple-torii-synth.svg");
+  --home-projects-a-tile: --spacing(14) --spacing(24.2475);
+  --home-projects-a-opacity: 0.3;
+  --home-projects-b-image: url("./media/asanoha-amber-torii-synth.svg");
+  --home-projects-b-tile: --spacing(14) --spacing(24.2475);
+  --home-projects-b-opacity: 0.22;
+
+  @variant lg {
+    --home-projects-a-opacity: 0.32;
+  }
+
+  opacity: var(--home-projects-night);
+  visibility: var(--home-projects-night-visibility);
+}
+
+.home-projects-day {
+  --home-projects-glow-color: 165 123 255;
+  --home-projects-glow-opacity: 0.1768;
+  --home-projects-a-image: url("./media/circles-cyber-sakura.svg");
+  --home-projects-a-tile: --spacing(12) --spacing(12);
+  --home-projects-a-opacity: 0.42;
+  --home-projects-b-image: url("./media/waves-cyber-sakura.svg");
+  --home-projects-b-tile: --spacing(13) --spacing(6.5);
+  --home-projects-b-opacity: 0.34;
+
+  @variant lg {
+    --home-projects-glow-opacity: 0.192;
+    --home-projects-a-opacity: 0.45;
+    --home-projects-b-opacity: 0.32;
+  }
+
+  opacity: var(--home-projects-day);
+  visibility: var(--home-projects-day-visibility);
+}
+
+.home-projects-glow {
+  @apply absolute rounded-full;
+  top: var(--home-projects-glow-top);
+  left: var(--home-projects-glow-left);
+  width: var(--home-projects-glow-size);
+  height: var(--home-projects-glow-size);
+  opacity: var(--home-projects-glow-opacity);
+  background: radial-gradient(
+    circle closest-side,
+    rgb(var(--home-projects-glow-color)) 0%,
+    rgb(var(--home-projects-glow-color) / 45%) 45%,
+    rgb(var(--home-projects-glow-color) / 0%) 100%
+  );
+}
+
+.home-projects-pattern {
+  @apply absolute bg-repeat;
+  mask-image: radial-gradient(
+    ellipse 55% 55% at 50% 50%,
+    #000 0%,
+    rgb(0 0 0 / 45%) 55%,
+    rgb(0 0 0 / 0%) 100%
+  );
+}
+
+.home-projects-pattern-a {
+  top: var(--home-projects-a-top);
+  right: var(--home-projects-a-right);
+  left: var(--home-projects-a-left);
+  width: var(--home-projects-a-width);
+  height: var(--home-projects-a-height);
+  opacity: var(--home-projects-a-opacity);
+  background-image: var(--home-projects-a-image);
+  background-size: var(--home-projects-a-tile);
+}
+
+.home-projects-pattern-b {
+  top: var(--home-projects-b-top);
+  bottom: var(--home-projects-b-bottom);
+  left: var(--home-projects-b-left);
+  width: var(--home-projects-b-width);
+  height: var(--home-projects-b-height);
+  opacity: var(--home-projects-b-opacity);
+  background-image: var(--home-projects-b-image);
+  background-size: var(--home-projects-b-tile);
+}

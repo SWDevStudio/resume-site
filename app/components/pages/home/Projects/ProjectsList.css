@@ -1,0 +1,87 @@
+@reference "~/assets/css/main.css";
+
+.home-projects-list {
+  @apply flex min-w-0 flex-col;
+  grid-area: list;
+}
+
+.home-projects-track {
+  @apply flex flex-col;
+  gap: --spacing(8);
+
+  @variant md {
+    @apply flex-row overflow-x-auto overflow-y-hidden;
+    margin-block: --spacing(-8);
+    margin-inline: --spacing(-8);
+    padding: --spacing(8);
+    scroll-padding-inline: --spacing(8);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      @apply hidden;
+    }
+
+    &::after {
+      @apply flex-none;
+      content: "";
+      flex-basis: calc(100% - --spacing(82.5) - --spacing(8));
+    }
+
+    @variant motion-safe {
+      scroll-behavior: smooth;
+    }
+  }
+
+  @variant xl {
+    @apply overflow-visible;
+    margin: 0rem;
+    padding: 0rem;
+    scroll-snap-type: none;
+
+    &::after {
+      @apply hidden;
+    }
+  }
+}
+
+.home-projects-dots {
+  @apply hidden justify-center md:flex xl:hidden;
+  gap: --spacing(2.5);
+  margin-top: --spacing(10);
+}
+
+.home-projects-dot {
+  --home-projects-dot-color: var(--color-primary);
+
+  @apply relative cursor-pointer appearance-none border-0 p-0;
+  width: --spacing(2.5);
+  height: --spacing(1);
+  border-radius: var(--radius-selector);
+  background-color: var(--home-projects-dot-color);
+  opacity: 0.5;
+  transition-property: width, opacity, background-color, border-radius;
+
+  &::before {
+    @apply absolute;
+    content: "";
+    inset: --spacing(-2.5) --spacing(-1);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-projects-dot-secondary {
+  --home-projects-dot-color: var(--color-secondary);
+}
+
+.home-projects-dot-accent {
+  --home-projects-dot-color: var(--color-accent);
+}
+
+.home-projects-dot-active {
+  width: --spacing(6.5);
+  opacity: 1;
+}

@@ -1,0 +1,20 @@
+@reference "~/assets/css/main.css";
+
+.home-projects-all {
+  --btn-height: --spacing(15);
+
+  @apply w-full flex-none;
+  grid-area: action;
+
+  @variant md {
+    width: --spacing(62.5);
+    align-self: end;
+    justify-self: end;
+  }
+}
+
+.home-projects-all-icon {
+  @apply relative shrink-0;
+  width: --spacing(4.5);
+  aspect-ratio: 18 / 12;
+}

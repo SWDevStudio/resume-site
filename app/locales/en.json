@@ -111,6 +111,17 @@
         "description": "Everything I work with, grouped by direction.",
         "close": "Close the window with all skills"
       }
+    },
+    "projects": {
+      "label": "04 — Projects",
+      "titleTop": "My",
+      "titleAccent": "Projects",
+      "description": "Selected work: e-commerce and booking",
+      "readCase": "Read case",
+      "all": "All projects",
+      "liveSite": "Live site",
+      "navigation": "Projects navigation",
+      "show": "Show project {number}"
     }
   },
   "resume": {
