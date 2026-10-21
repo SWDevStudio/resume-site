@@ -1,0 +1,68 @@
+@reference "~/assets/css/main.css";
+
+.home-skills-all-group {
+  @apply flex min-w-0 flex-col;
+  gap: --spacing(4);
+}
+
+.home-skills-all-title {
+  --home-skills-all-line: color-mix(in oklab, var(--color-primary) 35%, transparent);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-skills-all-line: color-mix(in oklab, var(--color-accent) 60%, transparent);
+  }
+
+  @apply m-0 flex items-baseline font-body font-light tracking-[.18em] uppercase;
+  gap: --spacing(3);
+  padding-bottom: --spacing(2.5);
+  border-bottom: --spacing(0.25) solid var(--home-skills-all-line);
+  font-size: --spacing(3.5);
+  line-height: 1.4;
+  transition-property: color, border-color;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-skills-all-index {
+  @apply text-primary-ink;
+}
+
+.home-skills-all-count {
+  @apply ml-auto text-base-content/60 tabular-nums;
+}
+
+.home-skills-all-list {
+  @apply m-0 flex list-none flex-wrap p-0;
+  gap: --spacing(2);
+}
+
+.home-skills-all-item {
+  @apply max-w-full min-w-0;
+}
+
+.home-skills-all-chip {
+  --home-skills-all-chip-line: var(--color-accent);
+  --home-skills-all-chip-fill: color-mix(
+    in srgb,
+    var(--color-accent) var(--badge-accent-tint),
+    var(--color-base-200)
+  );
+  --home-skills-all-chip-ink: var(--color-accent-ink);
+
+  @apply max-w-full text-left whitespace-normal;
+  translate: 0 0rem;
+  transition-property: color, translate;
+
+  &:hover {
+    --badge-line: var(--home-skills-all-chip-line);
+    --badge-fill: var(--home-skills-all-chip-fill);
+    --badge-ink: var(--home-skills-all-chip-ink);
+    translate: 0 --spacing(-0.5);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}

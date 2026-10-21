@@ -1,0 +1,1007 @@
+import { createSSRApp, h, nextTick } from "vue";
+import { renderToString } from "vue/server-renderer";
+import { createI18n } from "vue-i18n";
+import { cdp, page, userEvent } from "vitest/browser";
+import { render } from "vitest-browser-vue";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import type { Locale } from "~/assets/const";
+import { buildSkillGroups } from "#shared/mock/build";
+import { staticSources } from "#shared/mock/sources.static";
+import en from "~/locales/en.json";
+import ru from "~/locales/ru.json";
+import { SKILL_TILE_META } from "~/components/ui/UiSkillTile/skillTile";
+import type { SkillGroupView } from "#shared/types/catalog";
+import { SKILL_GROUP_IDS } from "#shared/types/resume";
+import Skills from "./Skills.vue";
+import { buildSkillPanels } from "./skillPanels";
+import { skillWaveOrder, skillWaveSwapTime } from "./skillWave";
+import { SKILL_SWAP_PERIOD } from "./useSkillSwap";
+import { buildToolkit } from "./toolkit";
+import { setTheme } from "../../../../../test/mocks/useTheme";
+import "~/assets/css/fonts.css";
+import "~/assets/css/main.css";
+
+vi.mock("~/composables/useTheme", () => import("../../../../../test/mocks/useTheme"));
+
+interface SkillsCase {
+  name: string;
+  width: number;
+  height: number;
+  locale?: Locale;
+  tall?: boolean;
+}
+
+const themes = ["torii-synth", "cyber-sakura"];
+
+const cases: SkillsCase[] = [
+  { name: "desktop", width: 1440, height: 900 },
+  { name: "tablet", width: 768, height: 900, tall: true },
+  { name: "mobile", width: 390, height: 780, tall: true },
+  { name: "desktop-ru", width: 1440, height: 900, locale: "ru" },
+  { name: "tablet-ru", width: 768, height: 900, locale: "ru", tall: true },
+  { name: "mobile-ru", width: 390, height: 780, locale: "ru", tall: true },
+];
+
+const switchCases: SkillsCase[] = [
+  { name: "desktop", width: 1440, height: 900 },
+  { name: "mobile", width: 390, height: 780, tall: true },
+];
+
+const customTransitions = [
+  ".home-skills-night",
+  ".home-skills-day",
+  ".home-skills-accent",
+  ".home-skills-band",
+  ".home-skills-type",
+  ".home-skills-cursor",
+];
+
+function finishAnimations() {
+  for (const animation of document.getAnimations()) {
+    if (animation.effect?.getComputedTiming().endTime === Infinity) animation.cancel();
+    else animation.finish();
+  }
+}
+
+function transitioning(element: Element, property: string, pseudo: string | null = null) {
+  return document.getAnimations().some((animation) => {
+    const effect = animation.effect as KeyframeEffect | null;
+    return (
+      animation instanceof CSSTransition &&
+      animation.transitionProperty === property &&
+      effect?.target === element &&
+      effect.pseudoElement === pseudo
+    );
+  });
+}
+
+function running(prefix: string) {
+  return document
+    .getAnimations()
+    .filter(
+      (animation) =>
+        animation instanceof CSSAnimation && animation.animationName.startsWith(prefix),
+    );
+}
+
+async function setReducedMotion(value: "reduce" | "no-preference") {
+  await cdp().send("Emulation.setEmulatedMedia", {
+    features: [{ name: "prefers-reduced-motion", value }],
+  });
+}
+
+const groupsOf: Record<Locale, SkillGroupView[]> = {
+  en: buildSkillGroups(staticSources("en"), "en"),
+  ru: buildSkillGroups(staticSources("ru"), "ru"),
+};
+
+const { panels: skillPanels, steps: skillWaveSteps } = buildSkillPanels(groupsOf.en);
+
+const additionalOf = (groups: SkillGroupView[]) =>
+  groups.find((group) => group.id === "additional")!.skills;
+
+const toolkit = buildToolkit(additionalOf(groupsOf.en));
+
+function createApp(locale: Locale) {
+  return createI18n({ legacy: false, locale, messages: { ru, en } });
+}
+
+async function renderCase(
+  item: Pick<SkillsCase, "width" | "height" | "locale" | "tall">,
+  data?: SkillGroupView[],
+) {
+  await page.viewport(item.width, item.tall ? 1800 : item.height);
+  const locale = item.locale ?? "en";
+  document.documentElement.lang = locale;
+  const groups = data ?? groupsOf[locale];
+  const screen = await render(
+    () => h("div", { class: "bg-base-100 font-body text-base-content" }, h(Skills, { groups })),
+    { global: { plugins: [createApp(locale)] } },
+  );
+  await expect
+    .poll(() => screen.container.querySelectorAll(".home-skills-night, .home-skills-day").length)
+    .toBe(2);
+  if (item.tall) screen.container.querySelector<HTMLElement>(".home-skills")!.style.minHeight = "0";
+  screen.container.getBoundingClientRect();
+  return screen;
+}
+
+type Screen = Awaited<ReturnType<typeof renderCase>>;
+
+function pick<T extends Element>(screen: Screen, selector: string) {
+  return screen.container.querySelector<T>(selector)!;
+}
+
+function pickAll<T extends Element>(screen: Screen, selector: string) {
+  return [...screen.container.querySelectorAll<T>(selector)];
+}
+
+function box(screen: Screen, selector: string, element?: Element) {
+  const slide = pick(screen, ".home-skills").getBoundingClientRect();
+  const rect = (element ?? pick(screen, selector)).getBoundingClientRect();
+  return {
+    left: rect.left - slide.left,
+    top: rect.top - slide.top,
+    right: slide.right - rect.right,
+    bottom: slide.bottom - rect.bottom,
+    width: rect.width,
+    height: rect.height,
+  };
+}
+
+const tiles = skillPanels.flatMap((panel) => panel.tiles);
+
+const panelSizes = skillPanels.map((panel) => panel.tiles.length);
+
+function swapTime(tile: (typeof tiles)[number], index = 0) {
+  return skillWaveSwapTime(tile.phase, skillWaveSteps, SKILL_SWAP_PERIOD, index);
+}
+
+function walk() {
+  const offsets = panelSizes.map((_, index) =>
+    panelSizes.slice(0, index).reduce((sum, size) => sum + size, 0),
+  );
+  return skillWaveOrder(panelSizes).map(({ panel, tile }) => offsets[panel]! + tile);
+}
+
+function tileLabels(screen: Screen) {
+  return pickAll(screen, ".skill-tile").map(
+    (tile) =>
+      tile.querySelector(".skill-tile-layer:not([aria-hidden]) .skill-tile-label")?.textContent,
+  );
+}
+
+async function advance(ms: number) {
+  await vi.advanceTimersByTimeAsync(ms);
+  await nextTick();
+}
+
+function near(value: number, expected: number, tolerance = 1) {
+  expect(Math.abs(value - expected)).toBeLessThanOrEqual(tolerance);
+}
+
+function fontSize(screen: Screen, selector: string) {
+  return Number.parseFloat(getComputedStyle(pick(screen, selector)).fontSize);
+}
+
+beforeAll(async () => {
+  await page.viewport(1440, 900);
+  await document.fonts.load('400 1em "Righteous"', "My Core Skills 01 Frontend Backend & DevOps");
+  await document.fonts.load('700 1em "Montserrat Alternates"', "Мои навыки Фронтенд");
+  await document.fonts.load('300 1em "Martian Mono"', "02 — SKILLS ALSO IN MY TOOLKIT");
+  await document.fonts.load('400 1em "Martian Mono"', "MY PROJECTS React Next.js");
+  await document.fonts.load('400 1em "Share Tech Mono"', "[Two or three sentences] Vite Webpack");
+  await cdp().send("Emulation.setScrollbarsHidden", { hidden: true });
+});
+
+afterAll(async () => {
+  await cdp().send("Emulation.setScrollbarsHidden", { hidden: false });
+});
+
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "setInterval", "clearInterval"] });
+});
+
+afterEach(async () => {
+  vi.useRealTimers();
+  finishAnimations();
+  await setReducedMotion("no-preference");
+  await page.viewport(1440, 900);
+});
+
+describe.each(themes)("%s", (theme) => {
+  beforeEach(() => {
+    setTheme(theme);
+  });
+
+  it.each(cases)("$name", async (item) => {
+    const screen = await renderCase(item);
+
+    await expect
+      .element(page.elementLocator(screen.container.firstElementChild!))
+      .toMatchScreenshot(`${theme}-${item.name}`);
+  });
+});
+
+describe("theme switch", () => {
+  it.each(switchCases)("$name", async (item) => {
+    setTheme("torii-synth");
+    const screen = await renderCase(item);
+    screen.container.getBoundingClientRect();
+    setTheme("cyber-sakura");
+
+    const animations = document.getAnimations().filter((animation) => {
+      return animation instanceof CSSTransition;
+    });
+    expect(animations.length).toBeGreaterThan(0);
+    for (const animation of animations) {
+      animation.pause();
+      animation.currentTime = Number(animation.effect?.getComputedTiming().duration) / 2;
+    }
+    for (const animation of document.getAnimations()) {
+      if (animation instanceof CSSAnimation) {
+        animation.pause();
+        animation.currentTime = 0;
+      }
+    }
+
+    await expect
+      .element(page.elementLocator(screen.container.firstElementChild!))
+      .toMatchScreenshot(`switch-${item.name}`, { screenshotOptions: { animations: "allow" } });
+  });
+});
+
+describe("behavior", () => {
+  beforeEach(() => {
+    setTheme("torii-synth");
+  });
+
+  it("renders the heading, the description, the action, two panels and the toolkit", async () => {
+    const screen = await renderCase({ width: 1440, height: 900 });
+    const slide = pick<HTMLElement>(screen, ".home-skills");
+    const panels = pickAll<HTMLElement>(screen, ".home-skills-panel");
+
+    expect(slide.tagName).toBe("SECTION");
+    expect(slide.id).toBe("skills");
+    expect(slide.querySelectorAll("h2")).toHaveLength(1);
+    expect(slide.querySelector("h1")).toBeNull();
+    expect(pick(screen, ".home-skills-label").textContent).toBe(en.home.skills.label);
+    expect(pick(screen, ".home-skills-title").textContent?.replace(/\s+/g, " ").trim()).toBe(
+      `${en.home.skills.titleTop} ${en.home.skills.titleAccent}`,
+    );
+    expect(pick(screen, ".home-skills-accent").textContent).toBe(en.home.skills.titleAccent);
+    expect(pick(screen, ".home-skills-description").textContent).toBe(en.home.skills.description);
+    expect(pick(screen, ".home-skills-action").textContent?.trim()).toBe(en.home.skills.all);
+    expect(pick(screen, ".home-skills-action").classList.contains("btn")).toBe(true);
+    expect(panels).toHaveLength(2);
+    expect(panels.every((panel) => panel.classList.contains("panel"))).toBe(true);
+    expect(panels.map((panel) => panel.querySelector(".card-title")?.textContent?.trim())).toEqual([
+      `01 ${en.home.skills.frontend}`,
+      `02 ${en.home.skills.backend}`,
+    ]);
+    expect(
+      panels.map((panel) =>
+        [...panel.querySelectorAll(".skill-tile-label")].map((label) => label.textContent),
+      ),
+    ).toEqual(
+      skillPanels.map((panel) => panel.tiles.map((tile) => SKILL_TILE_META[tile.skill].label)),
+    );
+    expect(pickAll(screen, ".skill-tile")).toHaveLength(18);
+    expect(pick(screen, ".home-skills-decor").getAttribute("aria-hidden")).toBe("true");
+  });
+
+  it("lists the toolkit for screen readers and draws the typed items", async () => {
+    const screen = await renderCase({ width: 1440, height: 900 });
+    const band = pick(screen, ".home-skills-band");
+
+    expect(band.getAttribute("role")).toBe("group");
+    expect(band.getAttribute("aria-label")).toBe(en.home.skills.toolkit);
+    expect(pick(screen, ".home-skills-band-label").textContent).toBe(en.home.skills.toolkit);
+    expect(pick(screen, ".home-skills-toolkit .sr-only").textContent).toBe(
+      [...toolkit.static, ...toolkit.typed.map((item) => item.text)].join(", "),
+    );
+    expect(pickAll(screen, ".home-skills-static").map((item) => item.textContent)).toEqual(
+      toolkit.static.map((item) => `${item}·`),
+    );
+    expect(pickAll(screen, ".home-skills-type").map((item) => item.textContent)).toEqual(
+      toolkit.typed.map((item) => item.text),
+    );
+    expect(pick(screen, ".home-skills-toolkit [aria-hidden='true']")).not.toBeNull();
+  });
+
+  it("translates the texts", async () => {
+    const screen = await renderCase({ width: 1440, height: 900, locale: "ru" });
+    const panels = pickAll<HTMLElement>(screen, ".home-skills-panel");
+
+    expect(pick(screen, ".home-skills-label").textContent).toBe(ru.home.skills.label);
+    expect(pick(screen, ".home-skills-title").textContent?.replace(/\s+/g, " ").trim()).toBe(
+      `${ru.home.skills.titleTop} ${ru.home.skills.titleAccent}`,
+    );
+    expect(pick(screen, ".home-skills-description").textContent).toBe(ru.home.skills.description);
+    expect(pick(screen, ".home-skills-action").textContent?.trim()).toBe(ru.home.skills.all);
+    expect(panels.map((panel) => panel.querySelector(".card-title")?.textContent?.trim())).toEqual([
+      `01 ${ru.home.skills.frontend}`,
+      `02 ${ru.home.skills.backend}`,
+    ]);
+    expect(pick(screen, ".home-skills-band-label").textContent).toBe(ru.home.skills.toolkit);
+  });
+
+  it("lays out like the mockup on desktop", async () => {
+    const screen = await renderCase({ width: 1440, height: 900 });
+    const panels = pickAll<HTMLElement>(screen, ".home-skills-panel");
+    const tiles = [...panels[0]!.querySelectorAll<HTMLElement>(".skill-tile")];
+
+    near(box(screen, ".home-slide-body").width, 1280);
+    near(box(screen, ".home-skills-title").left, 120);
+    near(fontSize(screen, ".home-skills-title"), 46);
+    near(fontSize(screen, ".home-skills-label"), 14);
+    near(fontSize(screen, ".home-skills-description"), 16);
+    near(box(screen, ".home-skills-action").width, 270);
+    near(box(screen, ".home-skills-action").height, 60);
+    near(box(screen, ".home-skills-action").right, 120);
+    near(box(screen, "", panels[0]).left, 120);
+    near(box(screen, "", panels[0]).width, 1200);
+    near(box(screen, "", panels[0]).height, 240);
+    near(box(screen, "", panels[1]).height, 240);
+    near(box(screen, "", panels[1]).top - box(screen, "", panels[0]).top, 240 + 16);
+    expect(tiles).toHaveLength(9);
+    expect(panels[1]!.querySelectorAll(".skill-tile")).toHaveLength(9);
+    for (const tile of tiles) {
+      near(tile.getBoundingClientRect().width, 108);
+      near(tile.getBoundingClientRect().height, 124);
+    }
+    near(
+      tiles[1]!.getBoundingClientRect().left - tiles[0]!.getBoundingClientRect().right,
+      (1136 - 9 * 108) / 8,
+    );
+    near(box(screen, "", tiles[0]).left, 120 + 32);
+    near(box(screen, "", tiles.at(-1)).right, 120 + 32);
+    near(box(screen, ".home-skills-band").left, 0);
+    near(box(screen, ".home-skills-band").right, 0);
+    near(box(screen, ".home-skills-band").height, 59, 3);
+    near(box(screen, ".home-skills-band").bottom, 0);
+  });
+
+  it("lays out like the mockup on tablet", async () => {
+    const screen = await renderCase({ width: 768, height: 900, tall: true });
+    const panels = pickAll<HTMLElement>(screen, ".home-skills-panel");
+    const visible = [...panels[0]!.querySelectorAll<HTMLElement>(".skill-tile")].filter(
+      (tile) => getComputedStyle(tile).display !== "none",
+    );
+
+    near(box(screen, ".home-skills-title").left, 32);
+    near(fontSize(screen, ".home-skills-title"), 56);
+    near(fontSize(screen, ".home-skills-description"), 16);
+    near(box(screen, "", panels[0]).left, 32);
+    near(box(screen, "", panels[0]).width, 704);
+    near(box(screen, "", panels[0]).height, 250 * 0.9);
+    near(box(screen, "", panels[1]).top - box(screen, "", panels[0]).top, 250 * 0.9 + 32 * 0.9);
+    expect(visible).toHaveLength(6);
+    near(visible[0]!.getBoundingClientRect().width, 108 * 0.9);
+    near(
+      visible[1]!.getBoundingClientRect().left - visible[0]!.getBoundingClientRect().right,
+      15 * 0.9,
+    );
+    near(box(screen, ".home-skills-band").left, 0);
+    near(box(screen, ".home-skills-band").right, 0);
+  });
+
+  it("lays out like the mockup on mobile", async () => {
+    const screen = await renderCase({ width: 390, height: 780, tall: true });
+    const panels = pickAll<HTMLElement>(screen, ".home-skills-panel");
+    const visible = [...panels[0]!.querySelectorAll<HTMLElement>(".skill-tile")].filter(
+      (tile) => getComputedStyle(tile).display !== "none",
+    );
+    const rows = new Set(visible.map((tile) => Math.round(tile.getBoundingClientRect().top)));
+
+    near(box(screen, ".home-skills-title").left, 20);
+    near(fontSize(screen, ".home-skills-title"), 44);
+    near(box(screen, "", panels[0]).left, 20);
+    near(box(screen, "", panels[0]).width, 350);
+    near(box(screen, "", panels[0]).height, 356);
+    near(visible[0]!.getBoundingClientRect().width, 108 * 0.87);
+    expect(visible).toHaveLength(6);
+    expect(rows.size).toBe(2);
+    near(box(screen, ".home-skills-band").left, 0);
+    near(box(screen, ".home-skills-band").right, 0);
+  });
+
+  it.each([
+    { width: 1440, height: 900, locale: "en" as const },
+    { width: 1440, height: 900, locale: "ru" as const },
+    { width: 1280, height: 800, locale: "en" as const },
+    { width: 1024, height: 800, locale: "ru" as const },
+    { width: 768, height: 900, locale: "ru" as const },
+    { width: 390, height: 780, locale: "en" as const },
+    { width: 390, height: 780, locale: "ru" as const },
+    { width: 360, height: 740, locale: "ru" as const },
+  ])("keeps everything inside the slide at $width in $locale", async (item) => {
+    const screen = await renderCase(item);
+    const slide = pick(screen, ".home-skills").getBoundingClientRect();
+    const parts = [
+      ".home-skills-label",
+      ".home-skills-title",
+      ".home-skills-description",
+      ".home-skills-action",
+      ".home-skills-panel",
+      ".home-skills-band",
+      ".home-skills-band-label",
+      ".home-skills-toolkit",
+    ];
+
+    for (const selector of parts) {
+      for (const element of screen.container.querySelectorAll(selector)) {
+        const rect = element.getBoundingClientRect();
+        expect(rect.left, selector).toBeGreaterThanOrEqual(slide.left - 0.5);
+        expect(rect.right, selector).toBeLessThanOrEqual(slide.right + 0.5);
+      }
+    }
+    for (const panel of pickAll(screen, ".home-skills-panel")) {
+      const rect = panel.getBoundingClientRect();
+      for (const tile of panel.querySelectorAll(".skill-tile")) {
+        if (getComputedStyle(tile).display === "none") continue;
+        const tileRect = tile.getBoundingClientRect();
+        expect(tileRect.left).toBeGreaterThanOrEqual(rect.left);
+        expect(tileRect.right).toBeLessThanOrEqual(rect.right);
+      }
+    }
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(item.width);
+  });
+
+  it.each([
+    { width: 1440, visible: 9 },
+    { width: 1280, visible: 9 },
+    { width: 1279, visible: 6 },
+    { width: 1024, visible: 6 },
+  ])("shows $visible frontend tiles at $width", async ({ width, visible }) => {
+    const screen = await renderCase({ width, height: 900 });
+    const tiles = pickAll<HTMLElement>(screen, ".home-skills-panel:first-child .skill-tile");
+
+    expect(tiles.filter((tile) => getComputedStyle(tile).display !== "none")).toHaveLength(visible);
+  });
+
+  it.each(["en", "ru"] as const)(
+    "fits the screen below the header at 1440 x 900 in %s",
+    async (locale) => {
+      const screen = await renderCase({ width: 1440, height: 900, locale });
+      const slide = pick(screen, ".home-skills").getBoundingClientRect();
+      const body = pick<HTMLElement>(screen, ".home-slide-body");
+      const main = pick(screen, ".home-skills-main").getBoundingClientRect();
+      const band = pick(screen, ".home-skills-band").getBoundingClientRect();
+
+      expect(slide.height).toBe(900);
+      expect(Number.parseFloat(getComputedStyle(body).paddingTop)).toBeGreaterThanOrEqual(109);
+      expect(main.top - slide.top).toBeGreaterThanOrEqual(109);
+      expect(band.bottom).toBeLessThanOrEqual(slide.bottom + 0.5);
+      expect(band.top).toBeGreaterThanOrEqual(main.bottom - 0.5);
+    },
+  );
+
+  it.each([
+    { width: 1440, height: 900, header: 110 },
+    { width: 768, height: 900, header: 94 },
+    { width: 390, height: 780, header: 92 },
+  ])("starts the content below the header at $width", async (item) => {
+    const screen = await renderCase({ ...item, tall: item.width < 1024 });
+    const label = pick(screen, ".home-skills-label").getBoundingClientRect();
+    const slide = pick(screen, ".home-skills").getBoundingClientRect();
+
+    expect(label.top - slide.top).toBeGreaterThanOrEqual(item.header - 1);
+  });
+
+  it("follows the theme with two crossfading layers", async () => {
+    const screen = await renderCase({ width: 1440, height: 900 });
+    const night = pick<HTMLElement>(screen, ".home-skills-night");
+    const day = pick<HTMLElement>(screen, ".home-skills-day");
+    const accent = pick<HTMLElement>(screen, ".home-skills-accent");
+    const band = pick<HTMLElement>(screen, ".home-skills-band");
+    const type = pick<HTMLElement>(screen, ".home-skills-type");
+    const cursor = pick<HTMLElement>(screen, ".home-skills-cursor");
+    const panel = pick<HTMLElement>(screen, ".home-skills-panel");
+    const frame = panel.querySelector<HTMLElement>(".card-frame")!;
+
+    expect(getComputedStyle(night).opacity).toBe("1");
+    expect(getComputedStyle(night).visibility).toBe("visible");
+    expect(getComputedStyle(day).opacity).toBe("0");
+    expect(getComputedStyle(day).visibility).toBe("hidden");
+    const darkShape = getComputedStyle(frame, "::before").clipPath;
+
+    setTheme("cyber-sakura");
+    expect(transitioning(night, "opacity")).toBe(true);
+    expect(transitioning(night, "visibility")).toBe(true);
+    expect(transitioning(day, "opacity")).toBe(true);
+    expect(transitioning(accent, "--home-skills-accent-via")).toBe(true);
+    expect(transitioning(band, "--home-skills-band-to")).toBe(true);
+    expect(transitioning(band, "box-shadow")).toBe(true);
+    expect(transitioning(band, "border-top-color")).toBe(true);
+    expect(transitioning(band, "border-bottom-color")).toBe(true);
+    expect(transitioning(type, "color")).toBe(true);
+    expect(transitioning(cursor, "background-color")).toBe(true);
+    expect(transitioning(frame, "clip-path", "::before")).toBe(true);
+    for (const animation of document.getAnimations()) {
+      if (animation instanceof CSSTransition) animation.finish();
+    }
+
+    expect(getComputedStyle(night).opacity).toBe("0");
+    expect(getComputedStyle(night).visibility).toBe("hidden");
+    expect(getComputedStyle(day).opacity).toBe("1");
+    expect(getComputedStyle(day).visibility).toBe("visible");
+    expect(getComputedStyle(frame, "::before").clipPath).not.toBe(darkShape);
+  });
+
+  it("types the toolkit items one after another and blinks the cursor", async () => {
+    await renderCase({ width: 1440, height: 900 });
+    const typing = running("home-skills-type");
+    const first = typing.find((animation) => animation.animationName === "home-skills-type-0")!;
+    const last = typing.find((animation) => animation.animationName === "home-skills-type-28")!;
+
+    expect(typing).toHaveLength(29);
+    expect(running("home-skills-blink")).toHaveLength(1);
+    expect(Number(first.effect?.getComputedTiming().duration)).toBeCloseTo(76860, 0);
+    expect(Number(last.effect?.getComputedTiming().duration)).toBeCloseTo(76860, 0);
+    expect(Number(first.effect?.getComputedTiming().iterations)).toBe(Infinity);
+    for (const animation of typing) animation.pause();
+
+    const widths = (time: number) => {
+      for (const animation of typing) animation.currentTime = time;
+      return pickAllTypeWidths();
+    };
+    function pickAllTypeWidths() {
+      return [...document.querySelectorAll<HTMLElement>(".home-skills-type")].map((item) =>
+        Math.round(item.getBoundingClientRect().width),
+      );
+    }
+    const length = (index: number) => toolkit.typed[index]!.text.length;
+
+    expect(widths(100).filter((width) => width > 0)).toHaveLength(1);
+    expect(widths(1000)[0]).toBeGreaterThan(0);
+    expect(
+      widths(1000)
+        .slice(1)
+        .every((width) => width === 0),
+    ).toBe(true);
+    expect(widths(2000).every((width) => width === 0)).toBe(true);
+    expect(widths(3500)[1]).toBeGreaterThan(0);
+    expect(widths(76000)[28]).toBeGreaterThan(0);
+    expect(length(0)).toBe(4);
+  });
+
+  describe("data", () => {
+    it("draws the panel tiles from the groups of the data", async () => {
+      const data = structuredClone(groupsOf.en);
+      const backend = data.find((group) => group.id === "backend")!;
+      backend.skills = backend.skills.filter((skill) => skill.id !== "kubernetes");
+      const screen = await renderCase({ width: 1440, height: 900 }, data);
+      const panels = pickAll<HTMLElement>(screen, ".home-skills-panel");
+
+      expect(panels[0]!.querySelectorAll(".skill-tile")).toHaveLength(9);
+      expect(panels[1]!.querySelectorAll(".skill-tile")).toHaveLength(8);
+      expect(
+        [...panels[1]!.querySelectorAll(".skill-tile-label")].map((label) => label.textContent),
+      ).not.toContain(SKILL_TILE_META.Kubernetes.label);
+    });
+
+    it("takes the toolkit from the additional group of the data", async () => {
+      const data = structuredClone(groupsOf.en);
+      additionalOf(data)[0]!.name = "Vite 7";
+      additionalOf(data)[6]!.name = "Sass 2";
+      const screen = await renderCase({ width: 1440, height: 900 }, data);
+
+      expect(pickAll(screen, ".home-skills-static")[0]!.textContent).toBe("Vite 7·");
+      expect(pickAll(screen, ".home-skills-type")[0]!.textContent).toBe("Sass 2");
+      expect(pick(screen, ".home-skills-toolkit .sr-only").textContent).toContain(
+        "Vite 7, Webpack",
+      );
+    });
+
+    it("shows only the first 35 skills of the additional group in the toolkit band", async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+
+      expect(additionalOf(groupsOf.en).length).toBeGreaterThan(35);
+      expect(pickAll(screen, ".home-skills-static")).toHaveLength(6);
+      expect(pickAll(screen, ".home-skills-type")).toHaveLength(29);
+    });
+  });
+
+  describe("all skills window", () => {
+    const allDialog = () => document.querySelector<HTMLDialogElement>("dialog.home-skills-all");
+
+    beforeEach(async () => {
+      await page.elementLocator(document.body).hover({ position: { x: 4, y: 4 } });
+    });
+
+    async function openAll(screen: Screen) {
+      await userEvent.click(page.elementLocator(pick(screen, ".home-skills-action")));
+      await expect.poll(() => allDialog()?.open, { timeout: 15000 }).toBe(true);
+      finishAnimations();
+      await expect.poll(() => allDialog()?.dataset.state).toBe("open");
+      return allDialog()!;
+    }
+
+    async function closeAll() {
+      await expect.poll(() => allDialog()?.dataset.state).toBe("closing");
+      finishAnimations();
+      await expect.poll(() => allDialog()?.open ?? false).toBe(false);
+    }
+
+    function groupsIn(dialog: Element) {
+      return [...dialog.querySelectorAll(".home-skills-all-group")].map((group) => ({
+        name: group.querySelector(".home-skills-all-name")!.textContent?.trim(),
+        count: group.querySelector(".home-skills-all-count")!.textContent?.trim(),
+        index: group.querySelector(".home-skills-all-index")!.textContent?.trim(),
+        skills: [...group.querySelectorAll(".home-skills-all-chip")].map((chip) =>
+          chip.textContent?.trim(),
+        ),
+      }));
+    }
+
+    it("keeps the window and its content out of the DOM until the button is pressed", async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+      const button = pick(screen, ".home-skills-action");
+
+      expect(button.getAttribute("aria-haspopup")).toBe("dialog");
+      expect(allDialog()).toBeNull();
+      expect(document.querySelectorAll(".home-skills-all-group")).toHaveLength(0);
+      expect(document.querySelectorAll(".home-skills-all-chip")).toHaveLength(0);
+
+      await openAll(screen);
+      expect(document.querySelectorAll(".home-skills-all-group")).toHaveLength(4);
+
+      await userEvent.keyboard("{Escape}");
+      await closeAll();
+      expect(document.querySelectorAll(".home-skills-all-group")).toHaveLength(0);
+      expect(document.querySelectorAll(".home-skills-all-chip")).toHaveLength(0);
+    });
+
+    it("lists every skill of the four groups at once, with the names of the data as they are", async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+      const dialog = await openAll(screen);
+      const groups = groupsOf.en;
+
+      expect(groups.map((group) => group.id)).toEqual([...SKILL_GROUP_IDS]);
+      expect(groupsIn(dialog)).toEqual(
+        groups.map((group, index) => ({
+          name: group.name,
+          count: String(group.skills.length),
+          index: String(index + 1).padStart(2, "0"),
+          skills: group.skills.map((skill) => skill.name),
+        })),
+      );
+      expect(dialog.querySelectorAll(".home-skills-all-chip")).toHaveLength(
+        groups.reduce((sum, group) => sum + group.skills.length, 0),
+      );
+      expect(dialog.querySelectorAll(".home-skills-all-list")).toHaveLength(4);
+    });
+
+    it("names the window, its description and its close button", async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+      const dialog = await openAll(screen);
+      const title = dialog.querySelector("h2")!;
+
+      expect(dialog.getAttribute("aria-labelledby")).toBe(title.id);
+      expect(title.textContent?.replace(/\s+/g, " ").trim()).toBe(
+        `${en.home.skills.modal.title} ${en.home.skills.modal.accent}`,
+      );
+      expect(dialog.querySelector(".modal-label")!.textContent).toBe(en.home.skills.label);
+      expect(dialog.querySelector(".modal-description")!.textContent).toBe(
+        en.home.skills.modal.description,
+      );
+      expect(dialog.querySelector(".modal-close")!.getAttribute("aria-label")).toBe(
+        en.home.skills.modal.close,
+      );
+      expect(dialog.querySelectorAll("h3")).toHaveLength(4);
+      for (const group of dialog.querySelectorAll("section")) {
+        const heading = group.querySelector("h3")!;
+        expect(group.getAttribute("aria-labelledby")).toBe(heading.id);
+      }
+    });
+
+    it("moves the focus into the window and returns it to the button on Escape", async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+      const button = pick<HTMLElement>(screen, ".home-skills-action");
+      const dialog = await openAll(screen);
+
+      expect(dialog.contains(document.activeElement)).toBe(true);
+      await userEvent.keyboard("{Escape}");
+      await closeAll();
+
+      expect(document.activeElement).toBe(button);
+    });
+
+    it("closes with the close button, returns the focus to the button and opens again", async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+      const button = pick<HTMLElement>(screen, ".home-skills-action");
+      const dialog = await openAll(screen);
+
+      await userEvent.click(page.elementLocator(dialog.querySelector(".modal-close")!));
+      await closeAll();
+
+      expect(document.activeElement).toBe(button);
+      await openAll(screen);
+      expect(document.querySelectorAll(".home-skills-all-group")).toHaveLength(4);
+    });
+
+    it("marks the technical groups as English terms and leaves the lead group alone", async () => {
+      const screen = await renderCase({ width: 1440, height: 900, locale: "ru" });
+      const dialog = await openAll(screen);
+      const groups = [...dialog.querySelectorAll(".home-skills-all-group")];
+
+      expect(
+        groups.map((group) => group.querySelector<HTMLElement>(".home-skills-all-name")!.lang),
+      ).toEqual(["en", "en", "", "en"]);
+      for (const index of [0, 1, 3]) {
+        for (const chip of groups[index]!.querySelectorAll(".home-skills-all-chip")) {
+          expect(chip.getAttribute("lang")).toBe("en");
+          expect(chip.hasAttribute("data-atom-skip")).toBe(true);
+        }
+      }
+      for (const chip of groups[2]!.querySelectorAll(".home-skills-all-chip")) {
+        expect(chip.hasAttribute("lang")).toBe(false);
+        expect(chip.hasAttribute("data-atom-skip")).toBe(false);
+      }
+    });
+
+    it("takes the service texts and the lead group of the language", async () => {
+      const screen = await renderCase({ width: 1440, height: 900, locale: "ru" });
+      const dialog = await openAll(screen);
+      const lead = groupsOf.ru.find((group) => group.id === "lead")!;
+
+      expect(dialog.querySelector("h2")!.textContent?.replace(/\s+/g, " ").trim()).toBe(
+        `${ru.home.skills.modal.title} ${ru.home.skills.modal.accent}`,
+      );
+      expect(dialog.querySelector(".modal-close")!.getAttribute("aria-label")).toBe(
+        ru.home.skills.modal.close,
+      );
+      expect(groupsIn(dialog)[2]).toEqual({
+        name: lead.name,
+        count: String(lead.skills.length),
+        index: "03",
+        skills: lead.skills.map((skill) => skill.name),
+      });
+    });
+
+    it("scrolls inside the window on a narrow screen and keeps the window on the screen", async () => {
+      const screen = await renderCase({ width: 390, height: 780 });
+      const dialog = await openAll(screen);
+      const body = dialog.querySelector<HTMLElement>(".modal-body")!;
+      const frame = dialog.querySelector<HTMLElement>(".modal-window")!.getBoundingClientRect();
+
+      expect(getComputedStyle(body).overflowY).toBe("auto");
+      expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+      expect(frame.top).toBeGreaterThanOrEqual(0);
+      expect(frame.bottom).toBeLessThanOrEqual(780);
+      expect(frame.left).toBeGreaterThanOrEqual(0);
+      expect(frame.right).toBeLessThanOrEqual(390);
+      for (const chip of dialog.querySelectorAll(".home-skills-all-chip")) {
+        expect(chip.getBoundingClientRect().right).toBeLessThanOrEqual(
+          body.getBoundingClientRect().right,
+        );
+      }
+      expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(390);
+    });
+
+    it.each([
+      { width: 1440, height: 900, columns: 2 },
+      { width: 768, height: 900, columns: 1 },
+      { width: 390, height: 780, columns: 1 },
+    ])("puts the groups in $columns column(s) at $width", async ({ width, height, columns }) => {
+      const screen = await renderCase({ width, height });
+      const dialog = await openAll(screen);
+      const lefts = new Set(
+        [...dialog.querySelectorAll(".home-skills-all-group")].map((group) =>
+          Math.round(group.getBoundingClientRect().left),
+        ),
+      );
+
+      expect(lefts.size).toBe(columns);
+    });
+
+    it("animates a chip on hover", async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+      const dialog = await openAll(screen);
+      const chip = dialog.querySelector<HTMLElement>(".home-skills-all-chip")!;
+      const before = getComputedStyle(chip).translate;
+      const fill = getComputedStyle(chip, "::before").backgroundColor;
+
+      await userEvent.hover(page.elementLocator(chip));
+
+      expect(transitioning(chip, "translate")).toBe(true);
+      expect(transitioning(chip, "color")).toBe(true);
+      expect(transitioning(chip, "background-color", "::before")).toBe(true);
+      finishAnimations();
+      expect(getComputedStyle(chip).translate).not.toBe(before);
+      expect(getComputedStyle(chip, "::before").backgroundColor).not.toBe(fill);
+
+      await userEvent.unhover(page.elementLocator(chip));
+      finishAnimations();
+      expect(getComputedStyle(chip).translate).toBe(before);
+    });
+
+    it("does not animate a chip when motion is reduced", async () => {
+      await setReducedMotion("reduce");
+      const screen = await renderCase({ width: 1440, height: 900 });
+      const dialog = await openAll(screen);
+      const chip = dialog.querySelector<HTMLElement>(".home-skills-all-chip")!;
+      const before = getComputedStyle(chip).translate;
+
+      await userEvent.hover(page.elementLocator(chip));
+
+      expect(transitioning(chip, "translate")).toBe(false);
+      expect(transitioning(chip, "background-color", "::before")).toBe(false);
+      expect(getComputedStyle(chip).translate).not.toBe(before);
+    });
+
+    it("follows the theme while the window is open", async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+      const dialog = await openAll(screen);
+      const title = dialog.querySelector<HTMLElement>(".home-skills-all-title")!;
+      const line = getComputedStyle(title).borderBottomColor;
+
+      setTheme("cyber-sakura");
+
+      expect(transitioning(title, "border-bottom-color")).toBe(true);
+      finishAnimations();
+      expect(getComputedStyle(title).borderBottomColor).not.toBe(line);
+    });
+  });
+
+  describe("skill swap", () => {
+    it("starts with the first skill on every tile and swaps nothing before the first moment", async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+      const first = tiles.map((tile) => SKILL_TILE_META[tile.skill].label);
+
+      expect(tileLabels(screen)).toEqual(first);
+      await advance(Math.min(...tiles.map((tile) => swapTime(tile))) - 1);
+      expect(tileLabels(screen)).toEqual(first);
+    });
+
+    it("swaps one tile per step: frontend 1, backend 2, frontend 3 and so on, then backend 1, frontend 2, and back again every 16 s", async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+      const first = tiles.map((tile) => SKILL_TILE_META[tile.skill].label);
+      const second = tiles.map((tile) => SKILL_TILE_META[tile.swap].label);
+      const expected = walk();
+      let previous = 0;
+
+      expect(expected).toHaveLength(18);
+      expect(expected.slice(0, 5)).toEqual([0, 10, 2, 12, 4]);
+      expect(expected.slice(9, 14)).toEqual([9, 1, 11, 3, 13]);
+      for (const cycle of [0, 1]) {
+        const moments = expected.map((index) => swapTime(tiles[index]!, cycle));
+
+        expect(moments).toEqual([...new Set(moments)].sort((a, b) => a - b));
+        for (const [step, moment] of moments.entries()) {
+          await advance(moment - 1 - previous);
+          const before = tileLabels(screen);
+          await advance(1);
+          previous = moment;
+          const after = tileLabels(screen);
+          const changed = after.flatMap((label, index) => (label === before[index] ? [] : [index]));
+          const index = expected[step]!;
+
+          expect(changed).toEqual([index]);
+          expect(after[index]).toBe(cycle === 0 ? second[index] : first[index]);
+        }
+        expect(tileLabels(screen)).toEqual(cycle === 0 ? second : first);
+      }
+    });
+
+    it("keeps one readable layer per tile and never uses a live region", async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+      const tile = pickAll(screen, ".skill-tile")[0]!;
+
+      await advance(swapTime(tiles[0]!));
+      const layers = [...tile.querySelectorAll(".skill-tile-layer")];
+      const readable = layers.filter((layer) => layer.getAttribute("aria-hidden") === null);
+
+      expect(layers).toHaveLength(2);
+      expect(readable).toHaveLength(1);
+      expect(readable[0]!.textContent).toBe(SKILL_TILE_META[tiles[0]!.swap].label);
+      expect(layers.find((layer) => layer !== readable[0])!.getAttribute("aria-hidden")).toBe(
+        "true",
+      );
+      expect(screen.container.querySelector("[aria-live]")).toBeNull();
+      expect(screen.container.querySelector("[role='status']")).toBeNull();
+      finishAnimations();
+      await expect.poll(() => tile.querySelectorAll(".skill-tile-layer").length).toBe(1);
+    });
+
+    it("stops every timer when the section is unmounted", async () => {
+      const before = vi.getTimerCount();
+      const screen = await renderCase({ width: 1440, height: 900 });
+
+      expect(vi.getTimerCount() - before).toBeGreaterThanOrEqual(tiles.length);
+      await advance(SKILL_SWAP_PERIOD / 2);
+      expect(vi.getTimerCount() - before).toBeGreaterThanOrEqual(tiles.length);
+      screen.unmount();
+      await nextTick();
+
+      expect(vi.getTimerCount()).toBe(before);
+    });
+
+    it("does not start the swap on the server", async () => {
+      const app = createSSRApp({ render: () => h(Skills, { groups: groupsOf.en }) });
+      app.use(createApp("en"));
+      const before = vi.getTimerCount();
+      await renderToString(app);
+
+      expect(vi.getTimerCount()).toBe(before);
+    });
+  });
+
+  describe("reduced motion", () => {
+    beforeEach(async () => {
+      await setReducedMotion("reduce");
+    });
+
+    it("keeps the first skill on every tile and starts no timers", async () => {
+      const before = vi.getTimerCount();
+      const screen = await renderCase({ width: 1440, height: 900 });
+
+      expect(vi.getTimerCount()).toBe(before);
+      await advance(SKILL_SWAP_PERIOD * 3);
+      expect(tileLabels(screen)).toEqual(tiles.map((tile) => SKILL_TILE_META[tile.skill].label));
+      expect(pickAll(screen, ".skill-tile-layer")).toHaveLength(18);
+    });
+
+    it("returns to the first skill and stops the timers when motion gets reduced", async () => {
+      await setReducedMotion("no-preference");
+      const screen = await renderCase({ width: 1440, height: 900 });
+      const backendTile = 10;
+
+      await advance(swapTime(tiles[backendTile]!));
+      expect(tileLabels(screen)[backendTile]).toBe(SKILL_TILE_META[tiles[backendTile]!.swap].label);
+      const running = vi.getTimerCount();
+
+      await setReducedMotion("reduce");
+      await expect
+        .poll(() => tileLabels(screen)[backendTile])
+        .toBe(SKILL_TILE_META[tiles[backendTile]!.skill].label);
+      expect(vi.getTimerCount()).toBeLessThan(running);
+      await advance(SKILL_SWAP_PERIOD * 3);
+      expect(tileLabels(screen)).toEqual(tiles.map((tile) => SKILL_TILE_META[tile.skill].label));
+    });
+
+    it("stops the typing and keeps the first item and the cursor visible", async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+      const items = pickAll<HTMLElement>(screen, ".home-skills-type");
+      const cursor = pick<HTMLElement>(screen, ".home-skills-cursor");
+
+      expect(document.getAnimations()).toHaveLength(0);
+      expect(items[0]!.getBoundingClientRect().width).toBeGreaterThan(0);
+      expect(items.slice(1).every((item) => item.getBoundingClientRect().width === 0)).toBe(true);
+      expect(getComputedStyle(cursor).opacity).toBe("1");
+    });
+
+    it("switches the theme without transitions", async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+      const night = pick<HTMLElement>(screen, ".home-skills-night");
+
+      setTheme("cyber-sakura");
+      await nextTick();
+      for (const selector of customTransitions) {
+        for (const element of screen.container.querySelectorAll(selector)) {
+          expect(
+            document
+              .getAnimations()
+              .some((animation) => (animation.effect as KeyframeEffect).target === element),
+            selector,
+          ).toBe(false);
+        }
+      }
+      expect(getComputedStyle(night).opacity).toBe("0");
+      expect(getComputedStyle(night).visibility).toBe("hidden");
+    });
+  });
+
+  it("renders on the server", async () => {
+    const app = createSSRApp({ render: () => h(Skills, { groups: groupsOf.en }) });
+    app.use(createApp("en"));
+    const html = await renderToString(app);
+
+    expect(html).toContain('id="skills"');
+    expect(html).toContain("home-skills-title");
+    expect(html).toContain("My Core");
+    expect(html.match(/home-skills-type /g)).toHaveLength(29);
+    expect(html.match(/skill-tile-label/g)).toHaveLength(18);
+  });
+});

@@ -1,0 +1,142 @@
+@reference "~/assets/css/main.css";
+
+.home-skills-decor {
+  --home-skills-glow-a-left: --spacing(1.25);
+  --home-skills-glow-a-top: --spacing(275);
+  --home-skills-glow-a-size: --spacing(95);
+  --home-skills-glow-b-left: --spacing(1.25);
+  --home-skills-glow-b-top: --spacing(30);
+  --home-skills-glow-b-size: --spacing(85);
+  --home-skills-pattern-right: --spacing(1);
+  --home-skills-pattern-left: auto;
+  --home-skills-pattern-top: auto;
+  --home-skills-pattern-bottom: --spacing(6);
+  --home-skills-pattern-width: --spacing(65);
+  --home-skills-pattern-height: --spacing(40);
+
+  @variant md {
+    --home-skills-glow-a-left: calc(50% - --spacing(80));
+    --home-skills-glow-a-top: --spacing(160);
+    --home-skills-glow-a-size: --spacing(160);
+    --home-skills-glow-b-left: 0%;
+    --home-skills-glow-b-top: --spacing(20);
+    --home-skills-glow-b-size: --spacing(95);
+    --home-skills-pattern-right: --spacing(2.5);
+    --home-skills-pattern-bottom: --spacing(7.5);
+    --home-skills-pattern-width: --spacing(100);
+    --home-skills-pattern-height: --spacing(57.5);
+  }
+
+  @variant lg {
+    --home-skills-glow-a-left: calc(50% + 0rem);
+    --home-skills-glow-a-top: --spacing(60);
+    --home-skills-glow-b-left: calc(50% - --spacing(180));
+    --home-skills-glow-b-top: --spacing(170);
+    --home-skills-glow-b-size: --spacing(105);
+    --home-skills-pattern-right: auto;
+    --home-skills-pattern-left: calc(50% + --spacing(75));
+    --home-skills-pattern-top: --spacing(205);
+    --home-skills-pattern-bottom: auto;
+    --home-skills-pattern-width: --spacing(120);
+    --home-skills-pattern-height: --spacing(70);
+  }
+
+  @apply pointer-events-none absolute inset-0 overflow-hidden;
+}
+
+.home-skills-night,
+.home-skills-day {
+  @apply absolute inset-0;
+  transition-property: opacity, visibility;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-skills-night {
+  --home-skills-glow-a-color: 255 30 67;
+  --home-skills-glow-b-color: 255 179 0;
+  --home-skills-glow-a-opacity: 0.208;
+  --home-skills-glow-b-opacity: 0.144;
+  --home-skills-pattern-image: url("./media/asanoha-torii-synth.svg");
+  --home-skills-pattern-tile: --spacing(14) --spacing(24.2475);
+  --home-skills-pattern-opacity: 0.3;
+
+  @variant lg {
+    --home-skills-pattern-opacity: 0.32;
+  }
+
+  opacity: var(--home-skills-night);
+  visibility: var(--home-skills-night-visibility);
+}
+
+.home-skills-day {
+  --home-skills-glow-a-color: 255 112 166;
+  --home-skills-glow-b-color: 58 134 255;
+  --home-skills-glow-a-opacity: 0.1768;
+  --home-skills-glow-b-opacity: 0.1224;
+  --home-skills-pattern-image: url("./media/circles-cyber-sakura.svg");
+  --home-skills-pattern-tile: --spacing(12) --spacing(12);
+  --home-skills-pattern-opacity: 0.42;
+
+  @variant lg {
+    --home-skills-glow-a-opacity: 0.192;
+    --home-skills-glow-b-opacity: 0.128;
+    --home-skills-pattern-opacity: 0.45;
+  }
+
+  opacity: var(--home-skills-day);
+  visibility: var(--home-skills-day-visibility);
+}
+
+.home-skills-glow {
+  @apply absolute rounded-full;
+}
+
+.home-skills-glow-a {
+  top: var(--home-skills-glow-a-top);
+  left: var(--home-skills-glow-a-left);
+  width: var(--home-skills-glow-a-size);
+  height: var(--home-skills-glow-a-size);
+  opacity: var(--home-skills-glow-a-opacity);
+  background: radial-gradient(
+    circle closest-side,
+    rgb(var(--home-skills-glow-a-color)) 0%,
+    rgb(var(--home-skills-glow-a-color) / 45%) 45%,
+    rgb(var(--home-skills-glow-a-color) / 0%) 100%
+  );
+}
+
+.home-skills-glow-b {
+  top: var(--home-skills-glow-b-top);
+  left: var(--home-skills-glow-b-left);
+  width: var(--home-skills-glow-b-size);
+  height: var(--home-skills-glow-b-size);
+  opacity: var(--home-skills-glow-b-opacity);
+  background: radial-gradient(
+    circle closest-side,
+    rgb(var(--home-skills-glow-b-color)) 0%,
+    rgb(var(--home-skills-glow-b-color) / 45%) 45%,
+    rgb(var(--home-skills-glow-b-color) / 0%) 100%
+  );
+}
+
+.home-skills-pattern {
+  @apply absolute bg-repeat;
+  top: var(--home-skills-pattern-top);
+  right: var(--home-skills-pattern-right);
+  bottom: var(--home-skills-pattern-bottom);
+  left: var(--home-skills-pattern-left);
+  width: var(--home-skills-pattern-width);
+  height: var(--home-skills-pattern-height);
+  opacity: var(--home-skills-pattern-opacity);
+  background-image: var(--home-skills-pattern-image);
+  background-size: var(--home-skills-pattern-tile);
+  mask-image: radial-gradient(
+    ellipse 55% 55% at 50% 50%,
+    #000 0%,
+    rgb(0 0 0 / 45%) 55%,
+    rgb(0 0 0 / 0%) 100%
+  );
+}

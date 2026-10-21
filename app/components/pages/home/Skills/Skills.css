@@ -1,0 +1,279 @@
+@reference "~/assets/css/main.css";
+
+@property --home-skills-accent-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --home-skills-accent-via {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --home-skills-accent-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.home-skills {
+  --home-skills-night: 1;
+  --home-skills-day: 0;
+  --home-skills-night-visibility: visible;
+  --home-skills-day-visibility: hidden;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-skills-night: 0;
+    --home-skills-day: 1;
+    --home-skills-night-visibility: hidden;
+    --home-skills-day-visibility: visible;
+  }
+
+  @apply overflow-hidden bg-base-100;
+  container-type: inline-size;
+}
+
+.home-skills > .home-slide-body {
+  padding-bottom: 0rem;
+}
+
+.home-skills-main {
+  @apply flex flex-1 flex-col;
+  gap: --spacing(9);
+  padding-bottom: --spacing(10);
+
+  @variant md {
+    gap: --spacing(10);
+    padding-bottom: --spacing(12);
+  }
+
+  @variant lg {
+    gap: --spacing(6);
+    padding-bottom: --spacing(8);
+  }
+}
+
+.home-skills-head {
+  @apply flex flex-col;
+  gap: --spacing(5);
+
+  @variant lg {
+    gap: --spacing(3.5);
+  }
+}
+
+.home-skills-label {
+  @apply font-body font-light tracking-[.3em] text-primary-ink uppercase;
+  font-size: --spacing(3.5);
+  line-height: 1.6;
+}
+
+.home-skills-title {
+  @apply m-0 font-head font-normal;
+  font-size: --spacing(11);
+  line-height: 1.02;
+
+  @variant md {
+    font-size: --spacing(14);
+  }
+
+  @variant lg {
+    font-size: --spacing(11.5);
+  }
+}
+
+.home-skills-accent {
+  --home-skills-accent-from: var(--color-primary);
+  --home-skills-accent-via: color-mix(in srgb, var(--color-primary) 45%, var(--color-accent));
+  --home-skills-accent-to: var(--color-accent);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-skills-accent-via: #8f6cff;
+    --home-skills-accent-to: var(--color-secondary);
+  }
+
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(
+    90deg,
+    var(--home-skills-accent-from),
+    var(--home-skills-accent-via) 55%,
+    var(--home-skills-accent-to)
+  );
+  transition-property: --home-skills-accent-from, --home-skills-accent-via, --home-skills-accent-to;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+:lang(ru) .home-skills-title {
+  font-size: --spacing(8);
+
+  @variant md {
+    font-size: --spacing(10);
+  }
+
+  @variant lg {
+    font-size: --spacing(8.5);
+  }
+}
+
+.home-skills-panels {
+  @apply flex flex-col;
+  gap: --spacing(8);
+
+  @variant md {
+    zoom: 0.9;
+  }
+
+  @variant lg {
+    gap: --spacing(4);
+    zoom: 1;
+  }
+}
+
+.home-skills-panel {
+  --card-fill: var(--color-base-200);
+  --card-min-height: --spacing(89);
+  --card-pad-top: --spacing(6);
+  --card-pad-inline: --spacing(4);
+  --home-skills-ear: --spacing(35);
+  --home-skills-notch: --spacing(23.5);
+  --card-foot-position: right --spacing(0.125) top --spacing(66.5);
+
+  @variant md {
+    --card-min-height: --spacing(62.5);
+    --card-pad-top: --spacing(6.5);
+    --card-pad-inline: --spacing(7.5);
+    --home-skills-ear: --spacing(100);
+    --home-skills-notch: --spacing(58);
+    --card-foot-position: right --spacing(0.125) top --spacing(40);
+  }
+
+  @variant lg {
+    --card-min-height: --spacing(60);
+    --card-pad-inline: --spacing(8);
+    --card-title-size: --spacing(5.5);
+    --card-gap: --spacing(4.5);
+  }
+
+  & .card-title {
+    line-height: 1.6;
+  }
+
+  & .panel-content {
+    @apply flex-wrap;
+    gap: --spacing(2.5) --spacing(2.25);
+
+    @variant md {
+      @apply flex-nowrap justify-start;
+      gap: --spacing(3.75);
+    }
+
+    @variant lg {
+      @apply justify-between;
+    }
+  }
+
+  & .card-frame {
+    &::before,
+    &::after {
+      clip-path: shape(
+        from calc(--spacing(3) + var(--card-e) * 0.46) calc(0rem + var(--card-e) * 1),
+        line to calc(var(--home-skills-ear) - var(--card-e) * 0.384) calc(0rem + var(--card-e) * 1),
+        curve to calc(var(--home-skills-ear) + --spacing(2.5) - var(--card-e) * 0.669)
+          calc(--spacing(2.25) + var(--card-e) * 0.743) with
+          calc(var(--home-skills-ear) + --spacing(2.5) - var(--card-e) * 0.669)
+          calc(--spacing(2.25) + var(--card-e) * 0.743),
+        curve to calc(var(--home-skills-ear) + --spacing(5) - var(--card-e) * 0.384)
+          calc(--spacing(4.5) + var(--card-e) * 1) with
+          calc(var(--home-skills-ear) + --spacing(5) - var(--card-e) * 0.384)
+          calc(--spacing(4.5) + var(--card-e) * 1),
+        line to calc(100% - --spacing(27.5) + var(--card-e) * 0.414)
+          calc(--spacing(4.5) + var(--card-e) * 1),
+        curve to calc(100% - --spacing(25.25) + var(--card-e) * 0.707)
+          calc(--spacing(2.25) + var(--card-e) * 0.707) with
+          calc(100% - --spacing(25.25) + var(--card-e) * 0.707)
+          calc(--spacing(2.25) + var(--card-e) * 0.707),
+        curve to calc(100% - --spacing(23) + var(--card-e) * 0.414) calc(0rem + var(--card-e) * 1)
+          with calc(100% - --spacing(23) + var(--card-e) * 0.414) calc(0rem + var(--card-e) * 1),
+        line to calc(100% - var(--card-e) * 1) calc(0rem + var(--card-e) * 1),
+        curve to calc(100% - var(--card-e) * 1) --spacing(7) with calc(100% - var(--card-e) * 1)
+          --spacing(7),
+        line to calc(100% - var(--card-e) * 1) calc(100% - --spacing(5.5) - var(--card-e) * 0.414),
+        curve to calc(100% - --spacing(5.5) - var(--card-e) * 0.414) calc(100% - var(--card-e) * 1)
+          with calc(100% - --spacing(5.5) - var(--card-e) * 0.414) calc(100% - var(--card-e) * 1),
+        line to calc(var(--home-skills-notch) + --spacing(4.5) + var(--card-e) * 0.343)
+          calc(100% - var(--card-e) * 1),
+        line to calc(var(--home-skills-notch) + var(--card-e) * 0.343)
+          calc(100% - --spacing(3.5) - var(--card-e) * 1),
+        line to calc(0rem + var(--card-e) * 1) calc(100% - --spacing(3.5) - var(--card-e) * 1),
+        curve to calc(0rem + var(--card-e) * 1) calc(100% - --spacing(7)) with
+          calc(0rem + var(--card-e) * 1) calc(100% - --spacing(7)),
+        line to calc(0rem + var(--card-e) * 1) calc(--spacing(3.5) + var(--card-e) * 0.37),
+        curve to calc(--spacing(3) + var(--card-e) * 0.46) calc(0rem + var(--card-e) * 1) with
+          calc(--spacing(3) + var(--card-e) * 0.46) calc(0rem + var(--card-e) * 1),
+        close
+      );
+    }
+  }
+}
+
+.home-skills-panel {
+  :where([data-theme="cyber-sakura"]) & .card-frame {
+    &::before,
+    &::after {
+      clip-path: shape(
+        from --spacing(7) calc(0rem + var(--card-e) * 1),
+        line to calc(var(--home-skills-ear) - --spacing(5)) calc(0rem + var(--card-e) * 1),
+        curve to calc(var(--home-skills-ear) + --spacing(1))
+          calc(--spacing(2.5) + var(--card-e) * 1) with
+          calc(var(--home-skills-ear) - --spacing(1.5)) calc(0rem + var(--card-e) * 1),
+        curve to calc(var(--home-skills-ear) + --spacing(7)) calc(--spacing(5) + var(--card-e) * 1)
+          with calc(var(--home-skills-ear) + --spacing(3.5)) calc(--spacing(5) + var(--card-e) * 1),
+        line to calc(100% - --spacing(30)) calc(--spacing(5) + var(--card-e) * 1),
+        curve to calc(100% - --spacing(24)) calc(--spacing(2.5) + var(--card-e) * 1) with
+          calc(100% - --spacing(26.5)) calc(--spacing(5) + var(--card-e) * 1),
+        curve to calc(100% - --spacing(18)) calc(0rem + var(--card-e) * 1) with
+          calc(100% - --spacing(21.5)) calc(0rem + var(--card-e) * 1),
+        line to calc(100% - --spacing(7)) calc(0rem + var(--card-e) * 1),
+        curve to calc(100% - var(--card-e) * 1) --spacing(7) with calc(100% - var(--card-e) * 1)
+          calc(0rem + var(--card-e) * 1),
+        line to calc(100% - var(--card-e) * 1) calc(100% - --spacing(7)),
+        curve to calc(100% - --spacing(7)) calc(100% - var(--card-e) * 1) with
+          calc(100% - var(--card-e) * 1) calc(100% - var(--card-e) * 1),
+        line to calc(var(--home-skills-notch) + --spacing(4.5)) calc(100% - var(--card-e) * 1),
+        line to var(--home-skills-notch) calc(100% - var(--card-e) * 1),
+        line to --spacing(7) calc(100% - var(--card-e) * 1),
+        curve to calc(0rem + var(--card-e) * 1) calc(100% - --spacing(7)) with
+          calc(0rem + var(--card-e) * 1) calc(100% - var(--card-e) * 1),
+        line to calc(0rem + var(--card-e) * 1) --spacing(7),
+        curve to --spacing(7) calc(0rem + var(--card-e) * 1) with calc(0rem + var(--card-e) * 1)
+          calc(0rem + var(--card-e) * 1),
+        close
+      );
+    }
+  }
+}
+
+.home-skills-panel-accent .card-index {
+  @apply text-accent-ink;
+}
+
+.home-skills-tile {
+  zoom: 0.87;
+
+  @variant md {
+    zoom: 1;
+  }
+}
+
+.home-skills-tile-wide {
+  @apply hidden;
+
+  @variant xl {
+    @apply block;
+  }
+}

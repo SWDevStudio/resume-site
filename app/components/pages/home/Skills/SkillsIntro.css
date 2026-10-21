@@ -1,0 +1,52 @@
+@reference "~/assets/css/main.css";
+
+.home-skills-intro {
+  @apply flex flex-wrap items-center justify-between;
+  border-left: --spacing(0.75) solid var(--color-brand);
+  gap: --spacing(6) --spacing(12);
+  padding-block: --spacing(0.5);
+  padding-inline-start: --spacing(4.5);
+
+  @variant md {
+    padding-block: --spacing(1);
+    padding-inline-start: --spacing(6);
+  }
+
+  @variant lg {
+    padding-inline-start: --spacing(7);
+  }
+}
+
+.home-skills-description {
+  @apply m-0 text-base-content/72;
+  flex: 1 1 --spacing(80);
+  max-width: --spacing(160);
+  font-family: "Share Tech Mono", ui-monospace, monospace;
+  font-size: --spacing(4);
+  line-height: 1.7;
+
+  @variant lg {
+    max-width: --spacing(190);
+  }
+}
+
+:lang(ru) .home-skills-description {
+  @apply font-body font-light;
+
+  @variant lg {
+    max-width: none;
+  }
+}
+
+.home-skills-action {
+  --btn-height: --spacing(15);
+
+  @apply flex-none;
+  width: --spacing(67.5);
+}
+
+.home-skills-action-icon {
+  @apply relative shrink-0;
+  width: --spacing(4.5);
+  aspect-ratio: 18 / 12;
+}

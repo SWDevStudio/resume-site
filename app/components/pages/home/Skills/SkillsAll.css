@@ -1,0 +1,21 @@
+@reference "~/assets/css/main.css";
+
+.home-skills-all {
+  --modal-width-wide: min(--spacing(200), calc(100% - --spacing(32)));
+}
+
+:where([data-theme="cyber-sakura"]) .home-skills-all .modal-window {
+  @variant md {
+    max-height: calc(100svh - --spacing(36));
+  }
+}
+
+.home-skills-all .modal-window {
+  transition-property: width, translate, filter, max-height;
+}
+
+.home-skills-all-groups {
+  @apply grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, --spacing(75)), 1fr));
+  gap: --spacing(8);
+}

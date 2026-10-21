@@ -95,6 +95,22 @@
           "optimization": "My site needs optimization…"
         }
       }
+    },
+    "skills": {
+      "label": "02 — Skills",
+      "titleTop": "My Core",
+      "titleAccent": "Skills",
+      "description": "[Two or three sentences about your stack: what you use on the frontend and backend, how you ship and maintain projects, and what you are learning now.]",
+      "all": "All skills",
+      "frontend": "Frontend",
+      "backend": "Backend & DevOps",
+      "toolkit": "Also in my toolkit",
+      "modal": {
+        "title": "All",
+        "accent": "skills",
+        "description": "Everything I work with, grouped by direction.",
+        "close": "Close the window with all skills"
+      }
     }
   },
   "resume": {
