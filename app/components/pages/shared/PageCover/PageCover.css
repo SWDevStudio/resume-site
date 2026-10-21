@@ -1,0 +1,117 @@
+@reference "~/assets/css/main.css";
+
+@property --page-cover-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --page-cover-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --page-cover-glow {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --page-cover-grid-line {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.page-cover {
+  --page-cover-lift: 0%;
+  --page-cover-from: color-mix(
+    in oklab,
+    var(--page-tone-media-start),
+    white var(--page-cover-lift)
+  );
+  --page-cover-to: color-mix(in oklab, var(--page-tone-media-end), white var(--page-cover-lift));
+  --page-cover-cut: --spacing(3.5);
+  --page-cover-radius: 0rem;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --page-cover-cut: 0rem;
+    --page-cover-radius: --spacing(4.5);
+  }
+
+  @apply relative;
+  padding: --spacing(0.25);
+  background-image: linear-gradient(135deg, var(--page-cover-from), var(--page-cover-to));
+  border-radius: var(--page-cover-radius);
+  clip-path: polygon(
+    var(--page-cover-cut) 0,
+    100% 0,
+    100% calc(100% - var(--page-cover-cut)),
+    calc(100% - var(--page-cover-cut)) 100%,
+    0 100%,
+    0 var(--page-cover-cut)
+  );
+  transition-property: border-radius, clip-path, --page-cover-from, --page-cover-to;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.page-cover-stage {
+  --page-cover-glow: color-mix(
+    in oklab,
+    var(--page-tone-accent) var(--page-tone-stage-alpha),
+    transparent
+  );
+
+  @apply relative size-full overflow-hidden;
+  container-type: inline-size;
+  background-color: var(--page-tone-stage-base);
+  background-image: radial-gradient(
+    ellipse 70% 80% at 30% 40%,
+    var(--page-cover-glow),
+    transparent 70%
+  );
+  border-radius: max(0rem, calc(var(--page-cover-radius) - --spacing(0.25)));
+  clip-path: polygon(
+    max(0rem, calc(var(--page-cover-cut) - --spacing(0.125))) 0,
+    100% 0,
+    100% calc(100% - max(0rem, calc(var(--page-cover-cut) - --spacing(0.125)))),
+    calc(100% - max(0rem, calc(var(--page-cover-cut) - --spacing(0.125)))) 100%,
+    0 100%,
+    0 max(0rem, calc(var(--page-cover-cut) - --spacing(0.125)))
+  );
+  transition-property: background-color, border-radius, clip-path, --page-cover-glow;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.page-cover-grid {
+  --page-cover-grid-line: color-mix(in oklab, var(--color-base-content) 3%, transparent);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --page-cover-grid-line: color-mix(in oklab, var(--color-base-content) 3.5%, transparent);
+  }
+
+  @apply pointer-events-none absolute inset-0;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      var(--page-cover-grid-line) 0 --spacing(0.25),
+      transparent --spacing(0.25) --spacing(6)
+    ),
+    repeating-linear-gradient(
+      90deg,
+      var(--page-cover-grid-line) 0 --spacing(0.25),
+      transparent --spacing(0.25) --spacing(6)
+    );
+  transition-property: --page-cover-grid-line;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}

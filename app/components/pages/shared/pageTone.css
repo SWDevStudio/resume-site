@@ -1,0 +1,48 @@
+.page-tone {
+  --page-tone-accent: var(--color-primary);
+  --page-tone-ink: var(--color-primary-ink);
+  --page-tone-line: 60%;
+  --page-tone-soft: 8%;
+  --page-tone-media-start: var(--page-tone-accent);
+  --page-tone-media-end: color-mix(in oklab, var(--page-tone-accent) 25%, transparent);
+  --page-tone-stage-alpha: 22%;
+  --page-tone-stage-base: #0e0c14;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --page-tone-line: 75%;
+    --page-tone-soft: 10%;
+    --page-tone-media-end: color-mix(in srgb, var(--page-tone-accent) 43%, white);
+    --page-tone-stage-alpha: 25%;
+    --page-tone-stage-base: #f6f1fa;
+  }
+}
+
+.page-tone-secondary {
+  --page-tone-accent: var(--color-secondary);
+  --page-tone-ink: var(--color-secondary-ink);
+  --page-tone-line: 55%;
+  --page-tone-stage-alpha: 18%;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --page-tone-line: 60%;
+    --page-tone-soft: 8%;
+    --page-tone-stage-alpha: 20%;
+    --page-tone-stage-base: #f3f4fb;
+  }
+}
+
+.page-tone-accent {
+  --page-tone-accent: var(--color-accent);
+  --page-tone-ink: var(--color-accent-ink);
+  --page-tone-line: 65%;
+  --page-tone-soft: 10%;
+  --page-tone-stage-alpha: 24%;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --page-tone-line: 85%;
+    --page-tone-soft: 14%;
+    --page-tone-media-start: #a57bff;
+    --page-tone-media-end: #dcc8ff;
+    --page-tone-stage-alpha: 30%;
+  }
+}
