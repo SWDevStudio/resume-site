@@ -20,8 +20,6 @@
   },
   "home": {
     "hero": {
-      "titleTop": "Fullstack",
-      "titleBottom": "Разработчик",
       "cv": "Скачать резюме"
     },
     "about": {
@@ -126,6 +124,9 @@
       "projects": "Последние проекты"
     }
   },
+  "pageSections": {
+    "count": "Разделов: {count}"
+  },
   "resume": {
     "nav": "На этой странице",
     "actions": {
@@ -134,14 +135,6 @@
       "pdfAria": "Скачать резюме в формате PDF",
       "mdAria": "Открыть резюме в формате Markdown для LLM"
     }
-  },
-  "footer": {
-    "tagline": "быстрые и продуманные веб-продукты",
-    "copyright": "© {year} Михаил · SOWA_DEV. Все права защищены.",
-    "top": "Наверх"
-  },
-  "pageSections": {
-    "count": "Разделов: {count}"
   },
   "projects": {
     "case": {
@@ -213,5 +206,10 @@
       "videoDuration": "Длительность {value}"
     },
     "empty": "Пока ничего нет"
+  },
+  "footer": {
+    "tagline": "быстрые и продуманные веб-продукты",
+    "copyright": "© {year} Михаил · SOWA_DEV. Все права защищены.",
+    "top": "Наверх"
   }
 }

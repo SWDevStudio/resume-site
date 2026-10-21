@@ -32,6 +32,58 @@
       "status": "Open to projects",
       "photoAlt": "Michael"
     },
+    "skills": {
+      "label": "02 — Skills",
+      "titleTop": "My Core",
+      "titleAccent": "Skills",
+      "description": "[Two or three sentences about your stack: what you use on the frontend and backend, how you ship and maintain projects, and what you are learning now.]",
+      "all": "All skills",
+      "frontend": "Frontend",
+      "backend": "Backend & DevOps",
+      "toolkit": "Also in my toolkit",
+      "modal": {
+        "title": "All",
+        "accent": "skills",
+        "description": "Everything I work with, grouped by direction.",
+        "close": "Close the window with all skills"
+      }
+    },
+    "why": {
+      "label": "03 — Why me",
+      "titleTop": "Does my experience",
+      "titleAccent": "fit you?",
+      "chat": {
+        "name": "michael.ai",
+        "role": "— portfolio agent",
+        "status": "Online",
+        "avatar": "AI",
+        "greeting": "Hi! I'm Michael's AI assistant. Tell me about your project or your problem, and I'll tell you how Michael can help — in seconds.",
+        "placeholder": "Ask the AI and get an answer in seconds",
+        "inputLabel": "Your question for the AI",
+        "dialogLabel": "Conversation with the assistant",
+        "typing": "The assistant is typing…",
+        "error": "Something went wrong and the answer did not arrive. Please try again.",
+        "mockReply": "Michael is a great fit for you on every count: he has built projects like this many times, and I rate him 10 out of 10",
+        "ask": "Ask",
+        "chips": {
+          "clients": "I'm losing clients on my website…",
+          "developer": "Looking for a developer…",
+          "website": "I need a website for…",
+          "optimization": "My site needs optimization…"
+        }
+      }
+    },
+    "projects": {
+      "label": "04 — Projects",
+      "titleTop": "My",
+      "titleAccent": "Projects",
+      "description": "Selected work: e-commerce and booking",
+      "readCase": "Read case",
+      "all": "All projects",
+      "liveSite": "Live site",
+      "navigation": "Projects navigation",
+      "show": "Show project {number}"
+    },
     "contact": {
       "label": "05 — Contact",
       "titleTop": "Let's grow",
@@ -70,59 +122,10 @@
         }
       },
       "projects": "My latest projects"
-    },
-    "why": {
-      "label": "03 — Why me",
-      "titleTop": "Does my experience",
-      "titleAccent": "fit you?",
-      "chat": {
-        "name": "michael.ai",
-        "role": "— portfolio agent",
-        "status": "Online",
-        "avatar": "AI",
-        "greeting": "Hi! I'm Michael's AI assistant. Tell me about your project or your problem, and I'll tell you how Michael can help — in seconds.",
-        "placeholder": "Ask the AI and get an answer in seconds",
-        "inputLabel": "Your question for the AI",
-        "dialogLabel": "Conversation with the assistant",
-        "typing": "The assistant is typing…",
-        "error": "Something went wrong and the answer did not arrive. Please try again.",
-        "mockReply": "Michael is a great fit for you on every count: he has built projects like this many times, and I rate him 10 out of 10",
-        "ask": "Ask",
-        "chips": {
-          "clients": "I'm losing clients on my website…",
-          "developer": "Looking for a developer…",
-          "website": "I need a website for…",
-          "optimization": "My site needs optimization…"
-        }
-      }
-    },
-    "skills": {
-      "label": "02 — Skills",
-      "titleTop": "My Core",
-      "titleAccent": "Skills",
-      "description": "[Two or three sentences about your stack: what you use on the frontend and backend, how you ship and maintain projects, and what you are learning now.]",
-      "all": "All skills",
-      "frontend": "Frontend",
-      "backend": "Backend & DevOps",
-      "toolkit": "Also in my toolkit",
-      "modal": {
-        "title": "All",
-        "accent": "skills",
-        "description": "Everything I work with, grouped by direction.",
-        "close": "Close the window with all skills"
-      }
-    },
-    "projects": {
-      "label": "04 — Projects",
-      "titleTop": "My",
-      "titleAccent": "Projects",
-      "description": "Selected work: e-commerce and booking",
-      "readCase": "Read case",
-      "all": "All projects",
-      "liveSite": "Live site",
-      "navigation": "Projects navigation",
-      "show": "Show project {number}"
     }
+  },
+  "pageSections": {
+    "count": "{count} section | {count} sections"
   },
   "resume": {
     "nav": "On this page",
@@ -132,14 +135,6 @@
       "pdfAria": "Download the resume as a PDF file",
       "mdAria": "Open the resume as Markdown for LLMs"
     }
-  },
-  "footer": {
-    "tagline": "fast, thoughtful web products",
-    "copyright": "© {year} Michael · SOWA_DEV. All rights reserved.",
-    "top": "Back to top"
-  },
-  "pageSections": {
-    "count": "{count} section | {count} sections"
   },
   "projects": {
     "case": {
@@ -211,5 +206,10 @@
       "videoDuration": "Duration {value}"
     },
     "empty": "Nothing here yet"
+  },
+  "footer": {
+    "tagline": "fast, thoughtful web products",
+    "copyright": "© {year} Michael · SOWA_DEV. All rights reserved.",
+    "top": "Back to top"
   }
 }
