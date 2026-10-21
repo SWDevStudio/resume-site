@@ -1,0 +1,231 @@
+@reference "~/assets/css/main.css";
+
+@property --home-why-edge-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --home-why-edge-via {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --home-why-edge-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --home-why-edge-stop {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 60%;
+}
+
+@property --home-why-bar-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --home-why-bar-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.home-why-window {
+  --home-why-cut: --spacing(5.5);
+  --home-why-cut-inner: --spacing(5.25);
+  --home-why-radius: 0rem;
+  --home-why-radius-inner: 0rem;
+  --home-why-glow: drop-shadow(0 0 0 transparent);
+  --home-why-pane: #100e17;
+  --home-why-edge-1: var(--color-primary);
+  --home-why-edge-2: var(--color-accent);
+  --home-why-edge-3: var(--color-primary);
+  --home-why-edge-at: 60%;
+  --home-why-bar-1: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  --home-why-bar-2: color-mix(in srgb, var(--color-accent) 6%, transparent);
+  --home-why-bar-line: color-mix(in srgb, var(--color-primary) 30%, transparent);
+  --home-why-dots-gap: --spacing(1);
+  --home-why-dot-width: --spacing(3.5);
+  --home-why-dot-height: --spacing(1);
+  --home-why-dot-radius: 0rem;
+  --home-why-dot-skew: -30deg;
+  --home-why-dot-1: var(--color-primary);
+  --home-why-dot-2: var(--color-primary);
+  --home-why-dot-3: var(--color-accent);
+  --home-why-ok: var(--color-secondary);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-why-cut: 0rem;
+    --home-why-cut-inner: 0rem;
+    --home-why-radius: --spacing(7);
+    --home-why-radius-inner: --spacing(6.625);
+    --home-why-glow: drop-shadow(0 --spacing(4.5) --spacing(12.5) rgb(193 153 255 / 35%));
+    --home-why-pane: rgb(251 249 253 / 96%);
+    --home-why-edge-1: #ff9cc2;
+    --home-why-edge-2: var(--color-accent);
+    --home-why-edge-3: #9fd8ff;
+    --home-why-edge-at: 55%;
+    --home-why-bar-1: color-mix(in srgb, var(--color-primary) 8%, transparent);
+    --home-why-bar-2: color-mix(in srgb, var(--color-accent) 10%, transparent);
+    --home-why-bar-line: color-mix(in srgb, var(--color-accent) 40%, transparent);
+    --home-why-dots-gap: --spacing(1.75);
+    --home-why-dot-width: --spacing(2.75);
+    --home-why-dot-height: --spacing(2.75);
+    --home-why-dot-radius: 50%;
+    --home-why-dot-skew: 0deg;
+    --home-why-dot-1: #ff8fb8;
+    --home-why-dot-2: #c9a6ff;
+    --home-why-dot-3: #8fc0ff;
+  }
+
+  @apply flex flex-auto flex-col;
+  filter: var(--home-why-glow);
+  transition-property: filter;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-why-edge {
+  --home-why-edge-from: var(--home-why-edge-1);
+  --home-why-edge-via: var(--home-why-edge-2);
+  --home-why-edge-to: var(--home-why-edge-3);
+  --home-why-edge-stop: var(--home-why-edge-at);
+
+  @apply flex flex-auto flex-col;
+  padding: --spacing(0.375);
+  border-radius: var(--home-why-radius);
+  background-image: linear-gradient(
+    120deg,
+    var(--home-why-edge-from),
+    var(--home-why-edge-via) var(--home-why-edge-stop),
+    var(--home-why-edge-to)
+  );
+  clip-path: polygon(
+    var(--home-why-cut) 0,
+    100% 0,
+    100% calc(100% - var(--home-why-cut)),
+    calc(100% - var(--home-why-cut)) 100%,
+    0 100%,
+    0 var(--home-why-cut)
+  );
+  transition-property:
+    border-radius, clip-path, --home-why-edge-from, --home-why-edge-via, --home-why-edge-to,
+    --home-why-edge-stop;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-why-pane {
+  @apply relative flex flex-auto flex-col overflow-hidden;
+  border-radius: var(--home-why-radius-inner);
+  background-color: var(--home-why-pane);
+  clip-path: polygon(
+    var(--home-why-cut-inner) 0,
+    100% 0,
+    100% calc(100% - var(--home-why-cut-inner)),
+    calc(100% - var(--home-why-cut-inner)) 100%,
+    0 100%,
+    0 var(--home-why-cut-inner)
+  );
+  transition-property: background-color, border-radius, clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-why-bar {
+  --home-why-bar-from: var(--home-why-bar-1);
+  --home-why-bar-to: var(--home-why-bar-2);
+
+  @apply flex items-center justify-between;
+  gap: --spacing(4);
+  padding: --spacing(2.75) --spacing(5);
+  border-bottom: --spacing(0.25) solid var(--home-why-bar-line);
+  background-image: linear-gradient(90deg, var(--home-why-bar-from), var(--home-why-bar-to));
+  transition-property: border-color, --home-why-bar-from, --home-why-bar-to;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-why-bar-title {
+  @apply flex min-w-0 items-center;
+  gap: --spacing(4);
+}
+
+.home-why-dots {
+  @apply flex flex-none;
+  gap: var(--home-why-dots-gap);
+  transition-property: gap;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-why-dot {
+  @apply block shrink-0;
+  width: var(--home-why-dot-width);
+  height: var(--home-why-dot-height);
+  border-radius: var(--home-why-dot-radius);
+  transform: skewX(var(--home-why-dot-skew));
+  transition-property: width, height, border-radius, transform, background-color;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-why-dot:nth-child(1) {
+  background-color: var(--home-why-dot-1);
+}
+
+.home-why-dot:nth-child(2) {
+  background-color: var(--home-why-dot-2);
+}
+
+.home-why-dot:nth-child(3) {
+  background-color: var(--home-why-dot-3);
+}
+
+.home-why-name {
+  @apply font-body font-normal tracking-[.08em] text-base-content;
+  font-size: --spacing(3.5);
+  line-height: 1.6;
+}
+
+.home-why-role {
+  @apply text-base-content/62;
+}
+
+.home-why-status {
+  @apply inline-flex flex-none items-center font-body font-light tracking-[.14em] text-base-content/62 uppercase;
+  gap: --spacing(2);
+  font-size: --spacing(3);
+  line-height: 1.6;
+}
+
+.home-why-status-dot {
+  @apply block shrink-0 rounded-full;
+  width: --spacing(2);
+  height: --spacing(2);
+  background-color: var(--home-why-ok);
+  box-shadow: 0 0 --spacing(2) var(--home-why-ok);
+  transition-property: background-color, box-shadow;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}

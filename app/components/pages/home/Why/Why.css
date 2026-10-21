@@ -1,0 +1,128 @@
+@reference "~/assets/css/main.css";
+
+@property --home-why-accent-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --home-why-accent-via {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --home-why-accent-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.home-why {
+  --home-why-night: 1;
+  --home-why-day: 0;
+  --home-why-night-visibility: visible;
+  --home-why-day-visibility: hidden;
+  --home-why-title-size: --spacing(8.5);
+  --home-why-title-scale: 1;
+  --home-why-title-width: --spacing(62.5);
+  --home-why-main-gap: --spacing(10);
+  --home-why-owl-gap: 0rem;
+  --home-why-owl-night-width: --spacing(28);
+  --home-why-owl-night-height: --spacing(38.5);
+  --home-why-owl-night-sink: --spacing(1);
+  --home-why-owl-day-width: --spacing(29.75);
+  --home-why-owl-day-height: --spacing(42.75);
+  --home-why-owl-day-sink: --spacing(1);
+
+  @variant md {
+    --home-why-title-size: --spacing(11.5);
+    --home-why-title-width: --spacing(120);
+    --home-why-owl-night-width: --spacing(35);
+    --home-why-owl-night-height: --spacing(48);
+    --home-why-owl-night-sink: --spacing(1.25);
+    --home-why-owl-day-width: --spacing(37);
+    --home-why-owl-day-height: --spacing(53.25);
+    --home-why-owl-day-sink: --spacing(1.25);
+  }
+
+  @variant lg {
+    --home-why-title-size: --spacing(14);
+    --home-why-title-width: none;
+    --home-why-main-gap: --spacing(7);
+    --home-why-owl-day-width: --spacing(43);
+    --home-why-owl-day-height: --spacing(61.75);
+    --home-why-owl-day-sink: --spacing(1.5);
+  }
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-why-night: 0;
+    --home-why-day: 1;
+    --home-why-night-visibility: hidden;
+    --home-why-day-visibility: visible;
+  }
+
+  @apply overflow-hidden bg-base-100;
+}
+
+.home-why-main {
+  @apply flex flex-1 flex-col;
+  gap: var(--home-why-main-gap);
+}
+
+.home-why-head {
+  @apply relative z-1 flex flex-col;
+  gap: --spacing(3.5);
+  min-height: calc(
+    max(
+        var(--home-why-owl-night-height) - var(--home-why-owl-night-sink),
+        var(--home-why-owl-day-height) - var(--home-why-owl-day-sink)
+      ) +
+      var(--home-why-owl-gap) - var(--home-why-main-gap)
+  );
+}
+
+.home-why-stage {
+  @apply relative flex flex-auto flex-col;
+}
+
+.home-why-label {
+  @apply font-body font-light tracking-[.3em] text-primary-ink uppercase;
+  font-size: --spacing(3.5);
+  line-height: 1.6;
+}
+
+.home-why-title {
+  @apply m-0 font-head font-normal;
+  max-width: var(--home-why-title-width);
+  font-size: calc(var(--home-why-title-size) * var(--home-why-title-scale));
+  line-height: 1.05;
+}
+
+.home-why-accent {
+  --home-why-accent-from: var(--color-primary);
+  --home-why-accent-via: color-mix(in srgb, var(--color-primary) 45%, var(--color-accent));
+  --home-why-accent-to: var(--color-accent);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-why-accent-via: #8f6cff;
+    --home-why-accent-to: var(--color-secondary);
+  }
+
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(
+    90deg,
+    var(--home-why-accent-from),
+    var(--home-why-accent-via) 55%,
+    var(--home-why-accent-to)
+  );
+  transition-property: --home-why-accent-from, --home-why-accent-via, --home-why-accent-to;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+:lang(ru) .home-why {
+  --home-why-title-scale: 0.72;
+}

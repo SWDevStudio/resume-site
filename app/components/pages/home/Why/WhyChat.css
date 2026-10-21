@@ -1,0 +1,210 @@
+@reference "~/assets/css/main.css";
+
+.home-why-body {
+  --home-why-dialog-height: --spacing(40);
+
+  @variant lg {
+    --home-why-dialog-height: --spacing(30);
+  }
+
+  --home-why-input: #0b0a10;
+  --home-why-input-line: color-mix(in srgb, var(--color-base-content) 14%, transparent);
+  --home-why-input-line-focus: var(--color-primary);
+  --home-why-input-radius: 0rem;
+  --home-why-input-cut: --spacing(3.5);
+  --home-why-placeholder: color-mix(in srgb, var(--color-base-content) 50%, transparent);
+  --home-why-chip-fill: color-mix(in srgb, var(--color-base-300) 90%, transparent);
+  --home-why-chip-fill-hover: color-mix(in srgb, var(--color-primary) 14%, var(--color-base-300));
+  --home-why-chip-line: color-mix(in srgb, var(--color-primary) 40%, transparent);
+  --home-why-chip-line-hover: var(--color-primary);
+  --home-why-chip-radius: var(--radius-selector);
+  --home-why-chip-cut: --spacing(2);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-why-input: #fff;
+    --home-why-input-line: color-mix(in srgb, var(--color-accent) 45%, transparent);
+    --home-why-input-line-focus: var(--color-accent);
+    --home-why-input-radius: --spacing(5);
+    --home-why-input-cut: 0rem;
+    --home-why-placeholder: color-mix(in srgb, var(--color-base-content) 45%, transparent);
+    --home-why-chip-fill: rgb(255 255 255 / 80%);
+    --home-why-chip-fill-hover: color-mix(in srgb, var(--color-accent) 16%, white);
+    --home-why-chip-line: color-mix(in srgb, var(--color-accent) 60%, transparent);
+    --home-why-chip-line-hover: var(--color-accent);
+    --home-why-chip-cut: 0rem;
+  }
+
+  @apply flex flex-auto flex-col;
+  gap: --spacing(3.5);
+  padding: --spacing(4.5) --spacing(5) --spacing(4);
+}
+
+.home-why-dialog {
+  @apply shrink-0 grow overflow-x-hidden overflow-y-auto overscroll-contain outline-hidden;
+  height: var(--home-why-dialog-height);
+  padding-inline-end: --spacing(1);
+  scrollbar-gutter: stable;
+
+  &::-webkit-scrollbar-track {
+    margin-block: --spacing(1);
+  }
+}
+
+.home-why-thread {
+  @apply flex flex-col;
+  gap: --spacing(3.5);
+}
+
+.home-why-input {
+  @apply relative flex flex-col items-stretch;
+  gap: --spacing(5);
+  min-height: --spacing(24);
+  padding: --spacing(3.5) --spacing(3.5) --spacing(3.5) --spacing(4.5);
+  border: --spacing(0.25) solid var(--home-why-input-line);
+  border-radius: var(--home-why-input-radius);
+  background-color: var(--home-why-input);
+  clip-path: polygon(
+    var(--home-why-input-cut) 0,
+    100% 0,
+    100% calc(100% - var(--home-why-input-cut)),
+    calc(100% - var(--home-why-input-cut)) 100%,
+    0 100%,
+    0 var(--home-why-input-cut)
+  );
+  transition-property: background-color, border-color, border-radius, clip-path;
+
+  &:focus-within {
+    border-color: var(--home-why-input-line-focus);
+  }
+
+  @variant md {
+    @apply flex-row items-end;
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-why-field {
+  @apply flex min-w-0 flex-1 cursor-text items-baseline self-stretch;
+  font-family: "Share Tech Mono", ui-monospace, monospace;
+  font-size: --spacing(4);
+  line-height: 1.6;
+}
+
+.home-why-prompt {
+  @apply flex-none text-primary-ink;
+  margin-right: 1ch;
+}
+
+.home-why-textbox {
+  @apply min-w-0 flex-1 appearance-none border-0 bg-transparent p-0 text-base-content input-caret outline-hidden;
+  font: inherit;
+  transition-property: color, opacity;
+
+  &::placeholder {
+    @apply opacity-100;
+    color: var(--home-why-placeholder);
+    transition-property: color;
+  }
+
+  &:disabled {
+    @apply opacity-60;
+  }
+
+  @variant motion-reduce {
+    &,
+    &::placeholder {
+      @apply transition-none;
+    }
+  }
+}
+
+.home-why-ask {
+  --btn-height: --spacing(12);
+
+  @apply flex-none self-end;
+  width: --spacing(42.5);
+
+  &[aria-busy="true"]:disabled {
+    @apply opacity-70;
+  }
+}
+
+.home-why-ask-icons {
+  @apply relative block shrink-0;
+  width: --spacing(4);
+  height: --spacing(4);
+}
+
+.home-why-ask-arrow,
+.home-why-ask-spinner {
+  @apply absolute inset-0 size-full;
+  transition-property: opacity;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-why-ask-spinner {
+  @apply opacity-0;
+}
+
+.home-why-ask[aria-busy="true"] {
+  & .home-why-ask-arrow {
+    @apply opacity-0;
+  }
+
+  & .home-why-ask-spinner {
+    @apply animate-spin opacity-100;
+
+    @variant motion-reduce {
+      @apply animate-none;
+    }
+  }
+}
+
+.home-why-chips {
+  @apply flex flex-wrap;
+  gap: --spacing(2.5);
+}
+
+.home-why-chip {
+  @apply inline-flex cursor-pointer items-center bg-(--home-why-chip-fill) text-left text-base-content;
+  min-height: --spacing(8);
+  padding-inline: --spacing(3.5);
+  border: --spacing(0.25) solid var(--home-why-chip-line);
+  border-radius: var(--home-why-chip-radius);
+  font-family: "Share Tech Mono", ui-monospace, monospace;
+  font-size: --spacing(3.5);
+  line-height: 1.6;
+  clip-path: polygon(
+    var(--home-why-chip-cut) 0,
+    100% 0,
+    100% calc(100% - var(--home-why-chip-cut)),
+    calc(100% - var(--home-why-chip-cut)) 100%,
+    0 100%,
+    0 var(--home-why-chip-cut)
+  );
+  transition-property: color, background-color, border-color, border-radius, clip-path, opacity;
+
+  @variant hover {
+    @apply bg-(--home-why-chip-fill-hover);
+    border-color: var(--home-why-chip-line-hover);
+  }
+
+  &:disabled {
+    @apply pointer-events-none opacity-50;
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+:lang(ru) .home-why-field,
+:lang(ru) .home-why-chip {
+  @apply font-body font-light;
+}

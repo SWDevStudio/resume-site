@@ -1,0 +1,141 @@
+@reference "~/assets/css/main.css";
+
+.home-why-decor {
+  --home-why-glow-a-left: auto;
+  --home-why-glow-a-right: 0rem;
+  --home-why-glow-a-top: --spacing(2.5);
+  --home-why-glow-a-size: --spacing(72.5);
+  --home-why-glow-b-left: --spacing(1.25);
+  --home-why-glow-b-top: --spacing(190);
+  --home-why-glow-b-size: --spacing(95);
+  --home-why-pattern-left: --spacing(1.5);
+  --home-why-pattern-right: auto;
+  --home-why-pattern-top: auto;
+  --home-why-pattern-bottom: --spacing(6.5);
+  --home-why-pattern-width: --spacing(65);
+  --home-why-pattern-height: --spacing(35);
+
+  @variant md {
+    --home-why-glow-a-size: --spacing(95);
+    --home-why-glow-a-top: 0rem;
+    --home-why-glow-b-left: 0rem;
+    --home-why-glow-b-top: --spacing(155);
+    --home-why-glow-b-size: --spacing(105);
+    --home-why-pattern-left: auto;
+    --home-why-pattern-right: --spacing(2.5);
+    --home-why-pattern-bottom: --spacing(10);
+    --home-why-pattern-width: --spacing(105);
+    --home-why-pattern-height: --spacing(47.5);
+  }
+
+  @variant lg {
+    --home-why-glow-a-left: calc(50% + --spacing(57.5));
+    --home-why-glow-a-right: auto;
+    --home-why-glow-a-top: --spacing(2.5);
+    --home-why-glow-a-size: --spacing(105);
+    --home-why-glow-b-left: calc(50% - --spacing(190));
+    --home-why-glow-b-top: --spacing(117.5);
+    --home-why-glow-b-size: --spacing(120);
+    --home-why-pattern-left: calc(50% + --spacing(40));
+    --home-why-pattern-right: auto;
+    --home-why-pattern-top: --spacing(182.5);
+    --home-why-pattern-bottom: auto;
+    --home-why-pattern-width: --spacing(140);
+    --home-why-pattern-height: --spacing(55);
+  }
+
+  @apply pointer-events-none absolute inset-0 overflow-hidden;
+}
+
+.home-why-night,
+.home-why-day {
+  @apply absolute inset-0;
+  transition-property: opacity, visibility;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-why-night {
+  --home-why-glow-a-color: 255 179 0;
+  --home-why-glow-b-color: 191 0 255;
+  --home-why-glow-a-opacity: 0.256;
+  --home-why-glow-b-opacity: 0.224;
+  --home-why-pattern-image: url("./media/asanoha-torii-synth.svg");
+  --home-why-pattern-tile: --spacing(14) --spacing(24.2475);
+  --home-why-pattern-opacity: 0.28;
+
+  opacity: var(--home-why-night);
+  visibility: var(--home-why-night-visibility);
+}
+
+.home-why-day {
+  --home-why-glow-a-color: 255 154 92;
+  --home-why-glow-b-color: 165 123 255;
+  --home-why-glow-a-opacity: 0.2176;
+  --home-why-glow-b-opacity: 0.1904;
+  --home-why-pattern-image: url("./media/waves-cyber-sakura.svg");
+  --home-why-pattern-tile: --spacing(13) --spacing(6.5);
+  --home-why-pattern-opacity: 0.4;
+
+  @variant lg {
+    --home-why-glow-a-opacity: 0.256;
+    --home-why-glow-b-opacity: 0.208;
+  }
+
+  opacity: var(--home-why-day);
+  visibility: var(--home-why-day-visibility);
+}
+
+.home-why-glow {
+  @apply absolute rounded-full;
+}
+
+.home-why-glow-a {
+  top: var(--home-why-glow-a-top);
+  right: var(--home-why-glow-a-right);
+  left: var(--home-why-glow-a-left);
+  width: var(--home-why-glow-a-size);
+  height: var(--home-why-glow-a-size);
+  opacity: var(--home-why-glow-a-opacity);
+  background: radial-gradient(
+    circle closest-side,
+    rgb(var(--home-why-glow-a-color)) 0%,
+    rgb(var(--home-why-glow-a-color) / 45%) 45%,
+    rgb(var(--home-why-glow-a-color) / 0%) 100%
+  );
+}
+
+.home-why-glow-b {
+  top: var(--home-why-glow-b-top);
+  left: var(--home-why-glow-b-left);
+  width: var(--home-why-glow-b-size);
+  height: var(--home-why-glow-b-size);
+  opacity: var(--home-why-glow-b-opacity);
+  background: radial-gradient(
+    circle closest-side,
+    rgb(var(--home-why-glow-b-color)) 0%,
+    rgb(var(--home-why-glow-b-color) / 45%) 45%,
+    rgb(var(--home-why-glow-b-color) / 0%) 100%
+  );
+}
+
+.home-why-pattern {
+  @apply absolute bg-repeat;
+  top: var(--home-why-pattern-top);
+  right: var(--home-why-pattern-right);
+  bottom: var(--home-why-pattern-bottom);
+  left: var(--home-why-pattern-left);
+  width: var(--home-why-pattern-width);
+  height: var(--home-why-pattern-height);
+  opacity: var(--home-why-pattern-opacity);
+  background-image: var(--home-why-pattern-image);
+  background-size: var(--home-why-pattern-tile);
+  mask-image: radial-gradient(
+    ellipse 55% 55% at 50% 50%,
+    #000 0%,
+    rgb(0 0 0 / 45%) 55%,
+    rgb(0 0 0 / 0%) 100%
+  );
+}

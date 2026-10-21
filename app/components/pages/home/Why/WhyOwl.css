@@ -1,0 +1,51 @@
+@reference "~/assets/css/main.css";
+
+.home-why-owl {
+  @apply pointer-events-none absolute max-w-none;
+  right: var(--home-why-owl-right);
+  bottom: calc(100% - var(--home-why-owl-sink));
+  width: var(--home-why-owl-width);
+  height: var(--home-why-owl-height);
+  transition-property: opacity, visibility;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-why-owl-night {
+  --home-why-owl-right: --spacing(-0.5);
+  --home-why-owl-width: var(--home-why-owl-night-width);
+  --home-why-owl-height: var(--home-why-owl-night-height);
+  --home-why-owl-sink: var(--home-why-owl-night-sink);
+
+  @variant md {
+    --home-why-owl-right: --spacing(3);
+  }
+
+  @variant lg {
+    --home-why-owl-right: --spacing(10);
+  }
+
+  opacity: var(--home-why-night);
+  visibility: var(--home-why-night-visibility);
+}
+
+.home-why-owl-day {
+  --home-why-owl-right: --spacing(-0.5);
+  --home-why-owl-width: var(--home-why-owl-day-width);
+  --home-why-owl-height: var(--home-why-owl-day-height);
+  --home-why-owl-sink: var(--home-why-owl-day-sink);
+
+  @variant md {
+    --home-why-owl-right: --spacing(3);
+  }
+
+  @variant lg {
+    --home-why-owl-right: --spacing(6);
+  }
+
+  mix-blend-mode: multiply;
+  opacity: var(--home-why-day);
+  visibility: var(--home-why-day-visibility);
+}

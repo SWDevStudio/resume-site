@@ -70,6 +70,31 @@
         }
       },
       "projects": "My latest projects"
+    },
+    "why": {
+      "label": "03 — Why me",
+      "titleTop": "Does my experience",
+      "titleAccent": "fit you?",
+      "chat": {
+        "name": "michael.ai",
+        "role": "— portfolio agent",
+        "status": "Online",
+        "avatar": "AI",
+        "greeting": "Hi! I'm Michael's AI assistant. Tell me about your project or your problem, and I'll tell you how Michael can help — in seconds.",
+        "placeholder": "Ask the AI and get an answer in seconds",
+        "inputLabel": "Your question for the AI",
+        "dialogLabel": "Conversation with the assistant",
+        "typing": "The assistant is typing…",
+        "error": "Something went wrong and the answer did not arrive. Please try again.",
+        "mockReply": "Michael is a great fit for you on every count: he has built projects like this many times, and I rate him 10 out of 10",
+        "ask": "Ask",
+        "chips": {
+          "clients": "I'm losing clients on my website…",
+          "developer": "Looking for a developer…",
+          "website": "I need a website for…",
+          "optimization": "My site needs optimization…"
+        }
+      }
     }
   },
   "resume": {

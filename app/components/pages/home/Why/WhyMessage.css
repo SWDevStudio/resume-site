@@ -1,0 +1,218 @@
+@reference "~/assets/css/main.css";
+
+@property --home-why-avatar-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --home-why-avatar-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.home-why-message {
+  --home-why-avatar-1: var(--color-primary);
+  --home-why-avatar-2: var(--color-accent);
+  --home-why-avatar-ink: var(--color-base-100);
+  --home-why-avatar-cut: --spacing(2);
+  --home-why-avatar-radius: 0rem;
+  --home-why-bubble-line: color-mix(in srgb, var(--color-accent) 40%, transparent);
+  --home-why-bubble-radius: 0rem;
+  --home-why-bubble-cut: --spacing(2.5);
+  --home-why-user-fill: color-mix(in srgb, var(--color-primary) 14%, var(--color-base-300));
+  --home-why-user-line: color-mix(in srgb, var(--color-primary) 55%, transparent);
+  --home-why-user-radius: 0rem;
+  --home-why-error-line: var(--color-error-ink);
+  --home-why-typing-dot: var(--color-primary);
+  --home-why-typing-radius: 0rem;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --home-why-avatar-1: #ff9cc2;
+    --home-why-avatar-2: #a57bff;
+    --home-why-avatar-ink: #fff;
+    --home-why-avatar-cut: 0rem;
+    --home-why-avatar-radius: 50%;
+    --home-why-bubble-line: color-mix(in srgb, var(--color-accent) 50%, transparent);
+    --home-why-bubble-radius: --spacing(1) --spacing(5) --spacing(5) --spacing(5);
+    --home-why-bubble-cut: 0rem;
+    --home-why-user-fill: color-mix(in srgb, var(--color-accent) 14%, white);
+    --home-why-user-line: color-mix(in srgb, var(--color-accent) 60%, transparent);
+    --home-why-user-radius: --spacing(5) --spacing(1) --spacing(5) --spacing(5);
+    --home-why-typing-dot: var(--color-accent);
+    --home-why-typing-radius: 50%;
+  }
+
+  @apply flex items-start;
+  gap: --spacing(3.5);
+}
+
+.home-why-message-user {
+  @apply flex-row-reverse;
+}
+
+.home-why-message-enter-active {
+  transition-property: opacity, translate;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-why-message-enter-from {
+  @apply opacity-0;
+  translate: 0 --spacing(3);
+}
+
+.home-why-avatar {
+  --home-why-avatar-from: var(--home-why-avatar-1);
+  --home-why-avatar-to: var(--home-why-avatar-2);
+
+  @apply grid flex-none place-items-center font-button font-extrabold;
+  width: --spacing(9);
+  height: --spacing(9);
+  font-size: --spacing(3.5);
+  color: var(--home-why-avatar-ink);
+  background-image: linear-gradient(135deg, var(--home-why-avatar-from), var(--home-why-avatar-to));
+  border-radius: var(--home-why-avatar-radius);
+  clip-path: polygon(
+    var(--home-why-avatar-cut) 0,
+    100% 0,
+    100% calc(100% - var(--home-why-avatar-cut)),
+    calc(100% - var(--home-why-avatar-cut)) 100%,
+    0 100%,
+    0 var(--home-why-avatar-cut)
+  );
+  transition-property:
+    color, border-radius, clip-path, --home-why-avatar-from, --home-why-avatar-to;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-why-bubble {
+  @apply m-0 min-w-0 bg-base-300 text-base-content;
+  max-width: --spacing(190);
+  padding: --spacing(2.5) --spacing(4);
+  border: --spacing(0.25) solid var(--home-why-bubble-line);
+  border-radius: var(--home-why-bubble-radius);
+  font-family: "Share Tech Mono", ui-monospace, monospace;
+  font-size: --spacing(3.5);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  clip-path: polygon(
+    var(--home-why-bubble-cut) 0,
+    100% 0,
+    100% calc(100% - var(--home-why-bubble-cut)),
+    calc(100% - var(--home-why-bubble-cut)) 100%,
+    0 100%,
+    0 var(--home-why-bubble-cut)
+  );
+  transition-property: color, background-color, border-color, border-radius, clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-why-bubble-user {
+  background-color: var(--home-why-user-fill);
+  border-color: var(--home-why-user-line);
+  border-radius: var(--home-why-user-radius);
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--home-why-bubble-cut)) 0,
+    100% var(--home-why-bubble-cut),
+    100% 100%,
+    var(--home-why-bubble-cut) 100%,
+    0 calc(100% - var(--home-why-bubble-cut))
+  );
+}
+
+.home-why-bubble-error {
+  border-color: var(--home-why-error-line);
+}
+
+.home-why-typing {
+  @apply inline-flex items-center align-top;
+  gap: --spacing(1.5);
+  height: 1.6em;
+}
+
+.home-why-typing-dot {
+  @apply block shrink-0;
+  width: --spacing(1.75);
+  height: --spacing(1.75);
+  border-radius: var(--home-why-typing-radius);
+  background-color: var(--home-why-typing-dot);
+  animation: home-why-typing 1.2s ease-in-out infinite;
+  transition-property: background-color, border-radius;
+
+  &:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  &:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  @variant motion-reduce {
+    @apply animate-none opacity-70 transition-none;
+  }
+}
+
+@keyframes home-why-typing {
+  0%,
+  60%,
+  100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateY(--spacing(-1));
+  }
+}
+
+.home-why-cursor {
+  @apply inline-block bg-primary opacity-0;
+  width: 0rem;
+  height: --spacing(4.5);
+  margin-left: 0rem;
+  vertical-align: --spacing(-0.75);
+  transition-property: width, margin-left;
+
+  @variant motion-reduce {
+    @apply animate-none transition-none;
+  }
+}
+
+.home-why-bubble-streaming .home-why-cursor {
+  @apply opacity-100;
+  width: --spacing(2.25);
+  margin-left: --spacing(1);
+  animation: home-why-blink 1s linear infinite;
+
+  @variant motion-reduce {
+    @apply animate-none;
+  }
+}
+
+@keyframes home-why-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+:lang(ru) .home-why-bubble {
+  @apply font-body font-light;
+}
