@@ -34,6 +34,7 @@ describe("$api.profile.fetchResume", () => {
     expect($api.profile.fetchResume.length).toBe(0);
     expect($api.projects.fetchList.length).toBe(0);
     expect($api.skills.fetchGroups.length).toBe(0);
+    expect($api.projects.fetchCase.length).toBe(1);
   });
 
   it("loads lazily and returns a promise", () => {

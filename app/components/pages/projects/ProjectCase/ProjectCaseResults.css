@@ -1,0 +1,79 @@
+@reference "~/assets/css/main.css";
+
+.project-case-results {
+  --project-case-results-line: color-mix(in oklab, var(--color-primary) 45%, transparent);
+  --project-case-results-fill: var(--color-base-200);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --project-case-results-line: color-mix(in oklab, var(--color-accent) 70%, transparent);
+  }
+
+  padding: --spacing(0.25);
+  background-color: var(--project-case-results-line);
+  border-radius: var(--radius-box);
+  clip-path: polygon(
+    var(--cut-field) 0,
+    100% 0,
+    100% calc(100% - var(--cut-field)),
+    calc(100% - var(--cut-field)) 100%,
+    0 100%,
+    0 var(--cut-field)
+  );
+  transition-property: background-color, border-radius, clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.project-case-stats {
+  @apply m-0 grid list-none overflow-hidden p-0;
+  grid-template-columns: minmax(0, 1fr);
+  gap: --spacing(0.25);
+  background-color: var(--project-case-results-line);
+  border-radius: max(0rem, calc(var(--radius-box) - --spacing(0.25)));
+  clip-path: polygon(
+    var(--cut-field) 0,
+    100% 0,
+    100% calc(100% - var(--cut-field)),
+    calc(100% - var(--cut-field)) 100%,
+    0 100%,
+    0 var(--cut-field)
+  );
+  transition-property: background-color, border-radius, clip-path;
+
+  @variant md {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.project-case-stat {
+  @apply flex flex-col;
+  gap: --spacing(1.5);
+  padding: --spacing(4.5) --spacing(5);
+  background-color: var(--project-case-results-fill);
+}
+
+.project-case-stat-value {
+  @apply font-head text-primary-ink;
+  font-size: --spacing(7);
+  line-height: 1;
+
+  @variant md {
+    font-size: --spacing(8);
+  }
+
+  @variant lg {
+    font-size: --spacing(8.5);
+  }
+}
+
+.project-case-stat-label {
+  font-size: --spacing(3.5);
+  line-height: 1.5;
+  color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+}

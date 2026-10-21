@@ -1,8 +1,14 @@
 import type { ProjectView, SkillGroupView } from "#shared/types/catalog";
+import type { ProjectBlock } from "~/types/projectCase";
 import { contact } from "./contact";
-import { buildProjects, buildResume, buildSkillGroups } from "#shared/mock/build";
+import { buildCase, buildProjects, buildResume, buildSkillGroups } from "#shared/mock/build";
 import { resolveLocale } from "./locale";
-import { loadProjectsSources, loadResumeSources, loadSkillsSources } from "./sources";
+import {
+  loadCaseBlocks,
+  loadProjectsSources,
+  loadResumeSources,
+  loadSkillsSources,
+} from "./sources";
 import type { ResumeData } from "#shared/types/resume";
 
 const profile = {
@@ -16,6 +22,14 @@ const projects = {
   async fetchList(): Promise<ProjectView[]> {
     const locale = resolveLocale();
     return buildProjects(await loadProjectsSources(locale), locale);
+  },
+  async fetchCase(slug: string): Promise<ProjectBlock[] | null> {
+    const locale = resolveLocale();
+    const [src, blocks] = await Promise.all([
+      loadProjectsSources(locale),
+      loadCaseBlocks(slug, locale),
+    ]);
+    return buildCase(slug, src, blocks, locale);
   },
 };
 

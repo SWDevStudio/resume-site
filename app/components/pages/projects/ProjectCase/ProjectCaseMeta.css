@@ -1,0 +1,56 @@
+@reference "~/assets/css/main.css";
+
+.project-case-meta {
+  @apply flex flex-col;
+  gap: --spacing(3.5);
+}
+
+.project-case-tags {
+  @apply m-0 flex list-none flex-wrap p-0;
+  gap: --spacing(2);
+}
+
+.project-case-tag {
+  --project-case-tag-cut: --spacing(1.25);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --project-case-tag-cut: 0rem;
+  }
+
+  @apply text-base-content;
+  padding: --spacing(1) --spacing(3);
+  font-size: --spacing(3.5);
+  line-height: 1.5;
+  background-color: color-mix(
+    in oklab,
+    var(--project-case-accent) var(--project-case-soft),
+    transparent
+  );
+  border: --spacing(0.25) solid
+    color-mix(in oklab, var(--project-case-accent) var(--project-case-line), transparent);
+  border-radius: var(--radius-selector);
+  clip-path: polygon(
+    var(--project-case-tag-cut) 0,
+    100% 0,
+    100% calc(100% - var(--project-case-tag-cut)),
+    calc(100% - var(--project-case-tag-cut)) 100%,
+    0 100%,
+    0 var(--project-case-tag-cut)
+  );
+  transition-property: color, background-color, border-color, border-radius, clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.project-case-stack {
+  @apply m-0;
+  font-size: --spacing(3.5);
+  line-height: 1.7;
+  color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+}
+
+.project-case-stack-label {
+  @apply text-base-content;
+}

@@ -1,0 +1,227 @@
+@reference "~/assets/css/main.css";
+
+@property --project-case-shot-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --project-case-shot-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --project-case-stage-glow {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --project-case-grid-line {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.project-case-cover {
+  --project-case-shot-from: var(--project-case-media-start);
+  --project-case-shot-to: var(--project-case-media-end);
+  --project-case-shot-cut: --spacing(3.5);
+  --project-case-shot-radius: 0rem;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --project-case-shot-cut: 0rem;
+    --project-case-shot-radius: --spacing(4.5);
+  }
+
+  @apply relative;
+  aspect-ratio: 350 / 240;
+  padding: --spacing(0.25);
+  background-image: linear-gradient(
+    135deg,
+    var(--project-case-shot-from),
+    var(--project-case-shot-to)
+  );
+  border-radius: var(--project-case-shot-radius);
+  clip-path: polygon(
+    var(--project-case-shot-cut) 0,
+    100% 0,
+    100% calc(100% - var(--project-case-shot-cut)),
+    calc(100% - var(--project-case-shot-cut)) 100%,
+    0 100%,
+    0 var(--project-case-shot-cut)
+  );
+  transition-property: border-radius, clip-path, --project-case-shot-from, --project-case-shot-to;
+
+  @variant md {
+    aspect-ratio: 704 / 400;
+  }
+
+  @variant lg {
+    aspect-ratio: 784 / 440;
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.project-case-stage {
+  --project-case-stage-glow: color-mix(
+    in oklab,
+    var(--project-case-accent) var(--project-case-stage-alpha),
+    transparent
+  );
+  --project-case-cover-u: calc(100cqw / 782);
+  --project-case-laptop-top: calc(var(--project-case-cover-u) * 90);
+  --project-case-phone-bottom: calc(var(--project-case-cover-u) * 38);
+
+  @apply relative size-full overflow-hidden;
+  container-type: inline-size;
+  background-color: var(--project-case-stage-base);
+  background-image: radial-gradient(
+    ellipse 70% 80% at 30% 40%,
+    var(--project-case-stage-glow),
+    transparent 70%
+  );
+  border-radius: max(0rem, calc(var(--project-case-shot-radius) - --spacing(0.25)));
+  clip-path: polygon(
+    max(0rem, calc(var(--project-case-shot-cut) - --spacing(0.125))) 0,
+    100% 0,
+    100% calc(100% - max(0rem, calc(var(--project-case-shot-cut) - --spacing(0.125)))),
+    calc(100% - max(0rem, calc(var(--project-case-shot-cut) - --spacing(0.125)))) 100%,
+    0 100%,
+    0 max(0rem, calc(var(--project-case-shot-cut) - --spacing(0.125)))
+  );
+  transition-property: background-color, border-radius, clip-path, --project-case-stage-glow;
+
+  @variant md {
+    --project-case-laptop-top: calc(var(--project-case-cover-u) * 53.5);
+    --project-case-phone-bottom: calc(var(--project-case-cover-u) * 31.2);
+  }
+
+  @variant lg {
+    --project-case-laptop-top: calc(var(--project-case-cover-u) * 51);
+    --project-case-phone-bottom: calc(var(--project-case-cover-u) * 31);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.project-case-grid {
+  --project-case-grid-line: color-mix(in oklab, var(--color-base-content) 3%, transparent);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --project-case-grid-line: color-mix(in oklab, var(--color-base-content) 3.5%, transparent);
+  }
+
+  @apply pointer-events-none absolute inset-0;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      var(--project-case-grid-line) 0 --spacing(0.25),
+      transparent --spacing(0.25) --spacing(6)
+    ),
+    repeating-linear-gradient(
+      90deg,
+      var(--project-case-grid-line) 0 --spacing(0.25),
+      transparent --spacing(0.25) --spacing(6)
+    );
+  transition-property: --project-case-grid-line;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.project-case-laptop {
+  @apply absolute;
+  left: calc(var(--project-case-cover-u) * 70);
+  top: var(--project-case-laptop-top);
+  width: calc(var(--project-case-cover-u) * 516);
+}
+
+.project-case-lid {
+  @apply relative box-border;
+  height: calc(var(--project-case-cover-u) * 320);
+  padding: calc(var(--project-case-cover-u) * 12) calc(var(--project-case-cover-u) * 10);
+  background-color: #111216;
+  border-radius: calc(var(--project-case-cover-u) * 14) calc(var(--project-case-cover-u) * 14)
+    calc(var(--project-case-cover-u) * 4) calc(var(--project-case-cover-u) * 4);
+  box-shadow:
+    inset 0 0 0 calc(var(--project-case-cover-u) * 1.5) #2a2b31,
+    0 calc(var(--project-case-cover-u) * 24) calc(var(--project-case-cover-u) * 50) rgb(0 0 0 / 35%);
+}
+
+.project-case-camera {
+  @apply absolute left-1/2;
+  top: calc(var(--project-case-cover-u) * 4);
+  width: calc(var(--project-case-cover-u) * 46);
+  height: calc(var(--project-case-cover-u) * 5);
+  margin-left: calc(var(--project-case-cover-u) * -23);
+  border-radius: calc(var(--project-case-cover-u) * 3);
+  background-color: #24252b;
+}
+
+.project-case-screen {
+  @apply overflow-hidden bg-white;
+  height: calc(var(--project-case-cover-u) * 296);
+  border-radius: calc(var(--project-case-cover-u) * 3);
+}
+
+.project-case-shot {
+  @apply card-media-image object-top;
+}
+
+.project-case-base {
+  height: calc(var(--project-case-cover-u) * 14);
+  margin-inline: calc(var(--project-case-cover-u) * -36);
+  background-image: linear-gradient(180deg, #2b2c33, #121317);
+  border-radius: 0 0 calc(var(--project-case-cover-u) * 14) calc(var(--project-case-cover-u) * 14);
+  box-shadow: 0 calc(var(--project-case-cover-u) * 10) calc(var(--project-case-cover-u) * 24)
+    rgb(0 0 0 / 30%);
+}
+
+.project-case-notch {
+  @apply mx-auto block;
+  width: 18%;
+  height: calc(var(--project-case-cover-u) * 5);
+  border-radius: 0 0 calc(var(--project-case-cover-u) * 6) calc(var(--project-case-cover-u) * 6);
+  background-color: #0b0b0e;
+}
+
+.project-case-phone {
+  @apply absolute box-border;
+  right: calc(var(--project-case-cover-u) * 55);
+  bottom: var(--project-case-phone-bottom);
+  width: calc(var(--project-case-cover-u) * 149);
+  height: calc(var(--project-case-cover-u) * 305);
+  padding: calc(var(--project-case-cover-u) * 7) calc(var(--project-case-cover-u) * 6);
+  background-color: #111216;
+  border-radius: calc(var(--project-case-cover-u) * 25);
+  box-shadow:
+    inset 0 0 0 calc(var(--project-case-cover-u) * 1.5) #2c2d33,
+    0 calc(var(--project-case-cover-u) * 24) calc(var(--project-case-cover-u) * 44) rgb(0 0 0 / 40%);
+  transform: rotate(4deg);
+}
+
+.project-case-phone-screen {
+  @apply relative size-full overflow-hidden bg-white;
+  border-radius: calc(var(--project-case-cover-u) * 19);
+}
+
+.project-case-shot-phone {
+  object-position: 0% top;
+}
+
+.project-case-island {
+  @apply absolute left-1/2 -translate-x-1/2;
+  top: calc(var(--project-case-cover-u) * 5);
+  width: 34%;
+  height: calc(var(--project-case-cover-u) * 9);
+  border-radius: calc(var(--project-case-cover-u) * 6);
+  background-color: #111216;
+}

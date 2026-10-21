@@ -1,3 +1,4 @@
+import type { ProjectBlock } from "../../types/projectCase";
 import type {
   ProjectsSources,
   ResumeFile,
@@ -12,6 +13,9 @@ const textSkills = import.meta.glob<SkillsText>("../data/*/skills.ts", {
   import: "default",
 });
 const textResume = import.meta.glob<ResumeFile>("../data/*/resume.ts", { import: "default" });
+const caseFiles = import.meta.glob<ProjectBlock[]>("../data/projects/*/{ru,en}.ts", {
+  import: "default",
+});
 
 function localeLayers(locale: Locale): Locale[] {
   return locale === DEFAULT_LOCALE ? [DEFAULT_LOCALE] : [locale, DEFAULT_LOCALE];
@@ -54,4 +58,13 @@ export async function loadResumeSources(locale: Locale): Promise<ResumeSources> 
     loadTexts(textResume, "resume", locale),
   ]);
   return { ...projects, ...skills, resume };
+}
+
+export async function loadCaseBlocks(slug: string, locale: Locale): Promise<ProjectBlock[] | null> {
+  for (const layer of localeLayers(locale)) {
+    const path = `../data/projects/${slug}/${layer}.ts`;
+    const load = caseFiles[path];
+    if (load) return load();
+  }
+  return null;
 }

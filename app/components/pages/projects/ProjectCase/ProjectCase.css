@@ -1,0 +1,56 @@
+@reference "~/assets/css/main.css";
+
+.project-case-tone {
+  --project-case-accent: var(--page-tone-accent);
+  --project-case-ink: var(--page-tone-ink);
+  --project-case-line: var(--page-tone-line);
+  --project-case-soft: var(--page-tone-soft);
+  --project-case-media-start: var(--page-tone-media-start);
+  --project-case-media-end: var(--page-tone-media-end);
+  --project-case-stage-alpha: var(--page-tone-stage-alpha);
+  --project-case-stage-base: var(--page-tone-stage-base);
+}
+
+.project-case {
+  --project-case-gap: --spacing(6.5);
+  --page-sections-content-gap: var(--project-case-gap);
+  --project-case-rule: color-mix(in oklab, var(--color-base-content) 12%, transparent);
+
+  padding-bottom: --spacing(14);
+
+  @variant md {
+    --project-case-gap: --spacing(8);
+    padding-bottom: --spacing(20);
+  }
+
+  @variant lg {
+    --project-case-gap: --spacing(9);
+    --page-sections-nav-inset: --spacing(18);
+    padding-bottom: --spacing(24);
+  }
+}
+
+.project-case-chapters {
+  @apply flex flex-col;
+  padding-top: calc(var(--project-case-gap) + --spacing(4));
+  border-top: --spacing(0.25) solid var(--project-case-rule);
+}
+
+.project-case-text {
+  @apply m-0 font-body font-light text-base-content/82;
+  font-size: --spacing(3.5);
+  line-height: 1.8;
+
+  @variant md {
+    font-size: --spacing(4);
+  }
+
+  :where([data-theme="cyber-sakura"]) & {
+    @apply text-base-content/84;
+  }
+}
+
+.project-case-footer {
+  padding-top: var(--project-case-gap);
+  border-top: --spacing(0.25) solid var(--project-case-rule);
+}

@@ -140,5 +140,14 @@
   },
   "pageSections": {
     "count": "{count} section | {count} sections"
+  },
+  "projects": {
+    "case": {
+      "nav": "On this page",
+      "back": "All projects",
+      "liveSite": "Live site",
+      "stack": "Stack",
+      "next": "Next project"
+    }
   }
 }

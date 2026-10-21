@@ -1,0 +1,128 @@
+@reference "~/assets/css/main.css";
+
+.project-case-header {
+  @apply flex flex-col;
+  gap: --spacing(4);
+  padding-top: 0rem;
+
+  @variant md {
+    padding-top: --spacing(3);
+  }
+
+  @variant lg {
+    padding-top: --spacing(6);
+  }
+}
+
+.project-case-back {
+  --project-case-back-ink: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+
+  @apply inline-flex items-center self-start no-underline;
+  gap: --spacing(2);
+  min-height: --spacing(11);
+  font-size: --spacing(3.5);
+  letter-spacing: 0.08em;
+  color: var(--project-case-back-ink);
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property: color, outline-color;
+
+  @variant hover {
+    --project-case-back-ink: var(--color-base-content);
+  }
+
+  @variant focus-visible {
+    --project-case-back-ink: var(--color-base-content);
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.project-case-back-icon {
+  width: --spacing(3.5);
+  aspect-ratio: 18 / 12;
+  rotate: 180deg;
+  translate: 0rem;
+  transition-property: translate, color, background-color;
+
+  .project-case-back:hover &,
+  .project-case-back:focus-visible & {
+    translate: --spacing(-0.75);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.project-case-head-row {
+  @apply flex flex-wrap items-center justify-between;
+  gap: --spacing(1.5) --spacing(4);
+}
+
+.project-case-label {
+  @apply uppercase;
+  font-size: --spacing(3);
+  letter-spacing: 0.26em;
+  line-height: 1.6;
+  color: var(--project-case-ink);
+}
+
+.project-case-live {
+  --btn-ink: var(--project-case-ink);
+  --btn-height: --spacing(11);
+
+  gap: --spacing(2);
+  letter-spacing: 0.22em;
+
+  &[aria-disabled="true"] {
+    @apply pointer-events-none opacity-50;
+  }
+
+  @variant hover {
+    --btn-ink: var(--color-base-content);
+  }
+
+  @variant focus-visible {
+    --btn-ink: var(--color-base-content);
+    outline: --spacing(0.5) solid var(--color-brand);
+    outline-offset: --spacing(1);
+  }
+}
+
+.project-case-live-icon {
+  width: --spacing(3);
+  aspect-ratio: 14 / 14;
+  translate: 0rem 0rem;
+  transition-property: translate, color, background-color;
+
+  .project-case-live:hover &,
+  .project-case-live:focus-visible & {
+    translate: --spacing(0.5) --spacing(-0.5);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.project-case-title {
+  @apply m-0 font-head font-normal text-base-content;
+  font-size: --spacing(8);
+  line-height: 1.1;
+
+  @variant md {
+    font-size: --spacing(11);
+  }
+
+  @variant lg {
+    font-size: --spacing(13);
+  }
+}
+
+.project-case-headline {
+  color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+}
