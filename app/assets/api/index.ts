@@ -1,5 +1,6 @@
 import type { ProjectView, SkillGroupView } from "#shared/types/catalog";
 import type { ProjectBlock } from "~/types/projectCase";
+import { blog } from "./blog";
 import { contact } from "./contact";
 import { buildCase, buildProjects, buildResume, buildSkillGroups } from "#shared/mock/build";
 import { resolveLocale } from "./locale";
@@ -40,4 +41,4 @@ const skills = {
   },
 };
 
-export const $api = { profile, projects, skills, contact };
+export const $api = { profile, projects, skills, blog, contact };

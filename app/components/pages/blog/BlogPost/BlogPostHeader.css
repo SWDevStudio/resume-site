@@ -1,0 +1,152 @@
+@reference "~/assets/css/main.css";
+
+@property --blog-post-avatar-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --blog-post-avatar-via {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --blog-post-avatar-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.blog-post-header {
+  @apply flex flex-col;
+  gap: --spacing(4);
+  padding-top: --spacing(1);
+
+  @variant md {
+    padding-top: --spacing(3);
+  }
+
+  @variant lg {
+    padding-top: --spacing(6);
+  }
+}
+
+.blog-post-back {
+  --blog-post-back-ink: var(--blog-post-muted);
+
+  @apply inline-flex items-center self-start no-underline;
+  gap: --spacing(2);
+  min-height: --spacing(11);
+  font-size: --spacing(3.5);
+  letter-spacing: 0.08em;
+  color: var(--blog-post-back-ink);
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property: color, outline-color;
+
+  @variant hover {
+    --blog-post-back-ink: var(--color-base-content);
+  }
+
+  @variant focus-visible {
+    --blog-post-back-ink: var(--color-base-content);
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-post-back-icon {
+  width: --spacing(3.5);
+  aspect-ratio: 18 / 12;
+  rotate: 180deg;
+  translate: 0rem;
+  transition-property: translate, color, background-color;
+
+  .blog-post-back:hover &,
+  .blog-post-back:focus-visible & {
+    translate: --spacing(-0.75);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-post-title {
+  @apply m-0 font-head font-normal text-base-content;
+  font-size: --spacing(7.5);
+  line-height: 1.1;
+
+  @variant md {
+    font-size: --spacing(10);
+  }
+
+  @variant lg {
+    font-size: --spacing(11.5);
+  }
+}
+
+.blog-post-author {
+  @apply flex items-center;
+  gap: --spacing(3);
+}
+
+.blog-post-avatar {
+  --blog-post-avatar-from: var(--gradient-cta-from);
+  --blog-post-avatar-via: var(--gradient-cta-via);
+  --blog-post-avatar-to: var(--gradient-cta-to);
+  --blog-post-avatar-ink: #09090c;
+  --blog-post-avatar-radius: 0rem;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --blog-post-avatar-ink: #fff;
+    --blog-post-avatar-radius: 50%;
+  }
+
+  @apply flex shrink-0 items-center justify-center;
+  width: --spacing(10);
+  height: --spacing(10);
+  font-size: --spacing(3);
+  color: var(--blog-post-avatar-ink);
+  background-image: linear-gradient(
+    90deg,
+    var(--blog-post-avatar-from),
+    var(--blog-post-avatar-via) 55%,
+    var(--blog-post-avatar-to)
+  );
+  border-radius: var(--blog-post-avatar-radius);
+  clip-path: polygon(
+    var(--cut-field) 0,
+    100% 0,
+    100% calc(100% - var(--cut-field)),
+    calc(100% - var(--cut-field)) 100%,
+    0 100%,
+    0 var(--cut-field)
+  );
+  transition-property:
+    color, border-radius, clip-path, --blog-post-avatar-from, --blog-post-avatar-via,
+    --blog-post-avatar-to;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-post-author-text {
+  @apply flex flex-col;
+  gap: --spacing(0.5);
+}
+
+.blog-post-author-name {
+  @apply text-base-content;
+  font-size: --spacing(3.5);
+}
+
+.blog-post-author-role {
+  font-size: --spacing(3);
+  color: var(--blog-post-muted);
+}

@@ -1,0 +1,49 @@
+@reference "~/assets/css/main.css";
+
+.blog-source-link {
+  --blog-source-link-ink: var(--page-tone-ink);
+
+  @apply inline-flex items-center no-underline;
+  gap: --spacing(2);
+  min-height: --spacing(11);
+  font-size: --spacing(3.5);
+  color: var(--blog-source-link-ink);
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property: color, outline-color;
+
+  @variant hover {
+    --blog-source-link-ink: var(--color-base-content);
+  }
+
+  @variant focus-visible {
+    --blog-source-link-ink: var(--color-base-content);
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-source-link-text {
+  @apply underline;
+  text-underline-offset: --spacing(0.75);
+  text-decoration-thickness: --spacing(0.25);
+}
+
+.blog-source-link-icon {
+  width: --spacing(3);
+  aspect-ratio: 1;
+  translate: 0rem 0rem;
+  transition-property: translate, color, background-color;
+
+  .blog-source-link:hover &,
+  .blog-source-link:focus-visible & {
+    translate: --spacing(0.5) --spacing(-0.5);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}

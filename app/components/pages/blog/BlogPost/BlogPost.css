@@ -1,0 +1,57 @@
+@reference "~/assets/css/main.css";
+
+.blog-post {
+  --blog-post-gap: --spacing(6);
+  --blog-post-read-size: --spacing(3.5);
+  --blog-post-h2: --spacing(5.5);
+  --blog-post-h3: --spacing(4.5);
+  --blog-post-body: color-mix(in oklab, var(--color-base-content) 82%, transparent);
+  --blog-post-muted: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+  --blog-post-rule: color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  --page-sections-content-gap: var(--blog-post-gap);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --blog-post-body: color-mix(in oklab, var(--color-base-content) 84%, transparent);
+  }
+
+  @apply font-light;
+  padding-bottom: --spacing(14);
+
+  @variant md {
+    --blog-post-gap: --spacing(6.5);
+    --blog-post-read-size: --spacing(4);
+    --blog-post-h2: --spacing(6.5);
+    --blog-post-h3: --spacing(5);
+    padding-bottom: --spacing(20);
+  }
+
+  @variant lg {
+    --blog-post-gap: --spacing(7);
+    --blog-post-h2: --spacing(7);
+    --blog-post-h3: --spacing(5.5);
+    --page-sections-nav-inset: --spacing(18);
+    padding-bottom: --spacing(24);
+  }
+}
+
+.blog-post .page-section-root {
+  --page-section-gap: --spacing(4.5);
+  --page-section-size: var(--blog-post-h2);
+  --page-section-leading: 1.2;
+  --page-section-divider: 0rem;
+  --page-section-padding: 0rem;
+  --page-section-margin: --spacing(3);
+}
+
+.blog-post .page-section-level-3 {
+  --page-section-gap: --spacing(4.5);
+  --page-section-size: var(--blog-post-h3);
+  --page-section-leading: 1.25;
+
+  margin-top: --spacing(1.5);
+}
+
+.blog-post-chapters {
+  @apply flex flex-col;
+  gap: --spacing(4.5);
+}

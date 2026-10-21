@@ -1,0 +1,16 @@
+@reference "~/assets/css/main.css";
+
+.blog-post-cover-link {
+  @apply block no-underline;
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property: outline-color;
+
+  @variant focus-visible {
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}

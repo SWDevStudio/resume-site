@@ -1,0 +1,50 @@
+@reference "~/assets/css/main.css";
+
+.blog-header {
+  @apply flex flex-col;
+  gap: --spacing(4);
+  padding-top: --spacing(2);
+
+  @variant md {
+    padding-top: --spacing(6);
+  }
+
+  @variant lg {
+    padding-top: --spacing(12);
+  }
+}
+
+.blog-eyebrow {
+  font-size: --spacing(3);
+  letter-spacing: 0.3em;
+  color: var(--color-primary-ink);
+}
+
+.blog-title {
+  @apply m-0 font-head font-normal text-base-content;
+  font-size: --spacing(9.5);
+  line-height: 1.05;
+
+  @variant md {
+    font-size: --spacing(13);
+  }
+
+  @variant lg {
+    font-size: --spacing(16);
+  }
+}
+
+.blog-title-accent {
+  color: var(--color-primary-ink);
+}
+
+.blog-lead {
+  @apply m-0 font-body font-light text-base-content/82;
+  max-width: --spacing(155);
+  font-size: --spacing(3.5);
+  line-height: 1.75;
+
+  :where([data-theme="cyber-sakura"]) & {
+    @apply text-base-content/84;
+  }
+}

@@ -1,0 +1,22 @@
+@reference "~/assets/css/main.css";
+
+.blog-post-list {
+  @apply m-0 flex flex-col;
+  gap: --spacing(2);
+  padding-left: --spacing(5.5);
+  font-size: var(--blog-post-read-size);
+  line-height: 1.75;
+  color: var(--blog-post-body);
+}
+
+.blog-post-list-ordered {
+  list-style-type: decimal;
+}
+
+.blog-post-list-bulleted {
+  list-style-type: disc;
+}
+
+.blog-post-list-item {
+  padding-left: --spacing(1.5);
+}

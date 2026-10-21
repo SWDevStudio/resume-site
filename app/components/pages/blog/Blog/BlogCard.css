@@ -1,0 +1,98 @@
+@reference "~/assets/css/main.css";
+
+.blog-card {
+  --blog-card-title-ink: var(--color-base-content);
+
+  @apply flex min-w-0 flex-col;
+  gap: --spacing(3.5);
+
+  @variant hover {
+    --blog-card-title-ink: var(--page-tone-ink);
+
+    & .blog-cover {
+      --page-cover-lift: 30%;
+    }
+  }
+
+  &:has(.blog-card-link:focus-visible) {
+    --blog-card-title-ink: var(--page-tone-ink);
+
+    & .blog-cover {
+      --page-cover-lift: 30%;
+    }
+  }
+}
+
+.blog-card-cover {
+  @apply block no-underline;
+}
+
+.blog-card-meta {
+  @apply flex flex-wrap items-center justify-between;
+  gap: --spacing(1) --spacing(3);
+}
+
+.blog-card-date {
+  font-size: --spacing(3);
+  color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+}
+
+.blog-card-title {
+  @apply m-0 font-head font-normal;
+  font-size: --spacing(5);
+  line-height: 1.2;
+  color: var(--blog-card-title-ink);
+  scroll-margin-top: var(--page-sections-offset, 0rem);
+  transition-property: color;
+
+  @variant md {
+    font-size: --spacing(6.5);
+  }
+
+  @variant lg {
+    font-size: --spacing(7);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-card-link {
+  @apply no-underline;
+  color: inherit;
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property: color, outline-color;
+
+  @variant focus-visible {
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-card-name {
+  font-family: "Righteous", sans-serif;
+}
+
+.blog-card-excerpt {
+  @apply m-0 font-body font-light text-base-content/82;
+  font-size: --spacing(3.5);
+  line-height: 1.75;
+
+  :where([data-theme="cyber-sakura"]) & {
+    @apply text-base-content/84;
+  }
+}
+
+.blog-card-actions {
+  @apply mt-auto flex flex-col;
+  gap: --spacing(1.5);
+}
+
+.blog-card-actions > .blog-source-link {
+  @apply self-start;
+}

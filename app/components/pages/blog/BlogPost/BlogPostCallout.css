@@ -1,0 +1,88 @@
+@reference "~/assets/css/main.css";
+
+.blog-post-callout {
+  --blog-post-callout-color: var(--color-accent);
+  --blog-post-callout-ink: var(--color-accent-ink);
+  --blog-post-callout-line: 45%;
+  --blog-post-callout-tint: 10%;
+  --blog-post-callout-note-ink: var(--color-info);
+  --blog-post-callout-warning-ink: var(--color-warning);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --blog-post-callout-line: 60%;
+    --blog-post-callout-tint: 14%;
+    --blog-post-callout-note-ink: #02627a;
+    --blog-post-callout-warning-ink: #8a4003;
+  }
+
+  @apply min-w-0;
+  padding: --spacing(0.25);
+  background-color: color-mix(
+    in oklab,
+    var(--blog-post-callout-color) var(--blog-post-callout-line),
+    transparent
+  );
+  border-radius: var(--radius-box);
+  clip-path: polygon(
+    var(--cut-field) 0,
+    100% 0,
+    100% calc(100% - var(--cut-field)),
+    calc(100% - var(--cut-field)) 100%,
+    0 100%,
+    0 var(--cut-field)
+  );
+  transition-property: background-color, border-radius, clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-post-callout-note {
+  --blog-post-callout-color: var(--color-info);
+  --blog-post-callout-ink: var(--blog-post-callout-note-ink);
+}
+
+.blog-post-callout-warning {
+  --blog-post-callout-color: var(--color-warning);
+  --blog-post-callout-ink: var(--blog-post-callout-warning-ink);
+}
+
+.blog-post-callout-box {
+  @apply flex flex-col;
+  gap: --spacing(1.5);
+  padding: --spacing(4.5) --spacing(5.5);
+  background-color: color-mix(
+    in srgb,
+    var(--blog-post-callout-color) var(--blog-post-callout-tint),
+    var(--color-base-200)
+  );
+  border-radius: max(0rem, calc(var(--radius-box) - --spacing(0.25)));
+  clip-path: polygon(
+    max(0rem, calc(var(--cut-field) - --spacing(0.1))) 0,
+    100% 0,
+    100% calc(100% - max(0rem, calc(var(--cut-field) - --spacing(0.1)))),
+    calc(100% - max(0rem, calc(var(--cut-field) - --spacing(0.1)))) 100%,
+    0 100%,
+    0 max(0rem, calc(var(--cut-field) - --spacing(0.1)))
+  );
+  transition-property: background-color, border-radius, clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-post-callout-label {
+  @apply uppercase;
+  font-size: --spacing(3);
+  letter-spacing: 0.22em;
+  line-height: 1.6;
+  color: var(--blog-post-callout-ink);
+}
+
+.blog-post-callout-text {
+  font-size: --spacing(3.5);
+  line-height: 1.75;
+  color: var(--blog-post-body);
+}

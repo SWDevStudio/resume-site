@@ -1,0 +1,131 @@
+@reference "~/assets/css/main.css";
+
+.blog-cover-terminal {
+  @apply absolute inset-0 flex items-center justify-center;
+  padding-inline: 8%;
+}
+
+.blog-cover-window {
+  --blog-cover-term-bg: #111216;
+  --blog-cover-term-head: #111216;
+  --blog-cover-term-line: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  --blog-cover-term-muted: color-mix(in oklab, #fcfcf2 55%, transparent);
+  --blog-cover-term-text: #fcfcf2;
+  --blog-cover-term-prompt: var(--color-secondary-ink);
+  --blog-cover-term-ok: #7cf2b0;
+  --blog-cover-term-cursor: color-mix(in oklab, #fcfcf2 70%, transparent);
+  --blog-cover-term-shadow:
+    0 0 0 --spacing(0.25) color-mix(in oklab, var(--color-base-content) 12%, transparent) inset,
+    0 --spacing(4.5) --spacing(10) rgb(0 0 0 / 30%);
+  --blog-cover-term-cut: var(--cut-field);
+  --blog-cover-dot-radius: 0rem;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --blog-cover-term-bg: #fff;
+    --blog-cover-term-head: #f6f8fa;
+    --blog-cover-term-line: #d0d7de;
+    --blog-cover-term-muted: #59636e;
+    --blog-cover-term-text: #1f2328;
+    --blog-cover-term-prompt: #0969da;
+    --blog-cover-term-ok: #1a7f37;
+    --blog-cover-term-cursor: color-mix(in oklab, #1f2328 55%, transparent);
+    --blog-cover-term-shadow:
+      0 0 0 --spacing(0.25) #d0d7de inset,
+      0 --spacing(4.5) --spacing(10) color-mix(in oklab, var(--color-accent) 25%, transparent);
+    --blog-cover-dot-radius: 50%;
+  }
+
+  @apply w-full overflow-hidden;
+  max-width: var(--blog-cover-term-max);
+  background-color: var(--blog-cover-term-bg);
+  border-radius: var(--radius-field);
+  box-shadow: var(--blog-cover-term-shadow);
+  clip-path: polygon(
+    var(--blog-cover-term-cut) 0,
+    100% 0,
+    100% calc(100% - var(--blog-cover-term-cut)),
+    calc(100% - var(--blog-cover-term-cut)) 100%,
+    0 100%,
+    0 var(--blog-cover-term-cut)
+  );
+  transition-property: background-color, border-radius, box-shadow, clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-cover-window-head {
+  @apply flex items-center;
+  gap: var(--blog-cover-dot-gap);
+  padding: var(--blog-cover-head-pad);
+  background-color: var(--blog-cover-term-head);
+  border-bottom: --spacing(0.25) solid var(--blog-cover-term-line);
+  transition-property: background-color, border-color;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-cover-dot {
+  @apply shrink-0;
+  width: var(--blog-cover-dot);
+  height: var(--blog-cover-dot);
+  border-radius: var(--blog-cover-dot-radius);
+  transition-property: background-color, border-radius;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-cover-dot-red {
+  background-color: #ff5f57;
+}
+
+.blog-cover-dot-yellow {
+  background-color: #febc2e;
+}
+
+.blog-cover-dot-green {
+  background-color: #28c840;
+}
+
+.blog-cover-window-title {
+  @apply min-w-0 truncate font-body;
+  margin-left: calc(var(--blog-cover-dot-gap) * 1.6);
+  font-size: var(--blog-cover-head-size);
+  color: var(--blog-cover-term-muted);
+}
+
+.blog-cover-window-body {
+  @apply flex flex-col font-body;
+  gap: var(--blog-cover-body-gap);
+  padding: var(--blog-cover-body-pad);
+  font-size: var(--blog-cover-code-size);
+  line-height: 1.5;
+}
+
+.blog-cover-command,
+.blog-cover-output {
+  @apply truncate;
+}
+
+.blog-cover-command {
+  color: var(--blog-cover-term-text);
+}
+
+.blog-cover-prompt {
+  color: var(--blog-cover-term-prompt);
+}
+
+.blog-cover-output {
+  color: var(--blog-cover-term-ok);
+}
+
+.blog-cover-cursor {
+  width: var(--blog-cover-cursor-width);
+  height: var(--blog-cover-cursor-height);
+  background-color: var(--blog-cover-term-cursor);
+}

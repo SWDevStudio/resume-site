@@ -7,6 +7,7 @@ export const Route = {
   projects: "/projects",
   project: (slug: string) => `/projects/${slug}`,
   blog: "/blog",
+  post: (slug: string) => `/blog/${slug}`,
   resume: "/resume",
   resumePdf: (locale: Locale) => `/resume/${locale}.pdf`,
   resumeMarkdown: (locale: Locale) => `/resume/${locale}.md`,

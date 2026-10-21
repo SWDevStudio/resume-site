@@ -1,0 +1,48 @@
+@reference "~/assets/css/main.css";
+
+.blog-post-source {
+  @apply min-w-0;
+  padding: --spacing(0.25);
+  background-color: color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  border-radius: var(--radius-box);
+  clip-path: polygon(
+    var(--cut-field) 0,
+    100% 0,
+    100% calc(100% - var(--cut-field)),
+    calc(100% - var(--cut-field)) 100%,
+    0 100%,
+    0 var(--cut-field)
+  );
+  transition-property: background-color, border-radius, clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-post-source-box {
+  @apply flex flex-wrap items-center justify-between;
+  gap: --spacing(1) --spacing(4);
+  padding: --spacing(3.5) --spacing(5);
+  background-color: var(--color-base-200);
+  border-radius: max(0rem, calc(var(--radius-box) - --spacing(0.25)));
+  clip-path: polygon(
+    max(0rem, calc(var(--cut-field) - --spacing(0.1))) 0,
+    100% 0,
+    100% calc(100% - max(0rem, calc(var(--cut-field) - --spacing(0.1)))),
+    calc(100% - max(0rem, calc(var(--cut-field) - --spacing(0.1)))) 100%,
+    0 100%,
+    0 max(0rem, calc(var(--cut-field) - --spacing(0.1)))
+  );
+  transition-property: background-color, border-radius, clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-post-source-text {
+  font-size: --spacing(3.5);
+  line-height: 1.6;
+  color: var(--blog-post-body);
+}

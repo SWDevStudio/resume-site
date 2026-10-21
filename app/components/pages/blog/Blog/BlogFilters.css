@@ -1,0 +1,83 @@
+@reference "~/assets/css/main.css";
+
+.blog-filters-list {
+  @apply m-0 flex list-none flex-wrap p-0;
+  gap: --spacing(2);
+}
+
+.blog-filter {
+  --blog-filter-cut: --spacing(1.25);
+  --blog-filter-ink: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+  --blog-filter-line: color-mix(in oklab, var(--color-primary) 45%, transparent);
+  --blog-filter-edge: color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  --blog-filter-fill: transparent;
+  --blog-filter-border: var(--blog-filter-edge);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --blog-filter-cut: 0rem;
+    --blog-filter-line: color-mix(in oklab, var(--color-accent) 70%, transparent);
+  }
+
+  --blog-filter-active-fill: color-mix(in oklab, var(--color-primary) 8%, var(--color-base-200));
+
+  :where([data-theme="cyber-sakura"]) & {
+    --blog-filter-active-fill: color-mix(in oklab, var(--color-primary) 10%, var(--color-base-200));
+  }
+
+  @apply relative isolate inline-flex cursor-pointer appearance-none items-center border-0 bg-transparent p-0;
+  gap: --spacing(2);
+  min-height: --spacing(10);
+  padding-inline: --spacing(4);
+  font: inherit;
+  font-size: --spacing(3.5);
+  color: var(--blog-filter-ink);
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property: color, outline-color;
+
+  &::before {
+    @apply absolute inset-0 -z-1;
+    content: "";
+    background-color: var(--blog-filter-fill);
+    border: --spacing(0.25) solid var(--blog-filter-border);
+    border-radius: var(--radius-selector);
+    clip-path: polygon(
+      var(--blog-filter-cut) 0,
+      100% 0,
+      100% calc(100% - var(--blog-filter-cut)),
+      calc(100% - var(--blog-filter-cut)) 100%,
+      0 100%,
+      0 var(--blog-filter-cut)
+    );
+    transition-property: background-color, border-color, border-radius, clip-path;
+  }
+
+  &[aria-pressed="true"] {
+    --blog-filter-ink: var(--color-base-content);
+    --blog-filter-fill: var(--blog-filter-active-fill);
+    --blog-filter-border: var(--blog-filter-line);
+  }
+
+  @variant hover {
+    --blog-filter-ink: var(--color-base-content);
+    --blog-filter-border: var(--blog-filter-line);
+  }
+
+  @variant focus-visible {
+    --blog-filter-ink: var(--color-base-content);
+    --blog-filter-border: var(--blog-filter-line);
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before {
+      @apply transition-none;
+    }
+  }
+}
+
+.blog-filter-count {
+  font-size: --spacing(3);
+  color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+}

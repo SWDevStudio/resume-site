@@ -1,0 +1,65 @@
+@reference "~/assets/css/main.css";
+
+.blog-post-code {
+  --blog-post-code-line: color-mix(in oklab, var(--color-primary) 45%, transparent);
+  --blog-post-code-bg: var(--color-base-100);
+  --blog-post-code-cut: var(--cut-field);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --blog-post-code-line: color-mix(in oklab, var(--color-accent) 70%, transparent);
+    --blog-post-code-bg: var(--color-base-content);
+  }
+
+  @apply m-0;
+  padding: --spacing(0.25);
+  background-color: var(--blog-post-code-line);
+  border-radius: var(--radius-field);
+  clip-path: polygon(
+    var(--blog-post-code-cut) 0,
+    100% 0,
+    100% calc(100% - var(--blog-post-code-cut)),
+    calc(100% - var(--blog-post-code-cut)) 100%,
+    0 100%,
+    0 var(--blog-post-code-cut)
+  );
+  transition-property: background-color, border-radius, clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-post-code-body {
+  --blog-post-code-inner-cut: max(0rem, calc(var(--blog-post-code-cut) - --spacing(0.1)));
+
+  @apply block overflow-x-auto font-body font-light whitespace-pre;
+  padding: --spacing(4.5) --spacing(5);
+  font-size: --spacing(3.5);
+  line-height: 1.7;
+  color: #fcfcf2;
+  background-color: var(--blog-post-code-bg);
+  border-radius: max(0rem, calc(var(--radius-field) - --spacing(0.25)));
+  clip-path: polygon(
+    var(--blog-post-code-inner-cut) 0,
+    100% 0,
+    100% calc(100% - var(--blog-post-code-inner-cut)),
+    calc(100% - var(--blog-post-code-inner-cut)) 100%,
+    0 100%,
+    0 var(--blog-post-code-inner-cut)
+  );
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: calc(--spacing(0.5) * -1);
+  transition-property: background-color, border-radius, clip-path, outline-color;
+
+  &::-webkit-scrollbar-track {
+    margin-inline: --spacing(2);
+  }
+
+  @variant focus-visible {
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}

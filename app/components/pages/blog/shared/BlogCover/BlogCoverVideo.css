@@ -1,0 +1,130 @@
+@reference "~/assets/css/main.css";
+
+@property --blog-cover-play-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --blog-cover-play-via {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --blog-cover-play-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.blog-cover-video-layer {
+  @apply absolute inset-0;
+}
+
+.blog-cover-video-title {
+  @apply absolute font-body font-normal whitespace-nowrap text-base-content opacity-90;
+  left: 7%;
+  top: 12%;
+  font-size: calc(var(--blog-cover-size) * 0.8);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.blog-cover-play {
+  --blog-cover-play-glow: drop-shadow(
+    0 0 --spacing(3.5) color-mix(in oklch, var(--color-accent) 45%, transparent)
+  );
+
+  :where([data-theme="cyber-sakura"]) & {
+    --blog-cover-play-glow: drop-shadow(
+      0 --spacing(2.5) --spacing(5) color-mix(in oklch, var(--color-accent) 40%, transparent)
+    );
+  }
+
+  @apply absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--blog-cover-play);
+  height: var(--blog-cover-play);
+  margin: calc(var(--blog-cover-play) / -2) 0 0 calc(var(--blog-cover-play) / -2);
+  filter: var(--blog-cover-play-glow);
+  transition-property: filter;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-cover-play-body {
+  --blog-cover-play-from: var(--gradient-cta-from);
+  --blog-cover-play-via: var(--gradient-cta-via);
+  --blog-cover-play-to: var(--gradient-cta-to);
+  --blog-cover-play-ink: #09090c;
+  --blog-cover-play-cut: calc(var(--blog-cover-play) * 0.158);
+  --blog-cover-play-radius: 0rem;
+  --blog-cover-play-mask: url("./media/play-torii-synth.svg");
+
+  :where([data-theme="cyber-sakura"]) & {
+    --blog-cover-play-ink: #fff;
+    --blog-cover-play-cut: 0rem;
+    --blog-cover-play-radius: 50%;
+    --blog-cover-play-mask: url("./media/play-cyber-sakura.svg");
+  }
+
+  @apply flex size-full items-center justify-center;
+  background-image: linear-gradient(
+    90deg,
+    var(--blog-cover-play-from),
+    var(--blog-cover-play-via) 55%,
+    var(--blog-cover-play-to)
+  );
+  border-radius: var(--blog-cover-play-radius);
+  clip-path: polygon(
+    var(--blog-cover-play-cut) 0,
+    100% 0,
+    100% calc(100% - var(--blog-cover-play-cut)),
+    calc(100% - var(--blog-cover-play-cut)) 100%,
+    0 100%,
+    0 var(--blog-cover-play-cut)
+  );
+  transition-property:
+    border-radius, clip-path, --blog-cover-play-from, --blog-cover-play-via, --blog-cover-play-to;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-cover-play-icon {
+  @apply block shrink-0 mask-contain mask-center mask-no-repeat;
+  width: var(--blog-cover-play-icon);
+  height: var(--blog-cover-play-icon);
+  margin-left: var(--blog-cover-play-shift);
+  background-color: var(--blog-cover-play-ink);
+  mask-image: var(--blog-cover-play-mask);
+}
+
+.blog-cover-duration {
+  @apply absolute font-body;
+  right: --spacing(3);
+  bottom: --spacing(3);
+  padding: --spacing(0.75) --spacing(2);
+  font-size: --spacing(3);
+  color: #fcfcf2;
+  background-color: rgb(9 9 12 / 72%);
+  border-radius: var(--radius-field);
+  clip-path: polygon(
+    var(--cut-field) 0,
+    100% 0,
+    100% calc(100% - var(--cut-field)),
+    calc(100% - var(--cut-field)) 100%,
+    0 100%,
+    0 var(--cut-field)
+  );
+  transition-property: background-color, border-radius, clip-path, color;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}

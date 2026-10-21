@@ -1,0 +1,19 @@
+@reference "~/assets/css/main.css";
+
+.blog-kind-label {
+  @apply uppercase;
+  font-size: --spacing(3);
+  line-height: 1.6;
+  letter-spacing: 0.18em;
+  color: var(--page-tone-ink);
+}
+
+.blog-kind-label-part::before {
+  @apply inline-block;
+  content: "·";
+  margin-inline: 0.7em;
+}
+
+.blog-kind-label-keep {
+  @apply normal-case;
+}

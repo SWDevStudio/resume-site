@@ -1,0 +1,53 @@
+@reference "~/assets/css/main.css";
+
+.blog-post-table-scroll {
+  @apply max-w-full overflow-x-auto;
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(0.5);
+  transition-property: outline-color;
+
+  &::-webkit-scrollbar-track {
+    margin-inline: --spacing(2);
+  }
+
+  @variant focus-visible {
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-post-table {
+  @apply w-full border-collapse;
+  font-size: --spacing(3.5);
+  line-height: 1.6;
+}
+
+.blog-post-table-head {
+  @apply text-left font-normal uppercase;
+  padding: 0rem --spacing(3.5) --spacing(2) 0rem;
+  font-size: --spacing(3);
+  letter-spacing: 0.18em;
+  color: var(--blog-post-muted);
+
+  &:last-child {
+    padding-right: 0rem;
+  }
+}
+
+.blog-post-table-cell {
+  padding: --spacing(2.5) --spacing(3.5) --spacing(2.5) 0rem;
+  vertical-align: top;
+  border-top: --spacing(0.25) solid var(--blog-post-rule);
+  color: var(--blog-post-body);
+
+  &:first-child {
+    @apply font-normal whitespace-nowrap text-base-content;
+  }
+
+  &:last-child {
+    padding-right: 0rem;
+  }
+}

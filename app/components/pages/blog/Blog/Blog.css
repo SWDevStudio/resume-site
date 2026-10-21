@@ -1,0 +1,70 @@
+@reference "~/assets/css/main.css";
+
+.blog {
+  --blog-gap: --spacing(7.5);
+  --page-sections-content-gap: var(--blog-gap);
+
+  padding-bottom: --spacing(14);
+
+  @variant md {
+    --blog-gap: --spacing(9);
+    padding-bottom: --spacing(20);
+  }
+
+  @variant lg {
+    --blog-gap: --spacing(10);
+    --page-sections-nav-inset: --spacing(18);
+    padding-bottom: --spacing(24);
+  }
+}
+
+.blog-cards {
+  @apply relative grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: --spacing(10);
+
+  @variant md {
+    gap: --spacing(12);
+  }
+
+  @variant lg {
+    gap: --spacing(14);
+  }
+}
+
+.blog-list-enter-active,
+.blog-list-leave-active {
+  transition-property: opacity, translate;
+}
+
+.blog-list-move {
+  transition-property: translate;
+}
+
+.blog-list-leave-active {
+  @apply absolute inset-x-0;
+}
+
+.blog-list-enter-from,
+.blog-list-leave-to {
+  @apply opacity-0;
+  translate: 0rem --spacing(4);
+}
+
+.blog-list-enter-active,
+.blog-list-leave-active,
+.blog-list-move {
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-empty {
+  @apply m-0 font-body font-light text-base-content/66;
+  font-size: --spacing(3.5);
+  line-height: 1.75;
+}
+
+.blog-bare .page-sections-aside {
+  @apply hidden;
+}

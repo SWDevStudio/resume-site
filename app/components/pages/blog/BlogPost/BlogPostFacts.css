@@ -1,0 +1,6 @@
+@reference "~/assets/css/main.css";
+
+.blog-post-facts {
+  @apply m-0 flex list-none flex-wrap p-0;
+  gap: --spacing(2);
+}

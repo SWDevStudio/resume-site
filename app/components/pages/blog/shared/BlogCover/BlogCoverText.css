@@ -1,0 +1,24 @@
+@reference "~/assets/css/main.css";
+
+.blog-cover-text {
+  @apply absolute inset-0 flex flex-col items-start justify-center;
+  gap: --spacing(1);
+  padding-inline: 9%;
+}
+
+.blog-cover-line {
+  @apply block font-body font-normal whitespace-nowrap text-base-content;
+  font-size: calc(var(--blog-cover-size) * var(--blog-cover-line-scale));
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin-left: var(--blog-cover-line-indent);
+}
+
+.blog-cover-line-muted {
+  color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+}
+
+.blog-cover-line-strike {
+  @apply line-through opacity-70;
+  text-decoration-thickness: 0.06em;
+}

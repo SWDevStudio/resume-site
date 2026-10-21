@@ -1,0 +1,8 @@
+@reference "~/assets/css/main.css";
+
+.blog-post-text {
+  @apply m-0;
+  font-size: var(--blog-post-read-size);
+  line-height: 1.85;
+  color: var(--blog-post-body);
+}

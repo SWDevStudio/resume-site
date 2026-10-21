@@ -1,0 +1,87 @@
+@reference "~/assets/css/main.css";
+
+.blog-cover {
+  --blog-cover-height: --spacing(49);
+  --blog-cover-size: min(--spacing(7.5), 9cqw);
+  --blog-cover-term-max: --spacing(161);
+  --blog-cover-dot: --spacing(2.5);
+  --blog-cover-dot-gap: --spacing(1.5);
+  --blog-cover-head-pad: --spacing(3) --spacing(4.5);
+  --blog-cover-head-size: --spacing(3.5);
+  --blog-cover-body-pad: --spacing(4.5);
+  --blog-cover-body-gap: --spacing(2.25);
+  --blog-cover-code-size: --spacing(4);
+  --blog-cover-cursor-width: --spacing(2.5);
+  --blog-cover-cursor-height: --spacing(4.5);
+  --blog-cover-play: --spacing(19);
+  --blog-cover-play-icon: --spacing(6.75);
+  --blog-cover-play-shift: --spacing(1.25);
+
+  height: var(--blog-cover-height);
+
+  @variant md {
+    --blog-cover-height: --spacing(90);
+    --blog-cover-size: min(--spacing(14.5), 9cqw);
+  }
+
+  @variant lg {
+    --blog-cover-height: --spacing(100);
+    --blog-cover-size: min(--spacing(16), 9cqw);
+  }
+
+  :where(a:hover, a:focus-visible) & {
+    --page-cover-lift: 30%;
+  }
+}
+
+.blog-cover-hero {
+  --blog-cover-height: --spacing(55);
+
+  @variant md {
+    --blog-cover-height: --spacing(95);
+  }
+
+  @variant lg {
+    --blog-cover-height: --spacing(100);
+  }
+
+  &.blog-cover-type-video {
+    --blog-cover-height: --spacing(49);
+
+    @variant md {
+      --blog-cover-height: --spacing(99);
+    }
+
+    @variant lg {
+      --blog-cover-height: --spacing(110);
+    }
+  }
+}
+
+.blog-cover-compact {
+  --blog-cover-height: --spacing(49);
+  --blog-cover-size: min(--spacing(7.5), 9cqw);
+  --blog-cover-term-max: --spacing(114.75);
+  --blog-cover-dot: --spacing(1.75);
+  --blog-cover-dot-gap: --spacing(1.25);
+  --blog-cover-head-pad: --spacing(2) --spacing(3.25);
+  --blog-cover-head-size: --spacing(2.5);
+  --blog-cover-body-pad: --spacing(3.25);
+  --blog-cover-body-gap: --spacing(1.75);
+  --blog-cover-code-size: --spacing(3);
+  --blog-cover-cursor-width: --spacing(1.75);
+  --blog-cover-cursor-height: --spacing(3.25);
+  --blog-cover-play: --spacing(14);
+  --blog-cover-play-icon: --spacing(5);
+  --blog-cover-play-shift: --spacing(0.75);
+
+  @variant md {
+    --blog-cover-height: --spacing(42.5);
+    --blog-cover-size: min(--spacing(7.5), 9cqw);
+  }
+
+  @variant lg {
+    --blog-cover-height: --spacing(47.5);
+    --blog-cover-size: min(--spacing(8.5), 9cqw);
+  }
+}

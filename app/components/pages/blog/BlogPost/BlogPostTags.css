@@ -1,0 +1,13 @@
+@reference "~/assets/css/main.css";
+
+.blog-post-tags {
+  @apply m-0 flex list-none flex-wrap p-0;
+  gap: --spacing(2);
+}
+
+.blog-post-tags-item {
+  @variant hover {
+    --page-tone-line: 100%;
+    --page-tone-soft: 16%;
+  }
+}

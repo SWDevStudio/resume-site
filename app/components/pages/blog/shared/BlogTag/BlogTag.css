@@ -1,0 +1,38 @@
+@reference "~/assets/css/main.css";
+
+.blog-tag {
+  --blog-tag-cut: --spacing(1.25);
+  --blog-tag-size: --spacing(3.5);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --blog-tag-cut: 0rem;
+  }
+
+  @apply inline-block text-base-content;
+  padding: --spacing(1) --spacing(3);
+  font-size: var(--blog-tag-size);
+  line-height: 1.5;
+  background-color: color-mix(in oklab, var(--page-tone-accent) var(--page-tone-soft), transparent);
+  border: --spacing(0.25) solid
+    color-mix(in oklab, var(--page-tone-accent) var(--page-tone-line), transparent);
+  border-radius: var(--radius-selector);
+  clip-path: polygon(
+    var(--blog-tag-cut) 0,
+    100% 0,
+    100% calc(100% - var(--blog-tag-cut)),
+    calc(100% - var(--blog-tag-cut)) 100%,
+    0 100%,
+    0 var(--blog-tag-cut)
+  );
+  transition-property: color, background-color, border-color, border-radius, clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-tag-small {
+  --blog-tag-size: --spacing(3);
+
+  line-height: 1.6;
+}

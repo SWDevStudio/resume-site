@@ -1,0 +1,71 @@
+@reference "~/assets/css/main.css";
+
+.blog-post-related {
+  @apply flex flex-col;
+  gap: --spacing(5);
+  padding-top: var(--blog-post-gap);
+  border-top: --spacing(0.25) solid var(--blog-post-rule);
+}
+
+.blog-post-related-title {
+  @apply m-0 font-head font-normal text-base-content;
+  font-size: var(--blog-post-h2);
+  line-height: 1.2;
+}
+
+.blog-post-related-list {
+  @apply m-0 grid list-none p-0;
+  grid-template-columns: minmax(0, 1fr);
+  gap: --spacing(9);
+
+  @variant md {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: --spacing(9) --spacing(5);
+  }
+
+  @variant lg {
+    gap: --spacing(10) --spacing(6);
+  }
+}
+
+.blog-post-related-item {
+  @apply min-w-0;
+}
+
+.blog-post-related-link {
+  --blog-post-related-name: var(--color-base-content);
+
+  @apply flex min-w-0 flex-col no-underline;
+  gap: --spacing(2.5);
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property: outline-color;
+
+  @variant hover {
+    --blog-post-related-name: var(--page-tone-ink);
+  }
+
+  @variant focus-visible {
+    --blog-post-related-name: var(--page-tone-ink);
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.blog-post-related-kind {
+  @apply uppercase;
+  font-size: --spacing(3);
+  line-height: 1.6;
+  letter-spacing: 0.18em;
+  color: var(--page-tone-ink);
+}
+
+.blog-post-related-name {
+  @apply font-head;
+  font-size: --spacing(4.5);
+  line-height: 1.25;
+  color: var(--blog-post-related-name);
+}

@@ -149,5 +149,67 @@
       "stack": "Stack",
       "next": "Next project"
     }
+  },
+  "blog": {
+    "eyebrow": "05 — BLOG",
+    "title": "Blog.",
+    "titleAccent": "Tips, stories, tools",
+    "lead": "Notes from practice: articles, open-source tools and video lessons. Each one lives on its original platform and has a full version here.",
+    "filters": {
+      "nav": "Blog sections",
+      "all": "All",
+      "article": "Articles",
+      "tool": "Tools",
+      "video": "Video lessons"
+    },
+    "nav": {
+      "title": "In the blog",
+      "count": "{count} post | {count} posts"
+    },
+    "kind": {
+      "article": "Article",
+      "tool": "{name} tool",
+      "video": "Video lesson"
+    },
+    "sections": {
+      "article": "Articles",
+      "tool": "Tools on {name}",
+      "video": "Video lessons",
+      "allArticle": "All articles",
+      "allTool": "All tools",
+      "allVideo": "All videos"
+    },
+    "readTime": "{count} min read",
+    "card": {
+      "source": {
+        "article": "Original on {name}",
+        "tool": "Repository on {name}",
+        "video": "Watch on {name}"
+      },
+      "cta": {
+        "article": "Read on site",
+        "tool": "Tool overview",
+        "video": "Article version"
+      }
+    },
+    "post": {
+      "back": "Blog",
+      "nav": "On this page",
+      "source": {
+        "article": "This is the full version on my site. The article was also published on",
+        "tool": "Source code, issues and releases live on",
+        "video": "This is the text version of the video. Watch it on"
+      },
+      "stars": "★ {value} stars",
+      "forks": "{value} forks",
+      "related": "Read more",
+      "callout": {
+        "tip": "Tip",
+        "note": "Note",
+        "warning": "Warning"
+      },
+      "videoDuration": "Duration {value}"
+    },
+    "empty": "Nothing here yet"
   }
 }
