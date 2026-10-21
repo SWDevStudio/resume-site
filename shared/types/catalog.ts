@@ -17,6 +17,7 @@ export type StackRef =
     };
 
 export interface ProjectCanon {
+  isFavorite: boolean;
   id: string;
   name: string;
   tone: Tone;
@@ -35,12 +36,11 @@ export interface SkillCanon {
 export interface SkillGroupCanon {
   id: string;
   kind: "tech" | "soft";
-  skills: string[];
+  skills: SkillCanon[];
 }
 
 export interface SkillsCanon {
   groups: SkillGroupCanon[];
-  skills: SkillCanon[];
 }
 
 export interface JobCanon {
@@ -56,6 +56,10 @@ export interface ProfileCanon {
   stack: StackRef[];
   contacts: Array<"telegram" | "email">;
   updatedAt: string;
+}
+
+export interface ProjectDefinition extends ProjectCanon {
+  text: Record<Locale, ProjectText>;
 }
 
 export interface ProjectText {
@@ -115,6 +119,7 @@ export interface ResumeNarrative {
 }
 
 export interface ProjectView {
+  isFavorite: boolean;
   id: string;
   index: string;
   name: string;

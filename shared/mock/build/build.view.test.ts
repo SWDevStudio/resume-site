@@ -22,6 +22,7 @@ import {
 
 const canon: ProjectCanon[] = [
   {
+    isFavorite: true,
     id: "alpha",
     name: "Alpha",
     tone: "primary",
@@ -31,6 +32,7 @@ const canon: ProjectCanon[] = [
     stack: ["react", { id: "next-js", label: "Next.js 16" }],
   },
   {
+    isFavorite: false,
     id: "beta",
     name: "Beta",
     tone: "accent",
@@ -220,21 +222,22 @@ describe("resolveStack", () => {
 
 const skillsCanon: SkillsCanon = {
   groups: [
-    { id: "tech", kind: "tech", skills: ["vue", "react"] },
-    { id: "soft", kind: "soft", skills: ["leadership"] },
-  ],
-  skills: [
-    { id: "vue", kind: "tech", label: "Vue" },
-    { id: "react", kind: "tech" },
-    { id: "leadership", kind: "soft" },
-    { id: "stripe", kind: "tech" },
+    {
+      id: "tech",
+      kind: "tech",
+      skills: [
+        { id: "vue", kind: "tech", label: "Vue" },
+        { id: "react", kind: "tech" },
+      ],
+    },
+    { id: "soft", kind: "soft", skills: [{ id: "leadership", kind: "soft" }] },
   ],
 };
 
 const skillsText: ByLocale<SkillsText> = {
   ru: {
     groups: { tech: "Tech", soft: "Мягкие навыки" },
-    skills: { vue: "Vue.js (long)", react: "React", leadership: "Лидерство", stripe: "Stripe" },
+    skills: { vue: "Vue.js (long)", react: "React", leadership: "Лидерство" },
   },
   en: {
     groups: { soft: "Soft skills" },
@@ -275,14 +278,6 @@ describe("buildSkillGroups", () => {
     ]);
   });
 
-  it("does not show a skill that no group lists", () => {
-    const ids = buildSkillGroups(skillsSources, "ru").flatMap((group) =>
-      group.skills.map((skill) => skill.id),
-    );
-
-    expect(ids).not.toContain("stripe");
-  });
-
   it("takes the text of the locale and falls back to the Russian one entity by entity", () => {
     const groups = buildSkillGroups(skillsSources, "en");
 
@@ -311,15 +306,6 @@ describe("buildSkillGroups", () => {
     expect(() => buildSkillGroups(noSkillName, "en")).toThrow("has no name");
   });
 
-  it("throws on a skill of a group that is not in the registry", () => {
-    const broken: SkillsSources = {
-      ...skillsSources,
-      skills: { ...skillsCanon, groups: [{ id: "tech", kind: "tech", skills: ["lost"] }] },
-    };
-
-    expect(() => buildSkillGroups(broken, "ru")).toThrow('Skill "lost" of the group "tech"');
-  });
-
   it("does not change the canon", () => {
     const before = structuredClone(skillsSources);
     buildSkillGroups(skillsSources, "en");
@@ -329,12 +315,11 @@ describe("buildSkillGroups", () => {
 });
 
 describe("buildSkillRegistry", () => {
-  it("lists every skill of the canon, the ones of no group included, by id", () => {
+  it("lists every skill of the groups by id", () => {
     expect(buildSkillRegistry(skillsSources, "ru")).toEqual({
       vue: { name: "Vue.js (long)", label: "Vue" },
       react: { name: "React" },
       leadership: { name: "Лидерство" },
-      stripe: { name: "Stripe" },
     });
   });
 
@@ -344,9 +329,10 @@ describe("buildSkillRegistry", () => {
   });
 
   it("gives resolveStack the short label of a skill and the name of one without a label", () => {
-    expect(
-      resolveStack(["vue", "react", "stripe"], buildSkillRegistry(skillsSources, "en")),
-    ).toEqual(["Vue", "React", "Stripe"]);
+    expect(resolveStack(["vue", "react"], buildSkillRegistry(skillsSources, "en"))).toEqual([
+      "Vue",
+      "React",
+    ]);
   });
 
   it("throws on a skill without a name", () => {

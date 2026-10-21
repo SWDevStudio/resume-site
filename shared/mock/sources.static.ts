@@ -1,25 +1,12 @@
-import type {
-  ProjectCanon,
-  ProjectsText,
-  ResumeSources,
-  SkillsCanon,
-  SkillsText,
-} from "../types/catalog";
+import type { ResumeSources, SkillsText } from "../types/catalog";
 import { DEFAULT_LOCALE, type Locale } from "../../app/assets/const/locale";
 import { buildSkillRegistry } from "./build/skills";
-import projects from "../../app/assets/data/canon/projects.json";
-import skills from "../../app/assets/data/canon/skills.json";
-import enProjectsText from "../../app/assets/data/en/projects.json";
-import enResume from "../../app/assets/data/en/resume.json";
-import enSkillsText from "../../app/assets/data/en/skills.json";
-import ruProjectsText from "../../app/assets/data/ru/projects.json";
-import ruResume from "../../app/assets/data/ru/resume.json";
-import ruSkillsText from "../../app/assets/data/ru/skills.json";
-
-const projectsText: Record<"ru" | "en", ProjectsText> = {
-  ru: ruProjectsText,
-  en: enProjectsText,
-};
+import { projects, projectsText } from "../../app/assets/data/projects";
+import skills from "../../app/assets/data/canon/skills";
+import enResume from "../../app/assets/data/en/resume";
+import enSkillsText from "../../app/assets/data/en/skills";
+import ruResume from "../../app/assets/data/ru/resume";
+import ruSkillsText from "../../app/assets/data/ru/skills";
 
 const skillsText: Record<"ru" | "en", SkillsText> = {
   ru: ruSkillsText,
@@ -27,13 +14,12 @@ const skillsText: Record<"ru" | "en", SkillsText> = {
 };
 
 export function staticSources(locale: Locale = DEFAULT_LOCALE): ResumeSources {
-  const skillsCanon = skills as SkillsCanon;
   return {
-    projects: projects as ProjectCanon[],
+    projects,
     projectsText,
-    skills: skillsCanon,
+    skills,
     skillsText,
-    registry: buildSkillRegistry({ skills: skillsCanon, skillsText }, locale),
+    registry: buildSkillRegistry({ skills, skillsText }, locale),
     resume: { ru: ruResume, en: enResume },
   };
 }

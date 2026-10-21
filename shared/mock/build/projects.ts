@@ -18,6 +18,7 @@ export function buildProjects(src: ProjectsSources, locale: Locale): ProjectView
     });
     return {
       id: project.id,
+      isFavorite: project.isFavorite,
       index: String(position + 1).padStart(2, "0"),
       name: project.name,
       tone: project.tone,

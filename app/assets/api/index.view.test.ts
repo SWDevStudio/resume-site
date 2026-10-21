@@ -1,0 +1,111 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { LOCALES, type Locale } from "~/assets/const";
+import enResume from "~/assets/data/en/resume";
+import ruResume from "~/assets/data/ru/resume";
+import { $api } from "./index";
+import { buildProjects, buildResume, buildSkillGroups } from "#shared/mock/build";
+import { staticSources } from "#shared/mock/sources.static";
+
+const state = vi.hoisted(() => ({ locale: "ru" }));
+
+vi.mock("./locale", () => ({ resolveLocale: () => state.locale }));
+
+beforeEach(() => {
+  state.locale = "ru";
+});
+
+describe("$api.profile.fetchResume", () => {
+  it("loads the data of the locale the api resolves itself", async () => {
+    const withSkills = (resume: { skills: object; projects: object }) => ({
+      ...resume,
+      skills: expect.objectContaining({ ...resume.skills, groups: expect.any(Array) }),
+      projects: expect.objectContaining({ ...resume.projects, items: expect.any(Array) }),
+    });
+
+    expect(await $api.profile.fetchResume()).toEqual(withSkills(ruResume));
+    state.locale = "en";
+    expect(await $api.profile.fetchResume()).toEqual(withSkills(enResume));
+    expect((await $api.profile.fetchResume()).profile.lastName).toBe("Malakhov");
+    state.locale = "ru";
+    expect((await $api.profile.fetchResume()).profile.lastName).toBe("Малахов");
+  });
+
+  it("takes no locale from the caller", () => {
+    expect($api.profile.fetchResume.length).toBe(0);
+    expect($api.projects.fetchList.length).toBe(0);
+    expect($api.skills.fetchGroups.length).toBe(0);
+  });
+
+  it("loads lazily and returns a promise", () => {
+    expect($api.profile.fetchResume()).toBeInstanceOf(Promise);
+    expect($api.projects.fetchList()).toBeInstanceOf(Promise);
+    expect($api.skills.fetchGroups()).toBeInstanceOf(Promise);
+  });
+});
+
+describe.each(LOCALES)("the client and the server build the same data in %s", (locale: Locale) => {
+  it("gives the page the same resume, project list and skill groups as the server builders", async () => {
+    state.locale = locale;
+    const sources = staticSources(locale);
+
+    expect(await $api.profile.fetchResume()).toEqual(buildResume(sources, locale));
+    expect(await $api.projects.fetchList()).toEqual(buildProjects(sources, locale));
+    expect(await $api.skills.fetchGroups()).toEqual(buildSkillGroups(sources, locale));
+  });
+});
+
+describe("$api.projects.fetchList", () => {
+  it("returns the projects in the language of the locale", async () => {
+    const ru = await $api.projects.fetchList();
+    state.locale = "en";
+    const en = await $api.projects.fetchList();
+
+    expect(ru.map((project) => project.id)).toEqual(en.map((project) => project.id));
+    expect(ru[0]!.subtitle).toBe("МАРКЕТПЛЕЙС ОДЕЖДЫ · ДОСТАВКА ИЗ США");
+    expect(en[0]!.subtitle).toBe("FASHION MARKETPLACE · US DELIVERY");
+    expect(ru[0]!.name).toBe(en[0]!.name);
+  });
+});
+
+describe("$api.skills.fetchGroups", () => {
+  it("returns the groups in the language of the locale", async () => {
+    const ru = await $api.skills.fetchGroups();
+    state.locale = "en";
+    const en = await $api.skills.fetchGroups();
+
+    expect(ru.map((group) => group.id)).toEqual(["frontend", "backend", "lead", "additional"]);
+    expect(en.map((group) => group.id)).toEqual(ru.map((group) => group.id));
+    expect(ru.find((group) => group.id === "lead")!.name).toBe("Лидерство и soft skills");
+    expect(en.find((group) => group.id === "lead")!.name).toBe("Lead & soft skills");
+    expect(ru.find((group) => group.id === "frontend")!.name).toBe("Frontend");
+  });
+
+  it("gives the same groups to the home slide and to the resume", async () => {
+    for (const locale of LOCALES) {
+      state.locale = locale;
+      const groups = await $api.skills.fetchGroups();
+      const resume = await $api.profile.fetchResume();
+
+      expect(resume.skills.groups).toEqual(
+        groups.map((group) => ({
+          id: group.id,
+          name: group.name,
+          terms: group.terms,
+          skills: group.skills.map((skill) => ({ id: skill.id, name: skill.name })),
+        })),
+      );
+    }
+  });
+
+  it("resolves the stack of every project from the registry of the skills", async () => {
+    for (const locale of LOCALES) {
+      state.locale = locale;
+      const groups = await $api.skills.fetchGroups();
+      const names = groups.flatMap((group) => group.skills.map((skill) => skill.name));
+      const stack = (await $api.projects.fetchList()).flatMap((project) => project.stack);
+
+      expect(stack.length).toBeGreaterThan(0);
+      for (const name of stack) expect(names).toContain(name);
+    }
+  });
+});
