@@ -1,0 +1,53 @@
+@reference "~/assets/css/main.css";
+
+.page-sections {
+  --page-sections-header: --spacing(23);
+  --page-sections-gap: --spacing(8);
+  --page-sections-offset: calc(var(--page-sections-header) + var(--page-sections-gap));
+  --page-sections-nav-width: --spacing(70);
+  --page-sections-nav-inset: 0rem;
+  --page-sections-column-gap: --spacing(24);
+
+  @variant md {
+    --page-sections-header: --spacing(23.5);
+  }
+
+  @variant lg {
+    --page-sections-header: --spacing(17.5);
+  }
+
+  @apply grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "nav" "content";
+  padding-top: var(--page-sections-header);
+
+  @variant lg {
+    grid-template-columns: minmax(0, 1fr) var(--page-sections-nav-width);
+    grid-template-areas: "content nav";
+    column-gap: var(--page-sections-column-gap);
+    align-items: start;
+  }
+}
+
+.page-sections-content {
+  @apply flex min-w-0 flex-col;
+  grid-area: content;
+  gap: var(--page-sections-content-gap, 0rem);
+}
+
+.page-sections-aside {
+  @apply relative z-1 min-w-0;
+  grid-area: nav;
+  padding-top: --spacing(7);
+
+  @variant lg {
+    align-self: stretch;
+    padding-top: var(--page-sections-nav-inset);
+  }
+}
+
+:root:has(.page-sections) {
+  @variant motion-safe {
+    scroll-behavior: smooth;
+  }
+}

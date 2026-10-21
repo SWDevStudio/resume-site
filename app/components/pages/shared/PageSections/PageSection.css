@@ -1,0 +1,146 @@
+@reference "~/assets/css/main.css";
+
+.page-section {
+  --page-section-gap: --spacing(3.5);
+  --page-section-size: --spacing(5);
+  --page-section-leading: 1.2;
+  --page-section-line: color-mix(in oklab, var(--color-base-content) 12%, transparent);
+
+  @apply flex flex-col;
+  gap: var(--page-section-gap);
+}
+
+.page-section-root {
+  --page-section-gap: --spacing(7);
+  --page-section-size: --spacing(7.5);
+  --page-section-leading: 1.15;
+
+  @variant md {
+    --page-section-size: --spacing(9);
+  }
+
+  @variant lg {
+    --page-section-size: --spacing(10);
+  }
+
+  & + & {
+    border-top: var(--page-section-divider, --spacing(0.25)) solid var(--page-section-line);
+    margin-top: var(--page-section-margin, --spacing(11));
+    padding-top: var(--page-section-padding, --spacing(11));
+  }
+}
+
+.page-section-level-3 {
+  --page-section-size: --spacing(5);
+
+  @variant md {
+    --page-section-size: --spacing(5.5);
+  }
+
+  @variant lg {
+    --page-section-size: --spacing(6);
+  }
+}
+
+.page-section-level-4,
+.page-section-level-5,
+.page-section-level-6 {
+  --page-section-size: --spacing(4.5);
+
+  @variant lg {
+    --page-section-size: --spacing(5);
+  }
+}
+
+.page-section-heading {
+  @apply m-0 font-head font-normal text-base-content;
+  font-size: var(--page-section-size);
+  line-height: var(--page-section-leading);
+  scroll-margin-top: var(--page-sections-offset, 0rem);
+}
+
+.page-section-label + .page-section-heading {
+  scroll-margin-top: calc(
+    var(--page-sections-offset, 0rem) + --spacing(3) * 1.8 +
+      var(--page-section-label-gap, --spacing(2.5))
+  );
+}
+
+.page-section-label {
+  @apply block;
+  margin-bottom: calc(var(--page-section-label-gap, --spacing(2.5)) - var(--page-section-gap));
+  font-size: --spacing(3);
+  line-height: 1.8;
+  letter-spacing: 0.3em;
+  color: var(--color-primary-ink);
+}
+
+.page-section-heading-split {
+  @apply flex flex-wrap items-baseline justify-between;
+  gap: --spacing(1.5) --spacing(5);
+}
+
+.page-section-heading-inline .page-section-meta {
+  margin-inline-start: --spacing(2);
+}
+
+.page-section-heading-hidden {
+  @apply sr-only;
+}
+
+.page-section-head {
+  @apply flex flex-wrap items-baseline justify-between;
+  gap: var(--page-section-end-gap, --spacing(2) --spacing(5));
+}
+
+.page-section-end {
+  @apply flex shrink-0 items-center;
+}
+
+.page-section-meta {
+  @apply font-body font-light;
+  font-size: var(--page-section-meta-size, --spacing(3));
+  line-height: 1.8;
+  letter-spacing: 0.08em;
+  color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+}
+
+.page-section-rule {
+  --page-section-rule-radius: 0rem;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --page-section-rule-radius: --spacing(0.75);
+  }
+
+  @apply relative block;
+  height: --spacing(0.25);
+  margin-top: calc(var(--page-section-rule-gap, --spacing(4)) - var(--page-section-gap));
+  background-color: var(--page-section-line);
+
+  &::before {
+    @apply absolute;
+    content: "";
+    top: --spacing(-0.25);
+    left: 0;
+    width: --spacing(14);
+    height: --spacing(0.75);
+    background-color: var(--color-primary);
+    border-radius: var(--page-section-rule-radius);
+    transition-property: background-color, border-radius;
+  }
+
+  @variant motion-reduce {
+    &::before {
+      @apply transition-none;
+    }
+  }
+}
+
+.page-section-body {
+  @apply flex flex-col;
+  gap: var(--page-section-gap);
+}
+
+.page-section-body:empty {
+  @apply hidden;
+}

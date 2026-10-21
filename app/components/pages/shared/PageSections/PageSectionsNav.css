@@ -1,0 +1,286 @@
+@reference "~/assets/css/main.css";
+
+.page-sections-nav {
+  --page-sections-nav-line: color-mix(in oklab, var(--color-primary) 45%, transparent);
+  --page-sections-nav-fill: var(--color-base-200);
+  --page-sections-nav-muted: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+  --page-sections-nav-rule: color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  --page-sections-nav-marker: var(--color-primary);
+  --page-sections-nav-marker-radius: 0rem;
+  --page-sections-nav-marker-glow: 0 0 --spacing(2)
+    color-mix(in oklab, var(--color-primary) 70%, transparent);
+  --page-sections-nav-chevron: url("./media/chevron-torii-synth.svg");
+  --page-sections-nav-shift: --spacing(-2);
+  --page-sections-nav-scale: 1;
+  --page-sections-nav-clip-open: inset(--spacing(-12));
+  --page-sections-nav-clip-closed: inset(0rem 0rem 100% 0rem);
+  --page-sections-nav-shadow: drop-shadow(
+    0 0 --spacing(4) color-mix(in oklab, var(--color-accent) 12%, transparent)
+  );
+
+  :where([data-theme="cyber-sakura"]) & {
+    --page-sections-nav-line: color-mix(in oklab, var(--color-accent) 70%, transparent);
+    --page-sections-nav-marker-radius: --spacing(1);
+    --page-sections-nav-marker-glow: 0 0 --spacing(2) transparent;
+    --page-sections-nav-chevron: url("./media/chevron-cyber-sakura.svg");
+    --page-sections-nav-shift: --spacing(-3);
+    --page-sections-nav-scale: 0.96;
+    --page-sections-nav-clip-closed: inset(--spacing(-12));
+    --page-sections-nav-shadow: drop-shadow(
+      0 --spacing(3.5) --spacing(8) color-mix(in oklab, var(--color-accent) 28%, transparent)
+    );
+  }
+
+  --page-sections-nav-cut: var(--cut-field);
+  --page-sections-nav-radius: var(--radius-field);
+  --page-sections-nav-head-pad: --spacing(3.5) --spacing(4.5);
+  --page-sections-nav-panel-pad: --spacing(3.5) --spacing(4.5);
+
+  @apply relative isolate font-body font-light text-base-content;
+
+  @variant lg {
+    --page-sections-nav-cut: var(--cut-box);
+    --page-sections-nav-radius: var(--radius-box);
+    --page-sections-nav-head-pad: --spacing(5.5) --spacing(5.5) 0rem;
+    --page-sections-nav-panel-pad: --spacing(3.5) --spacing(5.5) --spacing(6);
+
+    @apply sticky flex flex-col;
+    top: var(--page-sections-nav-top, var(--page-sections-offset));
+    max-height: calc(
+      100svh - var(--page-sections-nav-top, var(--page-sections-offset)) - var(--page-sections-gap)
+    );
+  }
+}
+
+.page-sections-nav-frame {
+  @apply pointer-events-none absolute inset-0 -z-1;
+  background-color: var(--page-sections-nav-line);
+  border-radius: var(--page-sections-nav-radius);
+  clip-path: polygon(
+    var(--page-sections-nav-cut) 0,
+    100% 0,
+    100% calc(100% - var(--page-sections-nav-cut)),
+    calc(100% - var(--page-sections-nav-cut)) 100%,
+    0 100%,
+    0 var(--page-sections-nav-cut)
+  );
+  transition-property: background-color, border-radius, clip-path;
+
+  &::before {
+    @apply absolute;
+    content: "";
+    inset: --spacing(0.25);
+    background-color: var(--page-sections-nav-fill);
+    border-radius: max(0rem, calc(var(--page-sections-nav-radius) - --spacing(0.25)));
+    clip-path: polygon(
+      max(0rem, calc(var(--page-sections-nav-cut) - --spacing(0.1))) 0,
+      100% 0,
+      100% calc(100% - max(0rem, calc(var(--page-sections-nav-cut) - --spacing(0.1)))),
+      calc(100% - max(0rem, calc(var(--page-sections-nav-cut) - --spacing(0.1)))) 100%,
+      0 100%,
+      0 max(0rem, calc(var(--page-sections-nav-cut) - --spacing(0.1)))
+    );
+    transition-property: background-color, border-radius, clip-path;
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before {
+      @apply transition-none;
+    }
+  }
+}
+
+.page-sections-nav-head {
+  @apply flex w-full cursor-pointer appearance-none items-center justify-between border-0 bg-transparent text-left;
+  gap: --spacing(3);
+  padding: var(--page-sections-nav-head-pad);
+  font: inherit;
+  color: inherit;
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: calc(--spacing(0.5) * -1);
+  transition-property: outline-color;
+
+  @variant focus-visible {
+    outline-color: var(--color-brand);
+  }
+
+  @variant lg {
+    @apply cursor-default;
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.page-sections-nav-text {
+  @apply flex min-w-0 flex-col;
+  gap: --spacing(1);
+}
+
+.page-sections-nav-title {
+  @apply font-head text-base-content;
+  font-size: --spacing(4.5);
+  line-height: 1.2;
+}
+
+.page-sections-nav-summary {
+  @apply truncate;
+  font-size: --spacing(3);
+  line-height: 1.4;
+  color: var(--page-sections-nav-muted);
+
+  @variant lg {
+    @apply hidden;
+  }
+}
+
+.page-sections-nav-chevron {
+  @apply shrink-0;
+  width: --spacing(4.5);
+  height: --spacing(4.5);
+  background-color: var(--color-primary-ink);
+  mask-image: var(--page-sections-nav-chevron);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  transition-property: transform, background-color;
+
+  .page-sections-nav-open & {
+    transform: rotate(180deg);
+  }
+
+  @variant lg {
+    @apply hidden;
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.page-sections-nav-panel {
+  @apply absolute inset-x-0 isolate origin-top;
+  top: calc(100% + --spacing(2));
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(var(--page-sections-nav-shift)) scale(var(--page-sections-nav-scale));
+  clip-path: var(--page-sections-nav-clip-closed);
+  filter: var(--page-sections-nav-shadow);
+  transition-property: opacity, visibility, transform, clip-path, filter;
+
+  .page-sections-nav-open & {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    clip-path: var(--page-sections-nav-clip-open);
+  }
+
+  @variant lg {
+    @apply static flex min-h-0 flex-1 flex-col;
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+    filter: none;
+
+    & > .page-sections-nav-frame {
+      @apply hidden;
+    }
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.page-sections-nav-scroll {
+  @apply min-h-0 overflow-y-auto;
+  max-height: min(60svh, --spacing(100));
+  padding: var(--page-sections-nav-panel-pad);
+
+  &::-webkit-scrollbar-track {
+    margin-block: --spacing(2);
+  }
+
+  @variant lg {
+    @apply flex-1;
+    max-height: none;
+  }
+}
+
+.page-sections-nav-list {
+  @apply m-0 list-none;
+  padding: 0rem 0rem 0rem --spacing(4);
+  border-left: --spacing(0.25) solid var(--page-sections-nav-rule);
+}
+
+.page-sections-nav-item > .page-sections-nav-list {
+  padding-left: --spacing(3.5);
+  border-left: 0;
+}
+
+.page-sections-nav-link {
+  @apply relative block no-underline;
+  padding-block: --spacing(1.25);
+  font-size: --spacing(3.5);
+  line-height: 1.4;
+  color: var(--page-sections-nav-muted);
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(0.5);
+  transition-property: color, outline-color;
+
+  &::before {
+    @apply absolute;
+    content: "";
+    inset-block: --spacing(1);
+    left: calc(var(--page-sections-depth) * --spacing(-3.5) + --spacing(-4.25));
+    width: --spacing(0.5);
+    border-radius: var(--page-sections-nav-marker-radius);
+    background-color: var(--page-sections-nav-marker);
+    box-shadow: var(--page-sections-nav-marker-glow);
+    opacity: 0;
+    transform: scaleY(0.4);
+    transition-property: opacity, transform, background-color, border-radius, box-shadow;
+  }
+
+  @variant hover {
+    color: var(--color-base-content);
+
+    &::before {
+      opacity: 0.5;
+      transform: scaleY(0.7);
+    }
+  }
+
+  @variant focus-visible {
+    color: var(--color-base-content);
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    &,
+    &::before {
+      @apply transition-none;
+    }
+  }
+}
+
+.page-sections-nav-link-active {
+  color: var(--color-base-content);
+
+  &::before,
+  &:hover::before {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.page-sections-nav-label {
+  @apply block;
+
+  @variant lg {
+    @apply truncate;
+  }
+}

@@ -136,5 +136,8 @@
     "tagline": "fast, thoughtful web products",
     "copyright": "© {year} Michael · SOWA_DEV. All rights reserved.",
     "top": "Back to top"
+  },
+  "pageSections": {
+    "count": "{count} section | {count} sections"
   }
 }
