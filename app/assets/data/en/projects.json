@@ -1,0 +1,35 @@
+{
+  "linkPlaceholder": "[link]",
+  "tags": {
+    "e-commerce": "E-commerce",
+    "full-stack": "Full-Stack",
+    "payments": "Payments",
+    "seo": "SEO",
+    "accounts": "Accounts",
+    "booking": "Booking",
+    "mobile-first": "Mobile first"
+  },
+  "items": {
+    "qwixit": {
+      "subtitle": "FASHION MARKETPLACE · US DELIVERY",
+      "description": "E-commerce platform for clothing, footwear and accessories from global brands, delivered across Russia.",
+      "previewAlt": "Qwixit website preview",
+      "role": "[Your role and scope on the project]",
+      "result": "[Measurable result: speed, conversion, revenue]"
+    },
+    "brendmart": {
+      "subtitle": "ONLINE STORE · CUSTOMER ACCOUNTS",
+      "description": "A fast, SEO-friendly store with personal accounts, order history and a convenient checkout.",
+      "previewAlt": "Brendmart website preview",
+      "role": "Senior Frontend Developer: frontend architecture of the store (SSR + SPA, ~160k unique users per month) and mentoring of 2 developers.",
+      "result": "Load time of the main pages (catalog, product page) reduced by ~37% according to Lighthouse."
+    },
+    "pine-ridge": {
+      "subtitle": "BOOKING SITE · GLAMPING RESORT",
+      "description": "A mobile-first site with online booking, availability calendar and fast-loading galleries.",
+      "previewAlt": "Pine Ridge website preview",
+      "role": "[Your role and scope on the project]",
+      "result": "[Measurable result: speed, conversion, revenue]"
+    }
+  }
+}

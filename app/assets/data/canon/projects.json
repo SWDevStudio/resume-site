@@ -1,0 +1,29 @@
+[
+  {
+    "id": "qwixit",
+    "name": "Qwixit",
+    "tone": "primary",
+    "url": "https://qwixit.com/",
+    "preview": "qwixit.svg",
+    "tags": ["e-commerce", "full-stack", "payments", "seo"],
+    "stack": ["next-js", "type-script", "node-js", "postgre-sql", "stripe"]
+  },
+  {
+    "id": "brendmart",
+    "name": "Brendmart",
+    "tone": "secondary",
+    "url": "https://brendmart.com/",
+    "preview": "brendmart.svg",
+    "tags": ["e-commerce", "seo", "accounts"],
+    "stack": ["next-js", "type-script", "node-js", "postgre-sql", "stripe"]
+  },
+  {
+    "id": "pine-ridge",
+    "name": "Pine Ridge",
+    "tone": "accent",
+    "url": null,
+    "preview": "pine-ridge.svg",
+    "tags": ["booking", "seo", "mobile-first"],
+    "stack": ["next-js", "type-script", "node-js", "postgre-sql", "stripe"]
+  }
+]
