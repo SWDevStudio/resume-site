@@ -1,0 +1,6 @@
+@reference "~/assets/css/main.css";
+
+.resume-experience {
+  @apply flex flex-col;
+  gap: --spacing(8.5);
+}

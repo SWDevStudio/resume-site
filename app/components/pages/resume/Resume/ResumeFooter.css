@@ -1,0 +1,55 @@
+@reference "~/assets/css/main.css";
+
+.resume-footer {
+  @apply flex flex-wrap justify-between;
+  gap: --spacing(3);
+  margin-top: --spacing(16);
+  padding: --spacing(6) 0rem --spacing(8);
+  border-top: --spacing(0.25) solid var(--resume-line);
+  font-size: --spacing(3);
+  letter-spacing: 0.08em;
+  color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+
+  @variant md {
+    padding-bottom: --spacing(10);
+  }
+
+  @variant lg {
+    padding-bottom: --spacing(12);
+  }
+}
+
+.resume-footer-top {
+  @apply inline-flex items-center uppercase no-underline;
+  gap: --spacing(2.5);
+  letter-spacing: 0.2em;
+  color: var(--color-primary-ink);
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property: color, outline-color;
+
+  @variant focus-visible {
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.resume-footer-icon {
+  @apply shrink-0;
+  width: --spacing(2.5);
+  aspect-ratio: 12 / 16;
+  translate: 0rem 0rem;
+  transition-property: translate, color, background-color;
+
+  .resume-footer-top:hover &,
+  .resume-footer-top:focus-visible & {
+    translate: 0rem --spacing(-0.5);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}

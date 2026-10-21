@@ -1,0 +1,88 @@
+@reference "~/assets/css/main.css";
+
+.resume-project {
+  --resume-project-line: color-mix(in oklab, var(--color-accent) 45%, transparent);
+  --resume-project-soft: 8%;
+  --resume-project-tag-cut: --spacing(1.25);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --resume-project-line: color-mix(in oklab, var(--color-accent) 60%, transparent);
+    --resume-project-soft: 10%;
+    --resume-project-tag-cut: 0rem;
+  }
+
+  @apply flex flex-col;
+  gap: --spacing(2.5);
+  padding-left: --spacing(5);
+  border-left: --spacing(0.5) solid var(--resume-project-line);
+}
+
+.resume-project-head {
+  @apply flex flex-wrap items-baseline justify-between;
+  gap: --spacing(1.5) --spacing(5);
+}
+
+.resume-project-title {
+  @apply m-0 font-head font-normal text-base-content;
+  font-size: --spacing(5);
+  line-height: 1.25;
+
+  @variant md {
+    font-size: --spacing(5.5);
+  }
+}
+
+.resume-project-index {
+  @apply font-body font-light;
+  margin-right: --spacing(1.5);
+  font-size: --spacing(3.5);
+  color: var(--color-primary-ink);
+}
+
+.resume-project-name {
+  font-family: "Righteous", sans-serif;
+}
+
+.resume-project-link {
+  font-size: --spacing(3);
+  letter-spacing: 0.08em;
+  color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+}
+
+.resume-project-subtitle {
+  font-size: --spacing(3);
+  letter-spacing: 0.14em;
+  color: var(--color-primary-ink);
+}
+
+.resume-project-tags {
+  @apply m-0 flex list-none flex-wrap p-0;
+  gap: --spacing(1.5);
+}
+
+.resume-project-tag {
+  @apply text-base-content;
+  padding: --spacing(0.75) --spacing(2.5);
+  font-size: --spacing(3);
+  line-height: 1.5;
+  background-color: color-mix(
+    in oklab,
+    var(--color-primary) var(--resume-project-soft),
+    transparent
+  );
+  border: --spacing(0.25) solid var(--resume-project-line);
+  border-radius: var(--radius-selector);
+  clip-path: polygon(
+    var(--resume-project-tag-cut) 0,
+    100% 0,
+    100% calc(100% - var(--resume-project-tag-cut)),
+    calc(100% - var(--resume-project-tag-cut)) 100%,
+    0 100%,
+    0 var(--resume-project-tag-cut)
+  );
+  transition-property: color, background-color, border-color, border-radius, clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}

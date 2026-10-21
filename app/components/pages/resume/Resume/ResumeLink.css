@@ -1,0 +1,41 @@
+@reference "~/assets/css/main.css";
+
+.resume-link {
+  --resume-link-ink: var(--color-base-content);
+  --resume-link-line: var(--color-primary);
+  --resume-link-thickness: --spacing(0.25);
+
+  color: var(--resume-link-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--resume-link-line);
+  text-decoration-thickness: var(--resume-link-thickness);
+  text-underline-offset: --spacing(1);
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property: color, text-decoration-color, text-decoration-thickness, outline-color;
+
+  &[href] {
+    @variant hover {
+      --resume-link-ink: var(--color-primary-ink);
+      --resume-link-line: var(--color-brand);
+      --resume-link-thickness: --spacing(0.5);
+    }
+
+    @variant focus-visible {
+      --resume-link-ink: var(--color-primary-ink);
+      --resume-link-line: var(--color-brand);
+      --resume-link-thickness: --spacing(0.5);
+      outline-color: var(--color-brand);
+    }
+
+    @variant active {
+      --resume-link-ink: var(--color-base-content);
+      --resume-link-line: var(--color-primary-ink);
+      --resume-link-thickness: --spacing(0.5);
+    }
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}

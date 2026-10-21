@@ -1,0 +1,6 @@
+@reference "~/assets/css/main.css";
+
+.resume-projects {
+  @apply flex flex-col;
+  gap: --spacing(7);
+}

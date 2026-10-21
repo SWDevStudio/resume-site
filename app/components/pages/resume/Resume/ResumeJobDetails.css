@@ -1,0 +1,14 @@
+@reference "~/assets/css/main.css";
+
+.resume-block {
+  @apply flex flex-col;
+  gap: --spacing(2.5);
+}
+
+.resume-block-title {
+  @apply m-0 font-body font-normal text-brand-ink uppercase;
+  margin-top: --spacing(1.5);
+  font-size: --spacing(3.5);
+  letter-spacing: 0.14em;
+  line-height: 1.8;
+}

@@ -1,0 +1,54 @@
+@reference "~/assets/css/main.css";
+
+.resume-list {
+  --resume-marker-width: --spacing(2.25);
+  --resume-marker-height: --spacing(0.75);
+  --resume-marker-radius: 0rem;
+  --resume-marker-skew: skewX(-30deg);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --resume-marker-width: --spacing(1.5);
+    --resume-marker-height: --spacing(1.5);
+    --resume-marker-radius: 50%;
+    --resume-marker-skew: none;
+  }
+
+  @apply m-0 flex list-none flex-col p-0;
+  gap: var(--resume-list-gap, --spacing(2.5));
+}
+
+.resume-list-loose {
+  --resume-list-gap: --spacing(3);
+}
+
+.resume-list-tight {
+  --resume-list-gap: --spacing(2);
+}
+
+.resume-list-item {
+  @apply relative;
+  padding-left: --spacing(6);
+
+  &::before {
+    @apply absolute;
+    content: "";
+    left: --spacing(0.5);
+    top: 0.78em;
+    width: var(--resume-marker-width);
+    height: var(--resume-marker-height);
+    background-color: var(--color-primary);
+    border-radius: var(--resume-marker-radius);
+    transform: var(--resume-marker-skew);
+    transition-property: background-color, border-radius, width, height, transform;
+  }
+
+  @variant motion-reduce {
+    &::before {
+      @apply transition-none;
+    }
+  }
+}
+
+.resume-list-lead {
+  @apply font-normal text-base-content;
+}

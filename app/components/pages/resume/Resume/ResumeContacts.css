@@ -1,0 +1,29 @@
+@reference "~/assets/css/main.css";
+
+.resume-contacts {
+  @apply m-0 grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: --spacing(2.5) --spacing(6);
+  font-size: --spacing(3.5);
+
+  @variant md {
+    grid-template-columns: --spacing(30) minmax(0, 1fr);
+  }
+}
+
+.resume-contacts-label {
+  @apply uppercase;
+  padding-top: --spacing(0.5);
+  font-size: --spacing(3);
+  letter-spacing: 0.14em;
+  color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+}
+
+.resume-contacts-value {
+  @apply m-0 text-base-content;
+  margin-bottom: --spacing(1.5);
+
+  @variant md {
+    margin-bottom: 0rem;
+  }
+}

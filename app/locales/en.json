@@ -125,6 +125,7 @@
     }
   },
   "resume": {
+    "nav": "On this page",
     "actions": {
       "pdf": "DOWNLOAD PDF",
       "md": "FOR LLM · MD",

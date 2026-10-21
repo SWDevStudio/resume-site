@@ -1,0 +1,64 @@
+@reference "~/assets/css/main.css";
+
+.resume-header {
+  @apply flex flex-col;
+  gap: --spacing(4.5);
+  padding-top: --spacing(2);
+
+  @variant md {
+    padding-top: --spacing(6);
+  }
+
+  @variant lg {
+    padding-top: --spacing(12);
+  }
+}
+
+.resume-caption {
+  font-size: --spacing(3);
+  letter-spacing: 0.3em;
+  line-height: 1.8;
+  color: var(--color-primary-ink);
+}
+
+.resume-title {
+  @apply m-0 font-head font-normal text-base-content;
+  font-size: --spacing(10);
+  line-height: 1.02;
+
+  @variant md {
+    font-size: --spacing(13);
+  }
+
+  @variant lg {
+    font-size: --spacing(16);
+  }
+}
+
+.resume-title-accent {
+  color: var(--color-primary-ink);
+}
+
+.resume-role {
+  @apply m-0 font-head text-base-content;
+  font-size: --spacing(4.5);
+  line-height: 1.3;
+
+  @variant md {
+    font-size: --spacing(5);
+  }
+}
+
+.resume-role-stack {
+  font-family: "Righteous", sans-serif;
+}
+
+.resume-role-focus {
+  color: var(--color-brand-ink);
+}
+
+.resume-rule {
+  height: --spacing(0.25);
+  margin: --spacing(2) 0rem --spacing(1);
+  background-color: var(--resume-line);
+}
