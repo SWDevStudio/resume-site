@@ -39,6 +39,39 @@ beforeAll(async () => {
   await document.fonts.load('400 1em "Martian Mono"');
 });
 
+describe("text skills", () => {
+  it("renders a skill without an icon inside the same tile frame", async () => {
+    const screen = await render(() => h(UiSkillTile, { label: "REST API" }));
+
+    expect(screen.container.querySelector(".skill-tile-frame")).not.toBeNull();
+    expect(screen.container.querySelector(".skill-tile-deco")).not.toBeNull();
+    expect(screen.container.querySelector(".skill-tile-text")?.textContent?.trim()).toBe(
+      "REST API",
+    );
+    expect(screen.container.querySelector("img")).toBeNull();
+  });
+
+  it("animates a translated text skill and removes the previous layer", async () => {
+    const label = ref("Team management");
+    const screen = await render(() => h(UiSkillTile, { label: label.value }));
+
+    label.value = "Team leadership";
+    await nextTick();
+
+    expect(screen.container.querySelector(".skill-tile-leave")?.textContent?.trim()).toBe(
+      "Team management",
+    );
+    expect(screen.container.querySelector(".skill-tile-enter")?.textContent?.trim()).toBe(
+      "Team leadership",
+    );
+    for (const animation of document.getAnimations()) animation.finish();
+    await expect.poll(() => screen.container.querySelectorAll(".skill-tile-layer").length).toBe(1);
+    expect(screen.container.querySelector(".skill-tile-label")?.textContent).toBe(
+      "Team leadership",
+    );
+  });
+});
+
 describe.each(themes)("%s", (theme) => {
   beforeEach(() => {
     document.documentElement.dataset.theme = theme;

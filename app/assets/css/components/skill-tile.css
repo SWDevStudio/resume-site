@@ -685,6 +685,13 @@
   line-height: normal;
 }
 
+@utility skill-tile-text {
+  & .skill-tile-label {
+    @apply px-3 text-center whitespace-normal;
+    overflow-wrap: anywhere;
+  }
+}
+
 @utility skill-tile-fx {
   @apply pointer-events-none absolute opacity-0;
   inset: var(--skill-tile-inset);
