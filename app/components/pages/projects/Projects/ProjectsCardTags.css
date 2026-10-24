@@ -7,6 +7,7 @@
 
 .projects-card-tag {
   --projects-card-tag-cut: --spacing(1.25);
+  --projects-card-tag-bleed: --spacing(0.5);
 
   :where([data-theme="cyber-sakura"]) & {
     --projects-card-tag-cut: 0rem;
@@ -21,12 +22,16 @@
     color-mix(in oklab, var(--page-tone-accent) var(--page-tone-line), transparent);
   border-radius: var(--radius-selector);
   clip-path: polygon(
-    var(--projects-card-tag-cut) 0,
-    100% 0,
-    100% calc(100% - var(--projects-card-tag-cut)),
-    calc(100% - var(--projects-card-tag-cut)) 100%,
-    0 100%,
-    0 var(--projects-card-tag-cut)
+    calc(var(--projects-card-tag-cut) + var(--projects-card-tag-bleed))
+      calc(0% - var(--projects-card-tag-bleed)),
+    calc(100% + var(--projects-card-tag-bleed)) calc(0% - var(--projects-card-tag-bleed)),
+    calc(100% + var(--projects-card-tag-bleed))
+      calc(100% - var(--projects-card-tag-cut) - var(--projects-card-tag-bleed)),
+    calc(100% - var(--projects-card-tag-cut) - var(--projects-card-tag-bleed))
+      calc(100% + var(--projects-card-tag-bleed)),
+    calc(0% - var(--projects-card-tag-bleed)) calc(100% + var(--projects-card-tag-bleed)),
+    calc(0% - var(--projects-card-tag-bleed))
+      calc(var(--projects-card-tag-cut) + var(--projects-card-tag-bleed))
   );
   transition-property: color, background-color, border-color, border-radius, clip-path;
 

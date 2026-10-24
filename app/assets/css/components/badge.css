@@ -15,6 +15,7 @@
   --badge-fill: var(--color-base-300);
   --badge-ink: var(--color-base-content);
   --badge-border: --spacing(0.25);
+  --badge-bleed: --spacing(0.5);
 
   @apply relative isolate inline-flex items-center gap-2 whitespace-nowrap;
   @apply font-body leading-3.5 font-light tracking-[.06em] text-(--badge-ink);
@@ -28,12 +29,12 @@
     content: "";
     border-radius: var(--radius-selector);
     clip-path: polygon(
-      var(--cut-selector) 0,
-      100% 0,
-      100% calc(100% - var(--cut-selector)),
-      calc(100% - var(--cut-selector)) 100%,
-      0 100%,
-      0 var(--cut-selector)
+      calc(var(--cut-selector) + var(--badge-bleed)) calc(0% - var(--badge-bleed)),
+      calc(100% + var(--badge-bleed)) calc(0% - var(--badge-bleed)),
+      calc(100% + var(--badge-bleed)) calc(100% - var(--cut-selector) - var(--badge-bleed)),
+      calc(100% - var(--cut-selector) - var(--badge-bleed)) calc(100% + var(--badge-bleed)),
+      calc(0% - var(--badge-bleed)) calc(100% + var(--badge-bleed)),
+      calc(0% - var(--badge-bleed)) calc(var(--cut-selector) + var(--badge-bleed))
     );
     transition-property: background-color, border-radius, clip-path;
   }

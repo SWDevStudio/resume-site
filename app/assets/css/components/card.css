@@ -50,6 +50,8 @@
 }
 
 @utility card-frame {
+  --card-bleed: --spacing(0.5);
+
   @apply pointer-events-none absolute inset-0 -z-1;
   filter: var(--card-glow);
   transition-property: filter;
@@ -60,12 +62,12 @@
     content: "";
     border-radius: var(--radius-box);
     clip-path: polygon(
-      var(--cut-box) 0,
-      100% 0,
-      100% calc(100% - var(--cut-box)),
-      calc(100% - var(--cut-box)) 100%,
-      0 100%,
-      0 var(--cut-box)
+      calc(var(--cut-box) + var(--card-bleed)) calc(0% - var(--card-bleed)),
+      calc(100% + var(--card-bleed)) calc(0% - var(--card-bleed)),
+      calc(100% + var(--card-bleed)) calc(100% - var(--cut-box) - var(--card-bleed)),
+      calc(100% - var(--cut-box) - var(--card-bleed)) calc(100% + var(--card-bleed)),
+      calc(0% - var(--card-bleed)) calc(100% + var(--card-bleed)),
+      calc(0% - var(--card-bleed)) calc(var(--cut-box) + var(--card-bleed))
     );
     transition-property: background-color, border-radius, clip-path;
   }
@@ -81,12 +83,16 @@
     inset: var(--card-border);
     border-radius: calc(var(--radius-box) - var(--card-border));
     clip-path: polygon(
-      calc(var(--cut-box) - var(--card-border) * 0.586) 0,
-      100% 0,
-      100% calc(100% - var(--cut-box) + var(--card-border) * 0.586),
-      calc(100% - var(--cut-box) + var(--card-border) * 0.586) 100%,
-      0 100%,
-      0 calc(var(--cut-box) - var(--card-border) * 0.586)
+      calc(var(--cut-box) - var(--card-border) * 0.586 + var(--card-bleed))
+        calc(0% - var(--card-bleed)),
+      calc(100% + var(--card-bleed)) calc(0% - var(--card-bleed)),
+      calc(100% + var(--card-bleed))
+        calc(100% - var(--cut-box) + var(--card-border) * 0.586 - var(--card-bleed)),
+      calc(100% - var(--cut-box) + var(--card-border) * 0.586 - var(--card-bleed))
+        calc(100% + var(--card-bleed)),
+      calc(0% - var(--card-bleed)) calc(100% + var(--card-bleed)),
+      calc(0% - var(--card-bleed))
+        calc(var(--cut-box) - var(--card-border) * 0.586 + var(--card-bleed))
     );
     background-color: var(--card-fill);
   }
