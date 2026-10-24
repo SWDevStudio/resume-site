@@ -46,6 +46,8 @@ const STYLE_ID = "atom-morph-style";
 const ASYNC_SELECTOR = "[data-atom-async]";
 const SKIP_SELECTOR = "[data-atom-skip]";
 const HIDDEN_ATTR = "data-atom-hidden";
+const CLIP_ATTR = "data-atom-clip";
+const RAMP_STEPS = 24;
 const SKIP_TAGS = new Set(["SCRIPT", "STYLE", "NOSCRIPT", "TEXTAREA", "OPTION"]);
 
 type AtomGroup = "static" | "async";
@@ -69,12 +71,23 @@ interface Glyph {
   spacing: string;
   step: number;
   color: number;
+  ramp: Ramp | null;
   fixed: boolean;
+}
+
+interface Ramp {
+  colors: Uint8Array;
+  dirX: number;
+  dirY: number;
+  centerX: number;
+  centerY: number;
+  length: number;
 }
 
 interface Collected {
   dots: Dots;
   elements: Set<HTMLElement>;
+  clips: Set<HTMLElement>;
 }
 
 interface Mapped {
@@ -103,6 +116,7 @@ interface Layer {
   key: string;
   root: Element | null;
   elements: Set<HTMLElement>;
+  clips: Set<HTMLElement>;
   source: Dots;
   order: Uint32Array;
   bornAt: number;
@@ -163,6 +177,18 @@ function toRgba(css: string): [number, number, number, number] {
   return [r, g, b, a];
 }
 
+function readColor(css: string): [number, number, number] | null {
+  probeContext = getContext(probeContext, 1, 1);
+  probeContext.fillStyle = "#010203";
+  probeContext.fillStyle = css;
+  const first = probeContext.fillStyle;
+  probeContext.fillStyle = "#030201";
+  probeContext.fillStyle = css;
+  if (first === "#010203" && probeContext.fillStyle === "#030201") return null;
+  const [r, g, b] = toRgba(css);
+  return [r, g, b];
+}
+
 function createPalette() {
   const colors: string[] = [];
   const cache = new Map<string, number>();
@@ -220,6 +246,164 @@ function buildMask(glyph: Glyph): Float32Array {
   return mask;
 }
 
+function splitTop(value: string, separator: RegExp): string[] {
+  const parts: string[] = [];
+  let depth = 0;
+  let start = 0;
+  for (let i = 0; i < value.length; i += 1) {
+    const char = value.charAt(i);
+    if (char === "(") depth += 1;
+    else if (char === ")") depth -= 1;
+    else if (depth === 0 && separator.test(char)) {
+      parts.push(value.slice(start, i));
+      start = i + 1;
+    }
+  }
+  parts.push(value.slice(start));
+  return parts.map((part) => part.trim()).filter(Boolean);
+}
+
+const ANGLE_UNITS: Record<string, number> = {
+  deg: Math.PI / 180,
+  grad: Math.PI / 200,
+  rad: 1,
+  turn: Math.PI * 2,
+};
+
+function gradientDirection(arg: string, width: number, height: number): [number, number] | null {
+  const angle = /^(-?[\d.]+)(deg|grad|rad|turn)$/.exec(arg);
+  if (angle) {
+    const radians = Number.parseFloat(angle[1] as string) * (ANGLE_UNITS[angle[2] as string] ?? 0);
+    return [Math.sin(radians), -Math.cos(radians)];
+  }
+  if (!arg.startsWith("to ")) return null;
+  const sx = Number(arg.includes("right")) - Number(arg.includes("left"));
+  const sy = Number(arg.includes("bottom")) - Number(arg.includes("top"));
+  const x = sy === 0 ? sx : sx * height;
+  const y = sx === 0 ? sy : sy * width;
+  const norm = Math.hypot(x, y) || 1;
+  return [x / norm, y / norm];
+}
+
+type Rgb = [number, number, number];
+
+interface Stop {
+  color: Rgb;
+  at: number;
+}
+
+function gradientStops(args: string[], length: number): Stop[] | null {
+  const stops: {
+    color: Rgb;
+    at: number | null;
+  }[] = [];
+  args.forEach((arg) => {
+    const tokens = splitTop(arg, /\s/);
+    const positions: number[] = [];
+    while (tokens.length > 1 && /^-?[\d.]+(%|px)$/.test(tokens.at(-1) as string)) {
+      const token = tokens.pop() as string;
+      const value = Number.parseFloat(token);
+      positions.unshift(token.endsWith("%") ? value / 100 : value / length);
+    }
+    const color = readColor(tokens.join(" "));
+    if (!color) return;
+    if (positions.length === 0) stops.push({ color, at: null });
+    positions.forEach((at) => stops.push({ color, at }));
+  });
+  const head = stops[0];
+  const tail = stops.at(-1);
+  if (!head || !tail) return null;
+  head.at ??= 0;
+  tail.at ??= 1;
+  let previous = 0;
+  stops.forEach((stop, i) => {
+    if (stop.at === null) {
+      const gap = stops.slice(i).findIndex((item) => item.at !== null);
+      const to = stops[i + gap]?.at ?? 1;
+      stop.at = previous + (to - previous) / (gap + 1);
+    }
+    previous = Math.max(previous, stop.at);
+    stop.at = previous;
+  });
+  return stops as Stop[];
+}
+
+function sampleStops(stops: Stop[], t: number): Rgb {
+  const next = stops.findIndex((stop) => stop.at >= t);
+  const b = stops[next] ?? (stops.at(-1) as Stop);
+  const a = stops[next - 1];
+  if (!a || b.at <= a.at) return b.color;
+  const k = (t - a.at) / (b.at - a.at);
+  return a.color.map((value, i) => Math.round(value + ((b.color[i] as number) - value) * k)) as Rgb;
+}
+
+function buildRamp(palette: Palette, element: HTMLElement): Ramp | null {
+  const marked = element.hasAttribute(CLIP_ATTR);
+  element.removeAttribute(CLIP_ATTR);
+  const image = getComputedStyle(element).backgroundImage;
+  if (marked) element.setAttribute(CLIP_ATTR, "");
+  const layer = splitTop(image, /,/)[0] ?? "";
+  const match = /^((?:repeating-)?(?:linear|radial|conic)-gradient)\((.*)\)$/s.exec(layer);
+  if (!match) return null;
+  const rect = element.getBoundingClientRect();
+  if (rect.width === 0 || rect.height === 0) return null;
+  const args = splitTop(match[2] as string, /,/);
+  const linear = match[1] === "linear-gradient";
+  const direction = linear ? gradientDirection(args[0] ?? "", rect.width, rect.height) : null;
+  const [dirX, dirY] = linear ? (direction ?? [0, 1]) : [0, 0];
+  const length = Math.abs(rect.width * dirX) + Math.abs(rect.height * dirY) || 1;
+  const stops = gradientStops(direction ? args.slice(1) : args, length);
+  if (!stops) return null;
+  return {
+    colors: Uint8Array.from({ length: RAMP_STEPS }, (_, i) => {
+      const [r, g, b] = sampleStops(stops, linear ? i / (RAMP_STEPS - 1) : 0.5);
+      return palette.index(`rgb(${r} ${g} ${b})`);
+    }),
+    dirX,
+    dirY,
+    centerX: rect.left + rect.width / 2,
+    centerY: rect.top + rect.height / 2,
+    length,
+  };
+}
+
+function rampColor(ramp: Ramp, x: number, y: number): number {
+  const t = ((x - ramp.centerX) * ramp.dirX + (y - ramp.centerY) * ramp.dirY) / ramp.length + 0.5;
+  const step = Math.round(Math.min(Math.max(t, 0), 1) * (RAMP_STEPS - 1));
+  return ramp.colors[step] as number;
+}
+
+function isClipText(style: CSSStyleDeclaration): boolean {
+  return /\btext\b/.test(`${style.backgroundClip} ${style.webkitBackgroundClip}`);
+}
+
+function clipOwner(element: Element, cache: Map<Element, HTMLElement | null>): HTMLElement | null {
+  const path: Element[] = [];
+  let result: HTMLElement | null = null;
+  let current: Element | null = element;
+  while (current) {
+    const known = cache.get(current);
+    if (known !== undefined) {
+      result = known;
+      break;
+    }
+    path.push(current);
+    if (current instanceof HTMLElement && isClipText(getComputedStyle(current))) {
+      result = current;
+      break;
+    }
+    current = current.parentElement;
+  }
+  path.forEach((item) => cache.set(item, result));
+  return result;
+}
+
+function findClips(root: HTMLElement): HTMLElement[] {
+  return [root, ...Array.from(root.querySelectorAll<HTMLElement>("*"))].filter((element) =>
+    isClipText(getComputedStyle(element)),
+  );
+}
+
 function transformChar(char: string, transform: string): string {
   if (transform === "uppercase") return char.toUpperCase();
   if (transform === "lowercase") return char.toLowerCase();
@@ -248,6 +432,109 @@ function isViewportAnchored(element: Element, cache: Map<Element, boolean>): boo
   return result;
 }
 
+interface Box {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
+}
+
+const OPEN_BOX: Box = { left: -Infinity, top: -Infinity, right: Infinity, bottom: Infinity };
+
+function intersectBox(a: Box, b: Box): Box {
+  return {
+    left: Math.max(a.left, b.left),
+    top: Math.max(a.top, b.top),
+    right: Math.min(a.right, b.right),
+    bottom: Math.min(a.bottom, b.bottom),
+  };
+}
+
+function lengthIn(value: string, size: number): number {
+  const number = Number.parseFloat(value);
+  if (Number.isNaN(number)) return 0;
+  return value.endsWith("%") ? (number / 100) * size : number;
+}
+
+function insetBox(clipPath: string, rect: DOMRect): Box {
+  const match = /^inset\((.*)\)$/.exec(clipPath);
+  if (!match) return OPEN_BOX;
+  const [top = "0px", right = top, bottom = top, left = right] = splitTop(
+    (match[1] as string).split(" round ")[0] ?? "",
+    /\s/,
+  );
+  return {
+    left: rect.left + lengthIn(left, rect.width),
+    top: rect.top + lengthIn(top, rect.height),
+    right: rect.right - lengthIn(right, rect.width),
+    bottom: rect.bottom - lengthIn(bottom, rect.height),
+  };
+}
+
+function rectBox(clip: string, rect: DOMRect): Box {
+  const match = /^rect\((.*)\)$/.exec(clip);
+  if (!match) return OPEN_BOX;
+  const [top, right, bottom, left] = splitTop(match[1] as string, /[\s,]/);
+  const edge = (value: string | undefined, fallback: number, origin: number) =>
+    !value || value === "auto" ? fallback : origin + Number.parseFloat(value);
+  return {
+    left: edge(left, rect.left, rect.left),
+    top: edge(top, rect.top, rect.top),
+    right: edge(right, rect.right, rect.left),
+    bottom: edge(bottom, rect.bottom, rect.top),
+  };
+}
+
+function overflowBox(element: HTMLElement, style: CSSStyleDeclaration, rect: DOMRect): Box {
+  const clipX = style.overflowX !== "visible";
+  const clipY = style.overflowY !== "visible";
+  const scaleX = element.offsetWidth ? rect.width / element.offsetWidth : 1;
+  const scaleY = element.offsetHeight ? rect.height / element.offsetHeight : 1;
+  const left = rect.left + element.clientLeft * scaleX;
+  const top = rect.top + element.clientTop * scaleY;
+  return {
+    left: clipX ? left : -Infinity,
+    top: clipY ? top : -Infinity,
+    right: clipX ? left + element.clientWidth * scaleX : Infinity,
+    bottom: clipY ? top + element.clientHeight * scaleY : Infinity,
+  };
+}
+
+function ownClip(element: Element, style: CSSStyleDeclaration): Box {
+  const overflows =
+    element instanceof HTMLElement &&
+    element !== document.documentElement &&
+    element !== document.body &&
+    style.display !== "inline" &&
+    style.display !== "contents" &&
+    (style.overflowX !== "visible" || style.overflowY !== "visible");
+  const inset = style.clipPath.startsWith("inset(");
+  const positioned = style.position === "absolute" || style.position === "fixed";
+  const rectClip = positioned && style.clip.startsWith("rect(");
+  if (!overflows && !inset && !rectClip) return OPEN_BOX;
+  const rect = element.getBoundingClientRect();
+  let box = overflows ? overflowBox(element, style, rect) : OPEN_BOX;
+  if (inset) box = intersectBox(box, insetBox(style.clipPath, rect));
+  if (rectClip) box = intersectBox(box, rectBox(style.clip, rect));
+  return box;
+}
+
+function clipParent(element: Element, position: string): Element | null {
+  if (position === "fixed") return null;
+  if (position === "absolute" && element instanceof HTMLElement) return element.offsetParent;
+  return element.parentElement;
+}
+
+function visibleBox(element: Element, cache: Map<Element, Box>): Box {
+  const known = cache.get(element);
+  if (known) return known;
+  const style = getComputedStyle(element);
+  const parent = clipParent(element, style.position);
+  const box = intersectBox(parent ? visibleBox(parent, cache) : OPEN_BOX, ownClip(element, style));
+  cache.set(element, box);
+  return box;
+}
+
 function collectGlyphs(
   palette: Palette,
   group: AtomGroup,
@@ -256,7 +543,11 @@ function collectGlyphs(
 ) {
   const glyphs: Glyph[] = [];
   const elements = new Set<HTMLElement>();
+  const clips = new Set<HTMLElement>();
+  const visible = new Map<Element, Box>();
   const anchored = new Map<Element, boolean>();
+  const owners = new Map<Element, HTMLElement | null>();
+  const ramps = new Map<HTMLElement, Ramp | null>();
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
   const margin = viewportHeight * VIEWPORT_MARGIN;
@@ -289,6 +580,15 @@ function collectGlyphs(
     }
 
     elements.add(element);
+    const box = visibleBox(element, visible);
+    if (
+      bounds.right <= box.left ||
+      bounds.left >= box.right ||
+      bounds.bottom <= box.top ||
+      bounds.top >= box.bottom
+    ) {
+      continue;
+    }
     const style = getComputedStyle(element);
     const fontSize = Number.parseFloat(style.fontSize);
     const font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
@@ -296,6 +596,12 @@ function collectGlyphs(
     const step = Math.min(Math.max(fontSize / 11, 1.1), 3);
     const color = palette.index(style.color);
     const fixed = isViewportAnchored(element, anchored);
+    const owner = clipOwner(element, owners);
+    if (owner) {
+      clips.add(owner);
+      if (!ramps.has(owner)) ramps.set(owner, buildRamp(palette, owner));
+    }
+    const ramp = owner ? (ramps.get(owner) ?? null) : null;
     const text = node.nodeValue ?? "";
 
     for (let i = 0; i < text.length; i += 1) {
@@ -306,6 +612,11 @@ function collectGlyphs(
       const rect = range.getBoundingClientRect();
       if (rect.width === 0 || rect.height === 0) continue;
       if (rect.bottom < -margin || rect.top > viewportHeight + margin) continue;
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      if (centerX < box.left || centerX > box.right || centerY < box.top || centerY > box.bottom) {
+        continue;
+      }
       glyphs.push({
         left: rect.left,
         top: rect.top,
@@ -316,12 +627,13 @@ function collectGlyphs(
         spacing,
         step,
         color,
+        ramp,
         fixed,
       });
     }
   }
 
-  return { glyphs, elements };
+  return { glyphs, elements, clips };
 }
 
 function collectDots(
@@ -330,7 +642,7 @@ function collectDots(
   root: Element | null,
   allowed: Set<HTMLElement> | null,
 ): Collected {
-  const { glyphs, elements } = collectGlyphs(palette, group, root, allowed);
+  const { glyphs, elements, clips } = collectGlyphs(palette, group, root, allowed);
   const density = Math.max(1, Math.sqrt((glyphs.length * DOTS_PER_GLYPH) / MAX_PARTICLES));
   glyphs.forEach((glyph) => {
     glyph.step *= density;
@@ -350,10 +662,12 @@ function collectDots(
     for (let i = 0; i < mask.length; i += 2) {
       if (keep < 1 && Math.random() > keep) continue;
       const jitter = glyph.step * 0.5;
-      x.push(glyph.left + (mask[i] as number) + (Math.random() - 0.5) * jitter);
-      y.push(glyph.top + (mask[i + 1] as number) + (Math.random() - 0.5) * jitter);
+      const dotX = glyph.left + (mask[i] as number) + (Math.random() - 0.5) * jitter;
+      const dotY = glyph.top + (mask[i + 1] as number) + (Math.random() - 0.5) * jitter;
+      x.push(dotX);
+      y.push(dotY);
       size.push(glyph.step * (keep < 1 ? 1 : 0.9));
-      col.push(glyph.color);
+      col.push(glyph.ramp ? rampColor(glyph.ramp, dotX, dotY) : glyph.color);
       fix.push(glyph.fixed ? 1 : 0);
     }
   });
@@ -368,6 +682,7 @@ function collectDots(
       fix: Uint8Array.from(fix),
     },
     elements,
+    clips,
   };
 }
 
@@ -399,12 +714,15 @@ function sampleFlow(x: number, y: number, t: number) {
 function ensureStyle() {
   const style = document.getElementById(STYLE_ID) ?? document.createElement("style");
   style.id = STYLE_ID;
-  const fade = `transition-property:-webkit-text-fill-color;transition-duration:${TEXT_FADE_MS}ms;transition-timing-function:linear;`;
-  const hidden = "-webkit-text-fill-color:transparent;transition-property:none;";
+  const fade = `transition-property:-webkit-text-fill-color,text-shadow,-webkit-text-stroke-color;transition-duration:${TEXT_FADE_MS}ms;transition-timing-function:linear;`;
+  const hidden =
+    "-webkit-text-fill-color:transparent;text-shadow:none;-webkit-text-stroke-color:transparent;transition-property:none;";
   const shown = "-webkit-text-fill-color:currentcolor;";
+  const clip = `[${CLIP_ATTR}]`;
   style.textContent = [
     `html[data-atoms] *{${shown}${fade}}`,
     `html[data-atoms] [${HIDDEN_ATTR}],html[data-atoms] [${HIDDEN_ATTR}] *{${hidden}}`,
+    `html[data-atoms] [${HIDDEN_ATTR}]${clip},html[data-atoms] [${HIDDEN_ATTR}] ${clip},html[data-atoms] ${clip}:has([${HIDDEN_ATTR}]){background-image:none}`,
   ].join("");
   if (!style.isConnected) document.head.append(style);
 }
@@ -425,6 +743,13 @@ function unmark(elements: Iterable<HTMLElement>) {
   for (const element of elements) element.removeAttribute(HIDDEN_ATTR);
 }
 
+function markClips(elements: Iterable<HTMLElement>, clipped: Set<HTMLElement>) {
+  for (const element of elements) {
+    element.setAttribute(CLIP_ATTR, "");
+    clipped.add(element);
+  }
+}
+
 function rootKey(root: Element): string {
   return root.getAttribute("data-atom-async") ?? "";
 }
@@ -433,6 +758,7 @@ function startAtomMorph(): AtomMorph {
   ensureStyle();
 
   const palette = createPalette();
+  const clipped = new Set<HTMLElement>();
   const viewport = { width: window.innerWidth, height: window.innerHeight };
   const ratio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO);
   const spread = Math.min(viewport.width, viewport.height) * 0.22;
@@ -522,6 +848,7 @@ function startAtomMorph(): AtomMorph {
       key: root ? rootKey(root) : "",
       root,
       elements: collected.elements,
+      clips: collected.clips,
       source,
       order: readingOrder(source),
       bornAt,
@@ -639,6 +966,8 @@ function startAtomMorph(): AtomMorph {
       layer.resolveSettled();
     });
     unmark(pendingRoots);
+    clipped.forEach((element) => element.removeAttribute(CLIP_ATTR));
+    clipped.clear();
     delete document.documentElement.dataset.atoms;
     canvas.remove();
     resolveDissolved();
@@ -784,7 +1113,9 @@ function startAtomMorph(): AtomMorph {
 
     shiftByScroll();
     const allowed = layer.group === "static" ? layer.elements : null;
-    const target = collectDots(palette, layer.group, layer.root, allowed).dots;
+    const collected = collectDots(palette, layer.group, layer.root, allowed);
+    markClips(collected.clips, clipped);
+    const target = collected.dots;
     if (target.n === 0) {
       startFading(layer, performance.now());
       await layer.settled;
@@ -889,7 +1220,11 @@ function startAtomMorph(): AtomMorph {
 
   resize();
   document.body.append(canvas);
-  layers.forEach((layer) => mark(layer.elements));
+  layers.forEach((layer) => {
+    mark(layer.elements);
+    markClips(layer.clips, clipped);
+  });
+  asyncRoots.forEach((root) => markClips(findClips(root), clipped));
   mark(pendingRoots);
   document.documentElement.dataset.atoms = "";
   window.addEventListener("resize", resize);
