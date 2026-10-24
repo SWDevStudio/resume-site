@@ -5,6 +5,7 @@ import { page } from "vitest/browser";
 import { render } from "vitest-browser-vue";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { $api } from "~/assets/api";
+import { projects as catalog } from "~/assets/data/projects";
 import en from "~/locales/en.json";
 import ru from "~/locales/ru.json";
 import DefaultLayout from "~/layouts/default.vue";
@@ -78,7 +79,9 @@ describe("slides", () => {
 
     expect(fetchList).toHaveBeenCalledTimes(1);
     expect(section("projects").getAttribute("data-atom-async")).toBe("home-projects");
-    expect(section("projects").querySelectorAll(".home-projects-card")).toHaveLength(3);
+    expect(section("projects").querySelectorAll(".home-projects-card")).toHaveLength(
+      catalog.filter((project) => project.isFavorite).length,
+    );
     fetchList.mockRestore();
   });
 

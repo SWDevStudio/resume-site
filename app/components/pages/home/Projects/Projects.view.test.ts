@@ -79,9 +79,19 @@ async function setReducedMotion(value: "reduce" | "no-preference") {
   });
 }
 
+const CARD_PROJECTS = ["qwixit", "brendmart", "tamriel-codex"];
+
+function cardSources(locale: Locale) {
+  const sources = staticSources(locale);
+  return {
+    ...sources,
+    projects: sources.projects.filter((project) => CARD_PROJECTS.includes(project.id)),
+  };
+}
+
 const lists = {
-  en: buildProjects(staticSources("en"), "en"),
-  ru: buildProjects(staticSources("ru"), "ru"),
+  en: buildProjects(cardSources("en"), "en"),
+  ru: buildProjects(cardSources("ru"), "ru"),
 };
 
 const CARD_TAGS = 3;
@@ -166,7 +176,7 @@ const dictionaries = { en, ru };
 
 beforeAll(async () => {
   await page.viewport(1440, 900);
-  await document.fonts.load('400 1em "Righteous"', "My Projects Qwixit Brendmart Pine Ridge");
+  await document.fonts.load('400 1em "Righteous"', "My Projects Qwixit Brendmart Tamriel Codex");
   await document.fonts.load('700 1em "Montserrat Alternates"', "Мои проекты");
   await document.fonts.load('300 1em "Martian Mono"', "04 — PROJECTS FASHION MARKETPLACE");
   await document.fonts.load('400 1em "Martian Mono"', "Read case LIVE SITE Читать кейс");
@@ -246,7 +256,7 @@ describe("behavior", () => {
       expect(cards.map((item) => text(item.querySelector(".card-title")))).toEqual([
         "01 Qwixit",
         "02 Brendmart",
-        "03 Pine Ridge",
+        "03 Tamriel Codex",
       ]);
       expect(cards.map((item) => text(item.querySelector(".card-subtitle")))).toEqual(
         list.map((project) => project.subtitle),
@@ -564,7 +574,7 @@ describe("behavior", () => {
     expect(links.map((item) => item.getAttribute("href"))).toEqual([
       "/projects/qwixit",
       "/projects/brendmart",
-      "/projects/pine-ridge",
+      "/projects/tamriel-codex",
     ]);
     expect(links.every((item) => item.classList.contains("btn"))).toBe(true);
     expect(links.every((item) => item.querySelector(".btn-frame") !== null)).toBe(true);

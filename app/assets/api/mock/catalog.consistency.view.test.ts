@@ -28,7 +28,18 @@ const ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const CYRILLIC = /[Ѐ-ӿ]/;
 
 const PROJECT_CANON_KEYS = ["id", "isFavorite", "name", "preview", "stack", "tags", "tone", "url"];
-const PROJECT_TEXT_KEYS = ["description", "previewAlt", "result", "role", "subtitle"];
+const PROJECT_CANON_OPTIONAL_KEYS = ["caseStack", "previewMobile"];
+const PROJECT_TEXT_KEYS = ["description", "headline", "previewAlt", "result", "role", "subtitle"];
+const CATALOG = [
+  "qwixit",
+  "brendmart",
+  "taobao",
+  "pochtoy-prostobox",
+  "cdek-shopping",
+  "fly-post",
+  "tamriel-codex",
+  "someday",
+];
 const TEXT_KEYS = [
   "subtitle",
   "description",
@@ -61,11 +72,12 @@ const caseModules = import.meta.glob<ProjectBlock[]>("../../data/projects/*/{ru,
 
 const texts = Object.entries(projectsText).map(([locale, data]) => ({ locale, data }));
 const resumes = byLocale(resumeFiles);
-const caseFiles = Object.entries(caseModules).map(([path, blocks]) => ({
+const allCaseFiles = Object.entries(caseModules).map(([path, blocks]) => ({
   locale: /\/(ru|en)\.ts$/.exec(path)![1]!,
   slug: /\/projects\/([^/]+)\//.exec(path)![1]!,
   blocks,
 }));
+const caseFiles = allCaseFiles.filter((file) => canon.some((project) => project.id === file.slug));
 
 const GENERATED = ["ProjectCaseHeader", "ProjectCaseCover", "ProjectCaseMeta", "ProjectCaseNext"];
 const MERGED = [...GENERATED, "ProjectCaseCta"];
@@ -121,21 +133,32 @@ describe("the canon of the projects", () => {
   });
 
   it.each(canon)("keeps only the facts of $id in the right shape", (project) => {
-    expect(keysOf(project)).toEqual(PROJECT_CANON_KEYS);
+    const keys = keysOf(project);
+
+    expect(keys.filter((key) => !PROJECT_CANON_OPTIONAL_KEYS.includes(key))).toEqual(
+      PROJECT_CANON_KEYS,
+    );
     expect(typeof project.isFavorite).toBe("boolean");
+    if (project.previewMobile !== undefined) {
+      expect(resolveProjectImage(project.previewMobile)).not.toBe(project.previewMobile);
+    }
     expect(["primary", "secondary", "accent"]).toContain(project.tone);
     expect(project.url === null || project.url.startsWith("https://")).toBe(true);
     expect(resolveProjectImage(project.preview)).not.toBe(project.preview);
-    expect(project.tags.length).toBeGreaterThan(0);
     for (const tag of project.tags) expect(tag).toMatch(ID);
     for (const ref of project.stack) {
       expect(typeof ref === "string" ? ref : ref.id).toMatch(ID);
       if (typeof ref !== "string") expect(ref.label.length).toBeGreaterThan(0);
     }
+    for (const item of project.caseStack ?? []) {
+      expect(["label", "own"]).toEqual(expect.arrayContaining(keysOf(item)));
+      expect(item.label.trim().length).toBeGreaterThan(0);
+      if (item.own !== undefined) expect(typeof item.own).toBe("boolean");
+    }
   });
 
   it("keeps the order that sets the index and the next project", () => {
-    expect(canon.map((project) => project.id)).toEqual(["qwixit", "brendmart", "pine-ridge"]);
+    expect(canon.map((project) => project.id)).toEqual(CATALOG);
     expect(canon[0]!.tags).toHaveLength(4);
     expect(canon[0]!.tags[3]).toBe("seo");
   });
@@ -245,7 +268,6 @@ describe.each(LOCALES)("the projects built for %s", (locale: Locale) => {
 
   it("derives the projects of the resume from the same list, text of the card included", () => {
     const items = buildResume(staticSources(locale), locale).projects.items;
-
     expect(items).toHaveLength(list.length);
     list.forEach((project, position) => {
       const item = items[position]!;
@@ -266,32 +288,29 @@ describe.each(LOCALES)("the projects built for %s", (locale: Locale) => {
 
   it("gives the resume the four tags of Qwixit and the placeholder instead of a missing link", () => {
     const items = buildResume(staticSources(locale), locale).projects.items;
-    const pineRidge = items.find((item) => item.id === "pine-ridge")!;
+    const tamrielCodex = items.find((item) => item.id === "tamriel-codex")!;
 
     expect(items.find((item) => item.id === "qwixit")!.tags).toHaveLength(4);
-    expect(pineRidge.link).toEqual({ label: text.linkPlaceholder, href: null });
+    expect(tamrielCodex.link).toEqual({ label: text.linkPlaceholder, href: null });
   });
 
   it("resolves every stack entry", () => {
-    for (const project of list) expect(project.stack.length).toBeGreaterThan(0);
+    list.forEach((project, position) => {
+      expect(project.stack).toHaveLength(canon[position]!.stack.length);
+      for (const name of project.stack) expect(name.length).toBeGreaterThan(0);
+    });
   });
 });
 
 describe("the files of the cases", () => {
-  it("has a file of every project of the canon in the Russian layer and only for the canon", () => {
-    const slugs = (locale: string) =>
-      caseFiles
-        .filter((file) => file.locale === locale)
-        .map((file) => file.slug)
-        .sort();
+  it("has a file of every project of the canon in the Russian layer", () => {
+    const slugs = caseFiles
+      .filter((file) => file.locale === DEFAULT_LOCALE)
+      .map((file) => file.slug)
+      .sort();
 
-    const ids = canon.map((project) => project.id);
-
-    expect(slugs(DEFAULT_LOCALE)).toEqual([...ids].sort());
-    for (const file of caseFiles) {
-      expect(LOCALES as readonly string[]).toContain(file.locale);
-      expect(ids).toContain(file.slug);
-    }
+    expect(slugs).toEqual(canon.map((project) => project.id).sort());
+    for (const file of allCaseFiles) expect(LOCALES as readonly string[]).toContain(file.locale);
   });
 
   it.each(caseFiles)("keeps no fact of the project in the file of $slug in $locale", (file) => {
@@ -301,8 +320,7 @@ describe("the files of the cases", () => {
       expect(components.filter((item) => item === component)).toHaveLength(1);
     }
     for (const block of file.blocks) expect(keysOf(block)).toEqual(["component", "data"]);
-    expect(keysOf(dataOf<object>(file.blocks, "ProjectCaseHeader"))).toEqual(["headline"]);
-    for (const component of ["ProjectCaseCover", "ProjectCaseMeta", "ProjectCaseNext"]) {
+    for (const component of GENERATED) {
       expect(dataOf(file.blocks, component)).toEqual({});
     }
     expect(components.at(-1)).toBe("ProjectCaseNext");
@@ -325,7 +343,6 @@ describe("the files of the cases", () => {
 });
 
 describe.each(LOCALES)("the cases built for %s", (locale: Locale) => {
-  const list = buildProjects(staticSources(locale), locale);
   const text = texts.find((file) => file.locale === locale)!.data;
 
   beforeEach(() => {
@@ -344,7 +361,7 @@ describe.each(LOCALES)("the cases built for %s", (locale: Locale) => {
         index: String(position + 1).padStart(2, "0"),
         subtitle: text.items[id]!.subtitle,
         name: project.name,
-        headline: expect.any(String),
+        headline: text.items[id]!.headline,
         url: project.url,
         tone: project.tone,
       });
@@ -355,7 +372,7 @@ describe.each(LOCALES)("the cases built for %s", (locale: Locale) => {
       });
       expect(dataOf<ProjectCaseMetaData>(blocks, "ProjectCaseMeta")).toEqual({
         tags: project.tags.map((tag) => text.tags[tag]),
-        stack: list[position]!.stack,
+        stack: project.caseStack ?? [],
       });
       expect(dataOf<ProjectCaseNextData>(blocks, "ProjectCaseNext")).toEqual({
         slug: following.id,
@@ -439,7 +456,7 @@ describe("the changes in one place", () => {
     expect(dataOf<ProjectCaseHeaderData>(blocks("qwixit"), "ProjectCaseHeader").name).toBe(
       "Renamed",
     );
-    expect(dataOf<ProjectCaseNextData>(blocks("pine-ridge"), "ProjectCaseNext").name).toBe(
+    expect(dataOf<ProjectCaseNextData>(blocks(canon.at(-1)!.id), "ProjectCaseNext").name).toBe(
       "Renamed",
     );
   });

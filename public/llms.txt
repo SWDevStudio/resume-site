@@ -21,8 +21,16 @@
 - [Project Qwixit, Russian](/ru/projects/qwixit): case study in Russian
 - [Project Brendmart, English](/en/projects/brendmart): case study
 - [Project Brendmart, Russian](/ru/projects/brendmart): case study in Russian
-- [Project Pine Ridge, English](/en/projects/pine-ridge): case study
-- [Project Pine Ridge, Russian](/ru/projects/pine-ridge): case study in Russian
+- [Project Taobao.at, English](/en/projects/taobao): case study
+- [Project Taobao.at, Russian](/ru/projects/taobao): case study in Russian
+- [Project Pochtoy & Prostobox, English](/en/projects/pochtoy-prostobox): case study
+- [Project Pochtoy & Prostobox, Russian](/ru/projects/pochtoy-prostobox): case study in Russian
+- [Project CDEK.Shopping, English](/en/projects/cdek-shopping): case study
+- [Project CDEK.Shopping, Russian](/ru/projects/cdek-shopping): case study in Russian
+- [Project Fly Post, English](/en/projects/fly-post): case study
+- [Project Fly Post, Russian](/ru/projects/fly-post): case study in Russian
+- [Project Tamriel Codex, English](/en/projects/tamriel-codex): case study
+- [Project Tamriel Codex, Russian](/ru/projects/tamriel-codex): case study in Russian
 - [Blog, English](/en/blog): articles, videos and open-source tools
 - [Blog, Russian](/ru/blog): same in Russian
 

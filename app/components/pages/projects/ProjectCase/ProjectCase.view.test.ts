@@ -13,8 +13,8 @@ import { $api } from "~/assets/api";
 import { buildCase } from "~/assets/api/mock/build";
 import { staticSources } from "~/assets/api/mock/sources.static";
 import brendmartFile from "~/assets/data/projects/brendmart/en";
-import pineRidgeFile from "~/assets/data/projects/pine-ridge/en";
 import qwixitFile from "~/assets/data/projects/qwixit/en";
+import tamrielCodexFile from "~/assets/data/projects/tamriel-codex/en";
 import type {
   ProjectBlock,
   ProjectCaseCoverData,
@@ -22,6 +22,7 @@ import type {
   ProjectCaseMetaData,
   ProjectCaseNextData,
 } from "~/assets/api/types/projectCase";
+import type { ProjectStackItem } from "~/assets/api/types/catalog";
 import { setTheme } from "../../../../../test/mocks/useTheme";
 import "~/assets/css/fonts.css";
 import "~/assets/css/main.css";
@@ -46,7 +47,7 @@ const cases: CaseView[] = [
   { name: "tablet", width: 768, height: 900 },
   { name: "mobile", width: 390, height: 780 },
   { name: "brendmart", width: 1440, height: 900, slug: "brendmart" },
-  { name: "pine-ridge", width: 1440, height: 900, slug: "pine-ridge" },
+  { name: "tamriel-codex", width: 1440, height: 900, slug: "tamriel-codex" },
 ];
 
 const switchCases: CaseView[] = [
@@ -57,12 +58,12 @@ const switchCases: CaseView[] = [
 const sources = staticSources("en");
 const qwixitCase = buildCase("qwixit", sources, qwixitFile, "en")!;
 const brendmartCase = buildCase("brendmart", sources, brendmartFile, "en")!;
-const pineRidgeCase = buildCase("pine-ridge", sources, pineRidgeFile, "en")!;
+const tamrielCodexCase = buildCase("tamriel-codex", sources, tamrielCodexFile, "en")!;
 
 const caseFiles: Record<string, ProjectBlock[]> = {
   qwixit: qwixitCase,
   brendmart: brendmartCase,
-  "pine-ridge": pineRidgeCase,
+  "tamriel-codex": tamrielCodexCase,
 };
 
 function blockData<T>(blocks: ProjectBlock[], component: string) {
@@ -79,6 +80,10 @@ const projectCases = Object.entries(caseFiles).map(([slug, blocks]) => ({
 }));
 
 const qwixit = projectCases[0]!;
+
+function caseStackOf(slug: string) {
+  return sources.projects.find((project) => project.id === slug)!.caseStack ?? [];
+}
 
 function createApp(locale: Locale) {
   return createI18n({ legacy: false, locale, messages: { ru, en } });
@@ -137,6 +142,25 @@ function pickAll<T extends Element>(screen: Screen, selector: string) {
 
 function text(element: Element | null | undefined) {
   return element?.textContent?.replace(/\s+/g, " ").trim();
+}
+
+function expectStack(screen: Screen, stack: ProjectStackItem[]) {
+  const chips = pickAll(screen, ".project-case-stack-item");
+  const own = stack.map((item) => Boolean(item.own));
+
+  if (stack.length === 0) {
+    expect(pickAll(screen, ".project-case-stack")).toHaveLength(0);
+    return;
+  }
+  expect(pick(screen, ".project-case-stack-list").getAttribute("lang")).toBe("en");
+  expect(pick(screen, ".project-case-stack-list").hasAttribute("data-atom-skip")).toBe(true);
+  expect(chips).toHaveLength(stack.length);
+  expect(chips.every((chip) => chip.classList.contains("badge"))).toBe(true);
+  expect(chips.map((chip) => text(chip))).toEqual(stack.map((item) => item.label));
+  expect(chips.map((chip) => chip.classList.contains("project-case-stack-own"))).toEqual(own);
+  const dots = chips.map((chip) => chip.querySelector(".project-case-stack-dot") !== null);
+  expect(dots).toEqual(own);
+  expect(pickAll(screen, ".project-case-stack-legend")).toHaveLength(own.includes(true) ? 1 : 0);
 }
 
 function near(value: number, expected: number, tolerance = 1) {
@@ -235,11 +259,11 @@ describe("data", () => {
   it("loads the blocks of a project from the api by its slug and builds the generated ones", async () => {
     expect(await $api.projects.fetchCase("qwixit")).toEqual(qwixitCase);
     expect(await $api.projects.fetchCase("brendmart")).toEqual(brendmartCase);
-    expect(await $api.projects.fetchCase("pine-ridge")).toEqual(pineRidgeCase);
+    expect(await $api.projects.fetchCase("tamriel-codex")).toEqual(tamrielCodexCase);
     expect($api.projects.fetchCase("qwixit")).toBeInstanceOf(Promise);
   });
 
-  it.each(["unknown", "pineRidge", "", "../projects/qwixit", "qwixit.json"])(
+  it.each(["unknown", "tamrielCodex", "", "../projects/qwixit", "qwixit.json"])(
     "returns null for the unknown slug %j",
     async (slug) => {
       expect(await $api.projects.fetchCase(slug)).toBeNull();
@@ -258,11 +282,7 @@ describe("data", () => {
   });
 
   it("chains the next project and wraps around", () => {
-    expect(projectCases.map((item) => item.next.slug)).toEqual([
-      "brendmart",
-      "pine-ridge",
-      "qwixit",
-    ]);
+    expect(projectCases.map((item) => item.next.slug)).toEqual(["brendmart", "taobao", "someday"]);
   });
 
   it("skips a block of an unknown component and keeps the rest", async () => {
@@ -350,9 +370,12 @@ describe("content", () => {
       "Payments",
       "SEO",
     ]);
-    expect(text(pick(screen, ".project-case-stack"))).toBe(
-      "Stack: Next.js · TypeScript · Node.js · PostgreSQL · Stripe",
-    );
+    expect(text(pick(screen, ".project-case-stack-label"))).toBe("Stack:");
+    expect(qwixit.meta.stack).toEqual(caseStackOf("qwixit"));
+    expectStack(screen, qwixit.meta.stack);
+    const labels = pickAll(screen, ".project-case-stack-item").map((chip) => text(chip));
+    expect(labels.slice(0, 2)).toEqual(["TypeScript", "Vue 3"]);
+    expect(text(pick(screen, ".project-case-stack-legend"))).toBe("used by me");
     expect(pick(screen, ".project-case-stack [data-atom-skip]").getAttribute("lang")).toBe("en");
     expect(pick(screen, ".project-case-title [data-atom-skip]").getAttribute("lang")).toBe("en");
   });
@@ -474,6 +497,8 @@ describe("content", () => {
     expect(text(pick(screen, "h1"))).toBe(`${header.name}: ${header.headline}`);
     expect(text(pick(screen, ".project-case-label"))).toBe(`${header.index} · ${header.subtitle}`);
     expect(pickAll(screen, ".project-case-tag").map((tag) => text(tag))).toEqual(item.meta.tags);
+    expect(item.meta.stack).toEqual(caseStackOf(item.slug));
+    expectStack(screen, item.meta.stack);
     expect(pick(screen, ".project-case-cover [role='img']").getAttribute("aria-label")).toBe(
       item.cover.imageAlt,
     );
@@ -501,7 +526,7 @@ describe("content", () => {
     for (const [slug, token] of [
       ["qwixit", "--color-primary-ink"],
       ["brendmart", "--color-secondary-ink"],
-      ["pine-ridge", "--color-accent-ink"],
+      ["tamriel-codex", "--color-accent-ink"],
     ] as const) {
       const screen = await renderCase({ width: 1440, height: 900, slug });
       expect(getComputedStyle(pick(screen, ".project-case-label")).color).toBe(resolve(token));
@@ -517,39 +542,51 @@ describe("content", () => {
     expect(text(pick(screen, ".project-case-back"))).toBe(ru.projects.case.back);
     expect(text(pick(screen, ".project-case-live"))).toBe(ru.projects.case.liveSite);
     expect(text(pick(screen, ".project-case-stack-label"))).toBe(`${ru.projects.case.stack}:`);
+    expect(text(pick(screen, ".project-case-stack-legend"))).toBe(ru.projects.case.stackOwn);
     expect(text(pick(screen, ".project-case-next-label"))).toBe(`${ru.projects.case.next} · 02`);
     expect(text(pick(screen, "h1"))).toBe(`Qwixit: ${qwixit.header.headline}`);
     expect(text(pick(screen, ".page-section-heading"))).toBe("About the project");
   });
 
   it("renders the whole case and its navigation on the server", async () => {
-    const app = createSSRApp({ render: () => h(ProjectCase, { blocks: pineRidgeCase }) });
+    const tamrielCodex = projectCases.find((item) => item.slug === "tamriel-codex")!;
+    const app = createSSRApp({ render: () => h(ProjectCase, { blocks: tamrielCodexCase }) });
     app.use(createApp("en"));
     const root = document.createElement("div");
     root.innerHTML = await renderToString(app);
 
     expect(root.querySelector("h1")?.textContent?.replace(/\s+/g, " ").trim()).toBe(
-      "Pine Ridge: [headline result, e.g. from zero to 10k orders a month]",
+      `Tamriel Codex: ${tamrielCodex.header.headline}`,
     );
     expect(
       [...root.querySelectorAll(".page-sections-nav-link")].map((link) =>
         link.getAttribute("href"),
       ),
     ).toEqual([
-      "#about",
-      "#business",
+      "#role",
+      "#context",
+      "#game",
       "#situation",
       "#goal",
-      "#solution",
-      "#results",
       "#process",
-      "#design",
-      "#development",
-      "#seo",
-      "#integrations",
+      "#contents",
+      "#architecture",
+      "#exchange",
+      "#mobile",
+      "#growth",
+      "#security",
+      "#quality",
+      "#challenges",
+      "#vk-data",
+      "#rules",
+      "#qr-size",
+      "#results",
+      "#cta",
     ]);
-    expect(root.querySelectorAll("h2")).toHaveLength(2);
-    expect(root.querySelector(".project-case-next")?.getAttribute("href")).toBe("/projects/qwixit");
+    expect(root.querySelectorAll("h2")).toHaveLength(6);
+    expect(root.querySelector(".project-case-next")?.getAttribute("href")).toBe(
+      "/projects/someday",
+    );
     expect(root.querySelector(".project-case-live")?.hasAttribute("href")).toBe(false);
   });
 
