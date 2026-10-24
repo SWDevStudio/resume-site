@@ -12,6 +12,7 @@ const project = {
   text: {
     ru: {
       subtitle: "САЙТ С БРОНИРОВАНИЕМ · ГЛЭМПИНГ-КУРОРТ",
+      headline: "[headline result, e.g. from zero to 10k orders a month]",
       description:
         "Сайт в подходе mobile-first: онлайн-бронирование, календарь доступности и быстро загружающиеся галереи.",
       previewAlt: "Превью сайта Pine Ridge",
@@ -20,6 +21,7 @@ const project = {
     },
     en: {
       subtitle: "BOOKING SITE · GLAMPING RESORT",
+      headline: "[headline result, e.g. from zero to 10k orders a month]",
       description:
         "A mobile-first site with online booking, availability calendar and fast-loading galleries.",
       previewAlt: "Pine Ridge website preview",

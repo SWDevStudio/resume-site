@@ -3,9 +3,7 @@ import type { ProjectBlock } from "../../../../types/projectCase";
 const qwixit = [
   {
     component: "ProjectCaseHeader",
-    data: {
-      headline: "[headline result, e.g. from zero to 10k orders a month]",
-    },
+    data: {},
   },
   {
     component: "ProjectCaseCover",

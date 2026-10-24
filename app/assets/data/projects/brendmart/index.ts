@@ -12,6 +12,7 @@ const project = {
   text: {
     ru: {
       subtitle: "ИНТЕРНЕТ-МАГАЗИН · ЛИЧНЫЕ КАБИНЕТЫ",
+      headline: "[headline result, e.g. from zero to 10k orders a month]",
       description:
         "Быстрый магазин, удобный для SEO, с личными кабинетами, историей заказов и удобным оформлением заказа.",
       previewAlt: "Превью сайта Brendmart",
@@ -21,6 +22,7 @@ const project = {
     },
     en: {
       subtitle: "ONLINE STORE · CUSTOMER ACCOUNTS",
+      headline: "[headline result, e.g. from zero to 10k orders a month]",
       description:
         "A fast, SEO-friendly store with personal accounts, order history and a convenient checkout.",
       previewAlt: "Brendmart website preview",

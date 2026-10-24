@@ -64,6 +64,7 @@ export interface ProjectDefinition extends ProjectCanon {
 
 export interface ProjectText {
   subtitle: string;
+  headline: string;
   description: string;
   previewAlt: string;
   role: string;
@@ -129,6 +130,7 @@ export interface ProjectView {
   preview: string;
   previewAlt: string;
   subtitle: string;
+  headline: string;
   description: string;
   tags: string[];
   stack: string[];

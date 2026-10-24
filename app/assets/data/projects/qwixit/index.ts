@@ -12,6 +12,7 @@ const project = {
   text: {
     ru: {
       subtitle: "МАРКЕТПЛЕЙС ОДЕЖДЫ · ДОСТАВКА ИЗ США",
+      headline: "[headline result, e.g. from zero to 10k orders a month]",
       description:
         "Платформа электронной коммерции для одежды, обуви и аксессуаров глобальных брендов с доставкой по России.",
       previewAlt: "Превью сайта Qwixit",
@@ -20,6 +21,7 @@ const project = {
     },
     en: {
       subtitle: "FASHION MARKETPLACE · US DELIVERY",
+      headline: "[headline result, e.g. from zero to 10k orders a month]",
       description:
         "E-commerce platform for clothing, footwear and accessories from global brands, delivered across Russia.",
       previewAlt: "Qwixit website preview",
