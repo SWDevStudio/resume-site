@@ -249,6 +249,16 @@
   "seo": {
     "home": {
       "description": "Michael’s portfolio: projects, blog, resume and contacts."
+    },
+    "projects": {
+      "description": "Michael’s projects and case studies: goals, solutions and results."
+    },
+    "blog": {
+      "description": "Michael’s blog: articles, tools and video tutorials on web development."
+    },
+    "resume": {
+      "title": "Resume",
+      "description": "Michael’s resume: experience, skills and projects."
     }
   },
   "error": {
