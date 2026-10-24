@@ -9,21 +9,51 @@
         {{ tag }}
       </li>
     </ul>
-    <p class="project-case-stack">
-      <span class="project-case-stack-label">{{ t("projects.case.stack") }}:</span>
-      <span
+    <div
+      v-if="hasStack"
+      class="project-case-stack"
+    >
+      <p class="project-case-stack-label">{{ t("projects.case.stack") }}:</p>
+      <ul
+        class="project-case-stack-list"
         lang="en"
         data-atom-skip
       >
-        {{ stack }}
-      </span>
-    </p>
+        <li
+          v-for="item in items"
+          :key="item.label"
+        >
+          <UiBadge
+            class="project-case-stack-item"
+            :class="item.classes"
+          >
+            <span
+              v-if="item.own"
+              class="project-case-stack-dot"
+              aria-hidden="true"
+            />
+            {{ item.label }}
+          </UiBadge>
+        </li>
+      </ul>
+      <p
+        v-if="hasOwn"
+        class="project-case-stack-legend"
+      >
+        <span
+          class="project-case-stack-dot"
+          aria-hidden="true"
+        />
+        {{ t("projects.case.stackOwn") }}
+      </p>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import UiBadge from "~/components/ui/UiBadge/UiBadge.vue";
 import type { ProjectCaseMetaData } from "~/assets/api/types/projectCase";
 
 const props = defineProps<{
@@ -32,7 +62,15 @@ const props = defineProps<{
 
 const { t } = useI18n();
 
-const stack = computed(() => ` ${props.data.stack.join(" · ")}`);
+const items = computed(() =>
+  props.data.stack.map((item) => ({
+    label: item.label,
+    own: Boolean(item.own),
+    classes: { "badge-primary project-case-stack-own": item.own },
+  })),
+);
+const hasStack = computed(() => props.data.stack.length > 0);
+const hasOwn = computed(() => props.data.stack.some((item) => item.own));
 </script>
 
 <style src="./ProjectCaseMeta.css" />

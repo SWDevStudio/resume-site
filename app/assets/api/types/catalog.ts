@@ -16,6 +16,11 @@ export type StackRef =
       label: string;
     };
 
+export interface ProjectStackItem {
+  label: string;
+  own?: boolean;
+}
+
 export interface ProjectCanon {
   isFavorite: boolean;
   id: string;
@@ -26,6 +31,7 @@ export interface ProjectCanon {
   previewMobile?: string;
   tags: string[];
   stack: StackRef[];
+  caseStack?: ProjectStackItem[];
 }
 
 export interface SkillCanon {

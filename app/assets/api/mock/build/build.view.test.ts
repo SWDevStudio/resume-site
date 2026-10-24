@@ -30,6 +30,7 @@ const canon: ProjectCanon[] = [
     preview: "alpha/media/preview.svg",
     tags: ["one", "two"],
     stack: ["react", { id: "next-js", label: "Next.js 16" }],
+    caseStack: [{ label: "React", own: true }, { label: "Next.js 16" }],
   },
   {
     isFavorite: false,
@@ -51,15 +52,36 @@ const sources: ProjectsSources = {
       linkPlaceholder: "[ссылка]",
       tags: { one: "Один", two: "Два" },
       items: {
-        alpha: { subtitle: "А", description: "А1", previewAlt: "Ал", role: "Р1", result: "Е1" },
-        beta: { subtitle: "Б", description: "Б1", previewAlt: "Бе", role: "Р2", result: "Е2" },
+        alpha: {
+          subtitle: "А",
+          headline: "Х1",
+          description: "А1",
+          previewAlt: "Ал",
+          role: "Р1",
+          result: "Е1",
+        },
+        beta: {
+          subtitle: "Б",
+          headline: "Х2",
+          description: "Б1",
+          previewAlt: "Бе",
+          role: "Р2",
+          result: "Е2",
+        },
       },
     },
     en: {
       linkPlaceholder: "[link]",
       tags: { one: "One" },
       items: {
-        alpha: { subtitle: "A", description: "A1", previewAlt: "Al", role: "R1", result: "E1" },
+        alpha: {
+          subtitle: "A",
+          headline: "H1",
+          description: "A1",
+          previewAlt: "Al",
+          role: "R1",
+          result: "E1",
+        },
       },
     },
   },
@@ -78,6 +100,7 @@ describe("buildProjects", () => {
       url: "https://alpha.example.com/path",
       preview: "alpha/media/preview.svg",
       subtitle: "А",
+      headline: "Х1",
       description: "А1",
       previewAlt: "Ал",
       tags: ["Один", "Два"],
@@ -90,8 +113,8 @@ describe("buildProjects", () => {
   it("takes the text of the locale and falls back to the Russian one entity by entity", () => {
     const list = buildProjects(sources, "en");
 
-    expect(list[0]).toMatchObject({ subtitle: "A", tags: ["One", "Два"] });
-    expect(list[1]).toMatchObject({ subtitle: "Б", tags: ["Два"] });
+    expect(list[0]).toMatchObject({ subtitle: "A", headline: "H1", tags: ["One", "Два"] });
+    expect(list[1]).toMatchObject({ subtitle: "Б", headline: "Х2", tags: ["Два"] });
   });
 
   it("falls back to the Russian text for a locale with no file at all", () => {
@@ -130,7 +153,7 @@ describe("buildCase", () => {
     data: { id: "about", name: "About", blocks: [] },
   };
   const blocks: ProjectBlock[] = [
-    { component: "ProjectCaseHeader", data: { headline: "H" } },
+    { component: "ProjectCaseHeader", data: {} },
     { component: "ProjectCaseCover", data: {} },
     { component: "ProjectCaseMeta", data: {} },
     chapter,
@@ -145,7 +168,7 @@ describe("buildCase", () => {
           index: "01",
           subtitle: "А",
           name: "Alpha",
-          headline: "H",
+          headline: "Х1",
           url: "https://alpha.example.com/path",
           tone: "primary",
         },
@@ -156,7 +179,10 @@ describe("buildCase", () => {
       },
       {
         component: "ProjectCaseMeta",
-        data: { tags: ["Один", "Два"], stack: ["React", "Next.js 16"] },
+        data: {
+          tags: ["Один", "Два"],
+          stack: [{ label: "React", own: true }, { label: "Next.js 16" }],
+        },
       },
       chapter,
       {
@@ -172,11 +198,18 @@ describe("buildCase", () => {
     expect(next.data).toEqual({ slug: "alpha", name: "Alpha", index: "01", tone: "primary" });
   });
 
+  it("gives the meta an empty stack when the project has no case stack", () => {
+    expect(buildCase("beta", sources, blocks, "ru")![2]!.data).toEqual({
+      tags: ["Два"],
+      stack: [],
+    });
+  });
+
   it("builds the text of the locale and falls back to the Russian one", () => {
     const header = buildCase("alpha", sources, blocks, "en")![0]!;
     const meta = buildCase("alpha", sources, blocks, "en")![2]!;
 
-    expect(header.data).toMatchObject({ subtitle: "A" });
+    expect(header.data).toMatchObject({ subtitle: "A", headline: "H1" });
     expect(meta.data).toMatchObject({ tags: ["One", "Два"] });
   });
 
@@ -187,7 +220,7 @@ describe("buildCase", () => {
 
     expect(buildCase("alpha", sources, own, "ru")![0]!.data).toMatchObject({
       name: "Alpha",
-      headline: "H",
+      headline: "Х1",
       extra: 1,
     });
   });

@@ -1,4 +1,4 @@
-import type { Tone } from "./catalog";
+import type { ProjectStackItem, Tone } from "./catalog";
 
 export type ProjectCaseTone = Tone;
 
@@ -24,7 +24,7 @@ export interface ProjectCaseCoverData {
 
 export interface ProjectCaseMetaData {
   tags: string[];
-  stack: string[];
+  stack: ProjectStackItem[];
 }
 
 export interface ProjectCaseChapterData {

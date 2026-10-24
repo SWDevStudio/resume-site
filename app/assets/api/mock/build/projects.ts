@@ -63,7 +63,7 @@ export function buildCase(
       imageMobile: project.previewMobile,
       imageAlt: project.previewAlt,
     },
-    ProjectCaseMeta: { tags: project.tags, stack: project.stack },
+    ProjectCaseMeta: { tags: project.tags, stack: src.projects[position]!.caseStack ?? [] },
     ProjectCaseNext: {
       slug: next.id,
       name: next.name,

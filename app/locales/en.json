@@ -163,6 +163,7 @@
       "back": "All projects",
       "liveSite": "Live site",
       "stack": "Stack",
+      "stackOwn": "used by me",
       "next": "Next project",
       "facts": {
         "role": "Role",
