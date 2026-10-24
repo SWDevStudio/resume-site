@@ -36,4 +36,8 @@
 .the-footer-tagline {
   @apply tracking-[.04em] text-base-content/60;
   font-size: --spacing(3.5);
+
+  :where([data-theme="cyber-sakura"]) & {
+    @apply text-base-content/66;
+  }
 }

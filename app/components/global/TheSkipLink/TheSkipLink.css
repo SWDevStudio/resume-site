@@ -1,0 +1,21 @@
+@reference "~/assets/css/main.css";
+
+.the-skip-link {
+  --the-skip-link-shift: calc(-100% - --spacing(8));
+
+  @apply fixed z-60;
+  top: --spacing(3);
+  left: --spacing(3);
+  opacity: 0;
+  translate: 0rem var(--the-skip-link-shift);
+  transition-property: color, text-decoration-color, filter, opacity, padding, min-width, translate;
+
+  @variant focus-visible {
+    opacity: 1;
+    translate: 0rem 0rem;
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}

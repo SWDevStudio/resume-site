@@ -76,8 +76,10 @@ const menuId = useId();
 const rootRef = ref<HTMLElement>();
 const [isOpen, toggleOpen] = useToggle(false);
 
-const triggerLabel = computed(() => t("header.language", { name: LOCALE_NAMES[locale.value] }));
 const triggerCode = computed(() => locale.value.toUpperCase());
+const triggerLabel = computed(
+  () => `${triggerCode.value}, ${t("header.language", { name: LOCALE_NAMES[locale.value] })}`,
+);
 const menuClass = computed(() => ({ "the-header-menu-open": isOpen.value }));
 
 const menuItems = computed(() =>

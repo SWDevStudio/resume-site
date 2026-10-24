@@ -55,4 +55,8 @@
   @apply flex flex-wrap items-center justify-between tracking-[.08em] text-base-content/60;
   gap: --spacing(4);
   font-size: --spacing(3);
+
+  :where([data-theme="cyber-sakura"]) & {
+    @apply text-base-content/66;
+  }
 }

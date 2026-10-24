@@ -7,9 +7,11 @@
     <div class="home-contact-pane">
       <FormInput
         name="name"
+        type="text"
         :label="t('home.contact.form.name')"
         :placeholder="t('home.contact.form.namePlaceholder')"
         autocomplete="name"
+        aria-required="true"
       />
       <FormInput
         name="email"
@@ -17,6 +19,7 @@
         :label="t('home.contact.form.email')"
         :placeholder="t('home.contact.form.emailPlaceholder')"
         autocomplete="email"
+        aria-required="true"
       />
       <FormTextarea
         name="message"
@@ -26,6 +29,7 @@
       <FormCheckbox
         class="home-contact-consent"
         name="consent"
+        aria-required="true"
       >
         {{ t("home.contact.form.consent") }}
       </FormCheckbox>

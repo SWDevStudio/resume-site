@@ -40,13 +40,24 @@
 }
 
 .home-why-dialog {
-  @apply shrink-0 grow overflow-x-hidden overflow-y-auto overscroll-contain outline-hidden;
+  @apply shrink-0 grow overflow-x-hidden overflow-y-auto overscroll-contain;
   height: var(--home-why-dialog-height);
   padding-inline-end: --spacing(1);
   scrollbar-gutter: stable;
+  outline: --spacing(0.5) solid transparent;
+  outline-offset: --spacing(1);
+  transition-property: color, background-color, border-color, outline-color;
 
   &::-webkit-scrollbar-track {
     margin-block: --spacing(1);
+  }
+
+  @variant focus-visible {
+    outline-color: var(--color-brand);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
   }
 }
 

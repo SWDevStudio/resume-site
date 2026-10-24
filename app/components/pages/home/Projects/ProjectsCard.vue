@@ -9,6 +9,7 @@
         class="home-projects-live btn-link"
         :href="liveHref"
         :aria-disabled="liveDisabled"
+        :aria-label="liveLabel"
         target="_blank"
       >
         {{ t("home.projects.liveSite") }}
@@ -62,6 +63,7 @@ const data = computed<FolderData>(() => ({
 const href = computed(() => Route.project(props.project.id));
 const liveHref = computed(() => props.project.url ?? null);
 const liveDisabled = computed(() => (props.project.url ? undefined : "true"));
+const liveLabel = computed(() => `${t("home.projects.liveSite")}: ${props.project.name}`);
 </script>
 
 <style src="./ProjectsCard.css" />

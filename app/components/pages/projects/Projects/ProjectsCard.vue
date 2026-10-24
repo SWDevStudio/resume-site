@@ -14,6 +14,7 @@
         class="projects-card-live btn-ghost"
         :href="liveHref"
         :aria-disabled="liveDisabled"
+        :aria-label="liveLabel"
         target="_blank"
       >
         {{ t("projects.page.card.liveSite") }}
@@ -99,6 +100,7 @@ const name = computed(() => `${props.project.name}: `);
 const href = computed(() => Route.project(props.project.id));
 const liveHref = computed(() => props.project.url ?? null);
 const liveDisabled = computed(() => (props.project.url ? undefined : "true"));
+const liveLabel = computed(() => `${t("projects.page.card.liveSite")}: ${props.project.name}`);
 
 onMounted(() => attach(root.value));
 onBeforeUnmount(detach);

@@ -246,6 +246,9 @@
     },
     "empty": "Nothing here yet"
   },
+  "layout": {
+    "skipLink": "Skip to content"
+  },
   "footer": {
     "tagline": "fast, thoughtful web products",
     "copyright": "© {year} Michael · SOWA_DEV. All rights reserved.",

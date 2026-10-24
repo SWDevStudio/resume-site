@@ -37,6 +37,7 @@ const rel = computed(() => {
 
 const bindings = computed(() => {
   if (props.to !== undefined) return { to: props.to, target: props.target, rel: rel.value };
+  if (props.href === null) return { role: "link" };
   if (props.href !== undefined) return { href: props.href, target: props.target, rel: rel.value };
   return {};
 });
