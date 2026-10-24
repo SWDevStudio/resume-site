@@ -1,6 +1,6 @@
 import type { ResumeData, ResumeProject } from "../../types/resume";
 import type { ProjectView, ResumeSources } from "../../types/catalog";
-import type { Locale } from "../../../app/assets/const/locale";
+import type { Locale } from "../../../const/locale";
 import { firstDefined, textLayers } from "./layers";
 import { buildProjects } from "./projects";
 import { buildSkillGroups } from "./skills";

@@ -1,11 +1,11 @@
-import type { ProjectDefinition } from "../../../../../shared/types/catalog";
+import type { ProjectDefinition } from "../../../api/types/catalog";
 
 const project = {
   id: "brendmart",
   name: "Brendmart",
   tone: "secondary",
   url: "https://brendmart.com/",
-  preview: "brendmart.svg",
+  preview: "brendmart/media/preview.svg",
   tags: ["e-commerce", "seo", "accounts"],
   stack: ["next-js", "type-script", "node-js", "postgre-sql"],
   isFavorite: true,

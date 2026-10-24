@@ -1,0 +1,72 @@
+@reference "~/assets/css/main.css";
+
+.project-case-integrations {
+  @apply flex flex-col;
+  gap: --spacing(3);
+}
+
+.project-case-integrations-list {
+  @apply m-0 flex list-none flex-wrap p-0;
+  gap: --spacing(2);
+}
+
+.project-case-integration {
+  --badge-ink: color-mix(in oklab, var(--color-base-content) 82%, transparent);
+
+  @apply whitespace-normal;
+  font-size: --spacing(3.5);
+  line-height: 1.5;
+  padding-block: calc(var(--badge-border) + --spacing(1.25));
+  padding-inline: calc(var(--badge-border) + --spacing(3));
+  translate: 0rem;
+  transition-property: color, translate;
+
+  @variant hover {
+    --badge-line: var(--color-primary);
+    translate: 0rem --spacing(-0.5);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.project-case-integration-own {
+  --badge-line: color-mix(in oklab, var(--color-primary) 60%, transparent);
+  --badge-ink: var(--color-base-content);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --badge-line: color-mix(in oklab, var(--color-primary) 75%, transparent);
+  }
+}
+
+.project-case-integration-dot {
+  --project-case-dot-radius: 0rem;
+  --project-case-dot-glow: 0 0 --spacing(1.5)
+    color-mix(in oklab, var(--color-primary) 70%, transparent);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --project-case-dot-radius: 50%;
+    --project-case-dot-glow: 0 0 --spacing(1.5) transparent;
+  }
+
+  @apply inline-block shrink-0 align-middle;
+  width: --spacing(1.5);
+  height: --spacing(1.5);
+  background-color: var(--color-primary);
+  border-radius: var(--project-case-dot-radius);
+  box-shadow: var(--project-case-dot-glow);
+  transition-property: background-color, border-radius, box-shadow;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.project-case-integrations-legend {
+  @apply m-0 flex items-center;
+  gap: --spacing(2);
+  font-size: --spacing(3);
+  line-height: 1.5;
+  color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+}

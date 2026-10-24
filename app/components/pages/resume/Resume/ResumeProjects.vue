@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import ResumeProject from "./ResumeProject.vue";
-import type { ResumeData } from "#shared/types/resume";
+import type { ResumeData } from "~/assets/api/types/resume";
 
 defineProps<{
   projects: ResumeData["projects"];

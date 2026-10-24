@@ -1,4 +1,4 @@
-import type { BlogBlock } from "../../../../types/blog";
+import type { BlogBlock } from "../../../api/types/blog";
 
 const headless_or_classic_cms = [
   {

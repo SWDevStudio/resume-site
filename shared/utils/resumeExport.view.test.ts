@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { LOCALES } from "~/assets/const";
-import { buildProjects, buildResume, buildSkillGroups } from "#shared/mock/build";
-import { staticSources } from "#shared/mock/sources.static";
-import type { ProjectView, SkillGroupView } from "#shared/types/catalog";
-import type { ResumeData } from "#shared/types/resume";
+import { buildProjects, buildResume, buildSkillGroups } from "../../app/assets/api/mock/build";
+import { staticSources } from "../../app/assets/api/mock/sources.static";
+import type { ProjectView, SkillGroupView } from "../../app/assets/api/types/catalog";
+import type { ResumeData } from "../../app/assets/api/types/resume";
 import { resumeToMarkdown } from "./resumeToMarkdown";
 import { resumeToPdf } from "./resumeToPdf";
 

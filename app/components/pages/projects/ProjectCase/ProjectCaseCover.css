@@ -217,6 +217,10 @@
   object-position: 0% top;
 }
 
+.project-case-shot-mobile {
+  object-position: center top;
+}
+
 .project-case-island {
   @apply absolute left-1/2 -translate-x-1/2;
   top: calc(var(--project-case-cover-u) * 5);

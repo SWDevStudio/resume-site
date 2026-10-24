@@ -43,7 +43,7 @@ import { Route } from "~/assets/const";
 import { useI18n } from "vue-i18n";
 import BlogKindLabel from "~/components/pages/blog/shared/BlogKindLabel/BlogKindLabel.vue";
 import UiIcon from "~/components/ui/UiIcon/UiIcon.vue";
-import type { BlogPostHeaderData } from "~/types/blog";
+import type { BlogPostHeaderData } from "~/assets/api/types/blog";
 
 defineProps<{
   data: BlogPostHeaderData;

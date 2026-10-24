@@ -17,7 +17,7 @@
 import { computed, type Component } from "vue";
 import PageCover from "~/components/pages/shared/PageCover/PageCover.vue";
 import { pageToneClass } from "~/components/pages/shared/pageTone";
-import type { BlogCover, BlogCoverSize, BlogTone } from "~/types/blog";
+import type { BlogCover, BlogCoverSize, BlogTone } from "~/assets/api/types/blog";
 import BlogCoverTerminal from "./BlogCoverTerminal.vue";
 import BlogCoverText from "./BlogCoverText.vue";
 import BlogCoverVideo from "./BlogCoverVideo.vue";

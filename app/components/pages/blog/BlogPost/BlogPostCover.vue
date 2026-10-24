@@ -38,7 +38,7 @@
 import { computed, inject } from "vue";
 import { I18nT } from "vue-i18n";
 import BlogCover from "~/components/pages/blog/shared/BlogCover/BlogCover.vue";
-import type { BlogPostCoverData } from "~/types/blog";
+import type { BlogPostCoverData } from "~/assets/api/types/blog";
 import { BLOG_POST_SOURCE } from "./blogPostContext";
 
 const props = defineProps<{

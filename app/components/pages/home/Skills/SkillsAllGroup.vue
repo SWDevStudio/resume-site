@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import { computed, useId } from "vue";
 import UiBadge from "~/components/ui/UiBadge/UiBadge.vue";
-import type { SkillGroupView } from "#shared/types/catalog";
+import type { SkillGroupView } from "~/assets/api/types/catalog";
 
 const props = defineProps<{
   group: SkillGroupView;

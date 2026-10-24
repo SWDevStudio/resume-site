@@ -37,7 +37,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import type { FolderData } from "~/components/ui/card/types";
 import UiFolder from "~/components/ui/UiFolder/UiFolder.vue";
-import type { ProjectView } from "#shared/types/catalog";
+import type { ProjectView } from "~/assets/api/types/catalog";
 import { projectTones } from "./projects";
 
 const CARD_TAGS = 3;

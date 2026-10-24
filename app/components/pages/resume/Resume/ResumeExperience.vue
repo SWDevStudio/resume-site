@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import PageSection from "~/components/pages/shared/PageSections/PageSection.vue";
-import type { ResumeData } from "#shared/types/resume";
+import type { ResumeData } from "~/assets/api/types/resume";
 import ResumeJobDetails from "./ResumeJobDetails.vue";
 
 const props = defineProps<{

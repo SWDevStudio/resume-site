@@ -1,13 +1,13 @@
-import type { ProjectBlock } from "../../types/projectCase";
+import type { ProjectBlock } from "~/assets/api/types/projectCase";
 import type {
   ProjectsSources,
   ResumeFile,
   ResumeSources,
   SkillsSources,
   SkillsText,
-} from "#shared/types/catalog";
+} from "~/assets/api/types/catalog";
 import { DEFAULT_LOCALE, type Locale } from "../const/locale";
-import { buildSkillRegistry } from "#shared/mock/build/skills";
+import { buildSkillRegistry } from "~/assets/api/mock/build/skills";
 
 const textSkills = import.meta.glob<SkillsText>("../data/*/skills.ts", {
   import: "default",

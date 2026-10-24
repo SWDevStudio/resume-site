@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import BlogTag from "~/components/pages/blog/shared/BlogTag/BlogTag.vue";
-import type { BlogPostTagsData } from "~/types/blog";
+import type { BlogPostTagsData } from "~/assets/api/types/blog";
 
 defineProps<{
   data: BlogPostTagsData;

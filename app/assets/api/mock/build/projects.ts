@@ -1,6 +1,6 @@
-import type { ProjectBlock } from "../../../app/types/projectCase";
+import type { ProjectBlock } from "../../types/projectCase";
 import type { ProjectsSources, ProjectView } from "../../types/catalog";
-import type { Locale } from "../../../app/assets/const/locale";
+import type { Locale } from "../../../const/locale";
 import { firstDefined, textLayers } from "./layers";
 import { resolveStack } from "./stack";
 
@@ -25,6 +25,7 @@ export function buildProjects(src: ProjectsSources, locale: Locale): ProjectView
       url: project.url,
       host: project.url ? new URL(project.url).host : null,
       preview: project.preview,
+      previewMobile: project.previewMobile ?? null,
       previewAlt: text.previewAlt,
       subtitle: text.subtitle,
       headline: text.headline,
@@ -57,7 +58,11 @@ export function buildCase(
       url: project.url,
       tone: project.tone,
     },
-    ProjectCaseCover: { image: project.preview, imageAlt: project.previewAlt },
+    ProjectCaseCover: {
+      image: project.preview,
+      imageMobile: project.previewMobile,
+      imageAlt: project.previewAlt,
+    },
     ProjectCaseMeta: { tags: project.tags, stack: project.stack },
     ProjectCaseNext: {
       slug: next.id,
@@ -65,6 +70,7 @@ export function buildCase(
       index: next.index,
       tone: next.tone,
     },
+    ProjectCaseCta: { url: project.url },
   };
   return blocks.map((block) => {
     const data = generated[block.component];

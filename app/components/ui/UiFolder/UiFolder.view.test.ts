@@ -3,7 +3,7 @@ import { render } from "vitest-browser-vue";
 import { afterEach, describe, expect, it } from "vitest";
 import UiButton from "~/components/ui/UiButton/UiButton.vue";
 import UiCardMedia from "~/components/ui/card/UiCardMedia/UiCardMedia.vue";
-import qwixit from "~/components/ui/card/UiCardMedia/media/qwixit.svg";
+import sample from "~/components/ui/card/UiCardMedia/media/sample.svg";
 import {
   describeHover,
   describeScreenshots,
@@ -43,7 +43,7 @@ const folder = (shot?: () => VNode) =>
         subtitle: "FASHION MARKETPLACE · US DELIVERY",
         text: "E-commerce platform for clothing, footwear and accessories from global brands.",
         tags,
-        image: shot ? undefined : qwixit,
+        image: shot ? undefined : sample,
         imageAlt: "Qwixit",
       },
     },
@@ -158,12 +158,12 @@ describe("data", () => {
   });
 
   it("renders an image with alt text", async () => {
-    const container = await mount({ image: qwixit, imageAlt: "Qwixit" });
+    const container = await mount({ image: sample, imageAlt: "Qwixit" });
     const image = container.querySelector<HTMLImageElement>(".card-media img")!;
 
     expect(image).not.toBeNull();
     expect(image.getAttribute("alt")).toBe("Qwixit");
-    expect(image.getAttribute("src")).toBe(qwixit);
+    expect(image.getAttribute("src")).toBe(sample);
   });
 
   it("renders no image block without an image", async () => {
@@ -175,7 +175,7 @@ describe("data", () => {
 
   it("replaces the image with the media slot", async () => {
     const container = await mount(
-      { image: qwixit },
+      { image: sample },
       { media: () => h("div", { class: "custom-media" }) },
     );
 
@@ -191,7 +191,7 @@ describe("data", () => {
 
   it("keeps the order of blocks", async () => {
     const container = await mount(
-      { index: "01", title: "T", subtitle: "S", text: "X", tags, image: qwixit },
+      { index: "01", title: "T", subtitle: "S", text: "X", tags, image: sample },
       { actions: () => h("b") },
     );
     const order = Array.from(
@@ -241,7 +241,7 @@ describe("data", () => {
   });
 
   it("renders an empty alt when imageAlt is omitted", async () => {
-    const container = await mount({ image: qwixit });
+    const container = await mount({ image: sample });
 
     expect(container.querySelector(".card-media img")!.getAttribute("alt")).toBe("");
   });

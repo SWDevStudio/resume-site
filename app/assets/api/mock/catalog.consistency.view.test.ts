@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_LOCALE, LOCALES, Route, type Locale } from "~/assets/const";
 import { projects as canonFile, projectsText } from "~/assets/data/projects";
 import { resolveProjectImage } from "~/components/pages/shared/projectImage";
-import type { ProjectCanon, ProjectsText, ResumeFile } from "#shared/types/catalog";
+import type { ProjectCanon, ProjectsText, ResumeFile } from "~/assets/api/types/catalog";
 import type {
   ProjectBlock,
   ProjectCaseCoverData,
   ProjectCaseHeaderData,
   ProjectCaseMetaData,
   ProjectCaseNextData,
-} from "~/types/projectCase";
-import { buildCase, buildProjects, buildResume } from "#shared/mock/build";
+} from "~/assets/api/types/projectCase";
+import { buildCase, buildProjects, buildResume } from "~/assets/api/mock/build";
 import { $api } from "~/assets/api";
-import { staticSources } from "#shared/mock/sources.static";
+import { staticSources } from "~/assets/api/mock/sources.static";
 
 const state = vi.hoisted(() => ({ locale: "ru" }));
 
@@ -42,7 +42,7 @@ const TEXT_KEYS = [
   "text",
 ];
 
-const resumeFiles = import.meta.glob<ResumeFile>("../../app/assets/data/*/resume.ts", {
+const resumeFiles = import.meta.glob<ResumeFile>("../../data/*/resume.ts", {
   eager: true,
   import: "default",
 });
@@ -54,13 +54,10 @@ function byLocale<T>(files: Record<string, T>) {
   }));
 }
 
-const caseModules = import.meta.glob<ProjectBlock[]>(
-  "../../app/assets/data/projects/*/{ru,en}.ts",
-  {
-    eager: true,
-    import: "default",
-  },
-);
+const caseModules = import.meta.glob<ProjectBlock[]>("../../data/projects/*/{ru,en}.ts", {
+  eager: true,
+  import: "default",
+});
 
 const texts = Object.entries(projectsText).map(([locale, data]) => ({ locale, data }));
 const resumes = byLocale(resumeFiles);
@@ -71,6 +68,7 @@ const caseFiles = Object.entries(caseModules).map(([path, blocks]) => ({
 }));
 
 const GENERATED = ["ProjectCaseHeader", "ProjectCaseCover", "ProjectCaseMeta", "ProjectCaseNext"];
+const MERGED = [...GENERATED, "ProjectCaseCta"];
 
 function chapterIds(blocks: ProjectBlock[]): string[] {
   return blocks.flatMap((block) =>
@@ -352,6 +350,7 @@ describe.each(LOCALES)("the cases built for %s", (locale: Locale) => {
       });
       expect(dataOf<ProjectCaseCoverData>(blocks, "ProjectCaseCover")).toEqual({
         image: project.preview,
+        imageMobile: project.previewMobile ?? null,
         imageAlt: text.items[id]!.previewAlt,
       });
       expect(dataOf<ProjectCaseMetaData>(blocks, "ProjectCaseMeta")).toEqual({
@@ -386,8 +385,8 @@ describe.each(LOCALES)("the cases built for %s", (locale: Locale) => {
       expect(blocks.map((block) => block.component)).toEqual(
         file.blocks.map((block) => block.component),
       );
-      expect(blocks.filter((block) => !GENERATED.includes(block.component))).toEqual(
-        file.blocks.filter((block) => !GENERATED.includes(block.component)),
+      expect(blocks.filter((block) => !MERGED.includes(block.component))).toEqual(
+        file.blocks.filter((block) => !MERGED.includes(block.component)),
       );
     }
   });

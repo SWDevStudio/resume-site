@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import type { SkillView } from "#shared/types/catalog";
+import type { SkillView } from "~/assets/api/types/catalog";
 import { buildToolkit } from "./toolkit";
 
 const props = defineProps<{

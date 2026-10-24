@@ -3,7 +3,12 @@ import { cdp, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-vue";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import posts from "~/assets/data/blog/posts";
-import type { BlogCover as Cover, BlogCoverSize, BlogPostSummary, BlogTone } from "~/types/blog";
+import type {
+  BlogCover as Cover,
+  BlogCoverSize,
+  BlogPostSummary,
+  BlogTone,
+} from "~/assets/api/types/blog";
 import BlogCover from "./BlogCover.vue";
 import "~/assets/css/fonts.css";
 import "~/assets/css/main.css";

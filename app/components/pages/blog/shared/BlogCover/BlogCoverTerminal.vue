@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import type { BlogCoverTerminal } from "~/types/blog";
+import type { BlogCoverTerminal } from "~/assets/api/types/blog";
 
 defineProps<{
   cover: BlogCoverTerminal;

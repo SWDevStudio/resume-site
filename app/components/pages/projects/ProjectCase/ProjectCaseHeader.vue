@@ -44,7 +44,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import UiButton from "~/components/ui/UiButton/UiButton.vue";
 import UiIcon from "~/components/ui/UiIcon/UiIcon.vue";
-import type { ProjectCaseHeaderData } from "~/types/projectCase";
+import type { ProjectCaseHeaderData } from "~/assets/api/types/projectCase";
 
 const props = defineProps<{
   data: ProjectCaseHeaderData;

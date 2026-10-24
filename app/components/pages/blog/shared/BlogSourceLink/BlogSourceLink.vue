@@ -41,7 +41,7 @@ import { computed } from "vue";
 import { I18nT } from "vue-i18n";
 import { blogToneClass } from "~/components/pages/blog/shared/blogTone";
 import UiIcon from "~/components/ui/UiIcon/UiIcon.vue";
-import type { BlogKind, BlogSource } from "~/types/blog";
+import type { BlogKind, BlogSource } from "~/assets/api/types/blog";
 
 const props = withDefaults(
   defineProps<{

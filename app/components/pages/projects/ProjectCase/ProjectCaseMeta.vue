@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import type { ProjectCaseMetaData } from "~/types/projectCase";
+import type { ProjectCaseMetaData } from "~/assets/api/types/projectCase";
 
 const props = defineProps<{
   data: ProjectCaseMetaData;

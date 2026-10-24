@@ -1,4 +1,4 @@
-import type { BlogKind } from "~/types/blog";
+import type { BlogKind } from "~/assets/api/types/blog";
 
 export type BlogFilter = "all" | BlogKind;
 

@@ -1,6 +1,9 @@
 <template>
   <div class="project-case-results">
-    <ul class="project-case-stats">
+    <ul
+      class="project-case-stats"
+      :style="gridStyle"
+    >
       <li
         v-for="stat in data.stats"
         :key="stat.label"
@@ -14,11 +17,15 @@
 </template>
 
 <script setup lang="ts">
-import type { ProjectCaseResultsData } from "~/types/projectCase";
+import { computed } from "vue";
+import type { ProjectCaseResultsData } from "~/assets/api/types/projectCase";
+import { gridColumns } from "./projectCaseGrid";
 
-defineProps<{
+const props = defineProps<{
   data: ProjectCaseResultsData;
 }>();
+
+const gridStyle = computed(() => gridColumns(props.data.stats.length, "project-case-stats"));
 </script>
 
 <style src="./ProjectCaseResults.css" />

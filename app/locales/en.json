@@ -163,7 +163,29 @@
       "back": "All projects",
       "liveSite": "Live site",
       "stack": "Stack",
-      "next": "Next project"
+      "next": "Next project",
+      "facts": {
+        "role": "Role",
+        "team": "Team",
+        "duration": "Timeline",
+        "status": "Status"
+      },
+      "role": "My role",
+      "challenge": {
+        "problem": "Problem",
+        "solution": "Solution",
+        "result": "Result",
+        "retro": "Would do differently"
+      },
+      "integrations": {
+        "own": "connected by me"
+      },
+      "cta": {
+        "label": "Let's talk",
+        "nav": "Discuss a project",
+        "telegram": "Discuss a project in Telegram",
+        "live": "Open the live site"
+      }
     }
   },
   "blog": {

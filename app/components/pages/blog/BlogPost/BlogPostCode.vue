@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import type { BlogPostCodeData } from "~/types/blog";
+import type { BlogPostCodeData } from "~/assets/api/types/blog";
 
 defineProps<{
   data: BlogPostCodeData;

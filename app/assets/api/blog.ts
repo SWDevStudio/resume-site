@@ -1,4 +1,4 @@
-import type { BlogBlock, BlogPostSummary } from "~/types/blog";
+import type { BlogBlock, BlogPostSummary } from "~/assets/api/types/blog";
 
 const postSources = import.meta.glob<{ default: BlogBlock[] }>("../data/blog/posts/*.ts");
 

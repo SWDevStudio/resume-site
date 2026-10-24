@@ -77,7 +77,7 @@
       <div class="flex flex-wrap items-start gap-x-12 gap-y-10">
         <figure class="flex w-78.25 flex-col gap-3">
           <UiCardMedia
-            :src="qwixit"
+            :src="sample"
             alt="Qwixit"
           />
           <figcaption>
@@ -102,7 +102,7 @@ import { definePageMeta } from "#imports";
 import type { FeatureData, FolderData, PanelData } from "~/components/ui/card/types";
 import UiButton from "~/components/ui/UiButton/UiButton.vue";
 import UiCardMedia from "~/components/ui/card/UiCardMedia/UiCardMedia.vue";
-import qwixit from "~/components/ui/card/UiCardMedia/media/qwixit.svg";
+import sample from "~/components/ui/card/UiCardMedia/media/sample.svg";
 import UiFeature from "~/components/ui/UiFeature/UiFeature.vue";
 import UiFolder from "~/components/ui/UiFolder/UiFolder.vue";
 import UiPanel from "~/components/ui/UiPanel/UiPanel.vue";
@@ -117,7 +117,7 @@ const folder: FolderData = {
   subtitle: "FASHION MARKETPLACE · US DELIVERY",
   text: "E-commerce platform for clothing, footwear and accessories from global brands.",
   tags: ["E-commerce", "Full-Stack", "Payments"],
-  image: qwixit,
+  image: sample,
   imageAlt: "Qwixit",
 };
 const panel: PanelData = { index: "01", title: "Frontend" };

@@ -15,7 +15,7 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import BlogSourceLink from "~/components/pages/blog/shared/BlogSourceLink/BlogSourceLink.vue";
-import type { BlogPostSourceData } from "~/types/blog";
+import type { BlogPostSourceData } from "~/assets/api/types/blog";
 
 const props = defineProps<{
   data: BlogPostSourceData;

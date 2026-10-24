@@ -59,7 +59,7 @@ import { computed } from "vue";
 import { I18nT, useI18n } from "vue-i18n";
 import BlogCover from "~/components/pages/blog/shared/BlogCover/BlogCover.vue";
 import { blogToneClass } from "~/components/pages/blog/shared/blogTone";
-import type { BlogPostRelatedData } from "~/types/blog";
+import type { BlogPostRelatedData } from "~/assets/api/types/blog";
 
 const props = defineProps<{
   data: BlogPostRelatedData;

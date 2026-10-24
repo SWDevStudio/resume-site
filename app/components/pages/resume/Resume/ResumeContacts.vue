@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import ResumeLink from "./ResumeLink.vue";
-import type { ResumeContact } from "#shared/types/resume";
+import type { ResumeContact } from "~/assets/api/types/resume";
 
 defineProps<{
   contacts: ResumeContact[];

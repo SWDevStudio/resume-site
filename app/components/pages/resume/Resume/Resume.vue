@@ -96,7 +96,7 @@
 import { useI18n } from "vue-i18n";
 import PageSection from "~/components/pages/shared/PageSections/PageSection.vue";
 import PageSections from "~/components/pages/shared/PageSections/PageSections.vue";
-import type { ResumeData } from "#shared/types/resume";
+import type { ResumeData } from "~/assets/api/types/resume";
 import ResumeExperience from "./ResumeExperience.vue";
 import ResumeFooter from "./ResumeFooter.vue";
 import ResumeHeader from "./ResumeHeader.vue";

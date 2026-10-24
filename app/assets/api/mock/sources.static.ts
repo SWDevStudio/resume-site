@@ -1,12 +1,12 @@
 import type { ResumeSources, SkillsText } from "../types/catalog";
-import { DEFAULT_LOCALE, type Locale } from "../../app/assets/const/locale";
+import { DEFAULT_LOCALE, type Locale } from "../../const/locale";
 import { buildSkillRegistry } from "./build/skills";
-import { projects, projectsText } from "../../app/assets/data/projects";
-import skills from "../../app/assets/data/canon/skills";
-import enResume from "../../app/assets/data/en/resume";
-import enSkillsText from "../../app/assets/data/en/skills";
-import ruResume from "../../app/assets/data/ru/resume";
-import ruSkillsText from "../../app/assets/data/ru/skills";
+import { projects, projectsText } from "../../data/projects";
+import skills from "../../data/canon/skills";
+import enResume from "../../data/en/resume";
+import enSkillsText from "../../data/en/skills";
+import ruResume from "../../data/ru/resume";
+import ruSkillsText from "../../data/ru/skills";
 
 const skillsText: Record<"ru" | "en", SkillsText> = {
   ru: ruSkillsText,

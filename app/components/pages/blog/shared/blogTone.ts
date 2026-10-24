@@ -1,5 +1,5 @@
 import { pageToneClass } from "~/components/pages/shared/pageTone";
-import type { BlogKind, BlogTone } from "~/types/blog";
+import type { BlogKind, BlogTone } from "~/assets/api/types/blog";
 
 const TONES: Partial<Record<BlogKind, BlogTone>> = {
   article: "primary",

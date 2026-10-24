@@ -23,8 +23,9 @@
     <div class="page-devices-phone">
       <div class="page-devices-phone-screen">
         <img
-          class="page-devices-shot page-devices-shot-phone"
-          :src="image"
+          class="page-devices-shot"
+          :class="phoneClass"
+          :src="phoneImage"
           alt=""
           loading="lazy"
           decoding="async"
@@ -36,9 +37,17 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+import { computed } from "vue";
+
+const props = defineProps<{
   image: string;
+  imageMobile?: string | null;
 }>();
+
+const phoneImage = computed(() => props.imageMobile ?? props.image);
+const phoneClass = computed(() =>
+  props.imageMobile ? "page-devices-shot-mobile" : "page-devices-shot-phone",
+);
 </script>
 
 <style src="./PageDevices.css" />

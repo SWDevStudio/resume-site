@@ -10,7 +10,7 @@ import type {
   SkillsSources,
   SkillsText,
 } from "../../types/catalog";
-import type { ProjectBlock } from "../../../app/types/projectCase";
+import type { ProjectBlock } from "../../types/projectCase";
 import {
   buildCase,
   buildProjects,
@@ -27,7 +27,7 @@ const canon: ProjectCanon[] = [
     name: "Alpha",
     tone: "primary",
     url: "https://alpha.example.com/path",
-    preview: "alpha.svg",
+    preview: "alpha/media/preview.svg",
     tags: ["one", "two"],
     stack: ["react", { id: "next-js", label: "Next.js 16" }],
   },
@@ -37,7 +37,7 @@ const canon: ProjectCanon[] = [
     name: "Beta",
     tone: "accent",
     url: null,
-    preview: "beta.svg",
+    preview: "beta/media/preview.svg",
     tags: ["two"],
     stack: [],
   },
@@ -76,7 +76,7 @@ describe("buildProjects", () => {
       name: "Alpha",
       tone: "primary",
       url: "https://alpha.example.com/path",
-      preview: "alpha.svg",
+      preview: "alpha/media/preview.svg",
       subtitle: "А",
       description: "А1",
       previewAlt: "Ал",
@@ -150,7 +150,10 @@ describe("buildCase", () => {
           tone: "primary",
         },
       },
-      { component: "ProjectCaseCover", data: { image: "alpha.svg", imageAlt: "Ал" } },
+      {
+        component: "ProjectCaseCover",
+        data: { image: "alpha/media/preview.svg", imageMobile: null, imageAlt: "Ал" },
+      },
       {
         component: "ProjectCaseMeta",
         data: { tags: ["Один", "Два"], stack: ["React", "Next.js 16"] },

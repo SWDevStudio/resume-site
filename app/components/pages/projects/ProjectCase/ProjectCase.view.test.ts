@@ -10,8 +10,8 @@ import ru from "~/locales/ru.json";
 import TheHeader from "~/components/global/TheHeader/TheHeader.vue";
 import ProjectCase from "./ProjectCase.vue";
 import { $api } from "~/assets/api";
-import { buildCase } from "#shared/mock/build";
-import { staticSources } from "#shared/mock/sources.static";
+import { buildCase } from "~/assets/api/mock/build";
+import { staticSources } from "~/assets/api/mock/sources.static";
 import brendmartFile from "~/assets/data/projects/brendmart/en";
 import pineRidgeFile from "~/assets/data/projects/pine-ridge/en";
 import qwixitFile from "~/assets/data/projects/qwixit/en";
@@ -21,7 +21,7 @@ import type {
   ProjectCaseHeaderData,
   ProjectCaseMetaData,
   ProjectCaseNextData,
-} from "~/types/projectCase";
+} from "~/assets/api/types/projectCase";
 import { setTheme } from "../../../../../test/mocks/useTheme";
 import "~/assets/css/fonts.css";
 import "~/assets/css/main.css";

@@ -1,4 +1,4 @@
-import type { BlogPostSummary } from "../../../types/blog";
+import type { BlogPostSummary } from "../../api/types/blog";
 
 const posts = [
   {

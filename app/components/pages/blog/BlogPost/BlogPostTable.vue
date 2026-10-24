@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import type { BlogPostTableData } from "~/types/blog";
+import type { BlogPostTableData } from "~/assets/api/types/blog";
 
 defineProps<{
   data: BlogPostTableData;

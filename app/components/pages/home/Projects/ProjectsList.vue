@@ -33,7 +33,7 @@
 import { computed, ref } from "vue";
 import { useEventListener } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
-import type { ProjectView } from "#shared/types/catalog";
+import type { ProjectView } from "~/assets/api/types/catalog";
 import ProjectsCard from "./ProjectsCard.vue";
 import { projectTones } from "./projects";
 

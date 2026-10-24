@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { SOCIAL } from "~/assets/const";
-import type { ResumeFile } from "#shared/types/catalog";
+import type { ResumeFile } from "~/assets/api/types/catalog";
 
 const files = import.meta.glob<ResumeFile>("./*/resume.ts", { eager: true, import: "default" });
 

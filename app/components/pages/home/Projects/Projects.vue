@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import HomeSlide from "~/components/pages/home/HomeSlide/HomeSlide.vue";
-import type { ProjectView } from "#shared/types/catalog";
+import type { ProjectView } from "~/assets/api/types/catalog";
 import ProjectsDecor from "./ProjectsDecor.vue";
 import ProjectsAll from "./ProjectsAll.vue";
 import ProjectsList from "./ProjectsList.vue";

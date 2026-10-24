@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import PageSection from "~/components/pages/shared/PageSections/PageSection.vue";
-import type { BlogPostChapterData } from "~/types/blog";
+import type { BlogPostChapterData } from "~/assets/api/types/blog";
 import BlogPostBlocks from "./BlogPostBlocks.vue";
 
 defineProps<{

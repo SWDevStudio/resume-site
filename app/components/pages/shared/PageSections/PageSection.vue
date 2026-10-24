@@ -55,6 +55,7 @@ import { useSectionEntry } from "./usePageSections";
 const props = defineProps<{
   name: string;
   id?: string;
+  navName?: string;
   label?: string;
   meta?: string;
   metaInline?: boolean;

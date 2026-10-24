@@ -5,7 +5,7 @@ import type {
   ResumeContact,
   ResumeExperienceLabels,
 } from "./resume";
-import type { Locale } from "../../app/assets/const/locale";
+import type { Locale } from "../../const/locale";
 
 export type Tone = "primary" | "secondary" | "accent";
 
@@ -23,6 +23,7 @@ export interface ProjectCanon {
   tone: Tone;
   url: string | null;
   preview: string;
+  previewMobile?: string;
   tags: string[];
   stack: StackRef[];
 }
@@ -128,6 +129,7 @@ export interface ProjectView {
   url: string | null;
   host: string | null;
   preview: string;
+  previewMobile: string | null;
   previewAlt: string;
   subtitle: string;
   headline: string;

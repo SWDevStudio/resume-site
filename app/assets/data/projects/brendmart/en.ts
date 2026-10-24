@@ -1,4 +1,4 @@
-import type { ProjectBlock } from "../../../../types/projectCase";
+import type { ProjectBlock } from "../../../api/types/projectCase";
 
 const brendmart = [
   {

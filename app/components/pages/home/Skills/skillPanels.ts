@@ -1,6 +1,6 @@
 import { SkillTile } from "~/components/ui/UiSkillTile/skillTile";
-import type { SkillGroupView } from "#shared/types/catalog";
-import type { SkillGroupId } from "#shared/types/resume";
+import type { SkillGroupView } from "~/assets/api/types/catalog";
+import type { SkillGroupId } from "~/assets/api/types/resume";
 import { skillTileId } from "./skillIds";
 import { skillWavePhases } from "./skillWave";
 

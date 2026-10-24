@@ -161,6 +161,7 @@ export function useSectionsRegistry() {
 interface SectionProps {
   name: string;
   id?: string;
+  navName?: string;
 }
 
 export function useSectionEntry(props: SectionProps) {
@@ -168,7 +169,7 @@ export function useSectionEntry(props: SectionProps) {
   const parent = inject(PARENT_KEY, null);
   const entry = reactive<SectionEntry>({
     uid: registry.nextUid(),
-    name: toRef(props, "name") as unknown as string,
+    name: computed(() => props.navName ?? props.name) as unknown as string,
     id: toRef(props, "id") as unknown as string | undefined,
     element: null,
     children: [],

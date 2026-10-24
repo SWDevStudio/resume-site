@@ -1,0 +1,67 @@
+@reference "~/assets/css/main.css";
+
+.project-case-challenges {
+  @apply flex flex-col;
+  gap: var(--project-case-gap);
+}
+
+.page-section.project-case-challenge {
+  --page-section-gap: --spacing(4);
+
+  @apply grid items-center;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: --spacing(3.5);
+  padding: --spacing(5.5) --spacing(5);
+
+  @variant md {
+    padding: --spacing(6) --spacing(6.5);
+  }
+
+  & > .page-section-label {
+    @apply m-0;
+    letter-spacing: 0.22em;
+    color: var(--page-tone-ink);
+  }
+
+  & > .page-section-label + .page-section-heading {
+    scroll-margin-top: var(--page-sections-offset, 0rem);
+  }
+
+  & > .page-section-body {
+    grid-column: 1 / -1;
+  }
+}
+
+.project-case-challenge-rows {
+  @apply m-0 flex flex-col;
+  gap: --spacing(2);
+}
+
+.project-case-challenge-row {
+  @apply grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: --spacing(1) --spacing(4.5);
+
+  @variant sm {
+    grid-template-columns: --spacing(32) minmax(0, 1fr);
+  }
+}
+
+.project-case-challenge-term {
+  @apply uppercase;
+  padding-top: --spacing(1);
+  font-size: --spacing(3);
+  line-height: 1.5;
+  letter-spacing: 0.18em;
+  color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+}
+
+.project-case-challenge-text {
+  @apply m-0 text-base-content/82;
+  font-size: --spacing(3.5);
+  line-height: 1.75;
+
+  :where([data-theme="cyber-sakura"]) & {
+    @apply text-base-content/84;
+  }
+}

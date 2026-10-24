@@ -1,4 +1,4 @@
-import type { SkillView } from "#shared/types/catalog";
+import type { SkillView } from "~/assets/api/types/catalog";
 
 export interface ToolkitTyped {
   key: string;

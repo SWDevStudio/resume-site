@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import type { ProjectView } from "#shared/types/catalog";
+import type { ProjectView } from "~/assets/api/types/catalog";
 import PageSections from "~/components/pages/shared/PageSections/PageSections.vue";
 import ProjectsCard from "./ProjectsCard.vue";
 import ProjectsHeader from "./ProjectsHeader.vue";

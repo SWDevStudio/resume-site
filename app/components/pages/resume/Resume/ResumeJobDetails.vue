@@ -56,7 +56,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { ResumeExperienceLabels, ResumeJob } from "#shared/types/resume";
+import type { ResumeExperienceLabels, ResumeJob } from "~/assets/api/types/resume";
 import ResumeLink from "./ResumeLink.vue";
 import ResumeList from "./ResumeList.vue";
 

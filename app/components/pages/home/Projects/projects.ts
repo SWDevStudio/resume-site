@@ -1,4 +1,4 @@
-import type { Tone } from "#shared/types/catalog";
+import type { Tone } from "~/assets/api/types/catalog";
 
 export interface ProjectToneClasses {
   cardClass:

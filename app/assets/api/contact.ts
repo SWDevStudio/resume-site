@@ -1,4 +1,4 @@
-import type { ContactPayload } from "~/types/contact";
+import type { ContactPayload } from "~/assets/api/types/contact";
 
 const SUBMIT_DELAY = 900;
 

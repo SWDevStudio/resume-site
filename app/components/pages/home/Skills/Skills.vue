@@ -51,7 +51,7 @@ import { useI18n } from "vue-i18n";
 import type { PanelData } from "~/components/ui/card/types";
 import HomeSlide from "~/components/pages/home/HomeSlide/HomeSlide.vue";
 import UiPanel from "~/components/ui/UiPanel/UiPanel.vue";
-import type { SkillGroupView } from "#shared/types/catalog";
+import type { SkillGroupView } from "~/assets/api/types/catalog";
 import SkillsDecor from "./SkillsDecor.vue";
 import SkillsIntro from "./SkillsIntro.vue";
 import SkillsTile from "./SkillsTile.vue";

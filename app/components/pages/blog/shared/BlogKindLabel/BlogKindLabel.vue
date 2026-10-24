@@ -41,7 +41,7 @@
 import { computed } from "vue";
 import { I18nT, useI18n } from "vue-i18n";
 import { blogToneClass } from "~/components/pages/blog/shared/blogTone";
-import type { BlogPostHead } from "~/types/blog";
+import type { BlogPostHead } from "~/assets/api/types/blog";
 
 const props = withDefaults(
   defineProps<{

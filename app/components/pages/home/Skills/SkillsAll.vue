@@ -24,7 +24,7 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import UiModal from "~/components/ui/UiModal/UiModal.vue";
-import type { SkillGroupView } from "#shared/types/catalog";
+import type { SkillGroupView } from "~/assets/api/types/catalog";
 import SkillsAllGroup from "./SkillsAllGroup.vue";
 
 const props = defineProps<{

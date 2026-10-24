@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { ResumeData } from "#shared/types/resume";
+import type { ResumeData } from "~/assets/api/types/resume";
 import ResumeList from "./ResumeList.vue";
 
 const props = defineProps<{

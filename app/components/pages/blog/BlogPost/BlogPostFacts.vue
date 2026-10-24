@@ -21,7 +21,7 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import BlogTag from "~/components/pages/blog/shared/BlogTag/BlogTag.vue";
-import type { BlogPostFactsData } from "~/types/blog";
+import type { BlogPostFactsData } from "~/assets/api/types/blog";
 
 interface Fact {
   key: string;

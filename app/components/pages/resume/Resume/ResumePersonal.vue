@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ResumeData } from "#shared/types/resume";
+import type { ResumeData } from "~/assets/api/types/resume";
 
 defineProps<{
   personal: ResumeData["personal"];

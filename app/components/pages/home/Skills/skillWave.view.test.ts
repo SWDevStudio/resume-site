@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { buildSkillGroups } from "#shared/mock/build";
-import { staticSources } from "#shared/mock/sources.static";
+import { buildSkillGroups } from "~/assets/api/mock/build";
+import { staticSources } from "~/assets/api/mock/sources.static";
 import { buildSkillPanels } from "./skillPanels";
 import { skillWaveOrder, skillWavePhases, skillWaveSwapTime } from "./skillWave";
 import { SKILL_SWAP_PERIOD } from "./useSkillSwap";

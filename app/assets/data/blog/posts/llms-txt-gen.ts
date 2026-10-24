@@ -1,4 +1,4 @@
-import type { BlogBlock } from "../../../../types/blog";
+import type { BlogBlock } from "../../../api/types/blog";
 
 const llms_txt_gen = [
   {

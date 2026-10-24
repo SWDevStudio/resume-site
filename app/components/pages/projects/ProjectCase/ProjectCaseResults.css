@@ -8,6 +8,7 @@
     --project-case-results-line: color-mix(in oklab, var(--color-accent) 70%, transparent);
   }
 
+  container-type: inline-size;
   padding: --spacing(0.25);
   background-color: var(--project-case-results-line);
   border-radius: var(--radius-box);
@@ -28,7 +29,7 @@
 
 .project-case-stats {
   @apply m-0 grid list-none overflow-hidden p-0;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(var(--project-case-stats-columns-sm, 1), minmax(0, 1fr));
   gap: --spacing(0.25);
   background-color: var(--project-case-results-line);
   border-radius: max(0rem, calc(var(--radius-box) - --spacing(0.25)));
@@ -42,8 +43,12 @@
   );
   transition-property: background-color, border-radius, clip-path;
 
-  @variant md {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  @container (min-width: 32rem) {
+    grid-template-columns: repeat(var(--project-case-stats-columns-md, 1), minmax(0, 1fr));
+  }
+
+  @container (min-width: 50rem) {
+    grid-template-columns: repeat(var(--project-case-stats-columns, 1), minmax(0, 1fr));
   }
 
   @variant motion-reduce {
@@ -52,14 +57,23 @@
 }
 
 .project-case-stat {
-  @apply flex flex-col;
+  @apply flex min-w-0 flex-col;
   gap: --spacing(1.5);
   padding: --spacing(4.5) --spacing(5);
   background-color: var(--project-case-results-fill);
+  transition-property: background-color;
+
+  @variant hover {
+    background-color: color-mix(in srgb, var(--color-primary) 6%, var(--project-case-results-fill));
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
 }
 
 .project-case-stat-value {
-  @apply font-head text-primary-ink;
+  @apply font-head text-primary-ink tabular-nums;
   font-size: --spacing(7);
   line-height: 1;
 

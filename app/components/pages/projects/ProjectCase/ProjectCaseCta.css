@@ -1,0 +1,177 @@
+@reference "~/assets/css/main.css";
+
+@property --project-case-cta-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --project-case-cta-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --project-case-cta-glow {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.page-section.project-case-cta {
+  --project-case-cta-cut: var(--cut-box);
+  --project-case-cta-radius: var(--radius-box);
+  --project-case-cta-inner-cut: max(0rem, calc(var(--project-case-cta-cut) - --spacing(0.1)));
+  --project-case-cta-inner-radius: max(
+    0rem,
+    calc(var(--project-case-cta-radius) - --spacing(0.25))
+  );
+  --page-section-gap: --spacing(4);
+  --page-section-size: --spacing(5.5);
+  --page-section-leading: 1.2;
+  --page-section-label-gap: --spacing(2);
+
+  @apply relative isolate;
+  padding: --spacing(6) --spacing(5);
+
+  @variant md {
+    --page-section-size: --spacing(6);
+
+    padding: --spacing(7.5) --spacing(8);
+  }
+
+  @variant lg {
+    --page-section-size: --spacing(7);
+  }
+
+  &::before,
+  &::after {
+    @apply pointer-events-none absolute -z-1;
+    content: "";
+  }
+
+  &::before {
+    --project-case-cta-from: var(--gradient-cta-from);
+    --project-case-cta-to: var(--gradient-cta-to);
+
+    @apply inset-0;
+    background-image: linear-gradient(
+      120deg,
+      var(--project-case-cta-from),
+      var(--project-case-cta-to) 60%,
+      var(--project-case-cta-from)
+    );
+    border-radius: var(--project-case-cta-radius);
+    clip-path: polygon(
+      var(--project-case-cta-cut) 0,
+      100% 0,
+      100% calc(100% - var(--project-case-cta-cut)),
+      calc(100% - var(--project-case-cta-cut)) 100%,
+      0 100%,
+      0 var(--project-case-cta-cut)
+    );
+    transition-property: border-radius, clip-path, --project-case-cta-from, --project-case-cta-to;
+  }
+
+  &::after {
+    --project-case-cta-glow: color-mix(in oklab, var(--color-primary) 14%, transparent);
+
+    inset: --spacing(0.25);
+    background-color: var(--color-base-200);
+    background-image: radial-gradient(
+      ellipse 80% 120% at 0% 0%,
+      var(--project-case-cta-glow),
+      transparent 60%
+    );
+    border-radius: var(--project-case-cta-inner-radius);
+    clip-path: polygon(
+      var(--project-case-cta-inner-cut) 0,
+      100% 0,
+      100% calc(100% - var(--project-case-cta-inner-cut)),
+      calc(100% - var(--project-case-cta-inner-cut)) 100%,
+      0 100%,
+      0 var(--project-case-cta-inner-cut)
+    );
+    transition-property: background-color, border-radius, clip-path, --project-case-cta-glow;
+  }
+
+  &:hover::after,
+  &:focus-within::after {
+    --project-case-cta-glow: color-mix(in oklab, var(--color-primary) 24%, transparent);
+  }
+
+  @variant motion-reduce {
+    &::before,
+    &::after {
+      @apply transition-none;
+    }
+  }
+}
+
+.project-case-cta-text {
+  @apply m-0 text-base-content/82;
+  font-size: --spacing(3.5);
+  line-height: 1.8;
+
+  @variant md {
+    font-size: --spacing(4);
+  }
+
+  :where([data-theme="cyber-sakura"]) & {
+    @apply text-base-content/84;
+  }
+}
+
+.project-case-cta-actions {
+  @apply flex flex-wrap items-center;
+  gap: --spacing(3) --spacing(5);
+}
+
+.project-case-cta-icon {
+  width: --spacing(4.5);
+  aspect-ratio: 18 / 12;
+  translate: 0rem;
+  transition-property: translate, color, background-color;
+
+  .project-case-cta-main:hover &,
+  .project-case-cta-main:focus-visible & {
+    translate: --spacing(1);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.project-case-cta-live {
+  --btn-ink: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+
+  gap: --spacing(2);
+  letter-spacing: 0.08em;
+
+  @variant hover {
+    --btn-ink: var(--color-base-content);
+  }
+
+  @variant focus-visible {
+    --btn-ink: var(--color-base-content);
+    outline: --spacing(0.5) solid var(--color-brand);
+    outline-offset: --spacing(1);
+  }
+}
+
+.project-case-cta-live-icon {
+  width: --spacing(3);
+  aspect-ratio: 14 / 14;
+  translate: 0rem 0rem;
+  transition-property: translate, color, background-color;
+
+  .project-case-cta-live:hover &,
+  .project-case-cta-live:focus-visible & {
+    translate: --spacing(0.5) --spacing(-0.5);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}

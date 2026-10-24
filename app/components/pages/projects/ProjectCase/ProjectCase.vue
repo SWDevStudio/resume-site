@@ -16,7 +16,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import PageSections from "~/components/pages/shared/PageSections/PageSections.vue";
 import { pageToneClass } from "~/components/pages/shared/pageTone";
-import type { ProjectBlock, ProjectCaseTone } from "~/types/projectCase";
+import type { ProjectBlock, ProjectCaseTone } from "~/assets/api/types/projectCase";
 import ProjectCaseBlocks from "./ProjectCaseBlocks.vue";
 
 const props = defineProps<{

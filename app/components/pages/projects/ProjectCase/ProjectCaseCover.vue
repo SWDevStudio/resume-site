@@ -27,8 +27,9 @@
       <div class="project-case-phone">
         <div class="project-case-phone-screen">
           <img
-            class="project-case-shot project-case-shot-phone"
-            :src="image"
+            class="project-case-shot"
+            :class="phoneClass"
+            :src="phoneImage"
             alt=""
           />
           <span class="project-case-island" />
@@ -41,13 +42,19 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { resolveProjectImage } from "~/components/pages/shared/projectImage";
-import type { ProjectCaseCoverData } from "~/types/projectCase";
+import type { ProjectCaseCoverData } from "~/assets/api/types/projectCase";
 
 const props = defineProps<{
   data: ProjectCaseCoverData;
 }>();
 
 const image = computed(() => resolveProjectImage(props.data.image));
+const phoneImage = computed(() =>
+  props.data.imageMobile ? resolveProjectImage(props.data.imageMobile) : image.value,
+);
+const phoneClass = computed(() =>
+  props.data.imageMobile ? "project-case-shot-mobile" : "project-case-shot-phone",
+);
 </script>
 
 <style src="./ProjectCaseCover.css" />

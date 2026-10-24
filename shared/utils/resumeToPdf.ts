@@ -5,7 +5,7 @@ import type {
   ResumeJob,
   ResumePersonalProject,
   ResumeProject,
-} from "../types/resume";
+} from "../../app/assets/api/types/resume";
 
 const PAGE = { width: 595.28, margin: { left: 42, right: 42, top: 44, bottom: 52 } };
 const CONTENT_WIDTH = PAGE.width - PAGE.margin.left - PAGE.margin.right;

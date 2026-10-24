@@ -19,7 +19,7 @@ import type {
   BlogPostRelatedData,
   BlogPostSourceData,
   BlogPostTagsData,
-} from "~/types/blog";
+} from "~/assets/api/types/blog";
 import BlogPost from "./BlogPost.vue";
 import { blogPostBlockNames } from "./blogPostBlocks";
 import { setTheme } from "../../../../../test/mocks/useTheme";

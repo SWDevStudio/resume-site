@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { ResumeListEntry } from "#shared/types/resume";
+import type { ResumeListEntry } from "~/assets/api/types/resume";
 
 const props = defineProps<{
   items: (string | ResumeListEntry)[];

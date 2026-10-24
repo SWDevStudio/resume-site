@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, type Locale } from "../../../app/assets/const/locale";
+import { DEFAULT_LOCALE, type Locale } from "../../../const/locale";
 import type { ByLocale } from "../../types/catalog";
 
 export function textLayers<T>(texts: ByLocale<T>, locale: Locale): T[] {

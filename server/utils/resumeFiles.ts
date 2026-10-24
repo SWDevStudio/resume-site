@@ -3,8 +3,8 @@ import vfs from "pdfmake/build/vfs_fonts";
 import { LOCALES, type Locale } from "../../app/assets/const/locale";
 import { resumeToMarkdown } from "../../shared/utils/resumeToMarkdown";
 import { resumeToPdf } from "../../shared/utils/resumeToPdf";
-import { buildResume } from "../../shared/mock/build/resume";
-import { staticSources } from "../../shared/mock/sources.static";
+import { buildResume } from "../../app/assets/api/mock/build/resume";
+import { staticSources } from "../../app/assets/api/mock/sources.static";
 
 interface VirtualFs {
   writeFileSync(file: string, content: Buffer): void;

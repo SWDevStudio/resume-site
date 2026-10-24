@@ -1,4 +1,4 @@
-import type { BlogKind, BlogPostSummary } from "~/types/blog";
+import type { BlogKind, BlogPostSummary } from "~/assets/api/types/blog";
 
 export interface BlogKindCount {
   kind: BlogKind;

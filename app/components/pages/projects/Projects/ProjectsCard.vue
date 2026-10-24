@@ -39,6 +39,7 @@
     </component>
     <ProjectsCardCover
       :image="project.preview"
+      :image-mobile="project.previewMobile"
       :alt="project.previewAlt"
     />
     <p class="projects-card-text">{{ project.description }}</p>
@@ -61,7 +62,7 @@ import { pageToneClass } from "~/components/pages/shared/pageTone";
 import { useSectionEntry } from "~/components/pages/shared/PageSections/usePageSections";
 import UiButton from "~/components/ui/UiButton/UiButton.vue";
 import UiIcon from "~/components/ui/UiIcon/UiIcon.vue";
-import type { ProjectView, Tone } from "#shared/types/catalog";
+import type { ProjectView, Tone } from "~/assets/api/types/catalog";
 import ProjectsCardCover from "./ProjectsCardCover.vue";
 import ProjectsCardTags from "./ProjectsCardTags.vue";
 

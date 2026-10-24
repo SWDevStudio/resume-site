@@ -9,7 +9,7 @@ import type {
   BlogPostSourceData,
   BlogPostSummary,
   BlogPostTagsData,
-} from "~/types/blog";
+} from "~/assets/api/types/blog";
 import { $api } from "./index";
 
 const files = import.meta.glob<BlogBlock[]>("../data/blog/posts/*.ts", {

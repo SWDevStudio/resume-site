@@ -1,5 +1,5 @@
 import type { SkillGroupView, SkillRegistry, SkillsSources, SkillsText } from "../../types/catalog";
-import type { Locale } from "../../../app/assets/const/locale";
+import type { Locale } from "../../../const/locale";
 import { firstDefined, textLayers } from "./layers";
 
 function skillName(layers: SkillsText[], id: string): string {

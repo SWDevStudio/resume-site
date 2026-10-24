@@ -1,11 +1,11 @@
-import type { ProjectDefinition } from "../../../../../shared/types/catalog";
+import type { ProjectDefinition } from "../../../api/types/catalog";
 
 const project = {
   id: "pine-ridge",
   name: "Pine Ridge",
   tone: "accent",
   url: null,
-  preview: "pine-ridge.svg",
+  preview: "pine-ridge/media/preview.svg",
   tags: ["booking", "seo", "mobile-first"],
   stack: ["next-js", "type-script", "node-js", "postgre-sql"],
   isFavorite: true,

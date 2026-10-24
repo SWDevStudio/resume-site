@@ -26,13 +26,22 @@
 
 <script setup lang="ts">
 import { computed, type Component } from "vue";
-import type { ProjectBlock } from "~/types/projectCase";
+import type { ProjectBlock } from "~/assets/api/types/projectCase";
+import ProjectCaseArchitecture from "./ProjectCaseArchitecture.vue";
+import ProjectCaseChallenges from "./ProjectCaseChallenges.vue";
 import ProjectCaseChapter from "./ProjectCaseChapter.vue";
 import ProjectCaseCover from "./ProjectCaseCover.vue";
+import ProjectCaseCta from "./ProjectCaseCta.vue";
+import ProjectCaseFacts from "./ProjectCaseFacts.vue";
+import ProjectCaseGoal from "./ProjectCaseGoal.vue";
 import ProjectCaseHeader from "./ProjectCaseHeader.vue";
+import ProjectCaseIntegrations from "./ProjectCaseIntegrations.vue";
 import ProjectCaseMeta from "./ProjectCaseMeta.vue";
 import ProjectCaseNext from "./ProjectCaseNext.vue";
+import ProjectCasePipeline from "./ProjectCasePipeline.vue";
 import ProjectCaseResults from "./ProjectCaseResults.vue";
+import ProjectCaseRole from "./ProjectCaseRole.vue";
+import ProjectCaseSteps from "./ProjectCaseSteps.vue";
 import ProjectCaseText from "./ProjectCaseText.vue";
 
 const props = defineProps<{
@@ -45,9 +54,18 @@ function registry(): Record<string, Component> {
     ProjectCaseHeader,
     ProjectCaseCover,
     ProjectCaseMeta,
+    ProjectCaseFacts,
+    ProjectCaseRole,
     ProjectCaseChapter,
     ProjectCaseText,
+    ProjectCaseGoal,
+    ProjectCaseSteps,
+    ProjectCaseArchitecture,
+    ProjectCaseIntegrations,
+    ProjectCasePipeline,
+    ProjectCaseChallenges,
     ProjectCaseResults,
+    ProjectCaseCta,
     ProjectCaseNext,
   };
 }

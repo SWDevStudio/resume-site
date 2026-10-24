@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import { computed, type Component } from "vue";
-import type { BlogBlock } from "~/types/blog";
+import type { BlogBlock } from "~/assets/api/types/blog";
 import { blogPostBlocks } from "./blogPostBlocks";
 
 const props = defineProps<{

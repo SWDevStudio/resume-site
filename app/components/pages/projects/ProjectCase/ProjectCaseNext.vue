@@ -32,7 +32,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { pageToneClass } from "~/components/pages/shared/pageTone";
 import UiIcon from "~/components/ui/UiIcon/UiIcon.vue";
-import type { ProjectCaseNextData } from "~/types/projectCase";
+import type { ProjectCaseNextData } from "~/assets/api/types/projectCase";
 
 const props = defineProps<{
   data: ProjectCaseNextData;

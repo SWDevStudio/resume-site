@@ -39,7 +39,7 @@ import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { countBlogKinds } from "~/components/pages/blog/shared/blogCatalog";
 import PageSections from "~/components/pages/shared/PageSections/PageSections.vue";
-import type { BlogPostSummary } from "~/types/blog";
+import type { BlogPostSummary } from "~/assets/api/types/blog";
 import BlogCard from "./BlogCard.vue";
 import type { BlogFilter, BlogFilterOption } from "./blogFilter";
 import BlogFilters from "./BlogFilters.vue";

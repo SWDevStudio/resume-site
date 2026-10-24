@@ -1,8 +1,8 @@
-import type { ProjectView, SkillGroupView } from "#shared/types/catalog";
-import type { ProjectBlock } from "~/types/projectCase";
+import type { ProjectView, SkillGroupView } from "~/assets/api/types/catalog";
+import type { ProjectBlock } from "~/assets/api/types/projectCase";
 import { blog } from "./blog";
 import { contact } from "./contact";
-import { buildCase, buildProjects, buildResume, buildSkillGroups } from "#shared/mock/build";
+import { buildCase, buildProjects, buildResume, buildSkillGroups } from "~/assets/api/mock/build";
 import { resolveLocale } from "./locale";
 import {
   loadCaseBlocks,
@@ -10,7 +10,7 @@ import {
   loadResumeSources,
   loadSkillsSources,
 } from "./sources";
-import type { ResumeData } from "#shared/types/resume";
+import type { ResumeData } from "~/assets/api/types/resume";
 
 const profile = {
   async fetchResume(): Promise<ResumeData> {

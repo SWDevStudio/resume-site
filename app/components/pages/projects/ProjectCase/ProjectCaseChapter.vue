@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import PageSection from "~/components/pages/shared/PageSections/PageSection.vue";
-import type { ProjectCaseChapterData } from "~/types/projectCase";
+import type { ProjectCaseChapterData } from "~/assets/api/types/projectCase";
 import ProjectCaseBlocks from "./ProjectCaseBlocks.vue";
 
 defineProps<{

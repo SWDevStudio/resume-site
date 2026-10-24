@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { pageToneClass } from "~/components/pages/shared/pageTone";
-import type { BlogTone } from "~/types/blog";
+import type { BlogTone } from "~/assets/api/types/blog";
 
 const props = withDefaults(
   defineProps<{

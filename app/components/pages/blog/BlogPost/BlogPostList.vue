@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { BlogPostListData } from "~/types/blog";
+import type { BlogPostListData } from "~/assets/api/types/blog";
 
 const props = defineProps<{
   data: BlogPostListData;

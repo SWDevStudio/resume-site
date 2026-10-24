@@ -1,4 +1,4 @@
-import type { ByLocale, ProjectsText } from "../../../../shared/types/catalog";
+import type { ByLocale, ProjectsText } from "../../api/types/catalog";
 
 export const projectLabels = {
   ru: {

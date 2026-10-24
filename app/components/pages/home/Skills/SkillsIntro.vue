@@ -25,7 +25,7 @@ import { useToggle } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import UiButton from "~/components/ui/UiButton/UiButton.vue";
 import UiIcon from "~/components/ui/UiIcon/UiIcon.vue";
-import type { SkillGroupView } from "#shared/types/catalog";
+import type { SkillGroupView } from "~/assets/api/types/catalog";
 import SkillsAll from "./SkillsAll.vue";
 
 defineProps<{

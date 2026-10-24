@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import type { BlogCoverVideo } from "~/types/blog";
+import type { BlogCoverVideo } from "~/assets/api/types/blog";
 
 defineProps<{
   cover: BlogCoverVideo;

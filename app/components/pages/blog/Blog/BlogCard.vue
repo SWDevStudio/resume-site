@@ -68,7 +68,7 @@ import BlogSourceLink from "~/components/pages/blog/shared/BlogSourceLink/BlogSo
 import { blogTone, blogToneClass } from "~/components/pages/blog/shared/blogTone";
 import { useSectionEntry } from "~/components/pages/shared/PageSections/usePageSections";
 import UiButton from "~/components/ui/UiButton/UiButton.vue";
-import type { BlogPostSummary } from "~/types/blog";
+import type { BlogPostSummary } from "~/assets/api/types/blog";
 
 const props = defineProps<{
   post: BlogPostSummary;

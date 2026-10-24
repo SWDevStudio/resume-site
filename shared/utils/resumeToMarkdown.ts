@@ -1,4 +1,9 @@
-import type { ResumeData, ResumeItem, ResumeJob, ResumeLink } from "../types/resume";
+import type {
+  ResumeData,
+  ResumeItem,
+  ResumeJob,
+  ResumeLink,
+} from "../../app/assets/api/types/resume";
 
 function escape(text: string) {
   return text.replace(/[\\*`[\]]/g, (char) => `\\${char}`);

@@ -30,7 +30,7 @@
 import { computed } from "vue";
 import ResumeActions from "./ResumeActions.vue";
 import ResumeContacts from "./ResumeContacts.vue";
-import type { ResumeProfile } from "#shared/types/resume";
+import type { ResumeProfile } from "~/assets/api/types/resume";
 
 const props = defineProps<{
   profile: ResumeProfile;

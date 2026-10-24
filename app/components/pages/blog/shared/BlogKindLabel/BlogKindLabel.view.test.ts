@@ -7,7 +7,7 @@ import type { Locale } from "~/assets/const";
 import posts from "~/assets/data/blog/posts";
 import en from "~/locales/en.json";
 import ru from "~/locales/ru.json";
-import type { BlogPostHead, BlogPostSummary } from "~/types/blog";
+import type { BlogPostHead, BlogPostSummary } from "~/assets/api/types/blog";
 import BlogKindLabel from "./BlogKindLabel.vue";
 import "~/assets/css/fonts.css";
 import "~/assets/css/main.css";

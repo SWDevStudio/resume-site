@@ -3,8 +3,8 @@ import { LOCALES, type Locale } from "~/assets/const";
 import enResume from "~/assets/data/en/resume";
 import ruResume from "~/assets/data/ru/resume";
 import { $api } from "./index";
-import { buildProjects, buildResume, buildSkillGroups } from "#shared/mock/build";
-import { staticSources } from "#shared/mock/sources.static";
+import { buildProjects, buildResume, buildSkillGroups } from "~/assets/api/mock/build";
+import { staticSources } from "~/assets/api/mock/sources.static";
 
 const state = vi.hoisted(() => ({ locale: "ru" }));
 

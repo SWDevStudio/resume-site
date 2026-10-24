@@ -4,7 +4,10 @@
     role="img"
     :aria-label="alt"
   >
-    <PageDevices :image="source" />
+    <PageDevices
+      :image="source"
+      :image-mobile="mobileSource"
+    />
   </PageCover>
 </template>
 
@@ -16,10 +19,14 @@ import { resolveProjectImage } from "~/components/pages/shared/projectImage";
 
 const props = defineProps<{
   image: string;
+  imageMobile?: string | null;
   alt: string;
 }>();
 
 const source = computed(() => resolveProjectImage(props.image));
+const mobileSource = computed(() =>
+  props.imageMobile ? resolveProjectImage(props.imageMobile) : null,
+);
 </script>
 
 <style src="./ProjectsCardCover.css" />

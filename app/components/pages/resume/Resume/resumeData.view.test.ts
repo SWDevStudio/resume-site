@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { buildProjects, buildResume, buildSkillGroups } from "#shared/mock/build";
-import { staticSources } from "#shared/mock/sources.static";
+import { buildProjects, buildResume, buildSkillGroups } from "~/assets/api/mock/build";
+import { staticSources } from "~/assets/api/mock/sources.static";
 import { projects as canonProjects } from "~/assets/data/projects";
 import { skillPanelSources } from "~/components/pages/home/Skills/skillPanels";
 import { skillTileId } from "~/components/pages/home/Skills/skillIds";
 import { buildToolkit } from "~/components/pages/home/Skills/toolkit";
 import { SkillTile } from "~/components/ui/UiSkillTile/skillTile";
-import type { ResumeData } from "#shared/types/resume";
+import type { ResumeData } from "~/assets/api/types/resume";
 
 const files: Record<"en" | "ru", ResumeData> = {
   en: buildResume(staticSources("en"), "en"),

@@ -2,7 +2,7 @@ import { h } from "vue";
 import { cdp, page } from "vitest/browser";
 import { render } from "vitest-browser-vue";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import type { BlogTone } from "~/types/blog";
+import type { BlogTone } from "~/assets/api/types/blog";
 import BlogTag from "./BlogTag.vue";
 import "~/assets/css/fonts.css";
 import "~/assets/css/main.css";

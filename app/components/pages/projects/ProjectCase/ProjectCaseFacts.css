@@ -1,0 +1,62 @@
+@reference "~/assets/css/main.css";
+
+.project-case-facts {
+  container-type: inline-size;
+}
+
+.project-case-facts-list {
+  --project-case-facts-line: color-mix(in oklab, var(--color-primary) 45%, transparent);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --project-case-facts-line: color-mix(in oklab, var(--color-accent) 70%, transparent);
+  }
+
+  @apply m-0 grid overflow-hidden p-0;
+  grid-template-columns: repeat(var(--project-case-facts-columns-sm, 1), minmax(0, 1fr));
+  gap: --spacing(0.25);
+  padding: --spacing(0.25);
+  background-color: var(--project-case-facts-line);
+  border-radius: var(--radius-field);
+  clip-path: polygon(
+    var(--cut-field) 0,
+    100% 0,
+    100% calc(100% - var(--cut-field)),
+    calc(100% - var(--cut-field)) 100%,
+    0 100%,
+    0 var(--cut-field)
+  );
+  transition-property: background-color, border-radius, clip-path;
+
+  @container (min-width: 32rem) {
+    grid-template-columns: repeat(var(--project-case-facts-columns-md, 1), minmax(0, 1fr));
+  }
+
+  @container (min-width: 50rem) {
+    grid-template-columns: repeat(var(--project-case-facts-columns, 1), minmax(0, 1fr));
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.project-case-fact {
+  @apply flex min-w-0 flex-col;
+  gap: --spacing(1);
+  padding: --spacing(4) --spacing(4.5);
+  background-color: var(--color-base-200);
+}
+
+.project-case-fact-label {
+  @apply uppercase;
+  font-size: --spacing(3);
+  line-height: 1.5;
+  letter-spacing: 0.18em;
+  color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+}
+
+.project-case-fact-value {
+  @apply m-0 font-normal text-base-content;
+  font-size: --spacing(3.5);
+  line-height: 1.5;
+}

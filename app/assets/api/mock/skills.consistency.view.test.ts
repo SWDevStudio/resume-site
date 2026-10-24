@@ -6,15 +6,15 @@ import { skillTileId } from "~/components/pages/home/Skills/skillIds";
 import { skillPanelSources } from "~/components/pages/home/Skills/skillPanels";
 import { buildToolkit } from "~/components/pages/home/Skills/toolkit";
 import { SKILL_TILE_META, SkillTile } from "~/components/ui/UiSkillTile/skillTile";
-import type { ProjectCanon, SkillsCanon, SkillsText } from "#shared/types/catalog";
+import type { ProjectCanon, SkillsCanon, SkillsText } from "~/assets/api/types/catalog";
 import {
   buildResume,
   buildSkillGroups,
   buildSkillRegistry,
   resolveStack,
-} from "#shared/mock/build";
+} from "~/assets/api/mock/build";
 import { $api } from "~/assets/api";
-import { staticSources } from "#shared/mock/sources.static";
+import { staticSources } from "~/assets/api/mock/sources.static";
 
 const state = vi.hoisted(() => ({ locale: "ru" }));
 
@@ -33,13 +33,10 @@ const ASCII = /^[\x20-\x7e]+$/;
 const GROUPS = ["frontend", "backend", "lead", "additional"];
 const TOOLKIT_SIZE = 35;
 
-const textFiles = import.meta.glob<SkillsText>(
-  ["../../app/assets/data/*/skills.ts", "!../../app/assets/data/canon/**"],
-  {
-    eager: true,
-    import: "default",
-  },
-);
+const textFiles = import.meta.glob<SkillsText>(["../../data/*/skills.ts", "!../../data/canon/**"], {
+  eager: true,
+  import: "default",
+});
 
 const texts = Object.entries(textFiles).map(([path, data]) => ({
   locale: /\/data\/([^/]+)\//.exec(path)![1]!,

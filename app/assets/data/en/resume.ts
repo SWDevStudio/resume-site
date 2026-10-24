@@ -1,4 +1,4 @@
-import type { ResumeFile } from "../../../../shared/types/catalog";
+import type { ResumeFile } from "../../api/types/catalog";
 import { SOCIAL } from "../../const/social";
 
 const resume = {

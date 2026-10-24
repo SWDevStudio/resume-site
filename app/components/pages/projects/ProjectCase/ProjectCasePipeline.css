@@ -1,0 +1,48 @@
+@reference "~/assets/css/main.css";
+
+.project-case-pipeline {
+  @apply m-0 flex list-none flex-wrap items-center p-0;
+  gap: --spacing(2.5);
+}
+
+.project-case-pipeline-step {
+  @apply flex flex-wrap items-center;
+  gap: --spacing(2.5);
+}
+
+.project-case-pipeline-stage {
+  --badge-ink: var(--color-base-content);
+
+  font-size: --spacing(3.5);
+  line-height: 1.5;
+  padding-block: calc(var(--badge-border) + --spacing(1.25));
+  padding-inline: calc(var(--badge-border) + --spacing(3));
+
+  .project-case-pipeline-step:hover & {
+    --badge-fill: color-mix(in srgb, var(--color-accent) 22%, var(--color-base-200));
+  }
+}
+
+.project-case-pipeline-link {
+  @apply inline-flex items-center;
+  gap: --spacing(2);
+  font-size: --spacing(3.5);
+  line-height: 1.5;
+  color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+}
+
+.project-case-pipeline-arrow {
+  width: --spacing(3.5);
+  aspect-ratio: 18 / 12;
+  color: var(--color-accent-ink);
+  translate: 0rem;
+  transition-property: translate, color, background-color;
+
+  .project-case-pipeline-step:hover & {
+    translate: --spacing(1);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}

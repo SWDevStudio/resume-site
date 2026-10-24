@@ -40,7 +40,7 @@
 import { computed } from "vue";
 import ResumeLink from "./ResumeLink.vue";
 import ResumeList from "./ResumeList.vue";
-import type { ResumeProject } from "#shared/types/resume";
+import type { ResumeProject } from "~/assets/api/types/resume";
 
 const props = defineProps<{
   project: ResumeProject;

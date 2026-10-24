@@ -1,4 +1,4 @@
-import type { ProjectCanon, ProjectsText } from "../../../../shared/types/catalog";
+import type { ProjectCanon, ProjectsText } from "../../api/types/catalog";
 import type { Locale } from "../../const/locale";
 import qwixit from "./qwixit";
 import brendmart from "./brendmart";

@@ -3,7 +3,7 @@ import { $api } from "~/assets/api";
 import { Route } from "~/assets/const";
 import en from "~/locales/en.json";
 import ru from "~/locales/ru.json";
-import type { BlogKind, BlogPostSummary } from "~/types/blog";
+import type { BlogKind, BlogPostSummary } from "~/assets/api/types/blog";
 import { countBlogKinds } from "./blogCatalog";
 import { blogTone, blogToneClass } from "./blogTone";
 

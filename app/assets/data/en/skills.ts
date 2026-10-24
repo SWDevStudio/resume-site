@@ -1,4 +1,4 @@
-import type { SkillsText } from "../../../../shared/types/catalog";
+import type { SkillsText } from "../../api/types/catalog";
 
 const skills = {
   groups: {

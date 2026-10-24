@@ -10,7 +10,7 @@ import TheHeader from "~/components/global/TheHeader/TheHeader.vue";
 import { countBlogKinds } from "~/components/pages/blog/shared/blogCatalog";
 import en from "~/locales/en.json";
 import ru from "~/locales/ru.json";
-import type { BlogKind, BlogPostSummary } from "~/types/blog";
+import type { BlogKind, BlogPostSummary } from "~/assets/api/types/blog";
 import Blog from "./Blog.vue";
 import { setTheme } from "../../../../../test/mocks/useTheme";
 import "~/assets/css/fonts.css";

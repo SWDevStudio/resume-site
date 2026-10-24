@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { BlogCoverText } from "~/types/blog";
+import type { BlogCoverText } from "~/assets/api/types/blog";
 
 const props = defineProps<{
   cover: BlogCoverText;
