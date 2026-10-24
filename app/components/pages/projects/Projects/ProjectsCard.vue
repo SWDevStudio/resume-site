@@ -28,14 +28,19 @@
       :id="headingId"
       class="projects-card-title"
     >
-      <span
-        class="projects-card-name"
-        lang="en"
-        data-atom-skip
+      <NuxtLinkLocale
+        class="projects-card-link"
+        :to="href"
       >
-        {{ name }}
-      </span>
-      <span class="projects-card-headline">{{ project.headline }}</span>
+        <span
+          class="projects-card-name"
+          lang="en"
+          data-atom-skip
+        >
+          {{ name }}
+        </span>
+        <span class="projects-card-headline">{{ project.headline }}</span>
+      </NuxtLinkLocale>
     </component>
     <ProjectsCardCover
       :image="project.preview"
@@ -55,6 +60,7 @@
 </template>
 
 <script setup lang="ts">
+import { NuxtLinkLocale } from "#components";
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { Route } from "~/assets/const";
