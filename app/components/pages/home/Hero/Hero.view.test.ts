@@ -13,6 +13,9 @@ import "~/assets/css/fonts.css";
 import "~/assets/css/main.css";
 
 vi.mock("~/composables/useTheme", () => import("../../../../../test/mocks/useTheme"));
+vi.mock("~/composables/useLocale", () => ({
+  useLocale: () => ({ locale: { value: "en" }, locales: ["ru", "en"], setLocale: vi.fn() }),
+}));
 
 interface HeroCase {
   name: string;

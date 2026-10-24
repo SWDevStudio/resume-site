@@ -146,10 +146,18 @@
 
   & img {
     @apply max-w-none;
+    transition-property: opacity;
+
+    &[data-hero-pending] {
+      @apply opacity-0 transition-none;
+    }
   }
 
   @variant motion-reduce {
-    @apply transition-none;
+    &,
+    & img {
+      @apply transition-none;
+    }
   }
 }
 
@@ -161,6 +169,12 @@
 .home-hero-day {
   opacity: var(--home-hero-day);
   visibility: var(--home-hero-day-visibility);
+}
+
+.home-hero-late {
+  @starting-style {
+    opacity: 0;
+  }
 }
 
 .home-hero-sky {

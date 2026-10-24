@@ -4,18 +4,21 @@
     aria-hidden="true"
   >
     <img
+      v-hero-image-fade
       class="home-hero-sky"
       src="./media/clouds-high-cyber-sakura.svg"
       alt=""
     />
     <div class="home-hero-scene">
       <img
+        v-hero-image-fade
         class="home-hero-fuji"
         src="./media/fuji-cyber-sakura.svg"
         alt=""
       />
     </div>
     <img
+      v-hero-image-fade
       class="home-hero-sky"
       src="./media/clouds-low-cyber-sakura.svg"
       alt=""
@@ -26,16 +29,19 @@
     <span class="home-hero-horizon" />
 
     <img
+      v-hero-image-fade
       class="home-hero-branch home-hero-branch-large"
       src="./media/branch-large-cyber-sakura.webp"
       alt=""
     />
     <img
+      v-hero-image-fade
       class="home-hero-branch home-hero-branch-corner"
       src="./media/branch-corner-cyber-sakura.webp"
       alt=""
     />
     <img
+      v-hero-image-fade
       class="home-hero-branch home-hero-branch-low"
       src="./media/branch-low-cyber-sakura.webp"
       alt=""
@@ -65,6 +71,7 @@
 <script setup lang="ts">
 import HeroFloor from "./HeroFloor.vue";
 import { petals } from "./heroDecor";
+import { vHeroImageFade } from "./heroImageFade";
 </script>
 
 <style src="./HeroDay.css" />
