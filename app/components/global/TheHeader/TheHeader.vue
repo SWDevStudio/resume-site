@@ -79,7 +79,7 @@ const items = [
   { key: "about", label: "nav.about", to: Route.about },
   { key: "portfolio", label: "nav.portfolio", to: Route.resume },
   { key: "blog", label: "nav.blog", to: Route.blog },
-  { key: "contact", label: "nav.contact", to: Route.contact },
+  { key: "projects", label: "nav.projects", to: Route.projects },
 ] as const;
 
 const { t } = useI18n();
