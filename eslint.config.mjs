@@ -39,10 +39,7 @@ export default withNuxt(
     files: codeFiles,
     plugins: { "@stylistic": stylistic },
     rules: {
-      "@stylistic/object-curly-newline": [
-        "error",
-        { TSTypeLiteral: { minProperties: 2, consistent: true } },
-      ],
+      "@stylistic/object-curly-newline": ["error", { TSTypeLiteral: { consistent: true } }],
     },
   },
   {
