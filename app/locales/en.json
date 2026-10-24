@@ -246,6 +246,25 @@
     },
     "empty": "Nothing here yet"
   },
+  "seo": {
+    "home": {
+      "description": "Michael’s portfolio: projects, blog, resume and contacts."
+    }
+  },
+  "error": {
+    "eyebrow": "ERROR",
+    "home": "Back to home",
+    "notFound": {
+      "title": "Page",
+      "titleAccent": "not found",
+      "text": "This page doesn't exist or has moved. Start from the home page."
+    },
+    "generic": {
+      "title": "Something",
+      "titleAccent": "went wrong",
+      "text": "The page couldn't be loaded. Try again later or go back to the home page."
+    }
+  },
   "layout": {
     "skipLink": "Skip to content"
   },

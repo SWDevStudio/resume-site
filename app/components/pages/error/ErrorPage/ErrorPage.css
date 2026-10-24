@@ -1,0 +1,142 @@
+@reference "~/assets/css/main.css";
+
+@property --error-page-code-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --error-page-code-via {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --error-page-code-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.error-page {
+  --error-page-header: --spacing(23);
+
+  @variant md {
+    --error-page-header: --spacing(23.5);
+  }
+
+  @variant lg {
+    --error-page-header: --spacing(17.5);
+  }
+
+  @apply flex flex-col items-start;
+  gap: --spacing(8);
+  padding-top: var(--error-page-header);
+  padding-bottom: --spacing(14);
+
+  @variant md {
+    gap: --spacing(10);
+    padding-bottom: --spacing(20);
+  }
+
+  @variant lg {
+    padding-bottom: --spacing(24);
+  }
+}
+
+.error-page-header {
+  @apply flex flex-col;
+  gap: --spacing(4);
+  padding-top: --spacing(2);
+
+  @variant md {
+    padding-top: --spacing(6);
+  }
+
+  @variant lg {
+    padding-top: --spacing(12);
+  }
+}
+
+.error-page-eyebrow {
+  font-size: --spacing(3);
+  letter-spacing: 0.3em;
+  color: var(--color-primary-ink);
+}
+
+.error-page-code {
+  --error-page-code-from: var(--gradient-cta-from);
+  --error-page-code-via: var(--gradient-cta-via);
+  --error-page-code-to: var(--gradient-cta-to);
+
+  @apply m-0 self-start bg-clip-text font-normal text-transparent;
+  font-family: "Righteous", sans-serif;
+  font-size: --spacing(28);
+  line-height: 1;
+  letter-spacing: --spacing(0.5);
+  background-image: linear-gradient(
+    90deg,
+    var(--error-page-code-from),
+    var(--error-page-code-via) 55%,
+    var(--error-page-code-to)
+  );
+  filter: var(--glow-primary);
+  transition-property: filter, --error-page-code-from, --error-page-code-via, --error-page-code-to;
+
+  @variant md {
+    font-size: --spacing(40);
+  }
+
+  @variant lg {
+    font-size: --spacing(48);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.error-page-title {
+  @apply m-0 font-head font-normal text-base-content;
+  font-size: --spacing(10);
+  line-height: 1.05;
+
+  @variant md {
+    font-size: --spacing(13);
+  }
+
+  @variant lg {
+    font-size: --spacing(16);
+  }
+}
+
+.error-page-title-accent {
+  color: var(--color-primary-ink);
+}
+
+.error-page-lead {
+  @apply m-0 font-body font-light text-base-content/82;
+  max-width: --spacing(155);
+  font-size: --spacing(3.5);
+  line-height: 1.75;
+
+  :where([data-theme="cyber-sakura"]) & {
+    @apply text-base-content/84;
+  }
+}
+
+.error-page-home-icon {
+  width: --spacing(4.5);
+  aspect-ratio: 18 / 12;
+  translate: 0rem;
+  transition-property: translate, color, background-color;
+
+  .error-page-home:hover &,
+  .error-page-home:focus-visible & {
+    translate: --spacing(1);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}

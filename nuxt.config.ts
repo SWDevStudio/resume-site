@@ -36,7 +36,7 @@ export default defineNuxtConfig({
   i18n: {
     restructureDir: "app",
     langDir: "locales",
-    locales: LOCALES.map((code) => ({ code, file: `${code}.json` })),
+    locales: LOCALES.map((code) => ({ code, language: code, file: `${code}.json` })),
     defaultLocale: DEFAULT_LOCALE,
     strategy: "prefix",
     detectBrowserLanguage: {
