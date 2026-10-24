@@ -1,0 +1,25 @@
+@reference "~/assets/css/main.css";
+
+.projects {
+  --projects-gap: --spacing(7);
+  --page-sections-content-gap: var(--projects-gap);
+
+  padding-bottom: --spacing(14);
+
+  @variant md {
+    --projects-gap: --spacing(9);
+    padding-bottom: --spacing(20);
+  }
+
+  @variant lg {
+    --projects-gap: --spacing(10);
+    --page-sections-nav-inset: --spacing(18);
+    padding-bottom: --spacing(24);
+  }
+}
+
+.projects-rule {
+  @apply block shrink-0;
+  height: --spacing(0.25);
+  background-color: color-mix(in oklab, var(--color-base-content) 12%, transparent);
+}

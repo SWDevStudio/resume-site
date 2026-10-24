@@ -1,0 +1,36 @@
+@reference "~/assets/css/main.css";
+
+.projects-card-tags {
+  @apply m-0 flex list-none flex-wrap p-0;
+  gap: --spacing(2);
+}
+
+.projects-card-tag {
+  --projects-card-tag-cut: --spacing(1.25);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --projects-card-tag-cut: 0rem;
+  }
+
+  @apply text-base-content;
+  padding: --spacing(1) --spacing(3);
+  font-size: --spacing(3.5);
+  line-height: 1.5;
+  background-color: color-mix(in oklab, var(--page-tone-accent) var(--page-tone-soft), transparent);
+  border: --spacing(0.25) solid
+    color-mix(in oklab, var(--page-tone-accent) var(--page-tone-line), transparent);
+  border-radius: var(--radius-selector);
+  clip-path: polygon(
+    var(--projects-card-tag-cut) 0,
+    100% 0,
+    100% calc(100% - var(--projects-card-tag-cut)),
+    calc(100% - var(--projects-card-tag-cut)) 100%,
+    0 100%,
+    0 var(--projects-card-tag-cut)
+  );
+  transition-property: color, background-color, border-color, border-radius, clip-path;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}

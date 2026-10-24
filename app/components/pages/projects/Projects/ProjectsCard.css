@@ -1,0 +1,101 @@
+@reference "~/assets/css/main.css";
+
+.projects-card {
+  @apply flex min-w-0 flex-col;
+  gap: --spacing(4.5);
+}
+
+.projects-card-head {
+  @apply flex flex-wrap items-center justify-between;
+  gap: --spacing(1.5) --spacing(4);
+}
+
+.projects-card-label {
+  @apply inline-flex items-baseline uppercase;
+  gap: --spacing(2.5);
+  font-size: --spacing(3);
+  letter-spacing: 0.14em;
+  line-height: 1.6;
+  color: var(--page-tone-ink);
+}
+
+.projects-card-index {
+  @apply font-body font-normal;
+  font-size: --spacing(3.5);
+  letter-spacing: normal;
+}
+
+.projects-card-live {
+  --btn-ink: var(--page-tone-ink);
+  --btn-height: --spacing(11);
+
+  gap: --spacing(2);
+  letter-spacing: 0.22em;
+
+  &[aria-disabled="true"] {
+    @apply pointer-events-none opacity-50;
+  }
+
+  @variant hover {
+    --btn-ink: var(--color-base-content);
+  }
+
+  @variant focus-visible {
+    --btn-ink: var(--color-base-content);
+    outline: --spacing(0.5) solid var(--color-brand);
+    outline-offset: --spacing(1);
+  }
+}
+
+.projects-card-live-icon {
+  width: --spacing(3);
+  aspect-ratio: 14 / 14;
+  translate: 0rem 0rem;
+  transition-property: translate, color, background-color;
+
+  .projects-card-live:hover &,
+  .projects-card-live:focus-visible & {
+    translate: --spacing(0.5) --spacing(-0.5);
+  }
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.projects-card-title {
+  @apply m-0 font-head font-normal text-base-content;
+  font-size: --spacing(5.5);
+  line-height: 1.15;
+  scroll-margin-top: var(--page-sections-offset, 0rem);
+
+  @variant md {
+    font-size: --spacing(7);
+  }
+
+  @variant lg {
+    font-size: --spacing(7.5);
+  }
+}
+
+.projects-card-name {
+  font-family: "Righteous", sans-serif;
+}
+
+.projects-card-headline {
+  color: color-mix(in oklab, var(--color-base-content) 66%, transparent);
+}
+
+.projects-card-text {
+  @apply m-0 font-body font-light text-base-content/82;
+  font-size: --spacing(3.5);
+  line-height: 1.75;
+
+  @variant md {
+    font-size: --spacing(4);
+  }
+
+  :where([data-theme="cyber-sakura"]) & {
+    @apply text-base-content/84;
+  }
+}

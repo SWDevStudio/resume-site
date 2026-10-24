@@ -1,0 +1,39 @@
+@reference "~/assets/css/main.css";
+
+.projects-header {
+  @apply flex flex-col;
+  gap: --spacing(4);
+  padding-top: --spacing(2);
+
+  @variant md {
+    padding-top: --spacing(6);
+  }
+
+  @variant lg {
+    padding-top: --spacing(12);
+  }
+}
+
+.projects-eyebrow {
+  font-size: --spacing(3);
+  letter-spacing: 0.3em;
+  color: var(--color-primary-ink);
+}
+
+.projects-title {
+  @apply m-0 font-head font-normal text-base-content;
+  font-size: --spacing(10);
+  line-height: 1.05;
+
+  @variant md {
+    font-size: --spacing(13);
+  }
+
+  @variant lg {
+    font-size: --spacing(16);
+  }
+}
+
+.projects-title-accent {
+  color: var(--color-primary-ink);
+}

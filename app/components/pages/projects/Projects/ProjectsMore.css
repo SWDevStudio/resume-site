@@ -1,0 +1,8 @@
+@reference "~/assets/css/main.css";
+
+.projects-more {
+  @apply m-0 font-body font-light text-base-content/66;
+  font-size: --spacing(3.5);
+  line-height: 1.75;
+  scroll-margin-top: var(--page-sections-offset, 0rem);
+}

@@ -1,0 +1,22 @@
+@reference "~/assets/css/main.css";
+
+.projects-card-cover {
+  --page-devices-laptop-top: 76;
+  --page-devices-phone-bottom: 36;
+
+  aspect-ratio: 350 / 230;
+
+  @variant md {
+    --page-devices-laptop-top: 42.3;
+    --page-devices-phone-bottom: 29;
+
+    aspect-ratio: 704 / 380;
+  }
+
+  @variant lg {
+    --page-devices-laptop-top: 31;
+    --page-devices-phone-bottom: 28;
+
+    aspect-ratio: 784 / 400;
+  }
+}
