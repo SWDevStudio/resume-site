@@ -61,6 +61,7 @@ const props = withDefaults(
   defineProps<{
     title: string;
     countRoots?: boolean;
+    count?: number;
     countKey?: string;
   }>(),
   { countKey: "pageSections.count" },
@@ -88,8 +89,9 @@ const rootClass = computed(() => ({ "page-sections-nav-open": open.value }));
 const activeName = computed(
   () => registry.flat.value.find((node) => node.id === registry.active.value)?.name ?? "",
 );
-const count = computed(() =>
-  props.countRoots ? registry.nodes.value.length : registry.flat.value.length,
+const count = computed(
+  () =>
+    props.count ?? (props.countRoots ? registry.nodes.value.length : registry.flat.value.length),
 );
 const summary = computed(
   () => `${activeName.value} · ${t(props.countKey, { count: count.value }, count.value)}`,

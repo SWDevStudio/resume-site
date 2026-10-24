@@ -7,6 +7,7 @@
       <PageSectionsNav
         :title="navTitle"
         :count-roots="countRoots"
+        :count="count"
         :count-key="countKey"
       />
     </div>
@@ -22,6 +23,7 @@ withDefaults(
   defineProps<{
     navTitle: string;
     countRoots?: boolean;
+    count?: number;
     countKey?: string;
   }>(),
   { countKey: "pageSections.count" },
