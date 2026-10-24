@@ -140,17 +140,12 @@
   "projects": {
     "page": {
       "eyebrow": "04 — PORTFOLIO",
-      "title": "My recent",
+      "title": "My",
       "titleAccent": "projects",
-      "intro": {
-        "title": "Info",
-        "text": "Projects whose results I can share. Most of them were a full cycle: from competitor analysis and design to development, Core Web Vitals optimisation, testing and deployment."
-      },
       "more": "[More projects are under NDA — I am happy to walk you through them on a call.]",
       "nav": {
         "title": "On this page",
         "count": "{count} projects",
-        "intro": "About these projects",
         "more": "More on request"
       },
       "card": {

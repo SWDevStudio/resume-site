@@ -6,7 +6,6 @@
     count-key="projects.page.nav.count"
   >
     <ProjectsHeader />
-    <ProjectsIntro />
     <template
       v-for="project in projects"
       :key="project.id"
@@ -28,7 +27,6 @@ import type { ProjectView } from "~/assets/api/types/catalog";
 import PageSections from "~/components/pages/shared/PageSections/PageSections.vue";
 import ProjectsCard from "./ProjectsCard.vue";
 import ProjectsHeader from "./ProjectsHeader.vue";
-import ProjectsIntro from "./ProjectsIntro.vue";
 import ProjectsMore from "./ProjectsMore.vue";
 
 const props = defineProps<{
