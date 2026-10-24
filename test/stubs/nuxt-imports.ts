@@ -10,6 +10,14 @@ export function useHead() {}
 
 export function definePageMeta() {}
 
+export function useState<T>(_key: string, init: () => T) {
+  return ref(init());
+}
+
+export function useNuxtApp() {
+  return { isHydrating: false };
+}
+
 export function tryUseNuxtApp(): null {
   return null;
 }

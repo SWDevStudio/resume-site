@@ -1,18 +1,24 @@
 import { computed, onMounted, ref, watch } from "vue";
 import { useEventListener } from "@vueuse/core";
+import { useNuxtApp, useState } from "#imports";
 import { DEFAULT_THEME, type ThemeId } from "~/assets/const";
 import { useTheme } from "~/composables/useTheme";
 
 export function useThemeLayers<T>(registry: Partial<Record<ThemeId, T>>) {
   const { current } = useTheme();
+  const { isHydrating } = useNuxtApp();
+  const rendered = useState<ThemeId>("theme-layers-rendered", () => current.value);
   const ids = Object.keys(registry) as ThemeId[];
+  const initial = isHydrating ? rendered.value : current.value;
   const mounted = ref(false);
-  const loaded = ref<ThemeId[]>([DEFAULT_THEME]);
 
-  const active = computed<ThemeId>(() => {
-    const id = mounted.value ? current.value : DEFAULT_THEME;
+  function resolve(id: ThemeId) {
     return ids.includes(id) ? id : DEFAULT_THEME;
-  });
+  }
+
+  const loaded = ref<ThemeId[]>([resolve(initial)]);
+
+  const active = computed<ThemeId>(() => resolve(mounted.value ? current.value : initial));
 
   const layers = computed(() =>
     ids

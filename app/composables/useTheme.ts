@@ -1,9 +1,16 @@
 import { computed } from "vue";
-import { createSharedComposable, useColorMode } from "@vueuse/core";
+import {
+  createSharedComposable,
+  useColorMode,
+  useStorage,
+  type BasicColorSchema,
+} from "@vueuse/core";
 import { DEFAULT_THEME, THEME, type ThemeId } from "~/assets/const";
 
 const INSTANT_ATTR = "data-theme-instant";
 const SETTLE_MS = 150;
+const STORAGE_KEY = "vueuse-color-scheme";
+const SERVER_SYSTEM_MODE = "dark";
 
 function transitionMs() {
   const value = getComputedStyle(document.documentElement).getPropertyValue(
@@ -34,19 +41,27 @@ function freezeHiddenElements() {
   }, transitionMs() + SETTLE_MS);
 }
 
-const useSharedColorMode = createSharedComposable(() =>
-  useColorMode({
+function resolveMode<M extends string>(store: string, state: M) {
+  return import.meta.server && store === "auto" ? SERVER_SYSTEM_MODE : state;
+}
+
+const useSharedColorMode = createSharedComposable(() => {
+  const store = useStorage<BasicColorSchema>(STORAGE_KEY, "auto");
+  return useColorMode({
     attribute: "data-theme",
     modes: THEME,
     disableTransition: false,
-  }),
-);
+    storageRef: store,
+    onChanged: (state, apply) => apply(resolveMode(store.value, state)),
+  });
+});
 
 export function useTheme() {
   const mode = useSharedColorMode();
 
   const current = computed<ThemeId>(
-    () => THEME[mode.state.value as keyof typeof THEME] ?? DEFAULT_THEME,
+    () =>
+      THEME[resolveMode(mode.store.value, mode.state.value) as keyof typeof THEME] ?? DEFAULT_THEME,
   );
 
   function toggle() {
