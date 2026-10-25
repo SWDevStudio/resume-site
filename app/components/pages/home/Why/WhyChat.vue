@@ -19,7 +19,7 @@
           :text="t('home.why.chat.greeting')"
         />
         <WhyMessage
-          v-for="message in messages"
+          v-for="message in thread"
           :key="message.id"
           :role="message.role"
           :text="message.text"
@@ -47,10 +47,11 @@
           type="text"
           enterkeyhint="send"
           autocomplete="off"
-          :maxlength="WHY_CHAT_MAX_LENGTH"
+          :maxlength="maxLength"
           :placeholder="t('home.why.chat.placeholder')"
           :aria-label="t('home.why.chat.inputLabel')"
-          :disabled="busy"
+          :disabled="inputDisabled"
+          @focus="prepare"
         />
       </label>
       <UiButton
@@ -98,10 +99,12 @@ import { useI18n } from "vue-i18n";
 import UiButton from "~/components/ui/UiButton/UiButton.vue";
 import UiIcon from "~/components/ui/UiIcon/UiIcon.vue";
 import WhyMessage from "./WhyMessage.vue";
-import { useWhyChat, WHY_CHAT_MAX_LENGTH } from "./useWhyChat";
+import { useWhyChat } from "./useWhyChat";
+import type { WhyMessageData } from "./useWhyChat";
 
 const { t } = useI18n();
-const { messages, status, draft, busy, canSend, send, fill } = useWhyChat();
+const { messages, status, draft, busy, locked, canSend, maxLength, send, fill, prepare } =
+  useWhyChat();
 
 const dialog = ref<HTMLElement | null>(null);
 const input = ref<HTMLInputElement | null>(null);
@@ -113,7 +116,16 @@ const chips = computed(() =>
   chipKeys.map((key) => ({ key, label: t(`home.why.chat.chips.${key}`) })),
 );
 
+function textOf({ kind, text }: WhyMessageData) {
+  return kind === "hint" ? t("home.why.chat.hint") : text;
+}
+
+const thread = computed(() =>
+  messages.value.map((message) => ({ ...message, text: textOf(message) })),
+);
+
 const askDisabled = computed(() => !canSend.value);
+const inputDisabled = computed(() => busy.value || locked.value);
 
 function onSubmit() {
   if (canSend.value) void send();

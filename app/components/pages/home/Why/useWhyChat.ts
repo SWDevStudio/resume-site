@@ -1,98 +1,244 @@
-import { computed, onScopeDispose, ref } from "vue";
-import { useI18n } from "vue-i18n";
-import { askAgent } from "./whyAgent";
+import { computed, onMounted, onScopeDispose, ref } from "vue";
+import { useToggle } from "@vueuse/core";
+import { $api } from "~/assets/api";
+import type {
+  AssistantDoneEvent,
+  AssistantEvent,
+  AssistantRefusalEvent,
+  AssistantRefusalReason,
+} from "~/assets/api/types/assistant";
+import { loadHistory, loadLimit, saveHistory, saveLimit } from "./whyChatHistory";
+import { ROLE_BY_KIND } from "./whyChatMessage";
+import type { WhyMessageData, WhyMessageKind, WhyMessageStatus } from "./whyChatMessage";
+import { inputLimit, isShortRequest, mergeFragments, projectContext } from "./whyChatRequest";
 
-export const WHY_CHAT_MAX_LENGTH = 300;
-
-export type WhyRole = "user" | "assistant";
-export type WhyMessageStatus = "done" | "waiting" | "streaming" | "error";
+export type { WhyMessageData, WhyMessageKind, WhyMessageStatus, WhyRole } from "./whyChatMessage";
 export type WhyChatStatus = "idle" | "waiting" | "streaming" | "error";
 
-export interface WhyMessageData {
-  id: number;
-  role: WhyRole;
-  text: string;
-  status: WhyMessageStatus;
+interface Exchange {
+  question: WhyMessageData;
+  request: string;
+  reply: WhyMessageData;
+  controller: AbortController;
 }
 
-export function useWhyChat() {
-  const { t, locale } = useI18n();
+const LOCKING_REASONS = new Set<AssistantRefusalReason>(["limit", "blocked"]);
+const DRAFT_REASONS = new Set<AssistantRefusalReason>([
+  "notProject",
+  "linkUnreadable",
+  "invalid",
+  "unavailable",
+  "captcha",
+]);
 
+export function useWhyChat() {
   const messages = ref<WhyMessageData[]>([]);
   const status = ref<WhyChatStatus>("idle");
   const draft = ref("");
+  const remaining = ref<number | null>(null);
+  const [locked, toggleLocked] = useToggle(false);
 
   let lastId = 0;
-  let controller: AbortController | null = null;
-  let activeReply: WhyMessageData | null = null;
+  let restored = false;
+  let active: Exchange | null = null;
 
   const busy = computed(() => status.value === "waiting" || status.value === "streaming");
-  const canSend = computed(() => !busy.value && draft.value.trim().length > 0);
+  const fragments = computed(() => messages.value.filter((message) => message.kind === "fragment"));
+  const maxLength = computed(() => inputLimit(fragments.value.map((message) => message.text)));
+  const canSend = computed(() => {
+    const text = draft.value.trim();
+    return !busy.value && !locked.value && text.length > 0 && text.length <= maxLength.value;
+  });
 
-  function push(role: WhyRole, text: string, state: WhyMessageStatus) {
+  function push(kind: WhyMessageKind, text: string, state: WhyMessageStatus) {
     lastId += 1;
-    messages.value.push({ id: lastId, role, text, status: state });
+    messages.value.push({ id: lastId, role: ROLE_BY_KIND[kind], kind, text, status: state });
     return messages.value[messages.value.length - 1]!;
   }
 
+  function remove(message: WhyMessageData) {
+    messages.value = messages.value.filter((item) => item.id !== message.id);
+  }
+
+  function removeHint() {
+    messages.value = messages.value.filter((message) => message.kind !== "hint");
+  }
+
+  function persist() {
+    if (restored) saveHistory(messages.value);
+  }
+
+  function restore() {
+    const history = loadHistory().map((message) => {
+      lastId += 1;
+      return { ...message, id: lastId };
+    });
+    messages.value = [...history, ...messages.value];
+    const limit = loadLimit();
+    if (limit) {
+      remaining.value = limit.remaining;
+      if (limit.locked) toggleLocked(true);
+    }
+    restored = true;
+  }
+
+  function applyRemaining(value: number, lock: boolean) {
+    remaining.value = value;
+    if (lock) toggleLocked(true);
+    saveLimit({ remaining: value, locked: locked.value });
+  }
+
   function cancel() {
-    controller?.abort();
-    controller = null;
-    const reply = activeReply;
-    activeReply = null;
-    if (!reply) return;
-    if (reply.text) reply.status = "done";
-    else messages.value = messages.value.filter((message) => message.id !== reply.id);
+    const exchange = active;
+    active = null;
+    if (!exchange) return;
+    exchange.controller.abort();
+    if (exchange.reply.text) exchange.reply.status = "done";
+    else remove(exchange.reply);
+    status.value = "idle";
+    persist();
+  }
+
+  function prepare() {
+    $api.assistant.prepare();
   }
 
   function fill(text: string) {
-    draft.value = text.slice(0, WHY_CHAT_MAX_LENGTH);
+    draft.value = text.slice(0, maxLength.value);
   }
 
-  async function send(raw: string = draft.value) {
-    const question = raw.trim();
-    if (!question) return;
+  function returnDraft(text: string) {
+    if (!locked.value && !draft.value) draft.value = text;
+  }
 
-    cancel();
-    const current = new AbortController();
-    controller = current;
-    draft.value = "";
-    push("user", question, "done");
-    const reply = push("assistant", "", "waiting");
-    activeReply = reply;
+  function replaceReply(exchange: Exchange) {
+    remove(exchange.reply);
+    exchange.reply = push("reply", "", "waiting");
+    return exchange.reply;
+  }
+
+  function holdFragment(text: string) {
+    push("fragment", text, "done");
+    removeHint();
+    push("hint", "", "done");
+    persist();
+  }
+
+  function appendChunk({ reply }: Exchange, text: string) {
+    reply.text += text;
+    if (reply.status !== "waiting") return;
+    reply.status = "streaming";
+    status.value = "streaming";
+  }
+
+  function restartReply(exchange: Exchange) {
+    replaceReply(exchange);
     status.value = "waiting";
+  }
 
+  function refuse(exchange: Exchange, event: AssistantRefusalEvent) {
+    const reply = exchange.reply.text ? replaceReply(exchange) : exchange.reply;
+    reply.text = event.message;
+    reply.status = "done";
+    const unavailable = event.reason === "unavailable";
+    status.value = unavailable ? "error" : "idle";
+    const lock = LOCKING_REASONS.has(event.reason) || (!unavailable && event.remaining === 0);
+    applyRemaining(event.remaining, lock);
+    if (DRAFT_REASONS.has(event.reason)) returnDraft(exchange.request);
+  }
+
+  function complete({ question, request, reply }: Exchange, event: AssistantDoneEvent) {
+    if (!reply.text) throw new Error("empty answer");
+    reply.status = "done";
+    question.kind = "accepted";
+    question.request = request;
+    question.projectStart = event.project === "new";
+    status.value = "idle";
+    applyRemaining(event.remaining, event.remaining === 0);
+  }
+
+  function handleEvent(exchange: Exchange, event: AssistantEvent): boolean {
+    switch (event.type) {
+      case "chunk":
+        appendChunk(exchange, event.text);
+        return false;
+      case "reset":
+        restartReply(exchange);
+        return false;
+      case "refusal":
+        refuse(exchange, event);
+        return true;
+      case "done":
+        complete(exchange, event);
+        return true;
+    }
+  }
+
+  function fail(exchange: Exchange) {
+    exchange.reply.status = "error";
+    status.value = "error";
+    returnDraft(exchange.request);
+  }
+
+  function startExchange(text: string, request: string): Exchange {
+    for (const fragment of fragments.value) fragment.kind = "sent";
+    removeHint();
+    const question = push("sent", text, "done");
+    const reply = push("reply", "", "waiting");
+    const exchange: Exchange = { question, request, reply, controller: new AbortController() };
+    active = exchange;
+    status.value = "waiting";
+    persist();
+    return exchange;
+  }
+
+  async function ask(text: string, request: string) {
+    const context = projectContext(messages.value);
+    const exchange = startExchange(text, request);
+    const { signal } = exchange.controller;
     try {
-      const stream = askAgent(question, current.signal, {
-        locale: locale.value,
-        reply: t("home.why.chat.mockReply"),
-      });
-      for await (const chunk of stream) {
-        if (current.signal.aborted) return;
-        reply.text += chunk;
-        if (reply.status === "waiting") {
-          reply.status = "streaming";
-          status.value = "streaming";
-        }
+      for await (const event of $api.assistant.chat([...context, request], signal)) {
+        if (signal.aborted || handleEvent(exchange, event)) return;
       }
-      if (current.signal.aborted) return;
-      if (!reply.text) throw new Error("empty answer");
-      reply.status = "done";
-      status.value = "idle";
+      throw new Error("stream ended");
     } catch {
-      if (current.signal.aborted) return;
-      reply.status = "error";
-      status.value = "error";
-      if (!draft.value) draft.value = question;
+      if (!signal.aborted) fail(exchange);
     } finally {
-      if (controller === current) {
-        controller = null;
-        activeReply = null;
+      if (active === exchange) {
+        active = null;
+        persist();
       }
     }
   }
 
+  async function send(raw: string = draft.value) {
+    const text = raw.trim();
+    if (!text || locked.value) return;
+    cancel();
+    draft.value = "";
+    const request = mergeFragments(
+      fragments.value.map((message) => message.text),
+      text,
+    );
+    if (isShortRequest(request)) holdFragment(text);
+    else await ask(text, request);
+  }
+
+  onMounted(restore);
   onScopeDispose(cancel);
 
-  return { messages, status, draft, busy, canSend, send, fill, cancel };
+  return {
+    messages,
+    status,
+    draft,
+    remaining,
+    locked,
+    busy,
+    canSend,
+    maxLength,
+    send,
+    fill,
+    cancel,
+    prepare,
+  };
 }
