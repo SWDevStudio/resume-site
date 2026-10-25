@@ -4,11 +4,29 @@ import { DEFAULT_LOCALE, LOCALE_COOKIE, LOCALES } from "./app/assets/const/local
 import { Route } from "./app/assets/const/route";
 
 const FILE_CACHE = "public, max-age=3600, stale-while-revalidate=86400";
+const FONT_CACHE = "public, max-age=31536000, immutable";
 
 const fileRules = Object.fromEntries(
-  LOCALES.flatMap((locale) => [Route.resumePdf(locale), Route.resumeMarkdown(locale)]).map(
-    (path) => [path, { headers: { "cache-control": FILE_CACHE } }],
-  ),
+  LOCALES.flatMap((locale) => [
+    [
+      Route.resumePdf(locale),
+      {
+        prerender: true,
+        headers: {
+          "cache-control": FILE_CACHE,
+          "content-disposition": `attachment; filename="resume-${locale}.pdf"`,
+        },
+      },
+    ],
+    [Route.resumeMarkdown(locale), { prerender: true, headers: { "cache-control": FILE_CACHE } }],
+  ]),
+);
+
+const pageRules = Object.fromEntries(
+  LOCALES.flatMap((locale) => [`/${locale}`, `/${locale}/**`]).map((path) => [
+    path,
+    { prerender: true },
+  ]),
 );
 
 export default defineNuxtConfig({
@@ -61,8 +79,18 @@ export default defineNuxtConfig({
       fallbackLocale: DEFAULT_LOCALE,
     },
   },
+  routeRules: {
+    [Route.home]: { prerender: false },
+    ...pageRules,
+    ...fileRules,
+    "/fonts/**": { headers: { "cache-control": FONT_CACHE } },
+    "/api/**": { headers: { "cache-control": "no-store" } },
+  },
+  prerender: {
+    crawlLinks: true,
+  },
   nitro: {
-    routeRules: fileRules,
+    compressPublicAssets: true,
     storage: {
       assistant: { driver: "fs", base: "./.data/assistant" },
     },
