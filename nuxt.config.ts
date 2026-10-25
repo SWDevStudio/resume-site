@@ -14,11 +14,26 @@ const fileRules = Object.fromEntries(
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
-  modules: ["@nuxt/eslint", "@vueuse/nuxt", "@nuxtjs/i18n"],
+  modules: ["@nuxt/eslint", "@vueuse/nuxt", "@nuxtjs/i18n", "nuxt-safe-runtime-config"],
   imports: {
     autoImport: false,
   },
   components: false,
+  runtimeConfig: {
+    assistant: {
+      groqKey: "",
+      cloudflareAccountId: "",
+      cloudflareToken: "",
+      openrouterKey: "",
+      githubToken: "",
+      secret: "",
+    },
+  },
+  safeRuntimeConfig: {
+    $schema: "./server/runtimeConfig.schema",
+    validateAtRuntime: false,
+    validateAtBuild: false,
+  },
   app: {
     head: {
       link: [

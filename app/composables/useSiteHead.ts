@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { useHead, useLocaleHead, useRuntimeConfig } from "#imports";
+import { useHead, useLocaleHead, useSafeRuntimeConfig } from "#imports";
 import { useI18n } from "vue-i18n";
 import { THEME_COLOR } from "~/assets/const";
 import { useTheme } from "~/composables/useTheme";
@@ -13,8 +13,8 @@ function titleTemplate(title?: string) {
 export function useSiteHead() {
   const { t } = useI18n();
   const { current } = useTheme();
-  const runtimeConfig = useRuntimeConfig();
-  const localeHead = useLocaleHead({ seo: Boolean(runtimeConfig.public.i18n?.baseUrl) });
+  const runtimeConfig = useSafeRuntimeConfig();
+  const localeHead = useLocaleHead({ seo: Boolean(runtimeConfig.public.i18n.baseUrl) });
   const themeColor = computed(() => THEME_COLOR[current.value]);
 
   useHead(() => ({
