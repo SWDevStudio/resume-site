@@ -43,7 +43,7 @@
         <input
           ref="input"
           v-model="draft"
-          class="home-why-textbox"
+          class="home-why-textbox ym-disable-keys"
           type="text"
           enterkeyhint="send"
           autocomplete="off"
