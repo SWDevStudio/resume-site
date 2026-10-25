@@ -46,6 +46,9 @@ export default defineNuxtConfig({
       githubToken: "",
       secret: "",
     },
+    public: {
+      yandexMetrikaId: "",
+    },
   },
   safeRuntimeConfig: {
     $schema: "./server/runtimeConfig.schema",

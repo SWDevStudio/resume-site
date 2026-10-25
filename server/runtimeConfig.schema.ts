@@ -24,6 +24,7 @@ const assistant = z
 const publicConfig = z
   .object({
     i18n: z.object({ baseUrl: z.string() }).passthrough(),
+    yandexMetrikaId: z.union([z.string(), z.number()]),
   })
   .passthrough();
 
