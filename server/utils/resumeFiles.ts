@@ -1,5 +1,5 @@
 import pdfmake from "pdfmake";
-import vfs from "pdfmake/build/vfs_fonts";
+import vfs from "pdfmake/build/vfs_fonts.js";
 import { LOCALES, type Locale } from "../../app/assets/const/locale";
 import { resumeToMarkdown } from "../../shared/utils/resumeToMarkdown";
 import { resumeToPdf } from "../../shared/utils/resumeToPdf";
