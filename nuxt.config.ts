@@ -63,6 +63,9 @@ export default defineNuxtConfig({
   },
   nitro: {
     routeRules: fileRules,
+    storage: {
+      assistant: { driver: "fs", base: "./.data/assistant" },
+    },
   },
   vite: {
     plugins: [tailwindcss()],
