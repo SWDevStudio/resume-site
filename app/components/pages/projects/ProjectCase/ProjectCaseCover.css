@@ -76,6 +76,8 @@
   --project-case-cover-u: calc(100cqw / 782);
   --project-case-laptop-top: calc(var(--project-case-cover-u) * 90);
   --project-case-phone-bottom: calc(var(--project-case-cover-u) * 38);
+  --project-case-phone-scale: 1;
+  --project-case-phone-u: calc(var(--project-case-cover-u) * var(--project-case-phone-scale));
   --page-terminal-scale: 1.35;
 
   @apply relative size-full overflow-hidden;
@@ -111,6 +113,18 @@
 
   @variant motion-reduce {
     @apply transition-none;
+  }
+}
+
+.project-case-stage-phone-only {
+  --project-case-phone-scale: 1.4;
+
+  @variant md {
+    --project-case-phone-scale: 1.16;
+  }
+
+  @variant lg {
+    --project-case-phone-scale: 1.1;
   }
 }
 
@@ -200,22 +214,27 @@
   @apply absolute box-border;
   right: calc(var(--project-case-cover-u) * 55);
   bottom: var(--project-case-phone-bottom);
-  width: calc(var(--project-case-cover-u) * 149);
-  height: calc(var(--project-case-cover-u) * 305);
-  padding: calc(var(--project-case-cover-u) * 7) calc(var(--project-case-cover-u) * 6);
+  width: calc(var(--project-case-phone-u) * 149);
+  height: calc(var(--project-case-phone-u) * 305);
+  padding: calc(var(--project-case-phone-u) * 7) calc(var(--project-case-phone-u) * 6);
   background-color: #111216;
-  border-radius: calc(var(--project-case-cover-u) * 25);
+  border-radius: calc(var(--project-case-phone-u) * 25);
   box-shadow:
-    inset 0 0 0 calc(var(--project-case-cover-u) * 1.5) #2c2d33,
-    0 calc(var(--project-case-cover-u) * 24) calc(var(--project-case-cover-u) * 44) rgb(0 0 0 / 40%);
+    inset 0 0 0 calc(var(--project-case-phone-u) * 1.5) #2c2d33,
+    0 calc(var(--project-case-phone-u) * 24) calc(var(--project-case-phone-u) * 44) rgb(0 0 0 / 40%);
   transform: rotate(4deg);
+
+  .project-case-stage-phone-only & {
+    @apply inset-0 m-auto;
+    transform: none;
+  }
 }
 
 .project-case-phone-screen {
   @apply relative box-border size-full overflow-hidden;
-  padding-top: calc(var(--project-case-cover-u) * 19);
+  padding-top: calc(var(--project-case-phone-u) * 19);
   background-color: #0b0b0e;
-  border-radius: calc(var(--project-case-cover-u) * 19);
+  border-radius: calc(var(--project-case-phone-u) * 19);
 }
 
 .project-case-shot-phone {
@@ -228,9 +247,9 @@
 
 .project-case-island {
   @apply absolute left-1/2 -translate-x-1/2;
-  top: calc(var(--project-case-cover-u) * 5);
+  top: calc(var(--project-case-phone-u) * 5);
   width: 34%;
-  height: calc(var(--project-case-cover-u) * 9);
-  border-radius: calc(var(--project-case-cover-u) * 6);
+  height: calc(var(--project-case-phone-u) * 9);
+  border-radius: calc(var(--project-case-phone-u) * 6);
   background-color: #111216;
 }

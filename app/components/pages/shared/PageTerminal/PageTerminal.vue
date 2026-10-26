@@ -7,8 +7,11 @@
       <div class="page-terminal-body">
         <div class="page-terminal-screen">
           <img
+            v-if="shot"
             class="page-terminal-shot"
-            :src="image"
+            :srcset="shot.srcset"
+            :sizes="DEVICE_SCREEN_SIZES"
+            :src="shot.src"
             alt=""
             :loading="loading"
             decoding="async"
@@ -28,12 +31,21 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(
+import { computed } from "vue";
+import type { ImageAsset } from "~/assets/api/types/media";
+import { DEVICE_SCREEN_SIZES } from "~/components/pages/shared/deviceSizes";
+import { imageSrcset } from "~/utils";
+
+const props = withDefaults(
   defineProps<{
-    image: string;
+    image: ImageAsset | null;
     loading?: "lazy" | "eager";
   }>(),
   { loading: "lazy" },
+);
+
+const shot = computed(() =>
+  props.image ? { src: props.image.src, srcset: imageSrcset(props.image) } : null,
 );
 </script>
 

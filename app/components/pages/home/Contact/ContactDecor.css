@@ -234,3 +234,9 @@
     --home-contact-koi-height: --spacing(52.5);
   }
 }
+
+.home-contact-late {
+  @starting-style {
+    opacity: 0;
+  }
+}

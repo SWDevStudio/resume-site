@@ -10,6 +10,8 @@ export const projectLabels = {
       seo: "SEO",
       accounts: "Кабинеты",
       "mobile-first": "Mobile first",
+      "mobile-app": "Мобильное приложение",
+      "team-lead": "Тимлид",
     },
   },
   en: {
@@ -21,6 +23,8 @@ export const projectLabels = {
       seo: "SEO",
       accounts: "Accounts",
       "mobile-first": "Mobile first",
+      "mobile-app": "Mobile app",
+      "team-lead": "Team Lead",
     },
   },
 } satisfies ByLocale<Omit<ProjectsText, "items">>;

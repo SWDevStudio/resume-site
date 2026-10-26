@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "typecheck": "nuxi typecheck",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lighthouse": "unlighthouse",
@@ -18,12 +19,20 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@ai-sdk/openai-compatible": "^3.0.78",
+    "@mozilla/readability": "^0.6.0",
     "@nuxtjs/i18n": "^10.6.0",
     "@vee-validate/zod": "^4.15.1",
     "@vueuse/core": "^15.0.0",
     "@vueuse/nuxt": "^15.0.0",
+    "ai": "^7.0.153",
+    "altcha-lib": "^2.6.0",
+    "eventsource-parser": "^3.1.1",
+    "linkedom": "^0.18.14",
     "nuxt": "^4.6.2",
+    "nuxt-safe-runtime-config": "^0.3.0",
     "pdfmake": "^0.3.12",
+    "request-filtering-agent": "^3.2.1",
     "vee-validate": "^4.15.1",
     "vue": "^3.5.44",
     "vue-i18n": "^11.4.16",
@@ -47,8 +56,16 @@
     "prettier": "^3.9.10",
     "tailwind-csstree": "^0.4.1",
     "tailwindcss": "^4.3.3",
+    "typescript": "~6.0.3",
     "unlighthouse": "^0.19.1",
+    "vite-imagetools": "^12.0.1",
     "vitest": "^5.0.5",
-    "vitest-browser-vue": "^3.1.0"
+    "vitest-browser-vue": "^3.1.0",
+    "vue-tsc": "^3.3.13"
+  },
+  "overrides": {
+    "altcha-lib": {
+      "h3": "^1.15.11"
+    }
   }
 }

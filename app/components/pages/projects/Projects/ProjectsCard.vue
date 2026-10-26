@@ -48,6 +48,7 @@
       :image-mobile="project.previewMobile"
       :frame="project.previewFrame"
       :alt="project.previewAlt"
+      :loading="loading"
     />
     <p class="projects-card-text">{{ project.description }}</p>
     <ProjectsCardTags :tags="project.tags" />
@@ -80,9 +81,13 @@ const BUTTON_CLASS: Record<Tone, string> = {
   accent: "btn-accent",
 };
 
-const props = defineProps<{
-  project: ProjectView;
-}>();
+const props = withDefaults(
+  defineProps<{
+    project: ProjectView;
+    loading?: "lazy" | "eager";
+  }>(),
+  { loading: "lazy" },
+);
 
 const { t } = useI18n();
 

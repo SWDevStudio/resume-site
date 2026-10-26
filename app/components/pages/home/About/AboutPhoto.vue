@@ -9,6 +9,8 @@
         class="home-about-photo-image"
         src="./media/photo.webp"
         :alt="t('home.about.photoAlt')"
+        loading="lazy"
+        decoding="async"
       />
       <span
         class="home-about-photo-tint"

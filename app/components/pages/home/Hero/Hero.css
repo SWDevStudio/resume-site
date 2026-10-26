@@ -132,13 +132,6 @@
   @apply overflow-hidden;
 }
 
-.home-hero-paused,
-.home-hero-paused *,
-.home-hero-paused ::before,
-.home-hero-paused ::after {
-  animation-play-state: paused !important;
-}
-
 .home-hero-night,
 .home-hero-day {
   @apply pointer-events-none absolute inset-0;
@@ -206,7 +199,7 @@
 
 .home-hero-title {
   @apply pointer-events-none absolute top-0 m-0 font-normal uppercase;
-  font-family: "Righteous", sans-serif;
+  font-family: "Righteous", "Righteous Fallback", sans-serif;
   left: var(--home-hero-title-left);
   height: --spacing(225);
   font-size: calc(var(--home-hero-title-size) * var(--home-hero-title-scale));

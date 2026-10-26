@@ -113,12 +113,14 @@
   background-color: var(--color-base-200);
   box-shadow: var(--the-header-menu-shadow);
   visibility: hidden;
+  content-visibility: hidden;
   opacity: 0;
   transform: translateY(var(--the-header-panel-shift)) scale(var(--the-header-panel-scale));
   clip-path: var(--the-header-panel-clip-closed);
   transition-property:
-    background-color, border-color, border-radius, box-shadow, opacity, visibility, transform,
-    clip-path;
+    background-color, border-color, border-radius, box-shadow, opacity, visibility,
+    content-visibility, transform, clip-path;
+  transition-behavior: allow-discrete;
 
   @variant motion-reduce {
     @apply transition-none;
@@ -127,6 +129,7 @@
 
 .the-header-menu-open {
   visibility: visible;
+  content-visibility: visible;
   opacity: 1;
   transform: none;
   clip-path: var(--the-header-panel-clip-open);

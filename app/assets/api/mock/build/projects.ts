@@ -1,11 +1,17 @@
 import type { ProjectBlock } from "../../types/projectCase";
 import type { ProjectsSources, ProjectView } from "../../types/catalog";
+import type { ImageAsset } from "../../types/media";
 import type { Locale } from "../../../const/locale";
 import { firstDefined, textLayers } from "./layers";
 import { resolveStack } from "./stack";
 
+function rawImage(path: string): ImageAsset {
+  return { src: path, width: 0, height: 0, variants: [] };
+}
+
 export function buildProjects(src: ProjectsSources, locale: Locale): ProjectView[] {
   const layers = textLayers(src.projectsText, locale);
+  const media = (path: string) => src.media?.(path) ?? rawImage(path);
   return src.projects.map((project, position) => {
     const text = firstDefined(layers, (layer) => layer.items[project.id]);
     if (!text) throw new Error(`Project "${project.id}" has no text`);
@@ -16,6 +22,8 @@ export function buildProjects(src: ProjectsSources, locale: Locale): ProjectView
       }
       return label;
     });
+    const preview = project.preview ? media(project.preview) : null;
+    const previewMobile = project.previewMobile ? media(project.previewMobile) : null;
     return {
       id: project.id,
       isFavorite: project.isFavorite,
@@ -24,8 +32,8 @@ export function buildProjects(src: ProjectsSources, locale: Locale): ProjectView
       tone: project.tone,
       url: project.url,
       host: project.url ? new URL(project.url).host : null,
-      preview: project.preview,
-      previewMobile: project.previewMobile ?? null,
+      preview,
+      previewMobile,
       previewFrame: project.previewFrame ?? "devices",
       previewAlt: text.previewAlt,
       subtitle: text.subtitle,

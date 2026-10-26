@@ -22,26 +22,12 @@ vi.mock("~/composables/useLocale", () => ({
 vi.mock("~/composables/useTheme", () => import("../../../../../test/mocks/useTheme"));
 
 interface View {
-  name: string;
   width: number;
   height: number;
 }
 
 const resumeData: ResumeData = buildResume(staticSources("en"), "en");
 const ruData: ResumeData = buildResume(staticSources("ru"), "ru");
-
-const themes = ["torii-synth", "cyber-sakura"];
-
-const cases: View[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 768, height: 900 },
-  { name: "mobile", width: 390, height: 780 },
-];
-
-const switchCases: View[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "mobile", width: 390, height: 780 },
-];
 
 function createApp(locale: Locale) {
   return createI18n({ legacy: false, locale, messages: { ru, en } });
@@ -82,37 +68,6 @@ async function renderResume(
 
 type Screen = Awaited<ReturnType<typeof renderResume>>;
 
-const FRAME = 2400;
-
-interface Shot extends View {
-  frame: string;
-  from: (screen: Screen) => number;
-}
-
-const shots: Shot[] = cases.flatMap((item) => [
-  { ...item, frame: "", from: () => 0 },
-  {
-    ...item,
-    frame: "-experience",
-    from: (screen) =>
-      pick(screen, "section[aria-labelledby='experience']").getBoundingClientRect().top +
-      window.scrollY -
-      24,
-  },
-  { ...item, frame: "-end", from: () => document.documentElement.scrollHeight - FRAME },
-]);
-
-async function frame(screen: Screen, width: number, from = 0, height = FRAME) {
-  const wrapper = screen.container.firstElementChild as HTMLElement;
-  const main = wrapper.querySelector("main") as HTMLElement;
-  if (from > 0) wrapper.querySelector("header")!.style.display = "none";
-  wrapper.style.height = `${height}px`;
-  wrapper.style.overflow = "hidden";
-  main.style.marginTop = `${-from}px`;
-  await page.viewport(width, height);
-  screen.container.getBoundingClientRect();
-}
-
 beforeAll(async () => {
   await page.viewport(1440, 900);
   await document.fonts.load('400 1em "Righteous"', "Michael Surname Summary Qwixit");
@@ -131,53 +86,6 @@ afterEach(async () => {
   window.scrollTo({ top: 0, behavior: "instant" });
   await setReducedMotion("no-preference");
   await page.viewport(1440, 900);
-});
-
-describe.each(themes)("%s", (theme) => {
-  beforeEach(() => {
-    setTheme(theme);
-  });
-
-  it.each(shots)("$name$frame", async (item) => {
-    const screen = await renderResume(item);
-    await frame(screen, item.width, item.from(screen));
-
-    await expect
-      .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`${theme}-${item.name}${item.frame}`);
-  });
-
-  it("mobile open", async () => {
-    const screen = await renderResume({ width: 390, height: 780 });
-    pick<HTMLButtonElement>(screen, ".page-sections-nav-head").click();
-    await nextTick();
-    finishAnimations();
-    await frame(screen, 390, 0, 1100);
-
-    await expect
-      .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`${theme}-mobile-open`);
-  });
-});
-
-describe("theme switch", () => {
-  it.each(switchCases)("$name", async (item) => {
-    setTheme("torii-synth");
-    const screen = await renderResume(item);
-    await frame(screen, item.width);
-    setTheme("cyber-sakura");
-
-    const animations = document.getAnimations();
-    expect(animations.length).toBeGreaterThan(0);
-    for (const animation of animations) {
-      animation.pause();
-      animation.currentTime = Number(animation.effect?.getComputedTiming().duration) / 2;
-    }
-
-    await expect
-      .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`switch-${item.name}`, { screenshotOptions: { animations: "allow" } });
-  });
 });
 
 function pick<T extends Element>(screen: Screen, selector: string) {

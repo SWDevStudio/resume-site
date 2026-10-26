@@ -4,8 +4,22 @@
   --page-devices-u: calc(100cqw / 782);
   --page-devices-laptop-top: 31;
   --page-devices-phone-bottom: 28;
+  --page-devices-phone-scale: 1;
+  --page-devices-phone-u: calc(var(--page-devices-u) * var(--page-devices-phone-scale));
 
   @apply pointer-events-none absolute inset-0;
+}
+
+.page-devices-phone-only {
+  --page-devices-phone-scale: 1.4;
+
+  @variant md {
+    --page-devices-phone-scale: 1.16;
+  }
+
+  @variant lg {
+    --page-devices-phone-scale: 1.1;
+  }
 }
 
 .page-devices-laptop {
@@ -67,22 +81,27 @@
   @apply absolute box-border;
   right: calc(var(--page-devices-u) * 55);
   bottom: calc(var(--page-devices-u) * var(--page-devices-phone-bottom));
-  width: calc(var(--page-devices-u) * 149);
-  height: calc(var(--page-devices-u) * 305);
-  padding: calc(var(--page-devices-u) * 7) calc(var(--page-devices-u) * 6);
+  width: calc(var(--page-devices-phone-u) * 149);
+  height: calc(var(--page-devices-phone-u) * 305);
+  padding: calc(var(--page-devices-phone-u) * 7) calc(var(--page-devices-phone-u) * 6);
   background-color: #111216;
-  border-radius: calc(var(--page-devices-u) * 25);
+  border-radius: calc(var(--page-devices-phone-u) * 25);
   box-shadow:
-    inset 0 0 0 calc(var(--page-devices-u) * 1.5) #2c2d33,
-    0 calc(var(--page-devices-u) * 24) calc(var(--page-devices-u) * 44) rgb(0 0 0 / 40%);
+    inset 0 0 0 calc(var(--page-devices-phone-u) * 1.5) #2c2d33,
+    0 calc(var(--page-devices-phone-u) * 24) calc(var(--page-devices-phone-u) * 44) rgb(0 0 0 / 40%);
   transform: rotate(4deg);
+
+  .page-devices-phone-only & {
+    @apply inset-0 m-auto;
+    transform: none;
+  }
 }
 
 .page-devices-phone-screen {
   @apply relative box-border size-full overflow-hidden;
-  padding-top: calc(var(--page-devices-u) * 19);
+  padding-top: calc(var(--page-devices-phone-u) * 19);
   background-color: #0b0b0e;
-  border-radius: calc(var(--page-devices-u) * 19);
+  border-radius: calc(var(--page-devices-phone-u) * 19);
 }
 
 .page-devices-shot-phone {
@@ -95,9 +114,9 @@
 
 .page-devices-island {
   @apply absolute left-1/2 -translate-x-1/2;
-  top: calc(var(--page-devices-u) * 5);
+  top: calc(var(--page-devices-phone-u) * 5);
   width: 34%;
-  height: calc(var(--page-devices-u) * 9);
-  border-radius: calc(var(--page-devices-u) * 6);
+  height: calc(var(--page-devices-phone-u) * 9);
+  border-radius: calc(var(--page-devices-phone-u) * 6);
   background-color: #111216;
 }

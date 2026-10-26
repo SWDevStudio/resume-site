@@ -70,7 +70,7 @@ const emit = defineEmits<{ open: [] }>();
 const LOCALE_NAMES: Record<Locale, string> = { ru: "Русский", en: "English" };
 
 const { t } = useI18n();
-const { locale, locales, setLocale } = useLocale();
+const { locale, locales, prepare, setLocale } = useLocale();
 
 const menuId = useId();
 const rootRef = ref<HTMLElement>();
@@ -97,7 +97,9 @@ function close() {
 
 function toggleMenu() {
   toggleOpen();
-  if (isOpen.value) emit("open");
+  if (!isOpen.value) return;
+  prepare();
+  emit("open");
 }
 
 onClickOutside(rootRef, close);

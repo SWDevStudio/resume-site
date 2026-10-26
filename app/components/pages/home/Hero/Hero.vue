@@ -1,14 +1,15 @@
 <template>
   <HomeSlide
     id="top"
+    ref="root"
     class="home-hero"
     :contained="false"
   >
     <component
       :is="item.entry"
-      v-for="item in items"
+      v-for="item in sceneLayers"
       :key="item.theme"
-      :class="{ 'home-hero-paused': item.paused, 'home-hero-late': item.late }"
+      :class="item.class"
     />
 
     <h1
@@ -38,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, useTemplateRef, type ComponentPublicInstance } from "vue";
 import { useHead } from "#imports";
 import UiIcon from "~/components/ui/UiIcon/UiIcon.vue";
 import { useI18n } from "vue-i18n";
@@ -46,6 +47,7 @@ import { Route } from "~/assets/const";
 import HomeSlide from "~/components/pages/home/HomeSlide/HomeSlide.vue";
 import UiButton from "~/components/ui/UiButton/UiButton.vue";
 import { useLocale } from "~/composables/useLocale";
+import { useDecorMotion } from "~/composables/useDecorMotion";
 import { useThemeLayers } from "~/composables/useThemeLayers";
 import HeroDay from "./HeroDay.vue";
 import HeroNight from "./HeroNight.vue";
@@ -65,9 +67,18 @@ const { layers } = useThemeLayers({
   "cyber-sakura": HeroDay,
 });
 
-const initialThemes = layers.value.map((item) => item.theme);
-const items = computed(() =>
-  layers.value.map((item) => ({ ...item, late: !initialThemes.includes(item.theme) })),
+const heroSlide = useTemplateRef<ComponentPublicInstance>("root");
+const { paused } = useDecorMotion(heroSlide);
+
+const sceneLayers = computed(() =>
+  layers.value.map((item) => ({
+    theme: item.theme,
+    entry: item.entry,
+    class: {
+      "decor-paused": item.paused || paused.value,
+      "home-hero-late": item.late,
+    },
+  })),
 );
 </script>
 

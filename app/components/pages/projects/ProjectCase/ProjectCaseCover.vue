@@ -2,6 +2,7 @@
   <div class="project-case-cover">
     <div
       class="project-case-stage"
+      :class="modeClass"
       role="img"
       :aria-label="data.imageAlt"
     >
@@ -11,17 +12,22 @@
       />
       <PageTerminal
         v-if="terminal"
-        :image="image"
+        :image="data.image"
         loading="eager"
       />
       <template v-else>
-        <div class="project-case-laptop">
+        <div
+          v-if="screen"
+          class="project-case-laptop"
+        >
           <div class="project-case-lid">
             <span class="project-case-camera" />
             <div class="project-case-screen">
               <img
                 class="project-case-shot"
-                :src="image"
+                :srcset="screen.srcset"
+                :sizes="DEVICE_SCREEN_SIZES"
+                :src="screen.src"
                 alt=""
               />
             </div>
@@ -30,12 +36,17 @@
             <span class="project-case-notch" />
           </div>
         </div>
-        <div class="project-case-phone">
+        <div
+          v-if="phone"
+          class="project-case-phone"
+        >
           <div class="project-case-phone-screen">
             <img
               class="project-case-shot"
-              :class="phoneClass"
-              :src="phoneImage"
+              :class="phone.class"
+              :srcset="phone.srcset"
+              :sizes="phone.sizes"
+              :src="phone.src"
               alt=""
             />
             <span class="project-case-island" />
@@ -49,21 +60,45 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import PageTerminal from "~/components/pages/shared/PageTerminal/PageTerminal.vue";
-import { resolveProjectImage } from "~/components/pages/shared/projectImage";
+import {
+  DEVICE_PHONE_SIZES,
+  DEVICE_PHONE_SOLO_SIZES,
+  DEVICE_SCREEN_SIZES,
+} from "~/components/pages/shared/deviceSizes";
 import type { ProjectCaseCoverData } from "~/assets/api/types/projectCase";
+import { imageSrcset } from "~/utils";
 
 const props = defineProps<{
   data: ProjectCaseCoverData;
 }>();
 
 const terminal = computed(() => props.data.frame === "terminal");
-const image = computed(() => resolveProjectImage(props.data.image));
-const phoneImage = computed(() =>
-  props.data.imageMobile ? resolveProjectImage(props.data.imageMobile) : image.value,
+
+const screen = computed(() =>
+  props.data.image ? { src: props.data.image.src, srcset: imageSrcset(props.data.image) } : null,
 );
-const phoneClass = computed(() =>
-  props.data.imageMobile ? "project-case-shot-mobile" : "project-case-shot-phone",
-);
+
+const modeClass = computed(() => ({ "project-case-stage-phone-only": !screen.value }));
+
+const phone = computed(() => {
+  if (props.data.imageMobile) {
+    return {
+      class: "project-case-shot-mobile",
+      src: props.data.imageMobile.src,
+      srcset: imageSrcset(props.data.imageMobile),
+      sizes: screen.value ? DEVICE_PHONE_SIZES : DEVICE_PHONE_SOLO_SIZES,
+    };
+  }
+  if (screen.value) {
+    return {
+      class: "project-case-shot-phone",
+      src: screen.value.src,
+      srcset: screen.value.srcset,
+      sizes: DEVICE_SCREEN_SIZES,
+    };
+  }
+  return null;
+});
 </script>
 
 <style src="./ProjectCaseCover.css" />

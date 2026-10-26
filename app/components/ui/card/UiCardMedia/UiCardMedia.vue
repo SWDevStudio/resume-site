@@ -4,8 +4,12 @@
       <img
         v-if="src"
         class="card-media-image"
+        :srcset="srcset"
+        :sizes="sizes"
         :src="src"
         :alt="alt"
+        loading="lazy"
+        decoding="async"
       />
       <slot />
     </div>
@@ -16,8 +20,10 @@
 withDefaults(
   defineProps<{
     src?: string;
+    srcset?: string;
+    sizes?: string;
     alt?: string;
   }>(),
-  { src: undefined, alt: "" },
+  { src: undefined, srcset: undefined, sizes: undefined, alt: "" },
 );
 </script>

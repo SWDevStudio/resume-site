@@ -139,3 +139,9 @@
     rgb(0 0 0 / 0%) 100%
   );
 }
+
+.home-why-late {
+  @starting-style {
+    opacity: 0;
+  }
+}

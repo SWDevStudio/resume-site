@@ -50,7 +50,7 @@
 }
 
 .resume-role-stack {
-  font-family: "Righteous", sans-serif;
+  font-family: "Righteous", "Righteous Fallback", sans-serif;
 }
 
 .resume-role-focus {

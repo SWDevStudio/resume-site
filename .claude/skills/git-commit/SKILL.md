@@ -38,7 +38,7 @@ description: Разбирает незакоммиченные изменени�
 | Префикс | Пути |
 |---|---|
 | `CLIENT` | `app/`, `public/`, `shared/`, `server/`, `nuxt.config.ts`, `tsconfig.json` |
-| `CORE` | корень проекта: `package.json`, `package-lock.json`, `eslint.config.mjs`, `.prettierrc`, `.prettierignore`, `.lintstagedrc.json`, `.gitignore`, `.husky/`, `.vscode/`, `.claude/`, `README.md`, `CLAUDE.md` |
+| `CORE` | корень проекта: `package.json`, `package-lock.json`, `eslint.config.mjs`, `.prettierrc`, `.prettierignore`, `.lintstagedrc.json`, `.gitignore`, `.env.example`, `.nuxtrc`, `.husky/`, `.vscode/`, `.claude/`, `README.md`, `CLAUDE.md` |
 
 - Если файл не подходит ни под одну строку (например, появилась новая папка верхнего уровня) — спросить у разработчика префикс и предложить дописать его в эту таблицу.
 

@@ -6,6 +6,7 @@ import type {
   ResumeExperienceLabels,
 } from "./resume";
 import type { Locale } from "../../const/locale";
+import type { ImageAsset } from "./media";
 
 export type Tone = "primary" | "secondary" | "accent";
 
@@ -23,19 +24,22 @@ export interface ProjectStackItem {
   own?: boolean;
 }
 
-export interface ProjectCanon {
+interface ProjectFacts {
   isFavorite: boolean;
   id: string;
   name: string;
   tone: Tone;
   url: string | null;
-  preview: string;
-  previewMobile?: string;
   previewFrame?: PreviewFrame;
   tags: string[];
   stack: StackRef[];
   caseStack?: ProjectStackItem[];
 }
+
+export type ProjectPreviewCanon =
+  { preview: string; previewMobile?: string } | { preview?: never; previewMobile: string };
+
+export type ProjectCanon = ProjectFacts & ProjectPreviewCanon;
 
 export interface SkillCanon {
   id: string;
@@ -68,9 +72,9 @@ export interface ProfileCanon {
   updatedAt: string;
 }
 
-export interface ProjectDefinition extends ProjectCanon {
+export type ProjectDefinition = ProjectCanon & {
   text: Record<Locale, ProjectText>;
-}
+};
 
 export interface ProjectText {
   subtitle: string;
@@ -137,8 +141,8 @@ export interface ProjectView {
   tone: Tone;
   url: string | null;
   host: string | null;
-  preview: string;
-  previewMobile: string | null;
+  preview: ImageAsset | null;
+  previewMobile: ImageAsset | null;
   previewFrame: PreviewFrame;
   previewAlt: string;
   subtitle: string;
@@ -172,10 +176,13 @@ export type SkillRegistry = Record<string, SkillRegistryEntry>;
 
 export type ByLocale<T> = Partial<Record<Locale, T>>;
 
+export type ProjectMediaResolver = (path: string) => ImageAsset | undefined;
+
 export interface ProjectsSources {
   projects: ProjectCanon[];
   projectsText: ByLocale<ProjectsText>;
   registry?: SkillRegistry;
+  media?: ProjectMediaResolver;
 }
 
 export interface SkillsSources {

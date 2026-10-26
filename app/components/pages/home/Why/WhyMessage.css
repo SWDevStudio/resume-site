@@ -65,6 +65,18 @@
   translate: 0 --spacing(3);
 }
 
+.home-why-message-leave-active {
+  transition-property: opacity;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.home-why-message-leave-to {
+  @apply opacity-0;
+}
+
 .home-why-avatar {
   --home-why-avatar-from: var(--home-why-avatar-1);
   --home-why-avatar-to: var(--home-why-avatar-2);

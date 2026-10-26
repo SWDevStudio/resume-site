@@ -6,36 +6,38 @@
   >
     <PageTerminal
       v-if="terminal"
-      :image="source"
+      :image="image"
+      :loading="loading"
     />
     <PageDevices
       v-else
-      :image="source"
-      :image-mobile="mobileSource"
+      :image="image"
+      :image-mobile="imageMobile"
+      :loading="loading"
     />
   </PageCover>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
+import type { PreviewFrame } from "~/assets/api/types/catalog";
+import type { ImageAsset } from "~/assets/api/types/media";
 import PageCover from "~/components/pages/shared/PageCover/PageCover.vue";
 import PageDevices from "~/components/pages/shared/PageDevices/PageDevices.vue";
 import PageTerminal from "~/components/pages/shared/PageTerminal/PageTerminal.vue";
-import { resolveProjectImage } from "~/components/pages/shared/projectImage";
-import type { PreviewFrame } from "~/assets/api/types/catalog";
 
-const props = defineProps<{
-  image: string;
-  imageMobile?: string | null;
-  frame: PreviewFrame;
-  alt: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    image: ImageAsset | null;
+    imageMobile?: ImageAsset | null;
+    frame: PreviewFrame;
+    alt: string;
+    loading?: "lazy" | "eager";
+  }>(),
+  { imageMobile: null, loading: "lazy" },
+);
 
 const terminal = computed(() => props.frame === "terminal");
-const source = computed(() => resolveProjectImage(props.image));
-const mobileSource = computed(() =>
-  props.imageMobile ? resolveProjectImage(props.imageMobile) : null,
-);
 </script>
 
 <style src="./ProjectsCardCover.css" />

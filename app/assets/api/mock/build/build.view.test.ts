@@ -11,6 +11,7 @@ import type {
   SkillsText,
 } from "../../types/catalog";
 import type { ProjectBlock } from "../../types/projectCase";
+import type { ImageAsset } from "../../types/media";
 import {
   buildCase,
   buildProjects,
@@ -43,6 +44,13 @@ const canon: ProjectCanon[] = [
     stack: [],
   },
 ];
+
+const alphaPreview: ImageAsset = {
+  src: "alpha/media/preview.svg",
+  width: 0,
+  height: 0,
+  variants: [],
+};
 
 const sources: ProjectsSources = {
   projects: canon,
@@ -98,7 +106,8 @@ describe("buildProjects", () => {
       name: "Alpha",
       tone: "primary",
       url: "https://alpha.example.com/path",
-      preview: "alpha/media/preview.svg",
+      preview: alphaPreview,
+      previewMobile: null,
       subtitle: "А",
       headline: "Х1",
       description: "А1",
@@ -108,6 +117,30 @@ describe("buildProjects", () => {
       role: "Р1",
       result: "Е1",
     });
+  });
+
+  it("takes the images from the media resolver and keeps the path for an unknown one", () => {
+    const shot: ImageAsset = {
+      src: "/_nuxt/preview.webp",
+      width: 1440,
+      height: 900,
+      variants: [
+        { src: "/_nuxt/preview-480.webp", width: 480 },
+        { src: "/_nuxt/preview.webp", width: 1440 },
+      ],
+    };
+    const list = buildProjects(
+      {
+        ...sources,
+        media: (path) => (path === "alpha/media/preview.svg" ? shot : undefined),
+      },
+      "ru",
+    );
+
+    expect(list.map((project) => project.preview)).toEqual([
+      shot,
+      { src: "beta/media/preview.svg", width: 0, height: 0, variants: [] },
+    ]);
   });
 
   it("takes the text of the locale and falls back to the Russian one entity by entity", () => {
@@ -175,12 +208,7 @@ describe("buildCase", () => {
       },
       {
         component: "ProjectCaseCover",
-        data: {
-          image: "alpha/media/preview.svg",
-          imageMobile: null,
-          imageAlt: "Ал",
-          frame: "devices",
-        },
+        data: { image: alphaPreview, imageMobile: null, imageAlt: "Ал", frame: "devices" },
       },
       {
         component: "ProjectCaseMeta",

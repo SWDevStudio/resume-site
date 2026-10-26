@@ -75,7 +75,7 @@
 }
 
 .blog-card-name {
-  font-family: "Righteous", sans-serif;
+  font-family: "Righteous", "Righteous Fallback", sans-serif;
 }
 
 .blog-card-excerpt {

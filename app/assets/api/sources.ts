@@ -8,6 +8,7 @@ import type {
 } from "~/assets/api/types/catalog";
 import { DEFAULT_LOCALE, type Locale } from "../const/locale";
 import { buildSkillRegistry } from "~/assets/api/mock/build/skills";
+import { loadProjectMedia } from "~/assets/api/mock/media";
 
 const textSkills = import.meta.glob<SkillsText>("../data/*/skills.ts", {
   import: "default",
@@ -44,11 +45,17 @@ export async function loadSkillsSources(locale: Locale): Promise<SkillsSources> 
 }
 
 export async function loadProjectsSources(locale: Locale): Promise<ProjectsSources> {
-  const [{ projects, projectsText }, skills] = await Promise.all([
+  const [{ projects, projectsText }, skills, media] = await Promise.all([
     import("../data/projects"),
     loadSkillsSources(locale),
+    loadProjectMedia(),
   ]);
-  return { projects, projectsText, registry: buildSkillRegistry(skills, locale) };
+  return {
+    projects,
+    projectsText,
+    registry: buildSkillRegistry(skills, locale),
+    media,
+  };
 }
 
 export async function loadResumeSources(locale: Locale): Promise<ResumeSources> {

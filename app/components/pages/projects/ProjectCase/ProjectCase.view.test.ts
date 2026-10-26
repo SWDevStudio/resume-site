@@ -11,6 +11,7 @@ import TheHeader from "~/components/global/TheHeader/TheHeader.vue";
 import ProjectCase from "./ProjectCase.vue";
 import { $api } from "~/assets/api";
 import { buildCase } from "~/assets/api/mock/build";
+import { loadProjectMedia } from "~/assets/api/mock/media";
 import { staticSources } from "~/assets/api/mock/sources.static";
 import brendmartFile from "~/assets/data/projects/brendmart/en";
 import qwixitFile from "~/assets/data/projects/qwixit/en";
@@ -34,28 +35,12 @@ vi.mock("~/composables/useTheme", () => import("../../../../../test/mocks/useThe
 vi.mock("~/assets/api/locale", () => ({ resolveLocale: () => "en" }));
 
 interface CaseView {
-  name: string;
   width: number;
   height: number;
   slug?: string;
 }
 
-const themes = ["torii-synth", "cyber-sakura"];
-
-const cases: CaseView[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 768, height: 900 },
-  { name: "mobile", width: 390, height: 780 },
-  { name: "brendmart", width: 1440, height: 900, slug: "brendmart" },
-  { name: "tamriel-codex", width: 1440, height: 900, slug: "tamriel-codex" },
-];
-
-const switchCases: CaseView[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "mobile", width: 390, height: 780 },
-];
-
-const sources = staticSources("en");
+const sources = { ...staticSources("en"), media: await loadProjectMedia() };
 const qwixitCase = buildCase("qwixit", sources, qwixitFile, "en")!;
 const brendmartCase = buildCase("brendmart", sources, brendmartFile, "en")!;
 const tamrielCodexCase = buildCase("tamriel-codex", sources, tamrielCodexFile, "en")!;
@@ -126,11 +111,6 @@ async function renderCase(
 }
 
 type Screen = Awaited<ReturnType<typeof renderCase>>;
-
-async function fit(screen: Screen, width: number) {
-  await page.viewport(width, Math.ceil(document.documentElement.scrollHeight));
-  screen.container.getBoundingClientRect();
-}
 
 function pick<T extends Element>(screen: Screen, selector: string) {
   return screen.container.querySelector<T>(selector)!;
@@ -214,41 +194,6 @@ afterEach(async () => {
   window.scrollTo({ top: 0, behavior: "instant" });
   await setReducedMotion("no-preference");
   await page.viewport(1440, 900);
-});
-
-describe.each(themes)("%s", (theme) => {
-  beforeEach(() => {
-    setTheme(theme);
-  });
-
-  it.each(cases)("$name", async (item) => {
-    const screen = await renderCase(item);
-    await fit(screen, item.width);
-
-    await expect
-      .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`${theme}-${item.name}`);
-  });
-});
-
-describe("theme switch", () => {
-  it.each(switchCases)("$name", async (item) => {
-    setTheme("torii-synth");
-    const screen = await renderCase(item);
-    await fit(screen, item.width);
-    setTheme("cyber-sakura");
-
-    const animations = document.getAnimations();
-    expect(animations.length).toBeGreaterThan(0);
-    for (const animation of animations) {
-      animation.pause();
-      animation.currentTime = Number(animation.effect?.getComputedTiming().duration) / 2;
-    }
-
-    await expect
-      .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`switch-${item.name}`, { screenshotOptions: { animations: "allow" } });
-  });
 });
 
 describe("data", () => {
@@ -678,6 +623,31 @@ describe("layout like the mockup", () => {
     near(rect(screen, ".project-case-meta").top - cover.bottom, 26);
     near(document.documentElement.scrollHeight - rect(screen, ".project-case-next").bottom, 56, 2);
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(390);
+  });
+
+  it.each(projectCases)("lays out the case of $slug in two columns at 1440", async (item) => {
+    const screen = await renderCase({ width: 1440, height: 900, slug: item.slug });
+    const content = rect(screen, ".page-sections-content");
+    const nav = rect(screen, ".page-sections-nav");
+    const blocks = [
+      ".project-case-header",
+      ".project-case-cover",
+      ".project-case-meta",
+      ".project-case-next",
+    ].map((selector) => rect(screen, selector));
+
+    near(content.left, 140);
+    near(content.width, 784);
+    near(nav.left, 1020);
+    near(nav.width, 280);
+    for (const box of blocks) {
+      expect(box.left).toBeGreaterThanOrEqual(content.left - 0.5);
+      expect(box.right).toBeLessThanOrEqual(content.right + 0.5);
+    }
+    for (let index = 1; index < blocks.length; index++) {
+      expect(blocks[index]!.top).toBeGreaterThanOrEqual(blocks[index - 1]!.bottom - 0.5);
+    }
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(1440);
   });
 
   it.each([

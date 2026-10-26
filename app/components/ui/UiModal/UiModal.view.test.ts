@@ -358,9 +358,10 @@ describe("lazy resources", () => {
       return idle.length;
     });
     await mountModal({ warm: false });
+    window.dispatchEvent(new Event("load"));
     await new Promise((resolve) => setTimeout(resolve, 300));
 
-    expect(idle).toHaveLength(1);
+    expect(idle).toStrictEqual([]);
     expect(requested("UiModalWindow")).toStrictEqual([]);
     expect(requested("UiModalHolo")).toStrictEqual([]);
     expect(requested("UiModalBloom")).toStrictEqual([]);
@@ -470,30 +471,24 @@ describe("lazy window", () => {
     expect(mounted.slotProps.isOpen).toBe(false);
   });
 
-  it("preloads once on idle after the page has loaded", async () => {
-    const callbacks: (() => void)[] = [];
-    vi.spyOn(window, "requestIdleCallback").mockImplementation((callback) => {
-      callbacks.push(() => callback({ didTimeout: false, timeRemaining: () => 50 }));
-      return callbacks.length;
-    });
-    await mountModal({ warm: false });
-    expect(callbacks).toHaveLength(1);
-    expect(importWindow).not.toHaveBeenCalled();
-
-    callbacks[0]!();
-    await expect.poll(() => vi.mocked(importWindow).mock.calls.length).toBe(1);
-    expect(dialogNow()).toBeNull();
-  });
-
-  it("waits for the load event of a loading page before the idle preload", async () => {
+  it("does not schedule an idle preload after the load event of a loading page", async () => {
     const spy = vi.spyOn(window, "requestIdleCallback").mockImplementation(() => 1);
     await whileLoading(async () => {
       await mountModal({ warm: false });
-      expect(spy).not.toHaveBeenCalled();
-
       window.dispatchEvent(new Event("load"));
-      expect(spy).toHaveBeenCalledTimes(1);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      expect(spy).not.toHaveBeenCalled();
+      expect(importWindow).not.toHaveBeenCalled();
     });
+  });
+
+  it("preloads on touchstart of the trigger", async () => {
+    const mounted = await mountModal({ warm: false });
+
+    mounted.trigger().dispatchEvent(new TouchEvent("touchstart", { bubbles: true }));
+    await expect.poll(() => vi.mocked(importWindow).mock.calls.length).toBe(1);
+    expect(dialogNow()).toBeNull();
   });
 
   it("preloads on pointerenter and focusin with one shared promise", async () => {

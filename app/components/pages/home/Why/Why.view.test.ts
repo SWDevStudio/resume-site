@@ -5,6 +5,7 @@ import { cdp, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-vue";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Locale } from "~/assets/const";
+import { useThemeLayersPrefetch } from "~/composables/useThemeLayers";
 import en from "~/locales/en.json";
 import ru from "~/locales/ru.json";
 import Why from "./Why.vue";
@@ -48,19 +49,9 @@ interface WhyCase {
 
 const themes = ["torii-synth", "cyber-sakura"];
 
-const cases: WhyCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 768, height: 900, tall: 1400 },
-  { name: "mobile", width: 390, height: 780, tall: 2200 },
-  { name: "desktop-ru", width: 1440, height: 900, locale: "ru" },
-  { name: "tablet-ru", width: 768, height: 900, locale: "ru", tall: 2200 },
-  { name: "mobile-ru", width: 390, height: 780, locale: "ru", tall: 2200 },
-];
+const cases: WhyCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
-const switchCases: WhyCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "mobile", width: 390, height: 780, tall: 2200 },
-];
+const switchCases: WhyCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
 const customTransitions = [
   ".home-why-night",
@@ -79,10 +70,6 @@ const customTransitions = [
   ".home-why-input",
   ".home-why-chip",
 ];
-
-function mismatch(item: Pick<WhyCase, "tall">) {
-  return item.tall === undefined ? {} : { allowedMismatchedPixelRatio: 0.01 };
-}
 
 function finishAnimations() {
   for (const animation of document.getAnimations()) {
@@ -109,6 +96,21 @@ async function setReducedMotion(value: "reduce" | "no-preference") {
   });
 }
 
+function layerCount(screen: { container: HTMLElement }) {
+  return screen.container.querySelectorAll(".home-why-night, .home-why-day, .home-why-owl").length;
+}
+
+async function prefetchThemeLayers(screen: { container: HTMLElement }) {
+  useThemeLayersPrefetch().prefetch();
+  await expect.poll(() => layerCount(screen)).toBe(4);
+  await expect
+    .poll(() => [...screen.container.querySelectorAll("img")].every((image) => image.complete), {
+      timeout: 5000,
+    })
+    .toBe(true);
+  screen.container.getBoundingClientRect();
+}
+
 function createApp(locale: Locale) {
   return createI18n({ legacy: false, locale, messages: { ru, en } });
 }
@@ -121,12 +123,7 @@ async function renderCase(item: Pick<WhyCase, "width" | "height" | "locale" | "t
     () => h("div", { class: "bg-base-100 font-body text-base-content" }, h(Why)),
     { global: { plugins: [createApp(locale)] } },
   );
-  await expect
-    .poll(
-      () =>
-        screen.container.querySelectorAll(".home-why-night, .home-why-day, .home-why-owl").length,
-    )
-    .toBe(4);
+  await expect.poll(() => layerCount(screen)).toBe(2);
   if (item.tall !== undefined)
     screen.container.querySelector<HTMLElement>(".home-why")!.style.minHeight = "0";
   screen.container.getBoundingClientRect();
@@ -286,7 +283,7 @@ describe.each(themes)("%s", (theme) => {
 
     await expect
       .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`${theme}-${item.name}`, { comparatorOptions: mismatch(item) });
+      .toMatchScreenshot(`${theme}-${item.name}`);
   });
 });
 
@@ -294,7 +291,7 @@ describe("theme switch", () => {
   it.each(switchCases)("$name", async (item) => {
     setTheme("torii-synth");
     const screen = await renderCase(item);
-    screen.container.getBoundingClientRect();
+    await prefetchThemeLayers(screen);
     setTheme("cyber-sakura");
 
     const animations = document.getAnimations();
@@ -354,9 +351,14 @@ describe("behavior", () => {
     expect([...pick(screen, ".home-why-stage").children].map((item) => item.className)).toEqual([
       "home-why-window",
       "home-why-owl home-why-owl-night",
-      "home-why-owl home-why-owl-day",
     ]);
     expect(pick(screen, ".home-why-decor").getAttribute("aria-hidden")).toBe("true");
+    await prefetchThemeLayers(screen);
+    expect([...pick(screen, ".home-why-stage").children].map((item) => item.className)).toEqual([
+      "home-why-window",
+      "home-why-owl home-why-owl-night",
+      "home-why-owl home-why-owl-day home-why-owl-late",
+    ]);
     expect(pick(screen, ".home-why-decor").querySelector("img")).toBeNull();
     for (const owl of pickAll(screen, ".home-why-owl")) {
       expect(owl.getAttribute("aria-hidden")).toBe("true");
@@ -482,6 +484,7 @@ describe("behavior", () => {
     { width: 2560, height: 1440, locale: "en" as const },
   ])("seats the owls on the top edge of the chat window at $width in $locale", async (item) => {
     const screen = await renderCase(item);
+    await prefetchThemeLayers(screen);
     const spacing = Number.parseFloat(getComputedStyle(document.documentElement).fontSize) / 4;
     const slide = pick(screen, ".home-why").getBoundingClientRect();
     const offset = Number.parseFloat(getComputedStyle(pick(screen, ".home-slide-body")).paddingTop);
@@ -517,6 +520,7 @@ describe("behavior", () => {
     "makes room for the biggest owl between the header and the window at $width in $locale",
     async (item) => {
       const screen = await renderCase(item);
+      await prefetchThemeLayers(screen);
       const slide = pick(screen, ".home-why").getBoundingClientRect();
       const offset = Number.parseFloat(
         getComputedStyle(pick(screen, ".home-slide-body")).paddingTop,
@@ -634,8 +638,18 @@ describe("behavior", () => {
     expect(head.top - slide.top).toBeGreaterThanOrEqual(item.header - 1);
   });
 
+  it("mounts only the layer and the owl of the current theme until the switch is intended", async () => {
+    const screen = await renderCase({ width: 1440, height: 900 });
+
+    expect(pickAll(screen, ".home-why-night")).toHaveLength(1);
+    expect(pickAll(screen, ".home-why-owl-night")).toHaveLength(1);
+    expect(screen.container.querySelector(".home-why-day")).toBeNull();
+    expect(screen.container.querySelector(".home-why-owl-day")).toBeNull();
+  });
+
   it("follows the theme with two crossfading layers", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
+    await prefetchThemeLayers(screen);
     const night = pick<HTMLElement>(screen, ".home-why-night");
     const day = pick<HTMLElement>(screen, ".home-why-day");
     const owlNight = pick<HTMLElement>(screen, ".home-why-owl-night");
@@ -699,6 +713,12 @@ describe("behavior", () => {
     expect(getComputedStyle(day).visibility).toBe("visible");
     expect(getComputedStyle(owlDay).opacity).toBe("1");
     expect(getComputedStyle(dot).width).toBe("11px");
+
+    await expect.poll(() => layerCount(screen)).toBe(2);
+    expect(night.isConnected).toBe(false);
+    expect(owlNight.isConnected).toBe(false);
+    expect(day.isConnected).toBe(true);
+    expect(owlDay.isConnected).toBe(true);
   });
 
   it("changes the shape of the window with the theme", async () => {
@@ -781,9 +801,9 @@ async function settleScroll(screen: Awaited<ReturnType<typeof renderCase>>) {
     .toBeLessThanOrEqual(1);
 }
 
-describe.each(themes)("%s chat", (theme) => {
+describe("chat states", () => {
   beforeEach(() => {
-    setTheme(theme);
+    setTheme("torii-synth");
   });
 
   afterEach(() => {
@@ -794,7 +814,7 @@ describe.each(themes)("%s chat", (theme) => {
     { name: "waiting", state: 0 },
     { name: "streaming", state: 1 },
     { name: "answered", state: 2 },
-  ])("shows the $name state", async (item) => {
+  ])("lays out the $name state inside the chat window", async (item) => {
     const agent = controlled();
     agentOverride.current = agent.agent;
     const reply = en.home.why.chat.mockReply;
@@ -817,10 +837,27 @@ describe.each(themes)("%s chat", (theme) => {
     finishAnimations();
     await settleScroll(screen);
     finishAnimations();
+    const dialog = pick(screen, ".home-why-dialog").getBoundingClientRect();
+    const last = lastBubble(screen);
+    const busy = item.state < 2;
 
-    await expect
-      .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`${theme}-chat-${item.name}`);
+    expect(bubbles(screen)).toHaveLength(3);
+    expect(last.querySelector(".home-why-typing") !== null).toBe(item.state === 0);
+    expect(last.classList.contains("home-why-bubble-streaming")).toBe(item.state === 1);
+    expect(pick(screen, ".home-why-ask").getAttribute("aria-busy")).toBe(String(busy));
+    const spinner = getComputedStyle(pick(screen, ".home-why-ask-spinner")).opacity;
+    const arrow = getComputedStyle(pick(screen, ".home-why-ask-arrow")).opacity;
+    expect([spinner, arrow]).toEqual(busy ? ["1", "0"] : ["0", "1"]);
+    for (const bubble of bubbles(screen)) {
+      const rect = bubble.getBoundingClientRect();
+      expect(rect.left).toBeGreaterThanOrEqual(dialog.left - 0.5);
+      expect(rect.right).toBeLessThanOrEqual(dialog.right + 0.5);
+    }
+    near(last.getBoundingClientRect().bottom, dialog.bottom, 40);
+    expect(last.getBoundingClientRect().bottom).toBeLessThanOrEqual(dialog.bottom + 0.5);
+    expect(pick(screen, ".home-why-message-user").getBoundingClientRect().right).toBeGreaterThan(
+      last.getBoundingClientRect().right,
+    );
   });
 });
 

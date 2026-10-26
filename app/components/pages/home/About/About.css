@@ -115,7 +115,7 @@
   }
 
   @apply m-0 bg-clip-text font-head font-normal text-transparent;
-  font-family: "Righteous", sans-serif;
+  font-family: "Righteous", "Righteous Fallback", sans-serif;
   font-size: var(--home-about-role-size);
   line-height: 1.1;
   background-image: linear-gradient(

@@ -1,5 +1,6 @@
 import type { ProjectView, SkillGroupView } from "~/assets/api/types/catalog";
 import type { ProjectBlock } from "~/assets/api/types/projectCase";
+import { assistant } from "./assistant";
 import { blog } from "./blog";
 import { contact } from "./contact";
 import { buildCase, buildProjects, buildResume, buildSkillGroups } from "~/assets/api/mock/build";
@@ -41,4 +42,4 @@ const skills = {
   },
 };
 
-export const $api = { profile, projects, skills, blog, contact };
+export const $api = { profile, projects, skills, blog, contact, assistant };

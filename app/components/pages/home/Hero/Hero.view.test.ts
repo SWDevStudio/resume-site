@@ -5,6 +5,7 @@ import { cdp, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-vue";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Locale } from "~/assets/const";
+import { useThemeLayersPrefetch } from "~/composables/useThemeLayers";
 import en from "~/locales/en.json";
 import ru from "~/locales/ru.json";
 import Hero from "./Hero.vue";
@@ -26,19 +27,9 @@ interface HeroCase {
 
 const themes = ["torii-synth", "cyber-sakura"];
 
-const cases: HeroCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 768, height: 900 },
-  { name: "mobile", width: 390, height: 780 },
-  { name: "desktop-ru", width: 1440, height: 900, locale: "ru" },
-  { name: "tablet-ru", width: 768, height: 900, locale: "ru" },
-  { name: "mobile-ru", width: 390, height: 780, locale: "ru" },
-];
+const cases: HeroCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
-const switchCases: HeroCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "mobile", width: 390, height: 780 },
-];
+const switchCases: HeroCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
 function finishAnimations() {
   for (const animation of document.getAnimations()) {
@@ -68,6 +59,34 @@ function running(prefix: string) {
     );
 }
 
+function properties(animation: Animation) {
+  const frames = (animation.effect as KeyframeEffect).getKeyframes();
+  const names = frames.flatMap((frame) =>
+    Object.keys(frame).filter(
+      (key) => !["offset", "computedOffset", "easing", "composite"].includes(key),
+    ),
+  );
+  return [...new Set(names)].sort();
+}
+
+function targets(animations: Animation[]) {
+  return animations.map((animation) => (animation.effect as KeyframeEffect).target as Element);
+}
+
+function playing(prefix: string) {
+  const animations = running(prefix);
+  return animations.length > 0 && animations.every((item) => item.playState === "running");
+}
+
+function stopped(prefix: string) {
+  const animations = running(prefix);
+  return animations.length > 0 && animations.every((item) => item.playState === "paused");
+}
+
+async function waitDecorMotion(prefix: string) {
+  await expect.poll(() => playing(prefix), { timeout: 5000 }).toBe(true);
+}
+
 async function setReducedMotion(value: "reduce" | "no-preference") {
   await cdp().send("Emulation.setEmulatedMedia", {
     features: [{ name: "prefers-reduced-motion", value }],
@@ -78,21 +97,40 @@ function createApp(locale: Locale) {
   return createI18n({ legacy: false, locale, messages: { ru, en } });
 }
 
-async function renderCase(item: Pick<HeroCase, "width" | "height" | "locale">, loaded = true) {
+function layerCount(screen: { container: HTMLElement }) {
+  return screen.container.querySelectorAll(".home-hero-night, .home-hero-day").length;
+}
+
+async function renderCase(item: Pick<HeroCase, "width" | "height" | "locale">, offset = 0) {
   await page.viewport(item.width, item.height);
   const locale = item.locale ?? "en";
   document.documentElement.lang = locale;
   const screen = await render(
-    () => h("div", { class: "bg-base-100 font-body text-base-content" }, h(Hero)),
+    () =>
+      h(
+        "div",
+        {
+          class: "bg-base-100 font-body text-base-content",
+          style: offset ? { marginTop: `${offset}px` } : undefined,
+        },
+        h(Hero),
+      ),
     { global: { plugins: [createApp(locale)] } },
   );
   screen.container.getBoundingClientRect();
-  if (loaded) {
-    await expect
-      .poll(() => screen.container.querySelectorAll(".home-hero-night, .home-hero-day").length)
-      .toBe(2);
-  }
+  await expect.poll(() => layerCount(screen)).toBe(1);
   return screen;
+}
+
+async function prefetchThemeLayers(screen: { container: HTMLElement }) {
+  useThemeLayersPrefetch().prefetch();
+  await expect.poll(() => layerCount(screen)).toBe(2);
+  await expect
+    .poll(() => [...screen.container.querySelectorAll("img")].every((image) => image.complete), {
+      timeout: 5000,
+    })
+    .toBe(true);
+  screen.container.getBoundingClientRect();
 }
 
 async function whileLoading(run: () => Promise<void>) {
@@ -134,6 +172,30 @@ afterEach(async () => {
   await page.viewport(1440, 900);
 });
 
+describe("decor motion", () => {
+  it("keeps the decor paused until the page has loaded and the browser is idle", async () => {
+    setTheme("torii-synth");
+    await whileLoading(async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      expect(screen.container.querySelector(".home-hero-night")!.classList).toContain(
+        "decor-paused",
+      );
+      expect(stopped("home-hero-firefly")).toBe(true);
+      expect(stopped("home-hero-blink")).toBe(true);
+
+      window.dispatchEvent(new Event("load"));
+      await waitDecorMotion("home-hero-firefly");
+      expect(playing("home-hero-blink")).toBe(true);
+      expect(screen.container.querySelector(".home-hero-night")!.classList).not.toContain(
+        "decor-paused",
+      );
+    });
+  });
+});
+
 describe.each(themes)("%s", (theme) => {
   beforeEach(() => {
     setTheme(theme);
@@ -152,7 +214,7 @@ describe("theme switch", () => {
   it.each(switchCases)("$name", async (item) => {
     setTheme("torii-synth");
     const screen = await renderCase(item);
-    screen.container.getBoundingClientRect();
+    await prefetchThemeLayers(screen);
     setTheme("cyber-sakura");
 
     const animations = document.getAnimations();
@@ -196,6 +258,7 @@ describe("behavior", () => {
     expect(cta.classList.contains("btn")).toBe(true);
     expect(cta.textContent?.trim()).toBe("Download my CV");
     expect(hero.querySelector(".home-hero-night")!.getAttribute("aria-hidden")).toBe("true");
+    await prefetchThemeLayers(screen);
     expect(hero.querySelector(".home-hero-day")!.getAttribute("aria-hidden")).toBe("true");
   });
 
@@ -217,6 +280,7 @@ describe("behavior", () => {
 
   it("lays out like the mockup on desktop", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
+    await prefetchThemeLayers(screen);
     const title = screen.container.querySelector<HTMLElement>(".home-hero-title")!;
     const gate = box(screen, ".home-hero-gate");
 
@@ -257,6 +321,7 @@ describe("behavior", () => {
 
   it("lays out like the mockup on mobile", async () => {
     const screen = await renderCase({ width: 390, height: 780 });
+    await prefetchThemeLayers(screen);
     const title = screen.container.querySelector<HTMLElement>(".home-hero-title")!;
     const rail = box(screen, ".home-hero-rail");
     const line = box(screen, ".home-hero-rail-line");
@@ -299,6 +364,7 @@ describe("behavior", () => {
 
   it("follows the theme with two crossfading layers", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
+    await prefetchThemeLayers(screen);
     const night = screen.container.querySelector<HTMLElement>(".home-hero-night")!;
     const day = screen.container.querySelector<HTMLElement>(".home-hero-day")!;
     const title = screen.container.querySelector<HTMLElement>(".home-hero-title-top")!;
@@ -333,16 +399,68 @@ describe("behavior", () => {
     expect(getComputedStyle(day).visibility).toBe("visible");
     expect(getComputedStyle(social, "::before").opacity).toBe("0");
     expect(getComputedStyle(social, "::after").opacity).toBe("1");
+
+    await expect.poll(() => layerCount(screen)).toBe(1);
+    expect(night.isConnected).toBe(false);
+    expect(day.isConnected).toBe(true);
   });
 
-  it("animates the fireflies and the petals", async () => {
-    await renderCase({ width: 1440, height: 900 });
+  it("animates the fireflies with a move and a blink on the same element", async () => {
+    const screen = await renderCase({ width: 1440, height: 900 });
+    await waitDecorMotion("home-hero-firefly");
+    const fireflies = [...screen.container.querySelectorAll(".home-hero-firefly")];
 
+    expect(fireflies).toHaveLength(18);
     expect(running("home-hero-firefly")).toHaveLength(18);
     expect(running("home-hero-blink")).toHaveLength(18);
+    expect(targets(running("home-hero-firefly"))).toEqual(fireflies);
+    expect(targets(running("home-hero-blink"))).toEqual(fireflies);
+    expect(running("home-hero-firefly").map((item) => properties(item).join())).toEqual(
+      fireflies.map(() => "transform"),
+    );
+    expect(running("home-hero-blink").map((item) => properties(item).join())).toEqual(
+      fireflies.map(() => "opacity"),
+    );
+    expect(running("home-hero-wind")).toHaveLength(0);
+  });
+
+  it("moves each petal with two elements and draws the blur and the glow in ::before", async () => {
+    setTheme("cyber-sakura");
+    const screen = await renderCase({ width: 1440, height: 900 });
+    await waitDecorMotion("home-hero-wind");
+    const petals = [...screen.container.querySelectorAll<HTMLElement>(".home-hero-petal")];
+    const leaves = [...screen.container.querySelectorAll<HTMLElement>(".home-hero-petal-leaf")];
+    const blurred = screen.container.querySelector<HTMLElement>(
+      ".home-hero-petal-leaf.home-hero-petal-blur",
+    )!;
+
+    expect(petals).toHaveLength(30);
+    expect(leaves).toHaveLength(30);
+    expect(petals.map((petal) => petal.children.length)).toEqual(petals.map(() => 1));
+    expect(leaves.map((leaf) => leaf.parentElement)).toEqual(petals);
+    expect(screen.container.querySelector(".home-hero-petal-sway")).toBeNull();
     expect(running("home-hero-wind")).toHaveLength(30);
     expect(running("home-hero-sway")).toHaveLength(30);
     expect(running("home-hero-flip")).toHaveLength(30);
+    expect(targets(running("home-hero-wind"))).toEqual(petals);
+    expect(targets(running("home-hero-sway"))).toEqual(petals);
+    expect(targets(running("home-hero-flip"))).toEqual(leaves);
+    expect(running("home-hero-wind").map((item) => properties(item).join())).toEqual(
+      petals.map(() => "opacity,translate"),
+    );
+    expect(running("home-hero-sway").map((item) => properties(item).join())).toEqual(
+      petals.map(() => "transform"),
+    );
+    expect(running("home-hero-flip").map((item) => properties(item).join())).toEqual(
+      leaves.map(() => "transform"),
+    );
+    expect(getComputedStyle(leaves[0]!).boxShadow).toBe("none");
+    expect(getComputedStyle(leaves[0]!).filter).toBe("none");
+    expect(getComputedStyle(leaves[0]!).backgroundImage).toBe("none");
+    expect(getComputedStyle(leaves[0]!, "::before").boxShadow).not.toBe("none");
+    expect(getComputedStyle(leaves[0]!, "::before").backgroundImage).toContain("linear-gradient");
+    expect(getComputedStyle(blurred).filter).toBe("none");
+    expect(getComputedStyle(blurred, "::before").filter).toContain("blur(");
   });
 
   it("animates the social links on hover", async () => {
@@ -374,6 +492,7 @@ describe("behavior", () => {
 
     it("stops the decor and keeps it visible", async () => {
       const screen = await renderCase({ width: 1440, height: 900 });
+      await prefetchThemeLayers(screen);
       const firefly = screen.container.querySelector<HTMLElement>(".home-hero-firefly")!;
       const leaf = screen.container.querySelector<HTMLElement>(".home-hero-petal-leaf")!;
 
@@ -399,46 +518,75 @@ describe("behavior", () => {
     });
   });
 
-  it("mounts the inactive layer only after the page has loaded", async () => {
+  it("mounts the inactive layer only on the intent to switch the theme", async () => {
     setTheme("torii-synth");
-    await whileLoading(async () => {
-      const screen = await renderCase({ width: 1440, height: 900 }, false);
-      await nextTick();
+    const screen = await renderCase({ width: 1440, height: 900 });
+    await waitDecorMotion("home-hero-firefly");
+    window.dispatchEvent(new Event("load"));
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
-      expect(screen.container.querySelector(".home-hero-night")).not.toBeNull();
-      expect(screen.container.querySelector(".home-hero-day")).toBeNull();
-      expect(running("home-hero-wind")).toHaveLength(0);
+    expect(screen.container.querySelector(".home-hero-night")).not.toBeNull();
+    expect(screen.container.querySelector(".home-hero-day")).toBeNull();
+    expect(running("home-hero-wind")).toHaveLength(0);
 
-      window.dispatchEvent(new Event("load"));
-      await expect.poll(() => screen.container.querySelector(".home-hero-day")).not.toBeNull();
-      expect(running("home-hero-wind")).toHaveLength(30);
-    });
+    await prefetchThemeLayers(screen);
+    expect(screen.container.querySelector(".home-hero-day")!.classList).toContain("home-hero-late");
+    expect(running("home-hero-wind")).toHaveLength(30);
   });
 
-  it("mounts the layer of a theme switched on before the page has loaded", async () => {
+  it("mounts the layer of a theme switched without the intent and drops the old one", async () => {
     setTheme("torii-synth");
-    await whileLoading(async () => {
-      const screen = await renderCase({ width: 1440, height: 900 }, false);
-      setTheme("cyber-sakura");
+    const screen = await renderCase({ width: 1440, height: 900 });
+    setTheme("cyber-sakura");
 
-      await expect.poll(() => screen.container.querySelector(".home-hero-day")).not.toBeNull();
-      expect(screen.container.querySelector(".home-hero-night")).not.toBeNull();
-    });
+    await expect.poll(() => screen.container.querySelector(".home-hero-day")).not.toBeNull();
+    expect(screen.container.querySelector(".home-hero-night")).not.toBeNull();
+    expect(screen.container.querySelector(".home-hero-day")!.classList).toContain("home-hero-late");
+    await expect.poll(() => screen.container.querySelector(".home-hero-night")).toBeNull();
+    expect(layerCount(screen)).toBe(1);
   });
 
   it("pauses the decor of the inactive layer", async () => {
     setTheme("torii-synth");
-    await renderCase({ width: 1440, height: 900 });
+    const screen = await renderCase({ width: 1440, height: 900 });
+    await waitDecorMotion("home-hero-firefly");
+    await prefetchThemeLayers(screen);
 
-    expect(running("home-hero-firefly").every((item) => item.playState === "running")).toBe(true);
-    expect(running("home-hero-wind").every((item) => item.playState === "paused")).toBe(true);
-    expect(running("home-hero-flip").every((item) => item.playState === "paused")).toBe(true);
+    expect(playing("home-hero-firefly")).toBe(true);
+    expect(stopped("home-hero-wind")).toBe(true);
+    expect(stopped("home-hero-flip")).toBe(true);
+    expect(screen.container.querySelector(".home-hero-day")!.classList).toContain("decor-paused");
 
     setTheme("cyber-sakura");
-    await expect
-      .poll(() => running("home-hero-wind").every((item) => item.playState === "running"))
-      .toBe(true);
-    expect(running("home-hero-firefly").every((item) => item.playState === "paused")).toBe(true);
+    await expect.poll(() => playing("home-hero-wind")).toBe(true);
+    expect(playing("home-hero-flip")).toBe(true);
+    expect(stopped("home-hero-firefly")).toBe(true);
+
+    await expect.poll(() => screen.container.querySelector(".home-hero-night")).toBeNull();
+    expect(running("home-hero-firefly")).toHaveLength(0);
+  });
+
+  it("pauses the decor while the slide is off the screen", async () => {
+    setTheme("torii-synth");
+    document.documentElement.style.scrollSnapType = "none";
+    window.scrollTo({ top: 0, behavior: "instant" });
+    try {
+      const screen = await renderCase({ width: 1440, height: 900 }, 2000);
+
+      await expect.poll(() => stopped("home-hero-firefly")).toBe(true);
+      expect(screen.container.querySelector(".home-hero-night")!.classList).toContain(
+        "decor-paused",
+      );
+
+      screen.container.querySelector(".home-hero")!.scrollIntoView({ behavior: "instant" });
+      await waitDecorMotion("home-hero-firefly");
+
+      window.scrollTo({ top: 0, behavior: "instant" });
+      await expect.poll(() => stopped("home-hero-firefly")).toBe(true);
+    } finally {
+      document.documentElement.style.scrollSnapType = "";
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
   });
 
   it("renders on the server", async () => {

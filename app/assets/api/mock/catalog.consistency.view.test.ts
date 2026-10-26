@@ -1,8 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_LOCALE, LOCALES, Route, type Locale } from "~/assets/const";
 import { projects as canonFile, projectsText } from "~/assets/data/projects";
-import { resolveProjectImage } from "~/components/pages/shared/projectImage";
+import { loadProjectMedia } from "~/assets/api/mock/media";
 import type { ProjectCanon, ProjectsText, ResumeFile } from "~/assets/api/types/catalog";
+import type { ImageAsset } from "~/assets/api/types/media";
 import type {
   ProjectBlock,
   ProjectCaseCoverData,
@@ -27,8 +28,8 @@ const canon = canonFile as ProjectCanon[];
 const ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const CYRILLIC = /[Ѐ-ӿ]/;
 
-const PROJECT_CANON_KEYS = ["id", "isFavorite", "name", "preview", "stack", "tags", "tone", "url"];
-const PROJECT_CANON_OPTIONAL_KEYS = ["caseStack", "previewFrame", "previewMobile"];
+const PROJECT_CANON_KEYS = ["id", "isFavorite", "name", "stack", "tags", "tone", "url"];
+const PROJECT_CANON_OPTIONAL_KEYS = ["caseStack", "preview", "previewFrame", "previewMobile"];
 const PROJECT_TEXT_KEYS = ["description", "headline", "previewAlt", "result", "role", "subtitle"];
 const CATALOG = [
   "qwixit",
@@ -39,6 +40,8 @@ const CATALOG = [
   "fly-post",
   "tamriel-codex",
   "someday",
+  "dobro",
+  "hector",
 ];
 const TEXT_KEYS = [
   "subtitle",
@@ -97,6 +100,16 @@ function dataOf<T>(blocks: ProjectBlock[], component: string) {
   return blocks.find((block) => block.component === component)!.data as unknown as T;
 }
 
+function expectImage(image: ImageAsset | undefined) {
+  expect(image).toBeDefined();
+  if (!image) return;
+  const widths = image.variants.map((variant) => variant.width);
+  expect(widths).toEqual([...widths].sort((a, b) => a - b));
+  expect(image.variants.at(-1)).toEqual({ src: image.src, width: image.width });
+  expect(image.width).toBeGreaterThan(0);
+  expect(image.height).toBeGreaterThan(0);
+}
+
 function keysOf(value: object) {
   return Object.keys(value).sort();
 }
@@ -132,19 +145,23 @@ describe("the canon of the projects", () => {
     for (const id of ids) expect(id).toMatch(ID);
   });
 
-  it.each(canon)("keeps only the facts of $id in the right shape", (project) => {
+  it.each(canon)("keeps only the facts of $id in the right shape", async (project) => {
     const keys = keysOf(project);
+    const media = await loadProjectMedia();
 
     expect(keys.filter((key) => !PROJECT_CANON_OPTIONAL_KEYS.includes(key))).toEqual(
       PROJECT_CANON_KEYS,
     );
     expect(typeof project.isFavorite).toBe("boolean");
+    expect([project.preview, project.previewMobile].some(Boolean)).toBe(true);
+    if (project.preview !== undefined) {
+      expectImage(media(project.preview));
+    }
     if (project.previewMobile !== undefined) {
-      expect(resolveProjectImage(project.previewMobile)).not.toBe(project.previewMobile);
+      expectImage(media(project.previewMobile));
     }
     expect(["primary", "secondary", "accent"]).toContain(project.tone);
     expect(project.url === null || project.url.startsWith("https://")).toBe(true);
-    expect(resolveProjectImage(project.preview)).not.toBe(project.preview);
     for (const tag of project.tags) expect(tag).toMatch(ID);
     for (const ref of project.stack) {
       expect(typeof ref === "string" ? ref : ref.id).toMatch(ID);
@@ -238,7 +255,31 @@ describe.each(LOCALES)("the projects built for %s", (locale: Locale) => {
       expect(project.name).toBe(canon[position]!.name);
       expect(project.url).toBe(canon[position]!.url);
       expect(project.tone).toBe(canon[position]!.tone);
-      expect(project.preview).toBe(canon[position]!.preview);
+      expect(project.preview?.src).toBe(canon[position]!.preview);
+    });
+  });
+
+  it("gives every project the images of the media resolver", async () => {
+    const media = await loadProjectMedia();
+    const resolved = buildProjects({ ...staticSources(locale), media }, locale);
+
+    resolved.forEach((project, position) => {
+      const item = canon[position]!;
+
+      expect([project.preview, project.previewMobile].some(Boolean)).toBe(true);
+      if (item.preview === undefined) {
+        expect(project.preview).toBeNull();
+      } else {
+        expect(project.preview).toEqual(media(item.preview));
+        expectImage(project.preview ?? undefined);
+        expect(project.preview?.src).not.toBe(item.preview);
+      }
+      if (item.previewMobile === undefined) {
+        expect(project.previewMobile).toBeNull();
+      } else {
+        expect(project.previewMobile).toEqual(media(item.previewMobile));
+        expectImage(project.previewMobile ?? undefined);
+      }
     });
   });
 
@@ -356,6 +397,9 @@ describe.each(LOCALES)("the cases built for %s", (locale: Locale) => {
       const project = canon[position]!;
       const following = canon[(position + 1) % canon.length]!;
       const blocks = (await $api.projects.fetchCase(id))!;
+      const media = await loadProjectMedia();
+      const desktop = project.preview ? media(project.preview) : null;
+      const mobile = project.previewMobile ? media(project.previewMobile) : null;
 
       expect(dataOf<ProjectCaseHeaderData>(blocks, "ProjectCaseHeader")).toEqual({
         index: String(position + 1).padStart(2, "0"),
@@ -366,8 +410,8 @@ describe.each(LOCALES)("the cases built for %s", (locale: Locale) => {
         tone: project.tone,
       });
       expect(dataOf<ProjectCaseCoverData>(blocks, "ProjectCaseCover")).toEqual({
-        image: project.preview,
-        imageMobile: project.previewMobile ?? null,
+        image: desktop,
+        imageMobile: mobile,
         imageAlt: text.items[id]!.previewAlt,
         frame: project.previewFrame ?? "devices",
       });

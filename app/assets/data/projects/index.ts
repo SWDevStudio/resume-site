@@ -8,6 +8,8 @@ import cdekShopping from "./cdek-shopping";
 import flyPost from "./fly-post";
 import tamrielCodex from "./tamriel-codex";
 import someday from "./someday";
+import dobro from "./dobro";
+import hector from "./hector";
 import { projectLabels } from "./labels";
 
 export const projectDefinitions = [
@@ -19,6 +21,8 @@ export const projectDefinitions = [
   flyPost,
   tamrielCodex,
   someday,
+  dobro,
+  hector,
 ];
 
 export const projects = projectDefinitions.map(

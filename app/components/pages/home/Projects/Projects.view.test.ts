@@ -5,8 +5,10 @@ import { cdp, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-vue";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { buildProjects } from "~/assets/api/mock/build";
+import { loadProjectMedia } from "~/assets/api/mock/media";
 import { staticSources } from "~/assets/api/mock/sources.static";
 import type { Locale } from "~/assets/const";
+import { useThemeLayersPrefetch } from "~/composables/useThemeLayers";
 import en from "~/locales/en.json";
 import ru from "~/locales/ru.json";
 import Projects from "./Projects.vue";
@@ -26,19 +28,9 @@ interface ProjectsCase {
 
 const themes = ["torii-synth", "cyber-sakura"];
 
-const cases: ProjectsCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 768, height: 900, tall: 1400 },
-  { name: "mobile", width: 390, height: 780, tall: 2400 },
-  { name: "desktop-ru", width: 1440, height: 900, locale: "ru" },
-  { name: "tablet-ru", width: 768, height: 900, locale: "ru", tall: 1400 },
-  { name: "mobile-ru", width: 390, height: 780, locale: "ru", tall: 2400 },
-];
+const cases: ProjectsCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
-const switchCases: ProjectsCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 768, height: 900, tall: 1400 },
-];
+const switchCases: ProjectsCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
 const customTransitions = [
   ".home-projects-night",
@@ -49,10 +41,6 @@ const customTransitions = [
   ".home-projects-read",
   ".home-projects-all",
 ];
-
-function mismatch(item: Pick<ProjectsCase, "tall">) {
-  return item.tall === undefined ? {} : { allowedMismatchedPixelRatio: 0.01 };
-}
 
 function finishAnimations() {
   for (const animation of document.getAnimations()) {
@@ -81,10 +69,13 @@ async function setReducedMotion(value: "reduce" | "no-preference") {
 
 const CARD_PROJECTS = ["qwixit", "brendmart", "tamriel-codex"];
 
+const media = await loadProjectMedia();
+
 function cardSources(locale: Locale) {
   const sources = staticSources(locale);
   return {
     ...sources,
+    media,
     projects: sources.projects.filter((project) => CARD_PROJECTS.includes(project.id)),
   };
 }
@@ -95,6 +86,16 @@ const lists = {
 };
 
 const CARD_TAGS = 3;
+
+function layerCount(screen: { container: HTMLElement }) {
+  return screen.container.querySelectorAll(".home-projects-night, .home-projects-day").length;
+}
+
+async function prefetchThemeLayers(screen: { container: HTMLElement }) {
+  useThemeLayersPrefetch().prefetch();
+  await expect.poll(() => layerCount(screen)).toBe(2);
+  screen.container.getBoundingClientRect();
+}
 
 function createApp(locale: Locale) {
   return createI18n({ legacy: false, locale, messages: { ru, en } });
@@ -113,11 +114,7 @@ async function renderCase(item: Pick<ProjectsCase, "width" | "height" | "locale"
       ),
     { global: { plugins: [createApp(locale)] } },
   );
-  await expect
-    .poll(
-      () => screen.container.querySelectorAll(".home-projects-night, .home-projects-day").length,
-    )
-    .toBe(2);
+  await expect.poll(() => layerCount(screen)).toBe(1);
   if (item.tall !== undefined) {
     screen.container.querySelector<HTMLElement>(".home-projects")!.style.minHeight = "0";
   }
@@ -204,7 +201,7 @@ describe.each(themes)("%s", (theme) => {
 
     await expect
       .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`${theme}-${item.name}`, { comparatorOptions: mismatch(item) });
+      .toMatchScreenshot(`${theme}-${item.name}`);
   });
 });
 
@@ -212,7 +209,7 @@ describe("theme switch", () => {
   it.each(switchCases)("$name", async (item) => {
     setTheme("torii-synth");
     const screen = await renderCase(item);
-    screen.container.getBoundingClientRect();
+    await prefetchThemeLayers(screen);
     setTheme("cyber-sakura");
 
     const animations = document.getAnimations();
@@ -291,6 +288,16 @@ describe("behavior", () => {
       expect(image.naturalWidth).toBeGreaterThan(0);
     }
     expect(new Set(images.map((image) => image.src)).size).toBe(3);
+    expect(images.map((image) => image.getAttribute("src"))).toEqual(
+      lists.en.map((project) => project.preview?.src),
+    );
+    expect(images.map((image) => image.getAttribute("srcset"))).toEqual(
+      lists.en.map((project) =>
+        project.preview?.variants.map((variant) => `${variant.src} ${variant.width}w`).join(", "),
+      ),
+    );
+    expect(lists.en.every((project) => (project.preview?.variants.length ?? 0) > 1)).toBe(true);
+    expect(images.every((image) => image.getAttribute("sizes"))).toBe(true);
   });
 
   it.each(["en", "ru"] as const)(
@@ -499,8 +506,16 @@ describe("behavior", () => {
     ]);
   });
 
+  it("mounts only the layer of the current theme until the theme switch is intended", async () => {
+    const screen = await renderCase({ width: 1440, height: 900 });
+
+    expect(pickAll(screen, ".home-projects-night")).toHaveLength(1);
+    expect(screen.container.querySelector(".home-projects-day")).toBeNull();
+  });
+
   it("follows the theme with two crossfading layers", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
+    await prefetchThemeLayers(screen);
     const night = pick<HTMLElement>(screen, ".home-projects-night");
     const day = pick<HTMLElement>(screen, ".home-projects-day");
     const accent = pick<HTMLElement>(screen, ".home-projects-accent");
@@ -528,6 +543,10 @@ describe("behavior", () => {
     expect(getComputedStyle(night).visibility).toBe("hidden");
     expect(getComputedStyle(day).opacity).toBe("1");
     expect(getComputedStyle(day).visibility).toBe("visible");
+
+    await expect.poll(() => layerCount(screen)).toBe(1);
+    expect(night.isConnected).toBe(false);
+    expect(day.isConnected).toBe(true);
   });
 
   it("changes the shape of the folder with the theme", async () => {

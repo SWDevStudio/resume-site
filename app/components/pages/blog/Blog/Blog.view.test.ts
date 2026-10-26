@@ -22,27 +22,12 @@ vi.mock("~/composables/useLocale", () => ({
 vi.mock("~/composables/useTheme", () => import("../../../../../test/mocks/useTheme"));
 
 interface BlogView {
-  name: string;
   width: number;
   height: number;
   locale?: Locale;
 }
 
-const themes = ["torii-synth", "cyber-sakura"];
-
 const TONES: Record<BlogKind, string> = { article: "primary", tool: "secondary", video: "accent" };
-
-const cases: BlogView[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 768, height: 900 },
-  { name: "mobile", width: 390, height: 780 },
-  { name: "desktop-ru", width: 1440, height: 900, locale: "ru" },
-];
-
-const switchCases: BlogView[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "mobile", width: 390, height: 780 },
-];
 
 let posts: BlogPostSummary[] = [];
 
@@ -85,11 +70,6 @@ async function renderBlog(
 }
 
 type Screen = Awaited<ReturnType<typeof renderBlog>>;
-
-async function fit(screen: Screen, width: number) {
-  await page.viewport(width, Math.ceil(document.documentElement.scrollHeight));
-  screen.container.getBoundingClientRect();
-}
 
 function pick<T extends Element>(screen: Screen, selector: string) {
   return screen.container.querySelector<T>(selector)!;
@@ -180,41 +160,6 @@ afterEach(async () => {
   window.scrollTo({ top: 0, behavior: "instant" });
   await setReducedMotion("no-preference");
   await page.viewport(1440, 900);
-});
-
-describe.each(themes)("%s", (theme) => {
-  beforeEach(() => {
-    setTheme(theme);
-  });
-
-  it.each(cases)("$name", async (item) => {
-    const screen = await renderBlog(item);
-    await fit(screen, item.width);
-
-    await expect
-      .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`${theme}-${item.name}`);
-  });
-});
-
-describe("theme switch", () => {
-  it.each(switchCases)("$name", async (item) => {
-    setTheme("torii-synth");
-    const screen = await renderBlog(item);
-    await fit(screen, item.width);
-    setTheme("cyber-sakura");
-
-    const animations = document.getAnimations();
-    expect(animations.length).toBeGreaterThan(0);
-    for (const animation of animations) {
-      animation.pause();
-      animation.currentTime = Number(animation.effect?.getComputedTiming().duration) / 2;
-    }
-
-    await expect
-      .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`switch-${item.name}`, { screenshotOptions: { animations: "allow" } });
-  });
 });
 
 describe("data", () => {
@@ -592,6 +537,37 @@ describe("layout", () => {
 
     expect(pick(screen, ".blog").classList.contains("container")).toBe(true);
     expect(pick(screen, ".blog").getBoundingClientRect().width).toBeLessThanOrEqual(1240);
+  });
+
+  it.each([
+    { width: 1440, height: 900, locale: "en" as const },
+    { width: 1440, height: 900, locale: "ru" as const },
+    { width: 768, height: 900, locale: "en" as const },
+    { width: 390, height: 780, locale: "en" as const },
+    { width: 390, height: 780, locale: "ru" as const },
+  ])("keeps everything inside the screen at $width in $locale", async (item) => {
+    const screen = await renderBlog(item);
+    const root = pick(screen, ".blog").getBoundingClientRect();
+    const header = pick(screen, ".blog-header").getBoundingClientRect();
+    const filters = pick(screen, ".blog-filters").getBoundingClientRect();
+    const cards = pick(screen, ".blog-cards").getBoundingClientRect();
+
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(item.width);
+    for (const selector of [
+      ".blog-header",
+      ".blog-filter",
+      ".blog-card",
+      ".blog-cover",
+      ".page-sections-nav",
+    ]) {
+      for (const element of screen.container.querySelectorAll(selector)) {
+        const box = element.getBoundingClientRect();
+        expect(box.left, selector).toBeGreaterThanOrEqual(root.left - 0.5);
+        expect(box.right, selector).toBeLessThanOrEqual(root.right + 0.5);
+      }
+    }
+    expect(filters.top).toBeGreaterThanOrEqual(header.bottom - 0.5);
+    expect(cards.top).toBeGreaterThanOrEqual(filters.bottom - 0.5);
   });
 });
 

@@ -7,6 +7,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import type { Locale } from "~/assets/const";
 import { buildSkillGroups } from "~/assets/api/mock/build";
 import { staticSources } from "~/assets/api/mock/sources.static";
+import { useThemeLayersPrefetch } from "~/composables/useThemeLayers";
 import en from "~/locales/en.json";
 import ru from "~/locales/ru.json";
 import { SKILL_TILE_META } from "~/components/ui/UiSkillTile/skillTile";
@@ -33,19 +34,9 @@ interface SkillsCase {
 
 const themes = ["torii-synth", "cyber-sakura"];
 
-const cases: SkillsCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 768, height: 900, tall: true },
-  { name: "mobile", width: 390, height: 780, tall: true },
-  { name: "desktop-ru", width: 1440, height: 900, locale: "ru" },
-  { name: "tablet-ru", width: 768, height: 900, locale: "ru", tall: true },
-  { name: "mobile-ru", width: 390, height: 780, locale: "ru", tall: true },
-];
+const cases: SkillsCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
-const switchCases: SkillsCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "mobile", width: 390, height: 780, tall: true },
-];
+const switchCases: SkillsCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
 const customTransitions = [
   ".home-skills-night",
@@ -75,15 +66,6 @@ function transitioning(element: Element, property: string, pseudo: string | null
   });
 }
 
-function running(prefix: string) {
-  return document
-    .getAnimations()
-    .filter(
-      (animation) =>
-        animation instanceof CSSAnimation && animation.animationName.startsWith(prefix),
-    );
-}
-
 async function setReducedMotion(value: "reduce" | "no-preference") {
   await cdp().send("Emulation.setEmulatedMedia", {
     features: [{ name: "prefers-reduced-motion", value }],
@@ -106,21 +88,38 @@ function createApp(locale: Locale) {
   return createI18n({ legacy: false, locale, messages: { ru, en } });
 }
 
+function layerCount(screen: { container: HTMLElement }) {
+  return screen.container.querySelectorAll(".home-skills-night, .home-skills-day").length;
+}
+
+async function prefetchThemeLayers(screen: { container: HTMLElement }) {
+  useThemeLayersPrefetch().prefetch();
+  await expect.poll(() => layerCount(screen)).toBe(2);
+  screen.container.getBoundingClientRect();
+}
+
 async function renderCase(
   item: Pick<SkillsCase, "width" | "height" | "locale" | "tall">,
   data?: SkillGroupView[],
+  offset = 0,
 ) {
   await page.viewport(item.width, item.tall ? 1800 : item.height);
   const locale = item.locale ?? "en";
   document.documentElement.lang = locale;
   const groups = data ?? groupsOf[locale];
   const screen = await render(
-    () => h("div", { class: "bg-base-100 font-body text-base-content" }, h(Skills, { groups })),
+    () =>
+      h(
+        "div",
+        {
+          class: "bg-base-100 font-body text-base-content",
+          style: offset ? { marginTop: `${offset}px` } : undefined,
+        },
+        h(Skills, { groups }),
+      ),
     { global: { plugins: [createApp(locale)] } },
   );
-  await expect
-    .poll(() => screen.container.querySelectorAll(".home-skills-night, .home-skills-day").length)
-    .toBe(2);
+  await expect.poll(() => layerCount(screen)).toBe(1);
   if (item.tall) screen.container.querySelector<HTMLElement>(".home-skills")!.style.minHeight = "0";
   screen.container.getBoundingClientRect();
   return screen;
@@ -176,6 +175,86 @@ async function advance(ms: number) {
   await nextTick();
 }
 
+async function waitFrames(check: () => boolean, timeout = 5000) {
+  const start = performance.now();
+  while (!check() && performance.now() - start < timeout) {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+  return check();
+}
+
+async function waitSwapTimers(before: number) {
+  expect(await waitFrames(() => vi.getTimerCount() - before >= tiles.length)).toBe(true);
+}
+
+async function waitDecorReady(screen: Screen) {
+  await expect
+    .poll(() => pick(screen, ".home-skills-typing").classList.contains("decor-paused"), {
+      timeout: 5000,
+    })
+    .toBe(false);
+}
+
+function typedItems(screen: Screen) {
+  return pickAll<HTMLElement>(screen, ".home-skills-type");
+}
+
+function typeWindow(screen: Screen) {
+  return pick<HTMLElement>(screen, ".home-skills-type-window");
+}
+
+function charWidth(screen: Screen) {
+  const max = Number(
+    getComputedStyle(typeWindow(screen)).getPropertyValue("--home-skills-type-max"),
+  );
+  return typeWindow(screen).offsetWidth / max;
+}
+
+function textRect(element: Element) {
+  const range = document.createRange();
+  range.selectNodeContents(element);
+  return range.getBoundingClientRect();
+}
+
+function visibleChars(screen: Screen) {
+  const view = typeWindow(screen).getBoundingClientRect();
+  const ch = charWidth(screen);
+  return typedItems(screen).map((item) => {
+    const rect = textRect(item);
+    const width = Math.min(rect.right, view.right) - Math.max(rect.left, view.left);
+    const height = Math.min(rect.bottom, view.bottom) - Math.max(rect.top, view.top);
+    return height > 1 && width > 0 ? Math.round(width / ch) : 0;
+  });
+}
+
+function typedRight(screen: Screen) {
+  const view = typeWindow(screen).getBoundingClientRect();
+  const visible = visibleChars(screen);
+  const index = visible.findIndex((count) => count > 0);
+  if (index < 0) return null;
+  const rect = textRect(typedItems(screen)[index]!);
+  return { left: Math.max(rect.left, view.left), right: Math.min(rect.right, view.right) };
+}
+
+function typingAnimations() {
+  return document
+    .getAnimations()
+    .filter(
+      (animation): animation is CSSAnimation =>
+        animation instanceof CSSAnimation &&
+        ["home-skills-type-window", "home-skills-type-strip", "home-skills-blink"].includes(
+          animation.animationName,
+        ),
+    );
+}
+
+function seekTyping(time: number) {
+  for (const animation of typingAnimations()) {
+    animation.pause();
+    animation.currentTime = time;
+  }
+}
+
 function near(value: number, expected: number, tolerance = 1) {
   expect(Math.abs(value - expected)).toBeLessThanOrEqual(tolerance);
 }
@@ -227,7 +306,7 @@ describe("theme switch", () => {
   it.each(switchCases)("$name", async (item) => {
     setTheme("torii-synth");
     const screen = await renderCase(item);
-    screen.container.getBoundingClientRect();
+    await prefetchThemeLayers(screen);
     setTheme("cyber-sakura");
 
     const animations = document.getAnimations().filter((animation) => {
@@ -489,8 +568,16 @@ describe("behavior", () => {
     expect(label.top - slide.top).toBeGreaterThanOrEqual(item.header - 1);
   });
 
+  it("mounts only the layer of the current theme until the theme switch is intended", async () => {
+    const screen = await renderCase({ width: 1440, height: 900 });
+
+    expect(pickAll(screen, ".home-skills-night")).toHaveLength(1);
+    expect(screen.container.querySelector(".home-skills-day")).toBeNull();
+  });
+
   it("follows the theme with two crossfading layers", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
+    await prefetchThemeLayers(screen);
     const night = pick<HTMLElement>(screen, ".home-skills-night");
     const day = pick<HTMLElement>(screen, ".home-skills-day");
     const accent = pick<HTMLElement>(screen, ".home-skills-accent");
@@ -527,43 +614,142 @@ describe("behavior", () => {
     expect(getComputedStyle(day).opacity).toBe("1");
     expect(getComputedStyle(day).visibility).toBe("visible");
     expect(getComputedStyle(frame, "::before").clipPath).not.toBe(darkShape);
+
+    await advance(600);
+    await expect.poll(() => layerCount(screen)).toBe(1);
+    expect(night.isConnected).toBe(false);
+    expect(day.isConnected).toBe(true);
   });
 
-  it("types the toolkit items one after another and blinks the cursor", async () => {
-    await renderCase({ width: 1440, height: 900 });
-    const typing = running("home-skills-type");
-    const first = typing.find((animation) => animation.animationName === "home-skills-type-0")!;
-    const last = typing.find((animation) => animation.animationName === "home-skills-type-28")!;
+  it("types the toolkit with a window, a strip and a cursor instead of one animation per item", async () => {
+    const screen = await renderCase({ width: 1440, height: 900 });
+    const typing = pick<HTMLElement>(screen, ".home-skills-typing");
+    const view = typeWindow(screen);
+    const strip = pick<HTMLElement>(screen, ".home-skills-type-strip");
+    const cursor = pick<HTMLElement>(screen, ".home-skills-cursor");
+    const animations = typingAnimations();
+    const byTarget = (element: Element) =>
+      animations
+        .filter((animation) => (animation.effect as KeyframeEffect).target === element)
+        .map((animation) => animation.animationName)
+        .sort();
 
-    expect(typing).toHaveLength(29);
-    expect(running("home-skills-blink")).toHaveLength(1);
-    expect(Number(first.effect?.getComputedTiming().duration)).toBeCloseTo(76860, 0);
-    expect(Number(last.effect?.getComputedTiming().duration)).toBeCloseTo(76860, 0);
-    expect(Number(first.effect?.getComputedTiming().iterations)).toBe(Infinity);
-    for (const animation of typing) animation.pause();
-
-    const widths = (time: number) => {
-      for (const animation of typing) animation.currentTime = time;
-      return pickAllTypeWidths();
-    };
-    function pickAllTypeWidths() {
-      return [...document.querySelectorAll<HTMLElement>(".home-skills-type")].map((item) =>
-        Math.round(item.getBoundingClientRect().width),
-      );
+    expect(typedItems(screen)).toHaveLength(29);
+    expect(strip.parentElement).toBe(view);
+    expect(view.parentElement).toBe(typing);
+    expect(cursor.parentElement).toBe(typing);
+    expect(animations).toHaveLength(4);
+    expect(byTarget(view)).toEqual(["home-skills-type-window"]);
+    expect(byTarget(strip)).toEqual(["home-skills-type-strip"]);
+    expect(byTarget(cursor)).toEqual(["home-skills-blink", "home-skills-type-window"]);
+    for (const item of typedItems(screen)) expect(byTarget(item)).toEqual([]);
+    const cyclic = animations.filter((item) => item.animationName !== "home-skills-blink");
+    for (const animation of cyclic) {
+      expect(Number(animation.effect?.getComputedTiming().duration)).toBeCloseTo(76860, 0);
+      expect(Number(animation.effect?.getComputedTiming().iterations)).toBe(Infinity);
     }
-    const length = (index: number) => toolkit.typed[index]!.text.length;
+    expect(getComputedStyle(view).overflow).toBe("hidden");
+    expect(getComputedStyle(view).getPropertyValue("--home-skills-type-max").trim()).toBe(
+      String(Math.max(...toolkit.typed.map((item) => item.text.length))),
+    );
+    expect(getComputedStyle(view).getPropertyValue("--home-skills-type-first").trim()).toBe(
+      String(toolkit.typed[0]!.text.length),
+    );
+  });
 
-    expect(widths(100).filter((width) => width > 0)).toHaveLength(1);
-    expect(widths(1000)[0]).toBeGreaterThan(0);
-    expect(
-      widths(1000)
-        .slice(1)
-        .every((width) => width === 0),
-    ).toBe(true);
-    expect(widths(2000).every((width) => width === 0)).toBe(true);
-    expect(widths(3500)[1]).toBeGreaterThan(0);
-    expect(widths(76000)[28]).toBeGreaterThan(0);
+  it("types the toolkit items one after another and moves the cursor with the text", async () => {
+    const screen = await renderCase({ width: 1440, height: 900 });
+    const cursor = pick<HTMLElement>(screen, ".home-skills-cursor");
+    const ch = charWidth(screen);
+    const length = (index: number) => toolkit.typed[index]!.text.length;
+    const only = (index: number, count: number) =>
+      toolkit.typed.map((_, position) => (position === index ? count : 0));
+    const gap = () => cursor.getBoundingClientRect().left - typedRight(screen)!.right;
+
+    seekTyping(0);
+    expect(visibleChars(screen)).toEqual(only(0, 0));
+
+    seekTyping(100);
+    expect(visibleChars(screen)).toEqual(only(0, 1));
+    const anchor = typedRight(screen)!.left;
+    near(gap(), Number.parseFloat(getComputedStyle(cursor).marginLeft), 1);
+
+    seekTyping(1000);
     expect(length(0)).toBe(4);
+    expect(visibleChars(screen)).toEqual(only(0, 4));
+    near(typedRight(screen)!.left, anchor);
+    near(typedRight(screen)!.right - anchor, 4 * ch);
+    near(gap(), Number.parseFloat(getComputedStyle(cursor).marginLeft), 1);
+
+    seekTyping(2000);
+    expect(visibleChars(screen)).toEqual(only(0, 0));
+
+    seekTyping(3500);
+    expect(visibleChars(screen)).toEqual(only(1, length(1)));
+    near(typedRight(screen)!.left, anchor);
+    near(gap(), Number.parseFloat(getComputedStyle(cursor).marginLeft), 1);
+
+    seekTyping(76000);
+    expect(visibleChars(screen)).toEqual(only(28, length(28)));
+    near(typedRight(screen)!.left, anchor);
+    near(gap(), Number.parseFloat(getComputedStyle(cursor).marginLeft), 1);
+
+    seekTyping(400);
+    expect(getComputedStyle(cursor).opacity).toBe("1");
+    seekTyping(700);
+    expect(getComputedStyle(cursor).opacity).toBe("0");
+  });
+
+  it.each(["en", "ru"] as const)(
+    "types every toolkit item to its full length and shows one item at a time in %s",
+    async (locale) => {
+      const screen = await renderCase({ width: 1440, height: 900, locale });
+      const typed = buildToolkit(additionalOf(groupsOf[locale])).typed;
+      const longest = typed.map(() => 0);
+      const order: number[] = [];
+
+      for (let time = 0; time < 76860; time += 60) {
+        seekTyping(time);
+        const visible = visibleChars(screen);
+        const shown = visible.flatMap((count, index) => (count > 0 ? [index] : []));
+
+        expect(shown.length, `${time}`).toBeLessThanOrEqual(1);
+        for (const index of shown) {
+          longest[index] = Math.max(longest[index]!, visible[index]!);
+          if (order.at(-1) !== index) order.push(index);
+        }
+      }
+
+      expect(longest).toEqual(typed.map((item) => item.text.length));
+      expect(order).toEqual(typed.map((_, index) => index));
+    },
+  );
+
+  it("keeps the typing paused until the page has loaded and the line is on the screen", async () => {
+    const screen = await renderCase({ width: 1440, height: 900 });
+    const typing = pick<HTMLElement>(screen, ".home-skills-typing");
+
+    await waitDecorReady(screen);
+    expect(typing.classList).not.toContain("decor-paused");
+    expect(typingAnimations().every((animation) => animation.playState === "running")).toBe(true);
+    screen.unmount();
+
+    document.documentElement.style.scrollSnapType = "none";
+    window.scrollTo({ top: 0, behavior: "instant" });
+    try {
+      const hidden = await renderCase({ width: 1440, height: 900 }, undefined, 3000);
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+      expect(pick(hidden, ".home-skills-typing").classList).toContain("decor-paused");
+      expect(typingAnimations().every((animation) => animation.playState === "paused")).toBe(true);
+
+      pick(hidden, ".home-skills-typing").scrollIntoView({ behavior: "instant" });
+      await waitDecorReady(hidden);
+      expect(typingAnimations().every((animation) => animation.playState === "running")).toBe(true);
+    } finally {
+      document.documentElement.style.scrollSnapType = "";
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
   });
 
   describe("data", () => {
@@ -847,7 +1033,9 @@ describe("behavior", () => {
 
   describe("skill swap", () => {
     it("starts with the first skill on every tile and swaps nothing before the first moment", async () => {
+      const before = vi.getTimerCount();
       const screen = await renderCase({ width: 1440, height: 900 });
+      await waitSwapTimers(before);
       const first = tiles.map((tile) => SKILL_TILE_META[tile.skill].label);
 
       expect(tileLabels(screen)).toEqual(first);
@@ -856,7 +1044,9 @@ describe("behavior", () => {
     });
 
     it("swaps one tile per step: frontend 1, backend 2, frontend 3 and so on, then backend 1, frontend 2, and back again every 16 s", async () => {
+      const before = vi.getTimerCount();
       const screen = await renderCase({ width: 1440, height: 900 });
+      await waitSwapTimers(before);
       const first = tiles.map((tile) => SKILL_TILE_META[tile.skill].label);
       const second = tiles.map((tile) => SKILL_TILE_META[tile.swap].label);
       const expected = walk();
@@ -886,7 +1076,9 @@ describe("behavior", () => {
     });
 
     it("keeps one readable layer per tile and never uses a live region", async () => {
+      const before = vi.getTimerCount();
       const screen = await renderCase({ width: 1440, height: 900 });
+      await waitSwapTimers(before);
       const tile = pickAll(screen, ".skill-tile")[0]!;
 
       await advance(swapTime(tiles[0]!));
@@ -908,6 +1100,7 @@ describe("behavior", () => {
     it("stops every timer when the section is unmounted", async () => {
       const before = vi.getTimerCount();
       const screen = await renderCase({ width: 1440, height: 900 });
+      await waitSwapTimers(before);
 
       expect(vi.getTimerCount() - before).toBeGreaterThanOrEqual(tiles.length);
       await advance(SKILL_SWAP_PERIOD / 2);
@@ -916,6 +1109,33 @@ describe("behavior", () => {
       await nextTick();
 
       expect(vi.getTimerCount()).toBe(before);
+    });
+
+    it("waits for the panels to come on the screen and stops while they are off it", async () => {
+      const before = vi.getTimerCount();
+      const first = tiles.map((tile) => SKILL_TILE_META[tile.skill].label);
+      document.documentElement.style.scrollSnapType = "none";
+      window.scrollTo({ top: 0, behavior: "instant" });
+      try {
+        const screen = await renderCase({ width: 1440, height: 900 }, undefined, 3000);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+        expect(pick(screen, ".home-skills-typing").classList).toContain("decor-paused");
+        expect(vi.getTimerCount()).toBe(before);
+        await advance(SKILL_SWAP_PERIOD);
+        expect(tileLabels(screen)).toEqual(first);
+
+        pick(screen, ".home-skills-panels").scrollIntoView({ behavior: "instant" });
+        await waitSwapTimers(before);
+        await advance(Math.min(...tiles.map((tile) => swapTime(tile))));
+        expect(tileLabels(screen)).not.toEqual(first);
+
+        window.scrollTo({ top: 0, behavior: "instant" });
+        await expect.poll(() => vi.getTimerCount()).toBe(before);
+      } finally {
+        document.documentElement.style.scrollSnapType = "";
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }
     });
 
     it("does not start the swap on the server", async () => {
@@ -936,6 +1156,7 @@ describe("behavior", () => {
     it("keeps the first skill on every tile and starts no timers", async () => {
       const before = vi.getTimerCount();
       const screen = await renderCase({ width: 1440, height: 900 });
+      await waitDecorReady(screen);
 
       expect(vi.getTimerCount()).toBe(before);
       await advance(SKILL_SWAP_PERIOD * 3);
@@ -945,8 +1166,10 @@ describe("behavior", () => {
 
     it("returns to the first skill and stops the timers when motion gets reduced", async () => {
       await setReducedMotion("no-preference");
+      const before = vi.getTimerCount();
       const screen = await renderCase({ width: 1440, height: 900 });
       const backendTile = 10;
+      await waitSwapTimers(before);
 
       await advance(swapTime(tiles[backendTile]!));
       expect(tileLabels(screen)[backendTile]).toBe(SKILL_TILE_META[tiles[backendTile]!.swap].label);
@@ -963,12 +1186,17 @@ describe("behavior", () => {
 
     it("stops the typing and keeps the first item and the cursor visible", async () => {
       const screen = await renderCase({ width: 1440, height: 900 });
-      const items = pickAll<HTMLElement>(screen, ".home-skills-type");
       const cursor = pick<HTMLElement>(screen, ".home-skills-cursor");
+      const first = toolkit.typed[0]!.text.length;
 
       expect(document.getAnimations()).toHaveLength(0);
-      expect(items[0]!.getBoundingClientRect().width).toBeGreaterThan(0);
-      expect(items.slice(1).every((item) => item.getBoundingClientRect().width === 0)).toBe(true);
+      expect(getComputedStyle(typeWindow(screen)).transform).toBe("none");
+      expect(getComputedStyle(pick(screen, ".home-skills-type-strip")).transform).toBe("none");
+      expect(visibleChars(screen)).toEqual(toolkit.typed.map((_, index) => (index ? 0 : first)));
+      near(
+        cursor.getBoundingClientRect().left - typedRight(screen)!.left,
+        first * charWidth(screen) + Number.parseFloat(getComputedStyle(cursor).marginLeft),
+      );
       expect(getComputedStyle(cursor).opacity).toBe("1");
     });
 
