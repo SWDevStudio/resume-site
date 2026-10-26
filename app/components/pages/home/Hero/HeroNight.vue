@@ -4,22 +4,22 @@
     aria-hidden="true"
   >
     <img
-      v-hero-image-fade
+      v-hero-image-fade="starsImage"
       class="home-hero-sky"
-      src="./media/stars-torii-synth.svg"
+      :src="starsImage"
       alt=""
     />
     <div class="home-hero-scene">
       <img
-        v-hero-image-fade
+        v-hero-image-fade="forestImage"
         class="home-hero-forest"
-        src="./media/forest-torii-synth.svg"
+        :src="forestImage"
         alt=""
       />
       <img
-        v-hero-image-fade
+        v-hero-image-fade="gateImage"
         class="home-hero-gate"
-        src="./media/gate-torii-synth.svg"
+        :src="gateImage"
         alt=""
       />
     </div>
@@ -29,9 +29,9 @@
     <div class="home-hero-scene">
       <span class="home-hero-pool" />
       <img
-        v-hero-image-fade
+        v-hero-image-fade="gateImage"
         class="home-hero-reflection"
-        src="./media/gate-torii-synth.svg"
+        :src="gateImage"
         alt=""
       />
     </div>
@@ -44,29 +44,29 @@
       <span class="home-hero-lamp-beam home-hero-lamp-beam-left" />
       <span class="home-hero-lamp-beam home-hero-lamp-beam-right" />
       <img
-        v-hero-image-fade
+        v-hero-image-fade="lanternImage"
         class="home-hero-lantern home-hero-lantern-left"
-        src="./media/lantern-torii-synth.svg"
+        :src="lanternImage"
         alt=""
       />
       <img
-        v-hero-image-fade
+        v-hero-image-fade="lanternImage"
         class="home-hero-lantern home-hero-lantern-right"
-        src="./media/lantern-torii-synth.svg"
+        :src="lanternImage"
         alt=""
       />
     </div>
 
     <img
-      v-hero-image-fade
+      v-hero-image-fade="pineLeftImage"
       class="home-hero-pine home-hero-pine-left"
-      src="./media/pine-left-torii-synth.svg"
+      :src="pineLeftImage"
       alt=""
     />
     <img
-      v-hero-image-fade
+      v-hero-image-fade="pineRightImage"
       class="home-hero-pine home-hero-pine-right"
-      src="./media/pine-right-torii-synth.svg"
+      :src="pineRightImage"
       alt=""
     />
 
@@ -88,6 +88,12 @@
 import HeroFloor from "./HeroFloor.vue";
 import { fireflies } from "./heroDecor";
 import { vHeroImageFade } from "./heroImageFade";
+import starsImage from "./media/stars-torii-synth.svg";
+import forestImage from "./media/forest-torii-synth.svg";
+import gateImage from "./media/gate-torii-synth.svg";
+import lanternImage from "./media/lantern-torii-synth.svg";
+import pineLeftImage from "./media/pine-left-torii-synth.svg";
+import pineRightImage from "./media/pine-right-torii-synth.svg";
 </script>
 
 <style src="./HeroNight.css" />

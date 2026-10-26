@@ -19,7 +19,10 @@
 
       <SkillsIntro :groups="groups" />
 
-      <div class="home-skills-panels">
+      <div
+        ref="panelsRoot"
+        class="home-skills-panels"
+      >
         <UiPanel
           v-for="panel in panels"
           :key="panel.key"
@@ -36,6 +39,7 @@
             :swap-name="tile.swap"
             :phase="tile.phase"
             :steps="steps"
+            :paused="paused"
           />
         </UiPanel>
       </div>
@@ -46,12 +50,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, useTemplateRef } from "vue";
 import { useI18n } from "vue-i18n";
 import type { PanelData } from "~/components/ui/card/types";
 import HomeSlide from "~/components/pages/home/HomeSlide/HomeSlide.vue";
 import UiPanel from "~/components/ui/UiPanel/UiPanel.vue";
 import type { SkillGroupView } from "~/assets/api/types/catalog";
+import { useDecorMotion } from "~/composables/useDecorMotion";
 import SkillsDecor from "./SkillsDecor.vue";
 import SkillsIntro from "./SkillsIntro.vue";
 import SkillsTile from "./SkillsTile.vue";
@@ -75,6 +80,9 @@ const panels = computed(() =>
     data: { index: panel.index, title: t(`home.skills.${panel.key}`) } satisfies PanelData,
   })),
 );
+
+const panelsGrid = useTemplateRef<HTMLElement>("panelsRoot");
+const { paused } = useDecorMotion(panelsGrid);
 
 const additional = computed(
   () => props.groups.find((group) => group.id === "additional")?.skills ?? [],

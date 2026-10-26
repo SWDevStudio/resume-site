@@ -49,3 +49,9 @@
   opacity: var(--home-why-day);
   visibility: var(--home-why-day-visibility);
 }
+
+.home-why-owl-late {
+  @starting-style {
+    opacity: 0;
+  }
+}

@@ -140,3 +140,9 @@
     rgb(0 0 0 / 0%) 100%
   );
 }
+
+.home-skills-late {
+  @starting-style {
+    opacity: 0;
+  }
+}

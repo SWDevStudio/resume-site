@@ -91,3 +91,10 @@
     }
   }
 }
+
+.decor-paused,
+.decor-paused *,
+.decor-paused ::before,
+.decor-paused ::after {
+  animation-play-state: paused !important;
+}

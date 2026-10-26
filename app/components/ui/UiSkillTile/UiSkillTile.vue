@@ -30,6 +30,8 @@
           class="skill-tile-icon"
           :src="layer.icon"
           alt=""
+          loading="lazy"
+          decoding="async"
         />
       </span>
       <span class="skill-tile-label">{{ layer.label }}</span>

@@ -12,7 +12,14 @@ const props = defineProps<{
   swapName: SkillTile;
   phase: number;
   steps: number;
+  paused: boolean;
 }>();
 
-const { skill } = useSkillSwap(props.skillName, props.swapName, props.phase, props.steps);
+const { skill } = useSkillSwap(
+  props.skillName,
+  props.swapName,
+  props.phase,
+  props.steps,
+  () => props.paused,
+);
 </script>

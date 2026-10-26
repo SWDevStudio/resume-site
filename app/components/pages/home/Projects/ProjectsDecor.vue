@@ -6,7 +6,7 @@
     <div
       v-for="item in layers"
       :key="item.theme"
-      :class="item.entry.layer"
+      :class="[item.entry.layer, { 'home-projects-late': item.late }]"
     >
       <span class="home-projects-glow" />
       <span class="home-projects-pattern home-projects-pattern-a" />
