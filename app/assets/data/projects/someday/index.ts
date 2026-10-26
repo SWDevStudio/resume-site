@@ -5,8 +5,8 @@ const project = {
   name: "Someday",
   tone: "accent",
   url: null,
-  preview: "someday/media/preview.svg",
-  previewMobile: "someday/media/preview-mobile.svg",
+  preview: "someday/media/preview.webp",
+  previewFrame: "terminal",
   tags: [],
   stack: [],
   caseStack: [
@@ -32,7 +32,7 @@ const project = {
       description:
         "Библиотеки драйверов на C++ для ESP32, из которых собираются игровые устройства для полигонной ролевой игры по S.T.A.L.K.E.R. на Урале.",
       previewAlt:
-        "Иллюстрация: плата ESP32 с подключёнными модулями RFID, GPS, дисплеем и светодиодной лентой",
+        "Иллюстрация: ретро-монитор со схемой платы ESP32 Someday и подключённых к ней модулей",
       role: "Весь софт в команде KB Someday из трёх человек. В этом кейсе — автор 11 библиотек драйверов someday-* на C++ под ESP32 и FreeRTOS.",
       result:
         "Устройства на этих библиотеках отработали на игре 2026 года: около 30 игроков прошли квесты локации, а устройство живёт 18–20 часов от двух аккумуляторов 18650 без оптимизаций энергопотребления.",
@@ -42,7 +42,8 @@ const project = {
       headline: "11 driver libraries that powered the devices at the 2026 game",
       description:
         "C++ driver libraries for ESP32 that game devices are built from, for a S.T.A.L.K.E.R. field role-playing game in the Urals.",
-      previewAlt: "Illustration: an ESP32 board wired to RFID, GPS, display and LED strip modules",
+      previewAlt:
+        "Illustration: a retro CRT monitor showing a diagram of the Someday ESP32 board and its wired modules",
       role: "All the software in the three-person KB Someday team. In this case, the author of 11 someday-* driver libraries in C++ for ESP32 and FreeRTOS.",
       result:
         "Devices built on these libraries worked through the 2026 game: about 30 players went through the location's quests, and a device runs 18–20 hours on two 18650 batteries with no power optimizations.",

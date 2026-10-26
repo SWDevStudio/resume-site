@@ -1,0 +1,171 @@
+@reference "~/assets/css/main.css";
+
+@property --page-terminal-shell-from {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --page-terminal-shell-to {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --page-terminal-vent {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+.page-terminal {
+  --page-terminal-u: calc(100cqw / 782 * var(--page-terminal-scale, 1));
+
+  @apply pointer-events-none absolute inset-0;
+
+  @variant motion-reduce {
+    & * {
+      @apply transition-none;
+    }
+  }
+}
+
+.page-terminal-monitor {
+  @apply absolute top-1/2 left-1/2 flex -translate-1/2 flex-col items-center;
+  width: calc(var(--page-terminal-u) * 400);
+}
+
+.page-terminal-body {
+  --page-terminal-shell-from: #aeaca4;
+  --page-terminal-shell-to: #88867e;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --page-terminal-shell-from: #c6c4bc;
+    --page-terminal-shell-to: #a09e96;
+  }
+
+  @apply relative box-border w-full;
+  padding: calc(var(--page-terminal-u) * 14) calc(var(--page-terminal-u) * 14) 0;
+  background-image: linear-gradient(
+    180deg,
+    var(--page-terminal-shell-from),
+    var(--page-terminal-shell-to)
+  );
+  border-radius: calc(var(--page-terminal-u) * 20) calc(var(--page-terminal-u) * 20)
+    calc(var(--page-terminal-u) * 14) calc(var(--page-terminal-u) * 14);
+  box-shadow:
+    inset 0 calc(var(--page-terminal-u) * 2) calc(var(--page-terminal-u) * 1) rgb(255 255 255 / 45%),
+    inset calc(var(--page-terminal-u) * 6) 0 calc(var(--page-terminal-u) * 10)
+      rgb(255 255 255 / 12%),
+    inset calc(var(--page-terminal-u) * -6) 0 calc(var(--page-terminal-u) * 10) rgb(0 0 0 / 14%),
+    inset 0 calc(var(--page-terminal-u) * -4) calc(var(--page-terminal-u) * 3) rgb(0 0 0 / 22%),
+    0 calc(var(--page-terminal-u) * 4) calc(var(--page-terminal-u) * 6) rgb(0 0 0 / 25%),
+    0 calc(var(--page-terminal-u) * 24) calc(var(--page-terminal-u) * 50) rgb(0 0 0 / 35%);
+  transition-property: --page-terminal-shell-from, --page-terminal-shell-to;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.page-terminal-screen {
+  @apply overflow-hidden;
+  aspect-ratio: 1156 / 800;
+  background-color: #050806;
+  border-radius: calc(var(--page-terminal-u) * 12);
+  box-shadow:
+    0 0 0 calc(var(--page-terminal-u) * 1.5) rgb(0 0 0 / 45%),
+    0 calc(var(--page-terminal-u) * -2) calc(var(--page-terminal-u) * 2) rgb(0 0 0 / 25%),
+    0 calc(var(--page-terminal-u) * 2.5) calc(var(--page-terminal-u) * 1) rgb(255 255 255 / 40%);
+}
+
+.page-terminal-shot {
+  @apply card-media-image;
+}
+
+.page-terminal-chin {
+  @apply flex items-center;
+  height: calc(var(--page-terminal-u) * 34);
+  gap: calc(var(--page-terminal-u) * 10);
+  padding-inline: calc(var(--page-terminal-u) * 8);
+}
+
+.page-terminal-vents {
+  --page-terminal-vent: rgb(0 0 0 / 30%);
+
+  :where([data-theme="cyber-sakura"]) & {
+    --page-terminal-vent: rgb(40 40 40 / 30%);
+  }
+
+  @apply block;
+  width: calc(var(--page-terminal-u) * 120);
+  height: calc(var(--page-terminal-u) * 10);
+  margin-inline-end: auto;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--page-terminal-vent) 0 calc(var(--page-terminal-u) * 3),
+    transparent calc(var(--page-terminal-u) * 3) calc(var(--page-terminal-u) * 7)
+  );
+  transition-property: --page-terminal-vent;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
+.page-terminal-knob {
+  @apply block rounded-full;
+  width: calc(var(--page-terminal-u) * 14);
+  height: calc(var(--page-terminal-u) * 14);
+  background-color: #141318;
+  box-shadow:
+    inset 0 calc(var(--page-terminal-u) * 1.5) calc(var(--page-terminal-u) * 1.5)
+      rgb(255 255 255 / 20%),
+    0 calc(var(--page-terminal-u) * 1.5) calc(var(--page-terminal-u) * 2) rgb(0 0 0 / 40%);
+}
+
+.page-terminal-led {
+  @apply block rounded-full;
+  width: calc(var(--page-terminal-u) * 6);
+  height: calc(var(--page-terminal-u) * 6);
+  background-color: #6dff8a;
+  box-shadow: 0 0 calc(var(--page-terminal-u) * 6) #6dff8a;
+}
+
+.page-terminal-neck {
+  --page-terminal-stand: #76746c;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --page-terminal-stand: #8f8d85;
+  }
+
+  @apply block;
+  width: calc(var(--page-terminal-u) * 120);
+  height: calc(var(--page-terminal-u) * 14);
+  background-color: var(--page-terminal-stand);
+  background-image:
+    linear-gradient(180deg, rgb(0 0 0 / 35%), transparent 60%),
+    linear-gradient(90deg, rgb(0 0 0 / 22%), transparent 30%, transparent 70%, rgb(0 0 0 / 22%));
+  clip-path: polygon(8% 0, 92% 0, 100% 100%, 0 100%);
+}
+
+.page-terminal-foot {
+  --page-terminal-stand: #94928a;
+
+  :where([data-theme="cyber-sakura"]) & {
+    --page-terminal-stand: #aaa8a0;
+  }
+
+  @apply block;
+  width: calc(var(--page-terminal-u) * 220);
+  height: calc(var(--page-terminal-u) * 10);
+  background-color: var(--page-terminal-stand);
+  border-radius: calc(var(--page-terminal-u) * 6) calc(var(--page-terminal-u) * 6)
+    calc(var(--page-terminal-u) * 3) calc(var(--page-terminal-u) * 3);
+  box-shadow:
+    inset 0 calc(var(--page-terminal-u) * 1.5) calc(var(--page-terminal-u) * 1)
+      rgb(255 255 255 / 40%),
+    inset 0 calc(var(--page-terminal-u) * -2) calc(var(--page-terminal-u) * 1.5) rgb(0 0 0 / 25%),
+    0 calc(var(--page-terminal-u) * 3) calc(var(--page-terminal-u) * 4) rgb(0 0 0 / 30%),
+    0 calc(var(--page-terminal-u) * 10) calc(var(--page-terminal-u) * 24) rgb(0 0 0 / 30%);
+}

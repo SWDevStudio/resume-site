@@ -46,6 +46,7 @@
     <ProjectsCardCover
       :image="project.preview"
       :image-mobile="project.previewMobile"
+      :frame="project.previewFrame"
       :alt="project.previewAlt"
     />
     <p class="projects-card-text">{{ project.description }}</p>

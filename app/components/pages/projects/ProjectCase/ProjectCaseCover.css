@@ -76,6 +76,7 @@
   --project-case-cover-u: calc(100cqw / 782);
   --project-case-laptop-top: calc(var(--project-case-cover-u) * 90);
   --project-case-phone-bottom: calc(var(--project-case-cover-u) * 38);
+  --page-terminal-scale: 1.35;
 
   @apply relative size-full overflow-hidden;
   container-type: inline-size;
@@ -99,11 +100,13 @@
   @variant md {
     --project-case-laptop-top: calc(var(--project-case-cover-u) * 53.5);
     --project-case-phone-bottom: calc(var(--project-case-cover-u) * 31.2);
+    --page-terminal-scale: 1.15;
   }
 
   @variant lg {
     --project-case-laptop-top: calc(var(--project-case-cover-u) * 51);
     --project-case-phone-bottom: calc(var(--project-case-cover-u) * 31);
+    --page-terminal-scale: 1.15;
   }
 
   @variant motion-reduce {
