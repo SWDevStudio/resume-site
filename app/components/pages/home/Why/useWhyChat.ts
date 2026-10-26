@@ -1,5 +1,5 @@
-import { computed, onMounted, onScopeDispose, ref } from "vue";
-import { useToggle } from "@vueuse/core";
+import { computed, onScopeDispose, ref, type MaybeRefOrGetter } from "vue";
+import { useIntersectionObserver, useToggle } from "@vueuse/core";
 import { $api } from "~/assets/api";
 import type {
   AssistantDoneEvent,
@@ -23,6 +23,7 @@ interface Exchange {
 }
 
 const LOCKING_REASONS = new Set<AssistantRefusalReason>(["limit", "blocked"]);
+const RESTORE_MARGIN = "200% 0px";
 const DRAFT_REASONS = new Set<AssistantRefusalReason>([
   "notProject",
   "linkUnreadable",
@@ -31,7 +32,7 @@ const DRAFT_REASONS = new Set<AssistantRefusalReason>([
   "captcha",
 ]);
 
-export function useWhyChat() {
+export function useWhyChat(root?: MaybeRefOrGetter<HTMLElement | null | undefined>) {
   const messages = ref<WhyMessageData[]>([]);
   const status = ref<WhyChatStatus>("idle");
   const draft = ref("");
@@ -69,11 +70,12 @@ export function useWhyChat() {
   }
 
   function restore() {
+    if (restored) return;
     const history = loadHistory().map((message) => {
       lastId += 1;
       return { ...message, id: lastId };
     });
-    messages.value = [...history, ...messages.value];
+    if (history.length) messages.value = [...history, ...messages.value];
     const limit = loadLimit();
     if (limit) {
       remaining.value = limit.remaining;
@@ -100,10 +102,12 @@ export function useWhyChat() {
   }
 
   function prepare() {
+    restore();
     $api.assistant.prepare();
   }
 
   function fill(text: string) {
+    restore();
     draft.value = text.slice(0, maxLength.value);
   }
 
@@ -212,6 +216,7 @@ export function useWhyChat() {
   }
 
   async function send(raw: string = draft.value) {
+    restore();
     const text = raw.trim();
     if (!text || locked.value) return;
     cancel();
@@ -224,7 +229,16 @@ export function useWhyChat() {
     else await ask(text, request);
   }
 
-  onMounted(restore);
+  const { stop: stopRestoreObserver } = useIntersectionObserver(
+    root,
+    ([entry]) => {
+      if (!entry?.isIntersecting) return;
+      stopRestoreObserver();
+      restore();
+    },
+    { rootMargin: RESTORE_MARGIN },
+  );
+
   onScopeDispose(cancel);
 
   return {

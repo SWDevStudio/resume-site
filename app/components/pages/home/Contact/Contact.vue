@@ -18,7 +18,11 @@
 
       <div class="home-contact-columns">
         <ContactInfo />
-        <ContactForm />
+        <ContactForm
+          :key="formKey"
+          :hydrate-on-visible="FORM_HYDRATION"
+          @hydrated="onFormHydrated"
+        />
       </div>
 
       <ContactProjects />
@@ -27,14 +31,34 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from "vue";
+import { useToggle } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
+import { defineLazyHydrationComponent } from "#imports";
 import HomeSlide from "~/components/pages/home/HomeSlide/HomeSlide.vue";
 import ContactDecor from "./ContactDecor.vue";
-import ContactForm from "./ContactForm.vue";
 import ContactInfo from "./ContactInfo.vue";
 import ContactProjects from "./ContactProjects.vue";
 
-const { t } = useI18n();
+const ContactForm = defineLazyHydrationComponent(
+  "visible",
+  () => import("~/components/pages/home/Contact/ContactForm.vue"),
+);
+
+const FORM_HYDRATION: IntersectionObserverInit = { rootMargin: "50% 0px" };
+
+const { t, locale } = useI18n();
+
+const [formHydrated, toggleFormHydrated] = useToggle(false);
+const formKey = ref(locale.value);
+
+watch(locale, (value) => {
+  if (!formHydrated.value) formKey.value = value;
+});
+
+function onFormHydrated() {
+  toggleFormHydrated(true);
+}
 </script>
 
 <style src="./Contact.css" />

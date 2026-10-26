@@ -103,11 +103,11 @@ import { useWhyChat } from "./useWhyChat";
 import type { WhyMessageData } from "./useWhyChat";
 
 const { t } = useI18n();
-const { messages, status, draft, busy, locked, canSend, maxLength, send, fill, prepare } =
-  useWhyChat();
-
 const dialog = ref<HTMLElement | null>(null);
 const input = ref<HTMLInputElement | null>(null);
+
+const { messages, status, draft, busy, locked, canSend, maxLength, send, fill, prepare } =
+  useWhyChat(dialog);
 const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
 const chipKeys = ["clients", "developer", "website", "optimization"] as const;
