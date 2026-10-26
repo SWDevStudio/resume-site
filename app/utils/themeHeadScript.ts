@@ -8,11 +8,11 @@ interface ThemeHeadConfig {
   colors: Record<ThemeId, string>;
 }
 
-function applyStoredTheme(config: ThemeHeadConfig): void {
+function applyStoredTheme(doc: Document, config: ThemeHeadConfig): void {
   function readCookie(name: string): string {
     const prefix = `${name}=`;
     let value = "";
-    for (const entry of document.cookie.split(/; */)) {
+    for (const entry of doc.cookie.split(/; */)) {
       if (entry.startsWith(prefix)) value = entry.slice(prefix.length);
     }
     return value;
@@ -36,14 +36,14 @@ function applyStoredTheme(config: ThemeHeadConfig): void {
   }
 
   function applyMetaColor(theme: ThemeId): void {
-    const meta = document.querySelector('meta[name="theme-color"]');
+    const meta = doc.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute("content", config.colors[theme]);
   }
 
   try {
     const theme = config.themes[resolveMode(decodeValue(readCookie(config.cookieName)))];
-    document.documentElement.setAttribute("data-theme", theme);
-    document.addEventListener("DOMContentLoaded", () => applyMetaColor(theme));
+    doc.documentElement.setAttribute("data-theme", theme);
+    doc.addEventListener("DOMContentLoaded", () => applyMetaColor(theme));
   } catch {
     return;
   }
@@ -55,4 +55,4 @@ const config: ThemeHeadConfig = {
   colors: THEME_COLOR,
 };
 
-export const THEME_HEAD_SCRIPT = `(${applyStoredTheme})(${JSON.stringify(config)})`;
+export const THEME_HEAD_SCRIPT = `(${applyStoredTheme})(document,${JSON.stringify(config)})`;
