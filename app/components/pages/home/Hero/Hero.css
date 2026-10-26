@@ -206,7 +206,7 @@
 
 .home-hero-title {
   @apply pointer-events-none absolute top-0 m-0 font-normal uppercase;
-  font-family: "Righteous", sans-serif;
+  font-family: "Righteous", "Righteous Fallback", sans-serif;
   left: var(--home-hero-title-left);
   height: --spacing(225);
   font-size: calc(var(--home-hero-title-size) * var(--home-hero-title-scale));

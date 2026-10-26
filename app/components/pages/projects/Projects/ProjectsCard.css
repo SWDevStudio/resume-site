@@ -79,7 +79,7 @@
 }
 
 .projects-card-name {
-  font-family: "Righteous", sans-serif;
+  font-family: "Righteous", "Righteous Fallback", sans-serif;
 }
 
 .projects-card-headline {

@@ -21,16 +21,16 @@
 @import "./themes/cyber-sakura.css";
 
 @theme {
-  --font-head: "Righteous", sans-serif;
-  --font-body: "Martian Mono", monospace;
-  --font-button: "Martian Mono", monospace;
+  --font-head: "Righteous", "Righteous Fallback", sans-serif;
+  --font-body: "Martian Mono", "Martian Mono Fallback", monospace;
+  --font-button: "Martian Mono", "Martian Mono Fallback", monospace;
 
   --default-transition-duration: 400ms;
   --default-transition-timing-function: var(--ease-in-out);
 }
 
 :lang(ru) {
-  --font-head: "Montserrat Alternates", sans-serif;
+  --font-head: "Montserrat Alternates", "Montserrat Alternates Fallback", sans-serif;
 }
 
 @layer base {
