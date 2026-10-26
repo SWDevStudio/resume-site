@@ -17,10 +17,21 @@ const someday = [
     component: "ProjectCaseFacts",
     data: {
       facts: [
-        { key: "role", value: "All the software, libraries author" },
-        { key: "team", value: "3 people: software, hardware, enclosures" },
-        { key: "duration", value: "Since January 2025, libraries since October 2025" },
-        { key: "status", value: "In development, field-tested at the 2026 game" },
+        { key: "role", value: "Lead software developer: architecture and 11 driver libraries" },
+        {
+          key: "team",
+          value:
+            "Own all the software in a team of three specialists: electronics, enclosures, software",
+        },
+        {
+          key: "duration",
+          value:
+            "The library ecosystem was developed from October 2025 and released for the 2026 game",
+        },
+        {
+          key: "status",
+          value: "Proven in real conditions at the 2026 game, under further development",
+        },
       ],
     },
   },
@@ -64,13 +75,19 @@ const someday = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "KB Someday is a team of enthusiasts building electronics for a S.T.A.L.K.E.R. field role-playing game in the Urals. The project is non-commercial and has no external client: tasks come from the game idea of the location.",
+                  text: "Someday is an indie project by the KB Someday team: electronics for story-driven field role-playing games. The audience is niche: mostly LARPers who play in the S.T.A.L.K.E.R. universe and similar post-apocalyptic settings. The project's first venue is a S.T.A.L.K.E.R. field role-playing game in the Urals.",
                 },
               },
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "There are three of us: I write all the software, the second member handles the hardware (circuits, soldering, assembly), and the third makes the enclosures. The libraries are used by the firmware of the game devices, and the devices are used by players on the field.",
+                  text: "The team has three people: I am responsible for all the software, the second member for the electronics (circuits, soldering, assembly), and the third for the enclosures. Device firmware is built from the libraries, and the devices themselves are used by players on the field.",
+                },
+              },
+              {
+                component: "ProjectCaseText",
+                data: {
+                  text: "Next, the team plans to enter the international market with projects in similar settings and to monetize the work by offering ready-made devices and firmware to other games.",
                 },
               },
             ],
@@ -103,23 +120,23 @@ const someday = [
                   items: [
                     {
                       label: "POWER",
-                      title: "Battery",
-                      text: "A device has to run for several days on a battery, so we save power: sleep, turning off the backlight.",
+                      title: "Battery power",
+                      text: "The drivers are designed for battery operation: charge monitoring, PWM backlight control and sleeping modules when idle.",
                     },
                     {
                       label: "OFFLINE",
-                      title: "No internet",
-                      text: "There is no internet and no stable Wi-Fi on the field. Devices work on their own or talk to each other directly.",
+                      title: "No network dependency",
+                      text: "Devices do not depend on the internet or the field infrastructure. They work on their own or exchange data directly: over Wi-Fi in access point mode, BLE and RFID cards.",
                     },
                     {
                       label: "FIELD",
-                      title: "Outdoors and players",
-                      text: "Debouncing, protection against careless handling, fast recovery after a failure.",
+                      title: "Field conditions",
+                      text: "Built for outdoor use and active handling by players: button debouncing, resilience to careless handling and fast recovery after a failure.",
                     },
                     {
                       label: "BUDGET",
-                      title: "Small budget",
-                      text: "Cheap modules, ESP32 and Chinese sensors.",
+                      title: "Limited budget",
+                      text: "The architecture targets affordable components — ESP32 and budget modules — without losing reliability.",
                     },
                   ],
                 },
@@ -174,7 +191,14 @@ const someday = [
                       code: ["Task<Derived>", "Singleton", "GuardedState<T>", "EffectData"],
                     },
                     {
+                      label: "CONVENTIONS",
+                      title: "Shared rules",
+                      text: "Every module has its own namespace. Modules are guarded by mutexes and never block: process() is called from the loop or from a task. Built through library.json for PlatformIO, versions on git tags.",
+                      code: ["someday::<module>", "process()", "library.json"],
+                    },
+                    {
                       label: "DRIVERS",
+                      wide: true,
                       title: "Module drivers",
                       text: "Several buttons in one firmware, an LED, a WS2812B addressable strip with the pin as a template parameter, a battery with a mock mode, a thread-safe 128×64 display with Cyrillic and PWM backlight, Wi-Fi in access point and client modes, GPS, RFID on PN532, a Serial console with commands, BLE artifact types.",
                       code: [
@@ -189,12 +213,6 @@ const someday = [
                         "Someday_SerialCommander",
                         "someday-types",
                       ],
-                    },
-                    {
-                      label: "CONVENTIONS",
-                      title: "Shared rules",
-                      text: "Every module has its own namespace. Modules are guarded by mutexes and never block: process() is called from the loop or from a task. Built through library.json for PlatformIO, versions on git tags.",
-                      code: ["someday::<module>", "process()", "library.json"],
                     },
                   ],
                 },
@@ -472,7 +490,7 @@ const someday = [
               },
               {
                 value: "18–20 h",
-                label: "of device runtime on two 18650s with no optimizations",
+                label: "of device runtime on two 18650s",
               },
               {
                 value: "~30",
@@ -500,8 +518,9 @@ const someday = [
     component: "ProjectCaseCta",
     data: {
       id: "cta",
-      title: "Need firmware for an ESP32 device or drivers for your own hardware?",
-      text: "I will build C++ and FreeRTOS firmware from modules: RFID, GPS, display, LEDs, Wi-Fi.",
+      title:
+        "Preparing a similar project with game electronics? I will take on the device software as a whole",
+      text: "I will design the architecture, write the module drivers and C++ and FreeRTOS firmware, test it and take it through field trials: RFID, GPS, displays, light, Wi-Fi and BLE.",
     },
   },
   {
