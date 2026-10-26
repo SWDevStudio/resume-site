@@ -42,7 +42,7 @@ const project = {
       headline: "Ускорение витрин двух брендов на одной платформе",
       description:
         "Сервис доставки покупок из американских магазинов: склад в беспошлинном Делавэре, выкуп товара, отправка в Россию, Казахстан, Беларусь и другие страны.",
-      previewAlt: "Главная страница сайта Pochtoy.com",
+      previewAlt: "Главная страница Pochtoy.com и мобильная версия главной Prostobox",
       role: "Fullstack-разработчик в команде из трёх разработчиков и PM: фронтенд витрины, запросы к базе данных для неё и ускорение загрузки страниц.",
       result:
         "Витрина получила пагинацию, ленивую загрузку картинок, отдельные скрипты и стили для каждой страницы и замер скорости у реальных пользователей. Модуль «Кешбэк за отзыв» мой: фронтенд и запросы.",
@@ -52,7 +52,7 @@ const project = {
       headline: "Speeding up the storefronts of two brands on one platform",
       description:
         "A service that delivers purchases from US stores: a warehouse in tax-free Delaware, buying items on the customer's behalf, shipping to Russia, Kazakhstan, Belarus and other countries.",
-      previewAlt: "Home page of the Pochtoy.com website",
+      previewAlt: "Home page of Pochtoy.com and the mobile home page of Prostobox",
       role: "Fullstack Developer in a team of three developers and a PM: the storefront frontend, its database queries and faster page loading.",
       result:
         "The storefront got pagination, lazy-loaded images, separate scripts and styles for every page and speed tracking for real users. The Review Cashback module is mine: frontend and queries.",
