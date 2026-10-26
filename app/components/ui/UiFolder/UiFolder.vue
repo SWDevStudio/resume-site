@@ -37,6 +37,8 @@
         <UiCardMedia
           v-if="data.image"
           :src="data.image"
+          :srcset="data.imageSrcset"
+          :sizes="data.imageSizes"
           :alt="imageAlt"
         />
       </slot>

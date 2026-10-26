@@ -13,6 +13,8 @@ export interface FolderData extends CardHeadData {
   text?: string;
   tags?: string[];
   image?: string;
+  imageSrcset?: string;
+  imageSizes?: string;
   imageAlt?: string;
 }
 

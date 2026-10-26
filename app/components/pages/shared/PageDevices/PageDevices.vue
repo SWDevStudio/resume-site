@@ -9,9 +9,11 @@
         <div class="page-devices-screen">
           <img
             class="page-devices-shot"
-            :src="image"
+            :srcset="screenSrcset"
+            :sizes="DEVICE_SCREEN_SIZES"
+            :src="image.src"
             alt=""
-            loading="lazy"
+            :loading="loading"
             decoding="async"
           />
         </div>
@@ -24,10 +26,12 @@
       <div class="page-devices-phone-screen">
         <img
           class="page-devices-shot"
-          :class="phoneClass"
-          :src="phoneImage"
+          :class="phone.class"
+          :srcset="phone.srcset"
+          :sizes="phone.sizes"
+          :src="phone.src"
           alt=""
-          loading="lazy"
+          :loading="loading"
           decoding="async"
         />
         <span class="page-devices-island" />
@@ -38,15 +42,35 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+import type { ImageAsset } from "~/assets/api/types/media";
+import { imageSrcset } from "~/utils";
+import { DEVICE_PHONE_SIZES, DEVICE_SCREEN_SIZES } from "~/components/pages/shared/deviceSizes";
 
-const props = defineProps<{
-  image: string;
-  imageMobile?: string | null;
-}>();
+const props = withDefaults(
+  defineProps<{
+    image: ImageAsset;
+    imageMobile?: ImageAsset | null;
+    loading?: "lazy" | "eager";
+  }>(),
+  { imageMobile: null, loading: "lazy" },
+);
 
-const phoneImage = computed(() => props.imageMobile ?? props.image);
-const phoneClass = computed(() =>
-  props.imageMobile ? "page-devices-shot-mobile" : "page-devices-shot-phone",
+const screenSrcset = computed(() => imageSrcset(props.image));
+
+const phone = computed(() =>
+  props.imageMobile
+    ? {
+        class: "page-devices-shot-mobile",
+        src: props.imageMobile.src,
+        srcset: imageSrcset(props.imageMobile),
+        sizes: DEVICE_PHONE_SIZES,
+      }
+    : {
+        class: "page-devices-shot-phone",
+        src: props.image.src,
+        srcset: screenSrcset.value,
+        sizes: DEVICE_SCREEN_SIZES,
+      },
 );
 </script>
 

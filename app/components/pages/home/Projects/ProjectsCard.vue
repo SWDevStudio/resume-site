@@ -31,7 +31,6 @@
 
 <script setup lang="ts">
 import { Route } from "~/assets/const";
-import { resolveProjectImage } from "~/components/pages/shared/projectImage";
 import UiButton from "~/components/ui/UiButton/UiButton.vue";
 import UiIcon from "~/components/ui/UiIcon/UiIcon.vue";
 import { computed } from "vue";
@@ -40,8 +39,17 @@ import type { FolderData } from "~/components/ui/card/types";
 import UiFolder from "~/components/ui/UiFolder/UiFolder.vue";
 import type { ProjectView } from "~/assets/api/types/catalog";
 import { projectTones } from "./projects";
+import { imageSizes, imageSrcset } from "~/utils";
 
 const CARD_TAGS = 3;
+const IMAGE_SIZES = imageSizes(
+  [
+    { from: "base", width: { vw: 122.7, minusSpacing: 28.8 } },
+    { from: "md", width: { spacing: 84.8 } },
+    { from: { rem: 80 }, width: { spacing: 156.5 } },
+  ],
+  { fluidDecimals: 1 },
+);
 
 const props = defineProps<{
   project: ProjectView;
@@ -56,7 +64,9 @@ const data = computed<FolderData>(() => ({
   subtitle: props.project.subtitle,
   text: props.project.description,
   tags: props.project.tags.slice(0, CARD_TAGS),
-  image: resolveProjectImage(props.project.preview),
+  image: props.project.preview.src,
+  imageSrcset: imageSrcset(props.project.preview),
+  imageSizes: IMAGE_SIZES,
   imageAlt: props.project.previewAlt,
 }));
 

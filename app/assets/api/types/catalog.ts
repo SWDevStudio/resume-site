@@ -6,6 +6,7 @@ import type {
   ResumeExperienceLabels,
 } from "./resume";
 import type { Locale } from "../../const/locale";
+import type { ImageAsset } from "./media";
 
 export type Tone = "primary" | "secondary" | "accent";
 
@@ -134,8 +135,8 @@ export interface ProjectView {
   tone: Tone;
   url: string | null;
   host: string | null;
-  preview: string;
-  previewMobile: string | null;
+  preview: ImageAsset;
+  previewMobile: ImageAsset | null;
   previewAlt: string;
   subtitle: string;
   headline: string;
@@ -168,10 +169,13 @@ export type SkillRegistry = Record<string, SkillRegistryEntry>;
 
 export type ByLocale<T> = Partial<Record<Locale, T>>;
 
+export type ProjectMediaResolver = (path: string) => ImageAsset | undefined;
+
 export interface ProjectsSources {
   projects: ProjectCanon[];
   projectsText: ByLocale<ProjectsText>;
   registry?: SkillRegistry;
+  media?: ProjectMediaResolver;
 }
 
 export interface SkillsSources {

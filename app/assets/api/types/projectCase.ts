@@ -1,4 +1,5 @@
 import type { ProjectStackItem, Tone } from "./catalog";
+import type { ImageAsset } from "./media";
 
 export type ProjectCaseTone = Tone;
 
@@ -17,8 +18,8 @@ export interface ProjectCaseHeaderData {
 }
 
 export interface ProjectCaseCoverData {
-  image: string;
-  imageMobile: string | null;
+  image: ImageAsset;
+  imageMobile: ImageAsset | null;
   imageAlt: string;
 }
 
