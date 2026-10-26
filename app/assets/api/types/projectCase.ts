@@ -90,6 +90,7 @@ export interface ProjectCaseArchitectureItem {
   title: string;
   text?: string;
   code?: string[];
+  wide?: boolean;
 }
 
 export interface ProjectCaseArchitectureData {

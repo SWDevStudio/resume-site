@@ -16,6 +16,12 @@
   padding: --spacing(4.5) --spacing(5);
 }
 
+.project-case-architecture-item-wide {
+  @variant md {
+    @apply col-span-2;
+  }
+}
+
 .project-case-architecture-label {
   font-size: --spacing(3);
   line-height: 1.5;

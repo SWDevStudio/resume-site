@@ -4,9 +4,10 @@
     :class="toneClass"
   >
     <li
-      v-for="item in data.items"
+      v-for="item in items"
       :key="item.label"
       class="project-case-architecture-item project-case-frame project-case-frame-field project-case-frame-tone project-case-frame-hoverable"
+      :class="item.wideClass"
     >
       <span
         class="project-case-architecture-label"
@@ -44,12 +45,20 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { pageToneClass } from "~/components/pages/shared/pageTone";
 import type { ProjectCaseArchitectureData } from "~/assets/api/types/projectCase";
 
-defineProps<{
+const props = defineProps<{
   data: ProjectCaseArchitectureData;
 }>();
+
+const items = computed(() =>
+  props.data.items.map((item) => ({
+    ...item,
+    wideClass: item.wide ? "project-case-architecture-item-wide" : null,
+  })),
+);
 
 const toneClass = pageToneClass("accent");
 </script>
