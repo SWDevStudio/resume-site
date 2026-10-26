@@ -4,6 +4,7 @@
     class="project-case-role project-case-frame"
     :name="data.name"
     :label="t('projects.case.role')"
+    hide-heading
   >
     <ul class="project-case-role-list">
       <li
