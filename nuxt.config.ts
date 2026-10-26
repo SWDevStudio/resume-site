@@ -1,10 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import tailwindcss from "@tailwindcss/vite";
+import { responsiveImages } from "./imagetools.config";
 import { DEFAULT_LOCALE, LOCALE_COOKIE, LOCALES } from "./app/assets/const/locale";
 import { Route } from "./app/assets/const/route";
 
 const FILE_CACHE = "public, max-age=3600, stale-while-revalidate=86400";
 const FONT_CACHE = "public, max-age=31536000, immutable";
+const SKILL_ICON_RE = /\/UiSkillTile\/icons\/[^/]+\.webp$/;
 
 const fileRules = Object.fromEntries(
   LOCALES.flatMap((locale) => [
@@ -99,7 +101,10 @@ export default defineNuxtConfig({
     },
   },
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), responsiveImages()],
+    build: {
+      assetsInlineLimit: (file) => (SKILL_ICON_RE.test(file) ? false : undefined),
+    },
   },
   $production: {
     ignore: ["**/pages/ui.vue", "**/pages/ui/**"],
