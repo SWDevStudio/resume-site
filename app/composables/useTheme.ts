@@ -5,11 +5,11 @@ import {
   useStorage,
   type BasicColorSchema,
 } from "@vueuse/core";
-import { DEFAULT_THEME, THEME, type ThemeId } from "~/assets/const";
+import { tryUseNuxtApp } from "#imports";
+import { DEFAULT_THEME, THEME, THEME_STORAGE_KEY, type ThemeId } from "~/assets/const";
 
 const INSTANT_ATTR = "data-theme-instant";
 const SETTLE_MS = 150;
-const STORAGE_KEY = "vueuse-color-scheme";
 const SERVER_SYSTEM_MODE = "dark";
 
 function transitionMs() {
@@ -17,6 +17,10 @@ function transitionMs() {
     "--default-transition-duration",
   );
   return Number.parseFloat(value) || 0;
+}
+
+export function readThemeSettleMs() {
+  return transitionMs() + SETTLE_MS;
 }
 
 function isOffscreen(element: Element) {
@@ -38,7 +42,18 @@ function freezeHiddenElements() {
   for (const element of hidden) element.setAttribute(INSTANT_ATTR, "");
   setTimeout(() => {
     for (const element of hidden) element.removeAttribute(INSTANT_ATTR);
-  }, transitionMs() + SETTLE_MS);
+  }, readThemeSettleMs());
+}
+
+function applyInstantly(apply: () => void) {
+  const root = document.documentElement;
+  root.setAttribute(INSTANT_ATTR, "");
+  apply();
+  requestAnimationFrame(() => requestAnimationFrame(() => root.removeAttribute(INSTANT_ATTR)));
+}
+
+function isThemeMode(mode: string): mode is keyof typeof THEME {
+  return Object.hasOwn(THEME, mode);
 }
 
 function resolveMode<M extends string>(store: string, state: M) {
@@ -46,13 +61,24 @@ function resolveMode<M extends string>(store: string, state: M) {
 }
 
 const useSharedColorMode = createSharedComposable(() => {
-  const store = useStorage<BasicColorSchema>(STORAGE_KEY, "auto");
+  const store = useStorage<BasicColorSchema>(THEME_STORAGE_KEY, "auto");
+  let initialApplied = import.meta.server || !tryUseNuxtApp()?.isHydrating;
+
+  function onChanged(state: string, apply: (mode: string) => void) {
+    const mode = resolveMode(store.value, state);
+    if (initialApplied) return apply(mode);
+    initialApplied = true;
+    const theme = isThemeMode(mode) ? THEME[mode] : undefined;
+    if (document.documentElement.getAttribute("data-theme") === theme) return apply(mode);
+    applyInstantly(() => apply(mode));
+  }
+
   return useColorMode({
     attribute: "data-theme",
     modes: THEME,
     disableTransition: false,
     storageRef: store,
-    onChanged: (state, apply) => apply(resolveMode(store.value, state)),
+    onChanged,
   });
 });
 
