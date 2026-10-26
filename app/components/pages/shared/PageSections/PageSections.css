@@ -5,7 +5,6 @@
   --page-sections-gap: --spacing(8);
   --page-sections-offset: calc(var(--page-sections-header) + var(--page-sections-gap));
   --page-sections-nav-width: --spacing(70);
-  --page-sections-nav-inset: 0rem;
   --page-sections-column-gap: --spacing(24);
 
   @variant md {
@@ -42,7 +41,7 @@
 
   @variant lg {
     align-self: stretch;
-    padding-top: var(--page-sections-nav-inset);
+    padding-top: var(--page-sections-nav-inset, 0rem);
   }
 }
 
