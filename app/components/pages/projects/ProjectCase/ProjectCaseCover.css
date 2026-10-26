@@ -212,7 +212,9 @@
 }
 
 .project-case-phone-screen {
-  @apply relative size-full overflow-hidden bg-white;
+  @apply relative box-border size-full overflow-hidden;
+  padding-top: calc(var(--project-case-cover-u) * 19);
+  background-color: #0b0b0e;
   border-radius: calc(var(--project-case-cover-u) * 19);
 }
 
