@@ -40,6 +40,8 @@ const CATALOG = [
   "fly-post",
   "tamriel-codex",
   "someday",
+  "dobro",
+  "hector",
 ];
 const TEXT_KEYS = [
   "subtitle",
