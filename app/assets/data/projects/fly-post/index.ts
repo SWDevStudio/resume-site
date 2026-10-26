@@ -36,7 +36,7 @@ const project = {
   text: {
     ru: {
       subtitle: "ПОПУТНАЯ ДОСТАВКА · ВНУТРЕННИЙ СЕРВИС",
-      headline: "MVP за ~5 недель командой из трёх разработчиков",
+      headline: "MVP сервиса попутной авиадоставки за ~5 недель",
       description:
         "Внутренний сервис, через который экипажи самолётов берут попутную почту на свой рейс и получают деньги за доставку.",
       previewAlt:
@@ -47,7 +47,7 @@ const project = {
     },
     en: {
       subtitle: "PIGGYBACK DELIVERY · INTERNAL SERVICE",
-      headline: "An MVP in ~5 weeks with a team of three developers",
+      headline: "An MVP of a crew-courier air delivery service in ~5 weeks",
       description:
         "An internal service where flight crews pick up mail for their own flight and get paid for delivering it.",
       previewAlt:

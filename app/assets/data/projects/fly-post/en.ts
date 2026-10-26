@@ -32,19 +32,19 @@ const flyPost = [
       items: [
         {
           title: "Design and the UI kit",
-          text: "Figma mockups of the key desktop and mobile screens and a UI kit: buttons, fields, badges, cards. The developers built the screens from my components.",
+          text: "Designed the key desktop and mobile screens and a UI kit in Figma. The team built the screens from ready-made components without approving every element.",
         },
         {
           title: "Architecture and backend",
-          text: "Chose the stack, described the API contract in Swagger and wrote the REST API in NestJS. Set up the infrastructure: Docker, a VPS and GitLab CI.",
+          text: "Defined the stack and the architecture and fixed the API contract in Swagger as the single source of truth for the team. Wrote the REST API in NestJS and set up the infrastructure: Docker, a VPS, GitLab CI.",
         },
         {
           title: "Frontend",
-          text: "The Vite and TypeScript skeleton, an MSW mock server, localization, sign-in and sign-up forms with a confirmation code, the Leaflet map.",
+          text: "Prepared the Vite and TypeScript skeleton and an MSW mock server so the team could start on day one. Took on the complex parts: localization, sign-in with a confirmation code and the Leaflet map.",
         },
         {
           title: "Team",
-          text: "Brought in two frontend developers, set their tasks in git issues, defined the project structure and the code style, reviewed their code.",
+          text: "Brought in two frontend developers, broke the work down into tasks in git issues, defined the project structure and the code style, and reviewed the code.",
         },
       ],
     },
@@ -64,13 +64,13 @@ const flyPost = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "A private client was launching piggyback delivery of documents and small parcels to another city or country. The flight crew, flight attendants and pilots, is flying that route anyway: they pick up the mail at the airport, drop it off at the destination and get paid for it.",
+                  text: "A private client was launching a service for piggyback delivery of documents and small parcels to other cities and countries. Deliveries are made by crew members — flight attendants and pilots who are flying that route anyway. They pick up a shipment at the departure airport, hand it over at the destination and get paid for the delivery.",
                 },
               },
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "For the sender it is faster than courier services, for the crew it is a side income. The service is internal, access to it is granted.",
+                  text: "For the sender it is faster than courier services, for the crew it is extra income. The service is closed: access to it is granted separately.",
                 },
               },
             ],
@@ -85,7 +85,7 @@ const flyPost = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "Before the service, such deliveries were arranged by hand, through acquaintances and chats. The project started from scratch.",
+                  text: "Before the service, such deliveries were arranged by hand, through acquaintances and chats. The sender had to find a crew member on the right flight, agree on the price and the meeting, and check where the parcel was in the chat. Neither side had any guarantees: it was unclear who would pick up the shipment and when, and how the delivery would be paid. The service was meant to replace all of this with one process and clear statuses. The project started from scratch.",
                 },
               },
             ],
@@ -134,19 +134,19 @@ const flyPost = [
                   steps: [
                     {
                       title: "Shipment",
-                      text: "The sender creates a parcel for shipment",
+                      text: "The sender creates a parcel for shipment. In development: a form with masks and validation, address search with suggestions through Nominatim",
                     },
                     {
                       title: "Flight",
-                      text: "The courier enters their flight, for example from Moscow to Paris",
+                      text: "The courier enters their flight, for example from Moscow to Paris. In development: a flight form with manual entry, a schedule API is planned in the architecture",
                     },
                     {
                       title: "Airport",
-                      text: "The courier picks up the mail at the departure airport",
+                      text: "The courier picks up the mail at the departure airport. In development: a Leaflet map with markers, clusters and geolocation, shipment status changes through actions in the table",
                     },
                     {
                       title: "Delivery",
-                      text: "Drops the parcel off at the destination and gets paid for the delivery",
+                      text: "Drops the parcel off at the destination and gets paid for the delivery. In development: an order status timeline, role checks by guards in the API, payouts are planned",
                     },
                   ],
                 },
@@ -163,7 +163,7 @@ const flyPost = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "I chose NestJS to have one language with the frontend: TypeScript and shared contract types on both sides. For a team of three on a short deadline this is faster.",
+                  text: "The team was three people, two of them frontend developers, on a tight deadline. So the stack was chosen to keep the whole team on one language and let it start fast. NestJS on TypeScript gave shared contract types on the frontend and the backend, with no second language to learn. The team already knew Vue 3 with Vite, Pinia and Tailwind, and the ready-made daisyUI components sped up the layout work. PostgreSQL is a reliable relational database for orders and users. Docker on a VPS with GitLab CI gives low-cost infrastructure with automatic rollouts.",
                 },
               },
               {
@@ -205,7 +205,13 @@ const flyPost = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "Points on the map stay readable even when there are many of them. I built the map on Leaflet with custom SVG markers, clusters, zoom and geolocation buttons, and the address search with suggestions works through Nominatim from OpenStreetMap.",
+                  text: "The UI kit in Figma and on the frontend set one interface language. Screens were built from ready-made components, so new pages came faster and the interface stayed consistent without a separate design review. For the client this means cheaper changes and faster delivery of new features.",
+                },
+              },
+              {
+                component: "ProjectCaseText",
+                data: {
+                  text: "Points on the map stay readable even when there are many of them: custom SVG markers, clusters, zoom and geolocation on Leaflet, and address search with suggestions through Nominatim from OpenStreetMap. Users find the right place faster, and the business does not pay for commercial map APIs.",
                 },
               },
               {
@@ -241,7 +247,7 @@ const flyPost = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The courier enters flights by hand, no schedule API was connected. Courier payouts through a payment service were planned, the MVP does not have them.",
+                  text: "Two more integrations are planned in the architecture for the next stages: a flight schedule API, so the courier picks a flight from a list instead of typing it in, and a payment service for courier payouts. They were not connected in the MVP, and the architecture is designed to add them.",
                 },
               },
             ],
@@ -256,7 +262,7 @@ const flyPost = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The service stores users' personal data. Sensitive fields are encrypted in the application before they are written to the database, the connection goes over HTTPS, the database is backed up. Sign-in is by a code from the Telegram bot, access is split by the sender and courier roles.",
+                  text: "The service stores the personal data of senders and couriers: full names, phone numbers, addresses and flight details. A leak of such data undermines trust in the service and breaks the personal data law (152-FZ), so protection was built in from day one. Sensitive fields are encrypted in the application with AES-256-GCM before they are written to the database: even if someone gets access to the database or a backup, the data stays unreadable, and GCM prevents it from being tampered with unnoticed. The connection goes over HTTPS only, the database is backed up regularly, sign-in uses a one-time code through a Telegram bot, and access is split between the sender and courier roles at the API level.",
                 },
               },
             ],
@@ -266,24 +272,24 @@ const flyPost = [
           component: "ProjectCaseChapter",
           data: {
             id: "quality",
-            name: "Quality and releases",
+            name: "Project and process setup",
             blocks: [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "Three developers were writing one frontend in a few weeks, so I set the rules right away: the folder structure is described in the README, ESLint checks the code style, all code goes through cross-review.",
+                  text: "Before development started, I set the project up so three developers could work on one frontend in parallel from the first week: the folder structure is described in the README, ESLint checks the code style, and all code goes through cross-review.",
                 },
               },
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The backend got unit tests, the frontend got component snapshot tests on Vitest and @vue/test-utils, which were written by AI agents.",
+                  text: "Tests are part of the process: unit tests for the backend and component snapshot tests on Vitest and @vue/test-utils for the frontend. Writing them was handed to AI agents to save the team's time.",
                 },
               },
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "After the repository moved to GitLab we set up GitLab CI: it builds the Docker images and rolls them out to the VPS automatically.",
+                  text: "I automated code delivery in GitLab CI: the pipeline builds the Docker images and rolls them out to the VPS.",
                 },
               },
               {
@@ -298,7 +304,7 @@ const flyPost = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "There was no formal process: calls and messages with the client directly, tasks for the developers in git issues, no sprints.",
+                  text: "I kept the process light, sized to the team and the deadline: tasks in git issues, direct contact with the client, no sprints.",
                 },
               },
             ],
@@ -327,11 +333,11 @@ const flyPost = [
                   },
                   {
                     key: "solution",
-                    text: "I gave the team the API contract in Swagger, and in the first week set up the frontend skeleton and an MSW mock server.",
+                    text: "I gave the team the API contract in Swagger and set up a basic backend on frontend tooling: NestJS on TypeScript with the same contract types as the frontend. While the API grew, the frontend worked through an MSW mock server.",
                   },
                   {
                     key: "result",
-                    text: "Two developers built the screens against the contract without waiting for the API, the backend went in parallel. The MVP was built in about 5 weeks.",
+                    text: "Two developers built the screens against the contract without waiting for the API, and the backend on a stack the team already knew went in parallel. The MVP was built in about 5 weeks.",
                   },
                 ],
               },
