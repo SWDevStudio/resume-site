@@ -25,6 +25,7 @@ export default defineUnlighthouseConfig({
     ignoreI18nPages: false,
     maxRoutes: 60,
     samples: 1,
+    throttle: true,
   },
   puppeteerClusterOptions: {
     maxConcurrency: 2,
