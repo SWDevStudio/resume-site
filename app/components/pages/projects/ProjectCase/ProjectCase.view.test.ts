@@ -11,6 +11,7 @@ import TheHeader from "~/components/global/TheHeader/TheHeader.vue";
 import ProjectCase from "./ProjectCase.vue";
 import { $api } from "~/assets/api";
 import { buildCase } from "~/assets/api/mock/build";
+import { loadProjectMedia } from "~/assets/api/mock/media";
 import { staticSources } from "~/assets/api/mock/sources.static";
 import brendmartFile from "~/assets/data/projects/brendmart/en";
 import qwixitFile from "~/assets/data/projects/qwixit/en";
@@ -55,7 +56,7 @@ const switchCases: CaseView[] = [
   { name: "mobile", width: 390, height: 780 },
 ];
 
-const sources = staticSources("en");
+const sources = { ...staticSources("en"), media: await loadProjectMedia() };
 const qwixitCase = buildCase("qwixit", sources, qwixitFile, "en")!;
 const brendmartCase = buildCase("brendmart", sources, brendmartFile, "en")!;
 const tamrielCodexCase = buildCase("tamriel-codex", sources, tamrielCodexFile, "en")!;

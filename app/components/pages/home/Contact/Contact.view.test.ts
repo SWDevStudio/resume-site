@@ -6,6 +6,7 @@ import { render } from "vitest-browser-vue";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { SOCIAL, type Locale } from "~/assets/const";
 import { useAlert } from "~/composables/useAlert";
+import { useThemeLayersPrefetch } from "~/composables/useThemeLayers";
 import en from "~/locales/en.json";
 import ru from "~/locales/ru.json";
 import Contact from "./Contact.vue";
@@ -91,6 +92,27 @@ function createApp(locale: Locale) {
   return createI18n({ legacy: false, locale, messages: { ru, en } });
 }
 
+function layerCount(screen: { container: HTMLElement }) {
+  return screen.container.querySelectorAll(".home-contact-night, .home-contact-day").length;
+}
+
+function formReady(container: HTMLElement) {
+  return [".home-contact-pane", ".input", ".textarea", ".checkbox", ".home-contact-submit"].every(
+    (selector) => container.querySelector(selector),
+  );
+}
+
+async function prefetchThemeLayers(screen: { container: HTMLElement }) {
+  useThemeLayersPrefetch().prefetch();
+  await expect.poll(() => layerCount(screen)).toBe(2);
+  await expect
+    .poll(() => [...screen.container.querySelectorAll("img")].every((image) => image.complete), {
+      timeout: 5000,
+    })
+    .toBe(true);
+  screen.container.getBoundingClientRect();
+}
+
 function pin(container: Element) {
   const wrapper = container.firstElementChild as HTMLElement;
   wrapper.style.height = "";
@@ -114,9 +136,8 @@ async function renderCase(
       ),
     { global: { plugins: [i18n] } },
   );
-  await expect
-    .poll(() => screen.container.querySelectorAll(".home-contact-night, .home-contact-day").length)
-    .toBe(2);
+  await expect.poll(() => layerCount(screen)).toBe(1);
+  await expect.poll(() => formReady(screen.container), { timeout: 5000 }).toBe(true);
   if (item.tall !== undefined) {
     screen.container.querySelector<HTMLElement>(".home-contact")!.style.minHeight = "0";
   }
@@ -269,7 +290,7 @@ describe("theme switch", () => {
   it.each(switchCases)("$name", async (item) => {
     setTheme("torii-synth");
     const screen = await renderCase(item, true);
-    screen.container.getBoundingClientRect();
+    await prefetchThemeLayers(screen);
     setTheme("cyber-sakura");
 
     const animations = document.getAnimations();
@@ -704,8 +725,18 @@ describe("behavior", () => {
     });
   });
 
+  it("mounts only the layer of the current theme until the theme switch is intended", async () => {
+    const screen = await renderCase({ width: 1440, height: 900 });
+
+    expect(pickAll(screen, ".home-contact-night")).toHaveLength(1);
+    expect(screen.container.querySelector(".home-contact-day")).toBeNull();
+    expect(screen.container.querySelector(".home-contact-koi-day")).toBeNull();
+    expect(pickAll(screen, ".home-contact-koi")).toHaveLength(1);
+  });
+
   it("follows the theme with two crossfading layers", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
+    await prefetchThemeLayers(screen);
     const night = pick<HTMLElement>(screen, ".home-contact-night");
     const day = pick<HTMLElement>(screen, ".home-contact-day");
     const accent = pick<HTMLElement>(screen, ".home-contact-accent");
@@ -744,6 +775,12 @@ describe("behavior", () => {
     expect(getComputedStyle(night).visibility).toBe("hidden");
     expect(getComputedStyle(day).opacity).toBe("1");
     expect(getComputedStyle(day).visibility).toBe("visible");
+
+    await expect.poll(() => layerCount(screen)).toBe(1);
+    expect(night.isConnected).toBe(false);
+    expect(koi.isConnected).toBe(false);
+    expect(day.isConnected).toBe(true);
+    expect(pickAll(screen, ".home-contact-koi-day")).toHaveLength(1);
   });
 
   it("changes the shape of the form and the social buttons with the theme", async () => {

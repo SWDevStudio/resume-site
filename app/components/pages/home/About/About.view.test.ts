@@ -7,6 +7,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import type { Locale } from "~/assets/const";
 import en from "~/locales/en.json";
 import ru from "~/locales/ru.json";
+import { useThemeLayersPrefetch } from "~/composables/useThemeLayers";
 import About from "./About.vue";
 import { setTheme } from "../../../../../test/mocks/useTheme";
 import "~/assets/css/fonts.css";
@@ -78,6 +79,21 @@ async function setReducedMotion(value: "reduce" | "no-preference") {
   });
 }
 
+function layerCount(screen: { container: HTMLElement }) {
+  return screen.container.querySelectorAll(".home-about-night, .home-about-day").length;
+}
+
+async function prefetchThemeLayers(screen: { container: HTMLElement }) {
+  useThemeLayersPrefetch().prefetch();
+  await expect.poll(() => layerCount(screen)).toBe(2);
+  await expect
+    .poll(() => [...screen.container.querySelectorAll("img")].every((image) => image.complete), {
+      timeout: 5000,
+    })
+    .toBe(true);
+  screen.container.getBoundingClientRect();
+}
+
 function createApp(locale: Locale) {
   return createI18n({ legacy: false, locale, messages: { ru, en } });
 }
@@ -90,9 +106,7 @@ async function renderCase(item: Pick<AboutCase, "width" | "height" | "locale" | 
     () => h("div", { class: "bg-base-100 font-body text-base-content" }, h(About)),
     { global: { plugins: [createApp(locale)] } },
   );
-  await expect
-    .poll(() => screen.container.querySelectorAll(".home-about-night, .home-about-day").length)
-    .toBe(2);
+  await expect.poll(() => layerCount(screen)).toBe(1);
   if (item.tall) screen.container.querySelector<HTMLElement>(".home-about")!.style.minHeight = "0";
   screen.container.getBoundingClientRect();
   return screen;
@@ -157,7 +171,7 @@ describe("theme switch", () => {
   it.each(switchCases)("$name", async (item) => {
     setTheme("torii-synth");
     const screen = await renderCase(item);
-    screen.container.getBoundingClientRect();
+    await prefetchThemeLayers(screen);
     setTheme("cyber-sakura");
 
     const animations = document.getAnimations();
@@ -349,8 +363,18 @@ describe("behavior", () => {
     expect(text.top - slide.top).toBeGreaterThanOrEqual(item.header - 1);
   });
 
+  it("mounts only the layer of the current theme until the theme switch is intended", async () => {
+    const screen = await renderCase({ width: 1440, height: 900 });
+
+    expect(screen.container.querySelectorAll(".home-about-night")).toHaveLength(1);
+    expect(screen.container.querySelector(".home-about-day")).toBeNull();
+    expect(screen.container.querySelector(".home-about-crane-day")).toBeNull();
+    expect(screen.container.querySelectorAll(".home-about-crane")).toHaveLength(1);
+  });
+
   it("follows the theme with two crossfading layers", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
+    await prefetchThemeLayers(screen);
     const night = pick<HTMLElement>(screen, ".home-about-night");
     const day = pick<HTMLElement>(screen, ".home-about-day");
     const craneNight = pick<HTMLElement>(screen, ".home-about-crane-night");
@@ -399,6 +423,12 @@ describe("behavior", () => {
     expect(getComputedStyle(craneDay).opacity).toBe("1");
     expect(getComputedStyle(corner).opacity).toBe("0");
     expect(getComputedStyle(petal).opacity).toBe("0.9");
+
+    await expect.poll(() => layerCount(screen)).toBe(1);
+    expect(night.isConnected).toBe(false);
+    expect(craneNight.isConnected).toBe(false);
+    expect(day.isConnected).toBe(true);
+    expect(craneDay.isConnected).toBe(true);
   });
 
   it("changes the shape of the photo frame with the theme", async () => {

@@ -5,6 +5,7 @@ import { cdp, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-vue";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Locale } from "~/assets/const";
+import { useThemeLayersPrefetch } from "~/composables/useThemeLayers";
 import en from "~/locales/en.json";
 import ru from "~/locales/ru.json";
 import Why from "./Why.vue";
@@ -109,6 +110,21 @@ async function setReducedMotion(value: "reduce" | "no-preference") {
   });
 }
 
+function layerCount(screen: { container: HTMLElement }) {
+  return screen.container.querySelectorAll(".home-why-night, .home-why-day, .home-why-owl").length;
+}
+
+async function prefetchThemeLayers(screen: { container: HTMLElement }) {
+  useThemeLayersPrefetch().prefetch();
+  await expect.poll(() => layerCount(screen)).toBe(4);
+  await expect
+    .poll(() => [...screen.container.querySelectorAll("img")].every((image) => image.complete), {
+      timeout: 5000,
+    })
+    .toBe(true);
+  screen.container.getBoundingClientRect();
+}
+
 function createApp(locale: Locale) {
   return createI18n({ legacy: false, locale, messages: { ru, en } });
 }
@@ -121,12 +137,7 @@ async function renderCase(item: Pick<WhyCase, "width" | "height" | "locale" | "t
     () => h("div", { class: "bg-base-100 font-body text-base-content" }, h(Why)),
     { global: { plugins: [createApp(locale)] } },
   );
-  await expect
-    .poll(
-      () =>
-        screen.container.querySelectorAll(".home-why-night, .home-why-day, .home-why-owl").length,
-    )
-    .toBe(4);
+  await expect.poll(() => layerCount(screen)).toBe(2);
   if (item.tall !== undefined)
     screen.container.querySelector<HTMLElement>(".home-why")!.style.minHeight = "0";
   screen.container.getBoundingClientRect();
@@ -294,7 +305,7 @@ describe("theme switch", () => {
   it.each(switchCases)("$name", async (item) => {
     setTheme("torii-synth");
     const screen = await renderCase(item);
-    screen.container.getBoundingClientRect();
+    await prefetchThemeLayers(screen);
     setTheme("cyber-sakura");
 
     const animations = document.getAnimations();
@@ -354,9 +365,14 @@ describe("behavior", () => {
     expect([...pick(screen, ".home-why-stage").children].map((item) => item.className)).toEqual([
       "home-why-window",
       "home-why-owl home-why-owl-night",
-      "home-why-owl home-why-owl-day",
     ]);
     expect(pick(screen, ".home-why-decor").getAttribute("aria-hidden")).toBe("true");
+    await prefetchThemeLayers(screen);
+    expect([...pick(screen, ".home-why-stage").children].map((item) => item.className)).toEqual([
+      "home-why-window",
+      "home-why-owl home-why-owl-night",
+      "home-why-owl home-why-owl-day home-why-owl-late",
+    ]);
     expect(pick(screen, ".home-why-decor").querySelector("img")).toBeNull();
     for (const owl of pickAll(screen, ".home-why-owl")) {
       expect(owl.getAttribute("aria-hidden")).toBe("true");
@@ -482,6 +498,7 @@ describe("behavior", () => {
     { width: 2560, height: 1440, locale: "en" as const },
   ])("seats the owls on the top edge of the chat window at $width in $locale", async (item) => {
     const screen = await renderCase(item);
+    await prefetchThemeLayers(screen);
     const spacing = Number.parseFloat(getComputedStyle(document.documentElement).fontSize) / 4;
     const slide = pick(screen, ".home-why").getBoundingClientRect();
     const offset = Number.parseFloat(getComputedStyle(pick(screen, ".home-slide-body")).paddingTop);
@@ -517,6 +534,7 @@ describe("behavior", () => {
     "makes room for the biggest owl between the header and the window at $width in $locale",
     async (item) => {
       const screen = await renderCase(item);
+      await prefetchThemeLayers(screen);
       const slide = pick(screen, ".home-why").getBoundingClientRect();
       const offset = Number.parseFloat(
         getComputedStyle(pick(screen, ".home-slide-body")).paddingTop,
@@ -634,8 +652,18 @@ describe("behavior", () => {
     expect(head.top - slide.top).toBeGreaterThanOrEqual(item.header - 1);
   });
 
+  it("mounts only the layer and the owl of the current theme until the switch is intended", async () => {
+    const screen = await renderCase({ width: 1440, height: 900 });
+
+    expect(pickAll(screen, ".home-why-night")).toHaveLength(1);
+    expect(pickAll(screen, ".home-why-owl-night")).toHaveLength(1);
+    expect(screen.container.querySelector(".home-why-day")).toBeNull();
+    expect(screen.container.querySelector(".home-why-owl-day")).toBeNull();
+  });
+
   it("follows the theme with two crossfading layers", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
+    await prefetchThemeLayers(screen);
     const night = pick<HTMLElement>(screen, ".home-why-night");
     const day = pick<HTMLElement>(screen, ".home-why-day");
     const owlNight = pick<HTMLElement>(screen, ".home-why-owl-night");
@@ -699,6 +727,12 @@ describe("behavior", () => {
     expect(getComputedStyle(day).visibility).toBe("visible");
     expect(getComputedStyle(owlDay).opacity).toBe("1");
     expect(getComputedStyle(dot).width).toBe("11px");
+
+    await expect.poll(() => layerCount(screen)).toBe(2);
+    expect(night.isConnected).toBe(false);
+    expect(owlNight.isConnected).toBe(false);
+    expect(day.isConnected).toBe(true);
+    expect(owlDay.isConnected).toBe(true);
   });
 
   it("changes the shape of the window with the theme", async () => {

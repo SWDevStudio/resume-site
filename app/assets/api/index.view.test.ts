@@ -4,6 +4,7 @@ import enResume from "~/assets/data/en/resume";
 import ruResume from "~/assets/data/ru/resume";
 import { $api } from "./index";
 import { buildProjects, buildResume, buildSkillGroups } from "~/assets/api/mock/build";
+import { loadProjectMedia } from "~/assets/api/mock/media";
 import { staticSources } from "~/assets/api/mock/sources.static";
 
 const state = vi.hoisted(() => ({ locale: "ru" }));
@@ -47,7 +48,7 @@ describe("$api.profile.fetchResume", () => {
 describe.each(LOCALES)("the client and the server build the same data in %s", (locale: Locale) => {
   it("gives the page the same resume, project list and skill groups as the server builders", async () => {
     state.locale = locale;
-    const sources = staticSources(locale);
+    const sources = { ...staticSources(locale), media: await loadProjectMedia() };
 
     expect(await $api.profile.fetchResume()).toEqual(buildResume(sources, locale));
     expect(await $api.projects.fetchList()).toEqual(buildProjects(sources, locale));

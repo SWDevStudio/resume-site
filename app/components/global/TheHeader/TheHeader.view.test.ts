@@ -18,11 +18,17 @@ const mocks = vi.hoisted(() => ({
 const current = ref<Locale>("ru");
 
 vi.mock("~/composables/useLocale", () => ({
-  useLocale: () => ({ locale: current, locales: ["ru", "en"], setLocale: mocks.setLocale }),
+  useLocale: () => ({
+    locale: current,
+    locales: ["ru", "en"],
+    prepare: vi.fn(),
+    setLocale: mocks.setLocale,
+  }),
 }));
 
 vi.mock("~/composables/useTheme", () => ({
   useTheme: () => ({ toggle: mocks.toggle }),
+  readThemeSettleMs: () => 550,
 }));
 
 interface HeaderCase {
@@ -421,7 +427,9 @@ describe("behavior", () => {
     const menu = screen.container.querySelector<HTMLElement>(".the-header-menu")!;
     const items = [...menu.querySelectorAll<HTMLElement>(".the-header-menu-item")];
     const checks = [...menu.querySelectorAll<HTMLElement>(".the-header-menu-check")];
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
+    expect(getComputedStyle(menu).contentVisibility).toBe("visible");
     items[0]!.removeAttribute("aria-current");
     items[1]!.setAttribute("aria-current", "true");
     expect(transitioning(items[1]!, "background-color")).toBe(true);
