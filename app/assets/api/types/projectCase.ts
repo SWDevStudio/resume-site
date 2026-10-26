@@ -54,7 +54,7 @@ export interface ProjectCaseNextData {
   tone: ProjectCaseTone;
 }
 
-export type ProjectCaseFactKey = "role" | "team" | "duration" | "status";
+export type ProjectCaseFactKey = "role" | "team" | "tools" | "duration" | "status";
 
 export interface ProjectCaseFact {
   key: ProjectCaseFactKey;
@@ -116,7 +116,7 @@ export interface ProjectCasePipelineData {
   stages: ProjectCasePipelineStage[];
 }
 
-export type ProjectCaseChallengeRowKey = "problem" | "solution" | "result" | "retro";
+export type ProjectCaseChallengeRowKey = "problem" | "solution" | "result" | "retro" | "next";
 
 export interface ProjectCaseChallengeRow {
   key: ProjectCaseChallengeRowKey;

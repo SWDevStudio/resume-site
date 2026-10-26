@@ -17,9 +17,9 @@ const tamrielCodex = [
     component: "ProjectCaseFacts",
     data: {
       facts: [
-        { key: "role", value: "Sole developer" },
-        { key: "team", value: "One person, built together with Claude" },
-        { key: "duration", value: "10 days, June 25 – July 4, 2026" },
+        { key: "role", value: "Fullstack developer" },
+        { key: "tools", value: "The Claude Code AI agent to speed up development" },
+        { key: "duration", value: "10 days" },
         { key: "status", value: "Used at the game, next version planned" },
       ],
     },
@@ -64,7 +64,7 @@ const tamrielCodex = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "A live-action role-playing game set in The Elder Scrolls world, about 100 players. There was no client as such: I built the app for free at the players' request. At the game it was used by the Aldmeri Dominion faction, which is why the codex speaks in the voice of an Altmer chronicler.",
+                  text: "A live-action role-playing game set in The Elder Scrolls world, about 100 players. The app was built for part of the players: at this game it was used by the Aldmeri Dominion faction, which is why the codex speaks in the voice of an Altmer chronicler. For the next game the plan is to develop it so that every player uses it.",
                 },
               },
             ],
@@ -85,7 +85,7 @@ const tamrielCodex = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "Players needed to find things in the game's knowledge base fast and keep their own notes. There is no internet at the game site, people play from Android phones and PCs, and the deadline was fixed: the game on July 5, 2026.",
+                  text: "Players needed to find things in the game's knowledge base fast and keep their own notes. There is no internet at the game site, people play from Android phones and PCs, and the deadline was fixed: there were 10 days for development.",
                 },
               },
             ],
@@ -100,8 +100,8 @@ const tamrielCodex = [
               {
                 component: "ProjectCaseGoal",
                 data: {
-                  value: "July 5",
-                  text: "is game day, and the app had to work by then. The aim was to make the game better: get rid of the stack of paper and awkward PDFs, give players the rules and lore with fast search, their own notes and a way to share them without internet.",
+                  value: "10 days",
+                  text: "was the time to get the app ready for the game. The aim was to make the game better: get rid of the stack of paper and awkward PDFs, give players the rules and lore with fast search, their own notes and a way to share them without internet.",
                 },
               },
             ],
@@ -334,8 +334,8 @@ const tamrielCodex = [
                     text: "All built-in content came from this export: about 24 newsletter pieces, rumors covering 11 years, about 37 cycle documents and 41 images. It all works offline and can be found with the search in the header.",
                   },
                   {
-                    key: "retro",
-                    text: "For the next game: content updates without rebuilding the app, so organizers can hand new materials to players themselves.",
+                    key: "next",
+                    text: "Based on the game and the organizers' feedback: content updates without rebuilding the app, so organizers can hand new materials to players themselves.",
                   },
                 ],
               },
@@ -374,8 +374,8 @@ const tamrielCodex = [
                     text: "At the game, players shared notes by QR without internet.",
                   },
                   {
-                    key: "retro",
-                    text: "Next step is large notes: split the data across several QR codes in a row, or use a QR code as a bridge to connect two phones and transfer data directly.",
+                    key: "next",
+                    text: "Based on players' feedback: support for large notes, by splitting the data across several QR codes in a row or using a QR code as a bridge for a direct transfer between two phones.",
                   },
                 ],
               },
@@ -397,7 +397,7 @@ const tamrielCodex = [
             stats: [
               {
                 value: "10 days",
-                label: "from the first to the last commit, the day before the game",
+                label: "from the first to the last commit, released right on schedule",
               },
               {
                 value: "2",
@@ -417,7 +417,7 @@ const tamrielCodex = [
         {
           component: "ProjectCaseText",
           data: {
-            text: "At the game on July 5, 2026, the app was used by the Aldmeri Dominion faction. Instead of a stack of paper and PDFs on a phone, anything took seconds to find. Players mentioned the convenience, the rules with fast search, the light and dark themes, the joke easter eggs and the help with translating the alphabets.",
+            text: "At the game the app was used by the Aldmeri Dominion faction. Instead of a stack of paper and PDFs on a phone, anything took seconds to find. Players mentioned the convenience, the rules with fast search, the light and dark themes, the joke easter eggs and the help with translating the alphabets.",
           },
         },
       ],

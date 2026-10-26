@@ -163,6 +163,7 @@
       "facts": {
         "role": "Role",
         "team": "Team",
+        "tools": "Tools",
         "duration": "Timeline",
         "status": "Status"
       },
@@ -171,7 +172,8 @@
         "problem": "Problem",
         "solution": "Solution",
         "result": "Result",
-        "retro": "Would do differently"
+        "retro": "Would do differently",
+        "next": "Planned improvements"
       },
       "integrations": {
         "own": "connected by me"

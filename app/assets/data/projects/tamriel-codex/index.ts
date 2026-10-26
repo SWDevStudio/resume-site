@@ -47,7 +47,7 @@ const project = {
       description:
         "Справочник и записная книжка игрока для полигонной ролевой игры по миру The Elder Scrolls: правила, лор и новости с быстрым поиском, свои заметки и обмен ими через QR без интернета.",
       previewAlt: "Главный экран приложения Tamriel Codex",
-      role: "Единственный разработчик, проект под ключ: интерфейс, локальная база, сборки под Android и Windows, выгрузка данных игры из группы VK и обмен заметками через QR.",
+      role: "Fullstack-разработчик, проект под ключ: интерфейс, локальная база, сборки под Android и Windows, выгрузка данных игры из группы VK и обмен заметками через QR.",
       result:
         "На игре приложением пользовалась фракция Альдмерский доминион, заметками игроки обменивались через QR без интернета. Нужное в правилах и лоре находилось за секунды, а не в стопке бумаги.",
     },
@@ -57,7 +57,7 @@ const project = {
       description:
         "A handbook and player's notebook for a live-action role-playing game set in The Elder Scrolls world: rules, lore and news with fast search, personal notes and sharing them by QR without internet.",
       previewAlt: "Home screen of the Tamriel Codex app",
-      role: "Sole developer, end to end: the interface, the local database, the Android and Windows builds, exporting the game data from the VK group and sharing notes by QR.",
+      role: "Fullstack developer, end to end: the interface, the local database, the Android and Windows builds, exporting the game data from the VK group and sharing notes by QR.",
       result:
         "At the game the Aldmeri Dominion faction used the app, and players shared notes by QR without internet. Anything in the rules and lore took seconds to find instead of digging through a stack of paper.",
     },
