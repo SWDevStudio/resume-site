@@ -15,3 +15,7 @@ export function setTheme(id: string) {
   document.documentElement.dataset.theme = id;
   current.value = id as ThemeId;
 }
+
+export function readThemeSettleMs() {
+  return 550;
+}
