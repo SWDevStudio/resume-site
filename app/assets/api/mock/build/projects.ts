@@ -22,7 +22,7 @@ export function buildProjects(src: ProjectsSources, locale: Locale): ProjectView
       }
       return label;
     });
-    const preview = media(project.preview);
+    const preview = project.preview ? media(project.preview) : null;
     const previewMobile = project.previewMobile ? media(project.previewMobile) : null;
     return {
       id: project.id,

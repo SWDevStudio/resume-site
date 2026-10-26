@@ -18,7 +18,7 @@ export interface ProjectCaseHeaderData {
 }
 
 export interface ProjectCaseCoverData {
-  image: ImageAsset;
+  image: ImageAsset | null;
   imageMobile: ImageAsset | null;
   imageAlt: string;
 }

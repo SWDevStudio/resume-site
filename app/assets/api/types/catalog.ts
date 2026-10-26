@@ -22,18 +22,21 @@ export interface ProjectStackItem {
   own?: boolean;
 }
 
-export interface ProjectCanon {
+interface ProjectFacts {
   isFavorite: boolean;
   id: string;
   name: string;
   tone: Tone;
   url: string | null;
-  preview: string;
-  previewMobile?: string;
   tags: string[];
   stack: StackRef[];
   caseStack?: ProjectStackItem[];
 }
+
+export type ProjectPreviewCanon =
+  { preview: string; previewMobile?: string } | { preview?: never; previewMobile: string };
+
+export type ProjectCanon = ProjectFacts & ProjectPreviewCanon;
 
 export interface SkillCanon {
   id: string;
@@ -66,9 +69,9 @@ export interface ProfileCanon {
   updatedAt: string;
 }
 
-export interface ProjectDefinition extends ProjectCanon {
+export type ProjectDefinition = ProjectCanon & {
   text: Record<Locale, ProjectText>;
-}
+};
 
 export interface ProjectText {
   subtitle: string;
@@ -135,7 +138,7 @@ export interface ProjectView {
   tone: Tone;
   url: string | null;
   host: string | null;
-  preview: ImageAsset;
+  preview: ImageAsset | null;
   previewMobile: ImageAsset | null;
   previewAlt: string;
   subtitle: string;

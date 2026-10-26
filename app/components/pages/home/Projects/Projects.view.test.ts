@@ -303,14 +303,14 @@ describe("behavior", () => {
     }
     expect(new Set(images.map((image) => image.src)).size).toBe(3);
     expect(images.map((image) => image.getAttribute("src"))).toEqual(
-      lists.en.map((project) => project.preview.src),
+      lists.en.map((project) => project.preview?.src),
     );
     expect(images.map((image) => image.getAttribute("srcset"))).toEqual(
       lists.en.map((project) =>
-        project.preview.variants.map((variant) => `${variant.src} ${variant.width}w`).join(", "),
+        project.preview?.variants.map((variant) => `${variant.src} ${variant.width}w`).join(", "),
       ),
     );
-    expect(lists.en.every((project) => project.preview.variants.length > 1)).toBe(true);
+    expect(lists.en.every((project) => (project.preview?.variants.length ?? 0) > 1)).toBe(true);
     expect(images.every((image) => image.getAttribute("sizes"))).toBe(true);
   });
 

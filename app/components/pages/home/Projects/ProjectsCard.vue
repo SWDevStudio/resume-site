@@ -58,14 +58,15 @@ const props = defineProps<{
 const { t } = useI18n();
 
 const tone = computed(() => projectTones[props.project.tone]);
+const cover = computed(() => props.project.preview ?? props.project.previewMobile);
 const data = computed<FolderData>(() => ({
   index: props.project.index,
   title: props.project.name,
   subtitle: props.project.subtitle,
   text: props.project.description,
   tags: props.project.tags.slice(0, CARD_TAGS),
-  image: props.project.preview.src,
-  imageSrcset: imageSrcset(props.project.preview),
+  image: cover.value?.src,
+  imageSrcset: cover.value ? imageSrcset(cover.value) : undefined,
   imageSizes: IMAGE_SIZES,
   imageAlt: props.project.previewAlt,
 }));

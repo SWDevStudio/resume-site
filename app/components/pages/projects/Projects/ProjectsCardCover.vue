@@ -19,7 +19,7 @@ import PageDevices from "~/components/pages/shared/PageDevices/PageDevices.vue";
 
 withDefaults(
   defineProps<{
-    image: ImageAsset;
+    image: ImageAsset | null;
     imageMobile?: ImageAsset | null;
     alt: string;
     loading?: "lazy" | "eager";

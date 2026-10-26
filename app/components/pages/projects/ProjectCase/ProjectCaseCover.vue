@@ -2,6 +2,7 @@
   <div class="project-case-cover">
     <div
       class="project-case-stage"
+      :class="modeClass"
       role="img"
       :aria-label="data.imageAlt"
     >
@@ -9,15 +10,18 @@
         class="project-case-grid"
         aria-hidden="true"
       />
-      <div class="project-case-laptop">
+      <div
+        v-if="screen"
+        class="project-case-laptop"
+      >
         <div class="project-case-lid">
           <span class="project-case-camera" />
           <div class="project-case-screen">
             <img
               class="project-case-shot"
-              :srcset="screenSrcset"
+              :srcset="screen.srcset"
               :sizes="DEVICE_SCREEN_SIZES"
-              :src="data.image.src"
+              :src="screen.src"
               alt=""
             />
           </div>
@@ -26,7 +30,10 @@
           <span class="project-case-notch" />
         </div>
       </div>
-      <div class="project-case-phone">
+      <div
+        v-if="phone"
+        class="project-case-phone"
+      >
         <div class="project-case-phone-screen">
           <img
             class="project-case-shot"
@@ -45,7 +52,11 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { DEVICE_PHONE_SIZES, DEVICE_SCREEN_SIZES } from "~/components/pages/shared/deviceSizes";
+import {
+  DEVICE_PHONE_SIZES,
+  DEVICE_PHONE_SOLO_SIZES,
+  DEVICE_SCREEN_SIZES,
+} from "~/components/pages/shared/deviceSizes";
 import type { ProjectCaseCoverData } from "~/assets/api/types/projectCase";
 import { imageSrcset } from "~/utils";
 
@@ -53,23 +64,31 @@ const props = defineProps<{
   data: ProjectCaseCoverData;
 }>();
 
-const screenSrcset = computed(() => imageSrcset(props.data.image));
-
-const phone = computed(() =>
-  props.data.imageMobile
-    ? {
-        class: "project-case-shot-mobile",
-        src: props.data.imageMobile.src,
-        srcset: imageSrcset(props.data.imageMobile),
-        sizes: DEVICE_PHONE_SIZES,
-      }
-    : {
-        class: "project-case-shot-phone",
-        src: props.data.image.src,
-        srcset: screenSrcset.value,
-        sizes: DEVICE_SCREEN_SIZES,
-      },
+const screen = computed(() =>
+  props.data.image ? { src: props.data.image.src, srcset: imageSrcset(props.data.image) } : null,
 );
+
+const modeClass = computed(() => ({ "project-case-stage-phone-only": !screen.value }));
+
+const phone = computed(() => {
+  if (props.data.imageMobile) {
+    return {
+      class: "project-case-shot-mobile",
+      src: props.data.imageMobile.src,
+      srcset: imageSrcset(props.data.imageMobile),
+      sizes: screen.value ? DEVICE_PHONE_SIZES : DEVICE_PHONE_SOLO_SIZES,
+    };
+  }
+  if (screen.value) {
+    return {
+      class: "project-case-shot-phone",
+      src: screen.value.src,
+      srcset: screen.value.srcset,
+      sizes: DEVICE_SCREEN_SIZES,
+    };
+  }
+  return null;
+});
 </script>
 
 <style src="./ProjectCaseCover.css" />
