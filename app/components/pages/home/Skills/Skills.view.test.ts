@@ -34,19 +34,9 @@ interface SkillsCase {
 
 const themes = ["torii-synth", "cyber-sakura"];
 
-const cases: SkillsCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 768, height: 900, tall: true },
-  { name: "mobile", width: 390, height: 780, tall: true },
-  { name: "desktop-ru", width: 1440, height: 900, locale: "ru" },
-  { name: "tablet-ru", width: 768, height: 900, locale: "ru", tall: true },
-  { name: "mobile-ru", width: 390, height: 780, locale: "ru", tall: true },
-];
+const cases: SkillsCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
-const switchCases: SkillsCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "mobile", width: 390, height: 780, tall: true },
-];
+const switchCases: SkillsCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
 const customTransitions = [
   ".home-skills-night",

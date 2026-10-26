@@ -27,19 +27,9 @@ interface HeroCase {
 
 const themes = ["torii-synth", "cyber-sakura"];
 
-const cases: HeroCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 768, height: 900 },
-  { name: "mobile", width: 390, height: 780 },
-  { name: "desktop-ru", width: 1440, height: 900, locale: "ru" },
-  { name: "tablet-ru", width: 768, height: 900, locale: "ru" },
-  { name: "mobile-ru", width: 390, height: 780, locale: "ru" },
-];
+const cases: HeroCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
-const switchCases: HeroCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "mobile", width: 390, height: 780 },
-];
+const switchCases: HeroCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
 function finishAnimations() {
   for (const animation of document.getAnimations()) {

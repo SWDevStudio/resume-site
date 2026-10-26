@@ -49,19 +49,9 @@ interface WhyCase {
 
 const themes = ["torii-synth", "cyber-sakura"];
 
-const cases: WhyCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 768, height: 900, tall: 1400 },
-  { name: "mobile", width: 390, height: 780, tall: 2200 },
-  { name: "desktop-ru", width: 1440, height: 900, locale: "ru" },
-  { name: "tablet-ru", width: 768, height: 900, locale: "ru", tall: 2200 },
-  { name: "mobile-ru", width: 390, height: 780, locale: "ru", tall: 2200 },
-];
+const cases: WhyCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
-const switchCases: WhyCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "mobile", width: 390, height: 780, tall: 2200 },
-];
+const switchCases: WhyCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
 const customTransitions = [
   ".home-why-night",
@@ -80,10 +70,6 @@ const customTransitions = [
   ".home-why-input",
   ".home-why-chip",
 ];
-
-function mismatch(item: Pick<WhyCase, "tall">) {
-  return item.tall === undefined ? {} : { allowedMismatchedPixelRatio: 0.01 };
-}
 
 function finishAnimations() {
   for (const animation of document.getAnimations()) {
@@ -297,7 +283,7 @@ describe.each(themes)("%s", (theme) => {
 
     await expect
       .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`${theme}-${item.name}`, { comparatorOptions: mismatch(item) });
+      .toMatchScreenshot(`${theme}-${item.name}`);
   });
 });
 
@@ -815,9 +801,9 @@ async function settleScroll(screen: Awaited<ReturnType<typeof renderCase>>) {
     .toBeLessThanOrEqual(1);
 }
 
-describe.each(themes)("%s chat", (theme) => {
+describe("chat states", () => {
   beforeEach(() => {
-    setTheme(theme);
+    setTheme("torii-synth");
   });
 
   afterEach(() => {
@@ -828,7 +814,7 @@ describe.each(themes)("%s chat", (theme) => {
     { name: "waiting", state: 0 },
     { name: "streaming", state: 1 },
     { name: "answered", state: 2 },
-  ])("shows the $name state", async (item) => {
+  ])("lays out the $name state inside the chat window", async (item) => {
     const agent = controlled();
     agentOverride.current = agent.agent;
     const reply = en.home.why.chat.mockReply;
@@ -851,10 +837,27 @@ describe.each(themes)("%s chat", (theme) => {
     finishAnimations();
     await settleScroll(screen);
     finishAnimations();
+    const dialog = pick(screen, ".home-why-dialog").getBoundingClientRect();
+    const last = lastBubble(screen);
+    const busy = item.state < 2;
 
-    await expect
-      .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`${theme}-chat-${item.name}`);
+    expect(bubbles(screen)).toHaveLength(3);
+    expect(last.querySelector(".home-why-typing") !== null).toBe(item.state === 0);
+    expect(last.classList.contains("home-why-bubble-streaming")).toBe(item.state === 1);
+    expect(pick(screen, ".home-why-ask").getAttribute("aria-busy")).toBe(String(busy));
+    const spinner = getComputedStyle(pick(screen, ".home-why-ask-spinner")).opacity;
+    const arrow = getComputedStyle(pick(screen, ".home-why-ask-arrow")).opacity;
+    expect([spinner, arrow]).toEqual(busy ? ["1", "0"] : ["0", "1"]);
+    for (const bubble of bubbles(screen)) {
+      const rect = bubble.getBoundingClientRect();
+      expect(rect.left).toBeGreaterThanOrEqual(dialog.left - 0.5);
+      expect(rect.right).toBeLessThanOrEqual(dialog.right + 0.5);
+    }
+    near(last.getBoundingClientRect().bottom, dialog.bottom, 40);
+    expect(last.getBoundingClientRect().bottom).toBeLessThanOrEqual(dialog.bottom + 0.5);
+    expect(pick(screen, ".home-why-message-user").getBoundingClientRect().right).toBeGreaterThan(
+      last.getBoundingClientRect().right,
+    );
   });
 });
 

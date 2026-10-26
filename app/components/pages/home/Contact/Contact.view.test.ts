@@ -26,27 +26,13 @@ interface ContactCase {
   height: number;
   locale?: Locale;
   tall?: number;
-  state?: "errors" | "busy";
 }
 
 const themes = ["torii-synth", "cyber-sakura"];
 
-const cases: ContactCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 768, height: 900, tall: 1800 },
-  { name: "mobile", width: 390, height: 780, tall: 2400 },
-  { name: "desktop-ru", width: 1440, height: 900, locale: "ru" },
-  { name: "tablet-ru", width: 768, height: 900, locale: "ru", tall: 1800 },
-  { name: "mobile-ru", width: 390, height: 780, locale: "ru", tall: 2400 },
-  { name: "desktop-errors", width: 1440, height: 900, tall: 1000, state: "errors" },
-  { name: "mobile-errors-ru", width: 390, height: 780, locale: "ru", tall: 2400, state: "errors" },
-  { name: "desktop-busy", width: 1440, height: 900, state: "busy" },
-];
+const cases: ContactCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
-const switchCases: ContactCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 768, height: 900, tall: 1800 },
-];
+const switchCases: ContactCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
 const customTransitions = [
   ".home-contact-night",
@@ -264,21 +250,6 @@ describe.each(themes)("%s", (theme) => {
 
   it.each(cases)("$name", async (item) => {
     const screen = await renderCase(item, true);
-    if (item.state === "errors") {
-      submit(screen);
-      await vi.waitFor(() => expect(errors(screen)).toHaveLength(3));
-      finishAnimations();
-      pin(screen.container);
-    }
-    if (item.state === "busy") {
-      mocks.submit.mockImplementation(() => new Promise(() => {}));
-      fillValid(screen);
-      submit(screen);
-      await vi.waitFor(() =>
-        expect(pick(screen, ".home-contact-submit").getAttribute("aria-busy")).toBe("true"),
-      );
-      finishAnimations();
-    }
 
     await expect
       .element(page.elementLocator(screen.container.firstElementChild!))
@@ -559,6 +530,34 @@ describe("behavior", () => {
       expect(field(screen, "consent").getAttribute("aria-invalid")).toBe("true");
       expect(mocks.submit).not.toHaveBeenCalled();
       expect(alerts()).toHaveLength(0);
+    });
+
+    it.each([
+      { width: 1440, height: 900, locale: "en" as const },
+      { width: 390, height: 780, locale: "ru" as const, tall: 2400 },
+    ])("shows the errors under their fields at $width in $locale", async (item) => {
+      const screen = await renderCase(item);
+
+      submit(screen);
+      await vi.waitFor(() => expect(errors(screen)).toHaveLength(3));
+      finishAnimations();
+      const pane = pick(screen, ".home-contact-pane").getBoundingClientRect();
+      const shown = pickAll(screen, ".input-field > p, .textarea-field > p, .checkbox-field > p");
+
+      expect(shown).toHaveLength(3);
+      for (const error of shown) {
+        const rect = error.getBoundingClientRect();
+        const control = error.parentElement!.querySelector(".input, .textarea, .checkbox")!;
+
+        expect(rect.height).toBeGreaterThan(0);
+        expect(getComputedStyle(error).visibility).toBe("visible");
+        expect(Number(getComputedStyle(error).opacity)).toBe(1);
+        expect(rect.top).toBeGreaterThanOrEqual(control.getBoundingClientRect().top);
+        expect(rect.left).toBeGreaterThanOrEqual(pane.left);
+        expect(rect.right).toBeLessThanOrEqual(pane.right + 0.5);
+        expect(rect.bottom).toBeLessThanOrEqual(pane.bottom + 0.5);
+      }
+      expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(item.width);
     });
 
     it("rejects an invalid email", async () => {

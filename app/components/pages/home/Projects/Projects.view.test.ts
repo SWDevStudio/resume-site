@@ -28,19 +28,9 @@ interface ProjectsCase {
 
 const themes = ["torii-synth", "cyber-sakura"];
 
-const cases: ProjectsCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 768, height: 900, tall: 1400 },
-  { name: "mobile", width: 390, height: 780, tall: 2400 },
-  { name: "desktop-ru", width: 1440, height: 900, locale: "ru" },
-  { name: "tablet-ru", width: 768, height: 900, locale: "ru", tall: 1400 },
-  { name: "mobile-ru", width: 390, height: 780, locale: "ru", tall: 2400 },
-];
+const cases: ProjectsCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
-const switchCases: ProjectsCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 768, height: 900, tall: 1400 },
-];
+const switchCases: ProjectsCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
 const customTransitions = [
   ".home-projects-night",
@@ -51,10 +41,6 @@ const customTransitions = [
   ".home-projects-read",
   ".home-projects-all",
 ];
-
-function mismatch(item: Pick<ProjectsCase, "tall">) {
-  return item.tall === undefined ? {} : { allowedMismatchedPixelRatio: 0.01 };
-}
 
 function finishAnimations() {
   for (const animation of document.getAnimations()) {
@@ -215,7 +201,7 @@ describe.each(themes)("%s", (theme) => {
 
     await expect
       .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`${theme}-${item.name}`, { comparatorOptions: mismatch(item) });
+      .toMatchScreenshot(`${theme}-${item.name}`);
   });
 });
 

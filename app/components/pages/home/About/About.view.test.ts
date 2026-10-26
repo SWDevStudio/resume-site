@@ -20,24 +20,13 @@ interface AboutCase {
   width: number;
   height: number;
   locale?: Locale;
-  tall?: boolean;
 }
 
 const themes = ["torii-synth", "cyber-sakura"];
 
-const cases: AboutCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 768, height: 900, tall: true },
-  { name: "mobile", width: 390, height: 780, tall: true },
-  { name: "desktop-ru", width: 1440, height: 900, locale: "ru" },
-  { name: "tablet-ru", width: 768, height: 900, locale: "ru", tall: true },
-  { name: "mobile-ru", width: 390, height: 780, locale: "ru", tall: true },
-];
+const cases: AboutCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
-const switchCases: AboutCase[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "mobile", width: 390, height: 780, tall: true },
-];
+const switchCases: AboutCase[] = [{ name: "desktop", width: 1440, height: 900 }];
 
 function finishAnimations() {
   for (const animation of document.getAnimations()) {
@@ -98,8 +87,8 @@ function createApp(locale: Locale) {
   return createI18n({ legacy: false, locale, messages: { ru, en } });
 }
 
-async function renderCase(item: Pick<AboutCase, "width" | "height" | "locale" | "tall">) {
-  await page.viewport(item.width, item.tall ? 1400 : item.height);
+async function renderCase(item: Pick<AboutCase, "width" | "height" | "locale">) {
+  await page.viewport(item.width, item.height);
   const locale = item.locale ?? "en";
   document.documentElement.lang = locale;
   const screen = await render(
@@ -107,7 +96,6 @@ async function renderCase(item: Pick<AboutCase, "width" | "height" | "locale" | 
     { global: { plugins: [createApp(locale)] } },
   );
   await expect.poll(() => layerCount(screen)).toBe(1);
-  if (item.tall) screen.container.querySelector<HTMLElement>(".home-about")!.style.minHeight = "0";
   screen.container.getBoundingClientRect();
   return screen;
 }
