@@ -28,7 +28,7 @@ const ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const CYRILLIC = /[Ѐ-ӿ]/;
 
 const PROJECT_CANON_KEYS = ["id", "isFavorite", "name", "preview", "stack", "tags", "tone", "url"];
-const PROJECT_CANON_OPTIONAL_KEYS = ["caseStack", "previewMobile"];
+const PROJECT_CANON_OPTIONAL_KEYS = ["caseStack", "previewFrame", "previewMobile"];
 const PROJECT_TEXT_KEYS = ["description", "headline", "previewAlt", "result", "role", "subtitle"];
 const CATALOG = [
   "qwixit",
@@ -369,6 +369,7 @@ describe.each(LOCALES)("the cases built for %s", (locale: Locale) => {
         image: project.preview,
         imageMobile: project.previewMobile ?? null,
         imageAlt: text.items[id]!.previewAlt,
+        frame: project.previewFrame ?? "devices",
       });
       expect(dataOf<ProjectCaseMetaData>(blocks, "ProjectCaseMeta")).toEqual({
         tags: project.tags.map((tag) => text.tags[tag]),

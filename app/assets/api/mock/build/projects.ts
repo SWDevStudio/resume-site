@@ -26,6 +26,7 @@ export function buildProjects(src: ProjectsSources, locale: Locale): ProjectView
       host: project.url ? new URL(project.url).host : null,
       preview: project.preview,
       previewMobile: project.previewMobile ?? null,
+      previewFrame: project.previewFrame ?? "devices",
       previewAlt: text.previewAlt,
       subtitle: text.subtitle,
       headline: text.headline,
@@ -62,6 +63,7 @@ export function buildCase(
       image: project.preview,
       imageMobile: project.previewMobile,
       imageAlt: project.previewAlt,
+      frame: project.previewFrame,
     },
     ProjectCaseMeta: { tags: project.tags, stack: src.projects[position]!.caseStack ?? [] },
     ProjectCaseNext: {

@@ -175,7 +175,12 @@ describe("buildCase", () => {
       },
       {
         component: "ProjectCaseCover",
-        data: { image: "alpha/media/preview.svg", imageMobile: null, imageAlt: "Ал" },
+        data: {
+          image: "alpha/media/preview.svg",
+          imageMobile: null,
+          imageAlt: "Ал",
+          frame: "devices",
+        },
       },
       {
         component: "ProjectCaseMeta",

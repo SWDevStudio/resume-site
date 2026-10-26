@@ -9,6 +9,8 @@ import type { Locale } from "../../const/locale";
 
 export type Tone = "primary" | "secondary" | "accent";
 
+export type PreviewFrame = "devices" | "terminal";
+
 export type StackRef =
   | string
   | {
@@ -29,6 +31,7 @@ export interface ProjectCanon {
   url: string | null;
   preview: string;
   previewMobile?: string;
+  previewFrame?: PreviewFrame;
   tags: string[];
   stack: StackRef[];
   caseStack?: ProjectStackItem[];
@@ -136,6 +139,7 @@ export interface ProjectView {
   host: string | null;
   preview: string;
   previewMobile: string | null;
+  previewFrame: PreviewFrame;
   previewAlt: string;
   subtitle: string;
   headline: string;

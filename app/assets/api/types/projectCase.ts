@@ -1,4 +1,4 @@
-import type { ProjectStackItem, Tone } from "./catalog";
+import type { PreviewFrame, ProjectStackItem, Tone } from "./catalog";
 
 export type ProjectCaseTone = Tone;
 
@@ -20,6 +20,7 @@ export interface ProjectCaseCoverData {
   image: string;
   imageMobile: string | null;
   imageAlt: string;
+  frame: PreviewFrame;
 }
 
 export interface ProjectCaseMetaData {
