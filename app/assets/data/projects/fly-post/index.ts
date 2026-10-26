@@ -39,7 +39,8 @@ const project = {
       headline: "MVP за ~5 недель командой из трёх разработчиков",
       description:
         "Внутренний сервис, через который экипажи самолётов берут попутную почту на свой рейс и получают деньги за доставку.",
-      previewAlt: "Профиль в Fly Post: таблица отправлений со статусами",
+      previewAlt:
+        "Профиль в Fly Post: таблица отправлений со статусами и карточка выбранного отправления",
       role: "Вёл проект как подрядчик: дизайн и UI-кит, архитектура, бэкенд на NestJS, фронтенд на Vue 3 вместе с двумя разработчиками и ревью их кода.",
       result:
         "Заказчик принял MVP, собранный примерно за 5 недель: фронтенд и бэкенд шли параллельно по контракту в Swagger.",
@@ -49,7 +50,8 @@ const project = {
       headline: "An MVP in ~5 weeks with a team of three developers",
       description:
         "An internal service where flight crews pick up mail for their own flight and get paid for delivering it.",
-      previewAlt: "Profile in Fly Post: a table of shipments with statuses",
+      previewAlt:
+        "Profile in Fly Post: a table of shipments with statuses and the selected shipment's card",
       role: "Led the project as a contractor: design and the UI kit, architecture, the NestJS backend, the Vue 3 frontend together with two developers and reviews of their code.",
       result:
         "The client accepted the MVP built in about 5 weeks: the frontend and the backend went in parallel against a Swagger API contract.",
