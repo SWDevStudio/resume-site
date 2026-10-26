@@ -3,9 +3,10 @@ import tailwindcss from "@tailwindcss/vite";
 import vue from "@vitejs/plugin-vue";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
+import { responsiveImages } from "./imagetools.config";
 
 export default defineConfig({
-  plugins: [vue(), tailwindcss()],
+  plugins: [vue(), tailwindcss(), responsiveImages()],
   resolve: {
     alias: {
       "~": fileURLToPath(new URL("./app", import.meta.url)),
