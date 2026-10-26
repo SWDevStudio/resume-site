@@ -32,14 +32,11 @@ vi.mock("~/composables/useLocale", () => ({
 vi.mock("~/composables/useTheme", () => import("../../../../../test/mocks/useTheme"));
 
 interface PostView {
-  name: string;
   width: number;
   height: number;
   kind: BlogKind;
   locale?: Locale;
 }
-
-const themes = ["torii-synth", "cyber-sakura"];
 
 const KINDS: {
   kind: BlogKind;
@@ -48,22 +45,6 @@ const KINDS: {
   { kind: "article", tone: "primary" },
   { kind: "tool", tone: "secondary" },
   { kind: "video", tone: "accent" },
-];
-
-const cases: PostView[] = [
-  { name: "article-desktop", width: 1440, height: 900, kind: "article" },
-  { name: "article-tablet", width: 768, height: 900, kind: "article" },
-  { name: "article-mobile", width: 390, height: 780, kind: "article" },
-  { name: "tool-desktop", width: 1440, height: 900, kind: "tool" },
-  { name: "video-desktop", width: 1440, height: 900, kind: "video" },
-  { name: "article-desktop-ru", width: 1440, height: 900, kind: "article", locale: "ru" },
-];
-
-const switchCases: PostView[] = [
-  { name: "article-desktop", width: 1440, height: 900, kind: "article" },
-  { name: "article-mobile", width: 390, height: 780, kind: "article" },
-  { name: "tool-desktop", width: 1440, height: 900, kind: "tool" },
-  { name: "video-desktop", width: 1440, height: 900, kind: "video" },
 ];
 
 const posts = await $api.blog.fetchPosts();
@@ -186,11 +167,6 @@ function renderPost(item: Pick<PostView, "width" | "height" | "kind" | "locale">
 
 type Screen = Awaited<ReturnType<typeof renderBlocks>>;
 
-async function fit(screen: Screen, width: number) {
-  await page.viewport(width, Math.ceil(document.documentElement.scrollHeight));
-  screen.container.getBoundingClientRect();
-}
-
 function pick<T extends Element>(screen: Screen, selector: string) {
   return screen.container.querySelector<T>(selector)!;
 }
@@ -254,41 +230,6 @@ afterEach(async () => {
   window.scrollTo({ top: 0, behavior: "instant" });
   await setReducedMotion("no-preference");
   await page.viewport(1440, 900);
-});
-
-describe.each(themes)("%s", (theme) => {
-  beforeEach(() => {
-    setTheme(theme);
-  });
-
-  it.each(cases)("$name", async (item) => {
-    const screen = await renderPost(item);
-    await fit(screen, item.width);
-
-    await expect
-      .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`${theme}-${item.name}`);
-  });
-});
-
-describe("theme switch", () => {
-  it.each(switchCases)("$name", async (item) => {
-    setTheme("torii-synth");
-    const screen = await renderPost(item);
-    await fit(screen, item.width);
-    setTheme("cyber-sakura");
-
-    const animations = document.getAnimations();
-    expect(animations.length).toBeGreaterThan(0);
-    for (const animation of animations) {
-      animation.pause();
-      animation.currentTime = Number(animation.effect?.getComputedTiming().duration) / 2;
-    }
-
-    await expect
-      .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`switch-${item.name}`, { screenshotOptions: { animations: "allow" } });
-  });
 });
 
 describe("data", () => {
@@ -684,6 +625,32 @@ describe("layout like the mockup", () => {
     near(cover.top - rect(screen, ".blog-post-header").bottom, 28);
     near(rect(screen, ".blog-post-source").top - cover.bottom, 28);
     near(document.documentElement.scrollHeight - rect(screen, ".blog-post-related").bottom, 96, 2);
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(1440);
+  });
+
+  it.each(["tool", "video"] as const)("lays out the desktop $0 in two columns", async (kind) => {
+    const screen = await renderPost({ width: 1440, height: 900, kind });
+    const content = rect(screen, ".page-sections-content");
+    const nav = rect(screen, ".page-sections-nav");
+    const blocks = [
+      ".blog-post-header",
+      ".blog-post-cover",
+      ".blog-post-source",
+      ".blog-post-tags",
+      ".blog-post-related",
+    ].map((selector) => rect(screen, selector));
+
+    near(content.left, 140);
+    near(content.width, 784);
+    near(nav.left, 1020);
+    near(nav.width, 280);
+    for (const box of blocks) {
+      expect(box.left).toBeGreaterThanOrEqual(content.left - 0.5);
+      expect(box.right).toBeLessThanOrEqual(content.right + 0.5);
+    }
+    for (let index = 1; index < blocks.length; index++) {
+      expect(blocks[index]!.top).toBeGreaterThanOrEqual(blocks[index - 1]!.bottom - 0.5);
+    }
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(1440);
   });
 

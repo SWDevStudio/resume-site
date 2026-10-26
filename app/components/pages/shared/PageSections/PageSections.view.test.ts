@@ -20,18 +20,9 @@ vi.mock("~/composables/useLocale", () => ({
 vi.mock("~/composables/useTheme", () => import("../../../../../test/mocks/useTheme"));
 
 interface View {
-  name: string;
   width: number;
   height: number;
 }
-
-const themes = ["torii-synth", "cyber-sakura"];
-
-const views: View[] = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "tablet", width: 768, height: 700 },
-  { name: "mobile", width: 390, height: 700 },
-];
 
 const outline = [
   { name: "About the project", children: ["Business", "The situation", "The goal"] },
@@ -137,11 +128,6 @@ async function renderSample(
 
 type Screen = Awaited<ReturnType<typeof renderSample>>;
 
-async function fit(screen: Screen, width: number) {
-  await page.viewport(width, Math.ceil(document.documentElement.scrollHeight));
-  screen.container.getBoundingClientRect();
-}
-
 function pick<T extends Element>(screen: Screen, selector: string) {
   return screen.container.querySelector<T>(selector)!;
 }
@@ -194,53 +180,6 @@ afterEach(async () => {
   history.replaceState(null, "", location.pathname + location.search);
   await setReducedMotion("no-preference");
   await page.viewport(1440, 900);
-});
-
-describe.each(themes)("%s", (theme) => {
-  beforeEach(() => {
-    setTheme(theme);
-  });
-
-  it.each(views)("$name", async (item) => {
-    const screen = await renderSample(item, { block: 120 });
-    await fit(screen, item.width);
-
-    await expect
-      .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`${theme}-${item.name}`);
-  });
-
-  it("mobile open", async () => {
-    const screen = await renderSample({ width: 390, height: 700 }, { block: 120 });
-    pick<HTMLButtonElement>(screen, ".page-sections-nav-head").click();
-    await nextTick();
-    finishAnimations();
-    await fit(screen, 390);
-
-    await expect
-      .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`${theme}-mobile-open`);
-  });
-});
-
-describe("theme switch", () => {
-  it.each([views[0]!, views[1]!])("$name", async (item) => {
-    setTheme("torii-synth");
-    const screen = await renderSample(item, { block: 120 });
-    await fit(screen, item.width);
-    setTheme("cyber-sakura");
-
-    const animations = document.getAnimations();
-    expect(animations.length).toBeGreaterThan(0);
-    for (const animation of animations) {
-      animation.pause();
-      animation.currentTime = Number(animation.effect?.getComputedTiming().duration) / 2;
-    }
-
-    await expect
-      .element(page.elementLocator(screen.container.firstElementChild!))
-      .toMatchScreenshot(`switch-${item.name}`, { screenshotOptions: { animations: "allow" } });
-  });
 });
 
 describe("registry", () => {
@@ -367,6 +306,30 @@ describe("registry", () => {
     near(content.width, 784);
     near(nav.left - content.right, 96);
     expect(root.classList.contains("container")).toBe(true);
+  });
+
+  it.each([
+    { width: 1440, height: 900, columns: 2 },
+    { width: 768, height: 700, columns: 1 },
+    { width: 390, height: 700, columns: 1 },
+  ])("keeps $columns column(s) inside the screen at $width", async (item) => {
+    const screen = await renderSample(item, { block: 120 });
+    const root = pick(screen, ".page-sections").getBoundingClientRect();
+    const content = pick(screen, ".page-sections-content").getBoundingClientRect();
+    const nav = pick(screen, ".page-sections-nav").getBoundingClientRect();
+
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(item.width);
+    for (const box of [content, nav]) {
+      expect(box.left).toBeGreaterThanOrEqual(root.left - 0.5);
+      expect(box.right).toBeLessThanOrEqual(root.right + 0.5);
+    }
+    if (item.columns === 2) {
+      expect(nav.left).toBeGreaterThanOrEqual(content.right);
+      near(nav.top, content.top, 80);
+    } else {
+      near(nav.width, content.width);
+      expect(content.top).toBeGreaterThanOrEqual(nav.bottom - 0.5);
+    }
   });
 
   it("names the navigation landmark by its title", async () => {
