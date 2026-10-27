@@ -87,7 +87,7 @@ const pochtoyProstobox = [
                     },
                     {
                       value: "7,000+",
-                      label: "parcels a week by the counter on the sites",
+                      label: "parcels a week",
                     },
                     {
                       value: "20,000+",
@@ -99,7 +99,7 @@ const pochtoyProstobox = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The numbers were taken from the sites in October 2026.",
+                  text: "The sites' statistics for October 2026 are shown as an example.",
                 },
               },
             ],

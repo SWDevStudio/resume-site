@@ -87,7 +87,7 @@ const pochtoyProstobox = [
                     },
                     {
                       value: "7 000+",
-                      label: "посылок в неделю по счётчику на сайтах",
+                      label: "посылок в неделю",
                     },
                     {
                       value: "20 000+",
@@ -99,7 +99,7 @@ const pochtoyProstobox = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "Цифры взяты с сайтов в октябре 2026 года.",
+                  text: "Для примера приведена статистика сайтов за октябрь 2026 года.",
                 },
               },
             ],
