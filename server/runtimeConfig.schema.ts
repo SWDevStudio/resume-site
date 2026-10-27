@@ -21,6 +21,11 @@ const assistant = z
     },
   );
 
+const telegram = z.object({
+  botToken: z.string(),
+  chatId: z.union([z.string(), z.number()]),
+});
+
 const publicConfig = z
   .object({
     i18n: z.object({ baseUrl: z.string() }).passthrough(),
@@ -28,6 +33,6 @@ const publicConfig = z
   })
   .passthrough();
 
-const runtimeConfigSchema = z.object({ assistant, public: publicConfig }).passthrough();
+const runtimeConfigSchema = z.object({ assistant, telegram, public: publicConfig }).passthrough();
 
 export default { "~standard": runtimeConfigSchema["~standard"] };

@@ -63,6 +63,10 @@ export default defineNuxtConfig({
       githubToken: "",
       secret: "",
     },
+    telegram: {
+      botToken: "",
+      chatId: "",
+    },
     public: {
       yandexMetrikaId: "",
     },
