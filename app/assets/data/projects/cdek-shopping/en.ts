@@ -70,7 +70,13 @@ const cdekShopping = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The service handles customs and logistics, and its own logistics company carries the delivery. If a product is not in the catalog, the customer can leave a purchase request.",
+                  text: "The service handles customs clearance and logistics, and orders are delivered by the group's own logistics company.",
+                },
+              },
+              {
+                component: "ProjectCaseText",
+                data: {
+                  text: "If the product is not in the catalog, the customer leaves a purchase request: sends a link to the product in a foreign store and specifies the size, color and quantity. A manager checks availability and calculates the final price in rubles with delivery and the service fee. After confirmation and payment, the service buys the product, and the order appears in the account on the “By purchase request” tab.",
                 },
               },
             ],
@@ -85,13 +91,13 @@ const cdekShopping = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The business wanted to launch as soon as possible, so the new service was built on the CDEK Market codebase: jQuery and Blade, files of 6,000+ lines. The customer account there looked straight out of the 2000s, and every action reloaded the page.",
+                  text: "The business wanted to launch as soon as possible, so the new service was built on the CDEK Market codebase: jQuery and Blade, files of 6,000+ lines. The customer account there was built on server templates with no interactivity: every action reloaded the page, and the customer waited for the server at every step.",
                 },
               },
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The business had no interest in tech debt, so refactoring had to fit into the same deadlines as the launch.",
+                  text: "The accumulated tech debt slowed development down and was waiting to be solved, but the plan had no separate time for refactoring: it had to run alongside the launch, on the same deadlines.",
                 },
               },
             ],
@@ -130,7 +136,7 @@ const cdekShopping = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The customer moves between the account sections without a reload. The tabs show counters: how many orders are waiting for payment and how many products have no review yet.",
+                  text: "The account is built as one Vue app: each section is a separate module with its own Vuex state and API requests. So the customer moves between sections without a page reload, and a new section can be added without touching the others.",
                 },
               },
               {
@@ -139,23 +145,27 @@ const cdekShopping = [
                   steps: [
                     {
                       title: "My details",
-                      text: "Contacts with a separate email and phone change, details for customs clearance",
+                      text: "Forms for contacts and customs clearance details, with the email and phone change moved into a separate flow",
                     },
                     {
                       title: "Orders",
-                      text: "“All”, “Unpaid” and “By purchase request” tabs, a filter, the status of every item, a separate order page",
+                      text: "“All”, “Unpaid” and “By purchase request” tabs, a filter and pagination with no reload, the status of every item, a separate order page",
                     },
                     {
                       title: "My points",
-                      text: "Active, accrued and frozen points, the points history",
+                      text: "Active, accrued and frozen points from the loyalty program API, the points history",
                     },
                     {
                       title: "Delivery address",
-                      text: "Default address, delivery to the door or to a pickup point",
+                      text: "Choosing the default address, switching between delivery to the door and to a pickup point",
                     },
                     {
                       title: "Reviews",
-                      text: "Products waiting for a review and reviews already written",
+                      text: "Products waiting for a review and reviews already written, in one section",
+                    },
+                    {
+                      title: "Navigation",
+                      text: "Counters of unpaid orders and products without a review on the tabs, hash routing, a separate mobile navigation",
                     },
                   ],
                 },
@@ -257,7 +267,7 @@ const cdekShopping = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The account works with customers' personal data, including the data needed for customs clearance. The backend returns sensitive fields masked, and the interface shows them in full only after the “Show data” button.",
+                  text: "The account works with customers' personal data, including passport details for customs clearance. They are stored encrypted in the database, and the profile API responses return them only masked. To see the data in full, the account makes a separate request to a protected endpoint. The server checks the user's session and permissions, decrypts the data and returns it only in that response. On the client it is not stored in Vuex or cached: once the block is closed, the mask is shown again.",
                 },
               },
             ],
@@ -378,8 +388,16 @@ const cdekShopping = [
                 label: "base UI components of the account",
               },
               {
-                value: "2 years",
-                label: "on the project",
+                value: "≤ 2.5 s",
+                label: "LCP (Largest Contentful Paint)",
+              },
+              {
+                value: "≤ 200 ms",
+                label: "INP (Interaction to Next Paint)",
+              },
+              {
+                value: "≤ 0.1",
+                label: "CLS (Cumulative Layout Shift)",
               },
             ],
           },

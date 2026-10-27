@@ -36,7 +36,7 @@ const project = {
   text: {
     ru: {
       subtitle: "ЗАРУБЕЖНЫЙ ШОПИНГ · ЛИЧНЫЙ КАБИНЕТ",
-      headline: "На 37% меньше регрессионных багов после рефакторинга легаси",
+      headline: "На 37% меньше регрессионных багов",
       description:
         "Сервис-агент группы СДЭК для заказа товаров зарубежных брендов из 14 стран с оплатой российской картой и ценами в рублях.",
       previewAlt: "Главная страница сайта CDEK.Shopping",
@@ -46,7 +46,7 @@ const project = {
     },
     en: {
       subtitle: "SHOPPING FROM ABROAD · CUSTOMER ACCOUNT",
-      headline: "37% fewer regression bugs after refactoring the legacy code",
+      headline: "37% fewer regression bugs",
       description:
         "A CDEK group agent service for ordering products of foreign brands from 14 countries, paid with a Russian card at prices in rubles.",
       previewAlt: "Home page of the CDEK.Shopping website",
