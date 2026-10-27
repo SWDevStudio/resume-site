@@ -32,11 +32,11 @@ const brendmart = [
       items: [
         {
           title: "Design and UI kit",
-          text: "The whole site design is mine. The UI kit is built on daisyUI, so the look changes by switching the theme.",
+          text: "The design is built around the product: the interface does not compete with the photos of brands from mass market to luxury, and the catalog, product page and cart work the same way so customers quickly find their way around the store. The UI kit is built on daisyUI: components take their colors and shapes from the theme, so the look changes by switching the theme rather than redoing the layout.",
         },
         {
           title: "Nuxt storefront",
-          text: "Proposed and introduced Nuxt: the storefront runs as a separate server-rendered app rather than part of a monolith.",
+          text: "Proposed and introduced Nuxt: the storefront runs as a separate server-rendered app rather than part of a monolith. For a store with a catalog of more than 2 million products, this means sales from search: search engines get a ready page with a description and markup and index the whole catalog. And a separate app evolves without waiting for backend releases.",
         },
         {
           title: "Admin panel and API",
@@ -44,7 +44,7 @@ const brendmart = [
         },
         {
           title: "Review",
-          text: "Reviewed the junior frontend developer's merge requests.",
+          text: "Reviewed the junior frontend developer's merge requests. Reviews kept the code in one style and caught bugs before the test stand, and through them the junior developer picked up the project's practices faster.",
         },
       ],
     },
@@ -97,19 +97,19 @@ const brendmart = [
                   steps: [
                     {
                       title: "Catalog",
-                      text: "The price already includes delivery and customs duties",
+                      text: "The price already includes delivery and customs duties. In development: server rendering of a catalog of 2M+ products, a cached category tree",
                     },
                     {
                       title: "Concierge",
-                      text: "If an item is not in the catalog, the customer can leave a purchase request",
+                      text: "If an item is not in the catalog, the customer can leave a purchase request. In development: a request form with zod validation",
                     },
                     {
                       title: "Cart",
-                      text: "The cart and favorites live in a guest session, no sign-up needed",
+                      text: "The cart and favorites live in a guest session, no sign-up needed. In development: a guest session through a proxy in a signed cookie, cart and favorites state in Pinia",
                     },
                     {
                       title: "Delivery",
-                      text: "The item is bought from a seller in Europe, express delivery from 5 days",
+                      text: "The item is bought from a seller in Europe, express delivery from 5 days. In development: the order goes to the admin panel, where an operator buys the item and handles the delivery",
                     },
                   ],
                 },
@@ -130,28 +130,29 @@ const brendmart = [
                     {
                       label: "STOREFRONT",
                       title: "Nuxt storefront",
-                      text: "A separate server-rendered app on Nuxt 4, Pinia, Tailwind and daisyUI. Page data arrives in _payload.json.",
-                    },
-                    {
-                      label: "API",
-                      title: "Public REST",
-                      text: "Cart, favorites, a cached category tree. The guest session goes through a proxy and is kept in a signed cookie.",
-                      code: ["/api/public/v1", "/cached/categories-tree", "/proxy/session/guest"],
+                      text: "A separate server-rendered app on Nuxt 4, Pinia, Tailwind and daisyUI. Page data arrives in _payload.json. Nuxt was chosen for server rendering, which a large catalog needs for SEO. Pinia keeps the shared state of the cart and favorites, and Tailwind with daisyUI lets the look change through the theme.",
                     },
                     {
                       label: "ADMIN",
                       title: "Operator admin panel",
-                      text: "The private part where the operator runs the store.",
+                      text: "The private part of the store for staff. The operator receives orders and purchase requests, buys the item from the seller and handles the delivery. The panel is built on the same UI kit as the storefront, so new screens are made from ready components.",
+                    },
+                    {
+                      label: "API",
+                      title: "Public REST",
+                      text: "Cart, favorites, a cached category tree. The guest session goes through a proxy and is kept in a signed cookie. The category tree is cached because it rarely changes but is needed on every page. The signed cookie keeps the cart without sign-up and prevents the session from being forged.",
+                      code: ["/api/public/v1", "/cached/categories-tree", "/proxy/session/guest"],
+                      wide: true,
                     },
                     {
                       label: "BACKEND",
                       title: "Services and data",
-                      text: "Laravel and Go, queues on RabbitMQ. PostgreSQL, Redis, Elasticsearch, ClickHouse, S3 / MinIO.",
+                      text: "Laravel and Go, queues on RabbitMQ. PostgreSQL, Redis, Elasticsearch, ClickHouse, S3 / MinIO. Laravel speeds up business logic development, and Go handles the high-load services. RabbitMQ moves heavy tasks to the background, Elasticsearch searches 2 million products, and ClickHouse stores analytics.",
                     },
                     {
                       label: "INFRA",
                       title: "Infrastructure",
-                      text: "Docker, Traefik, Kubernetes and Argo CD, builds in GitLab CI. Logs in ELK, metrics in Grafana and Prometheus.",
+                      text: "Docker, Traefik, Kubernetes and Argo CD, builds in GitLab CI. Logs in ELK, metrics in Grafana and Prometheus. Kubernetes and Argo CD update the store without downtime and roll back a release in one step. ELK, Grafana and Prometheus reveal errors and load before customers notice them.",
                     },
                   ],
                 },
@@ -195,7 +196,7 @@ const brendmart = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "We started adding accessibility support to the storefront: semantic page landmarks, alt text on images, labels on buttons and links, zoom is not blocked.",
+                  text: "Accessibility is built into the storefront to the extent needed: semantic page landmarks, alt text on images, labels on buttons and links, zoom is not blocked. Semantics works for three sides at once. Customers with a screen reader or a keyboard can place an order. Search engines understand the page structure better and rank it more accurately. And developers find clear markup easier to maintain.",
                 },
               },
             ],
@@ -207,6 +208,12 @@ const brendmart = [
             id: "integrations",
             name: "Integrations",
             blocks: [
+              {
+                component: "ProjectCaseText",
+                data: {
+                  text: "The integrations cover tasks the store does not need to build from scratch. Card payments take money right on the site. Jivo online chat lets customers quickly ask about a product or an order without leaving the page. Yandex Metrica shows where customers come from and at which step they leave.",
+                },
+              },
               {
                 component: "ProjectCaseIntegrations",
                 data: {
@@ -244,7 +251,7 @@ const brendmart = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "I wrote three kinds of tests: component tests in Vitest, visual regression tests that compare a block with a reference screenshot, and E2E tests in Playwright for critical scenarios.",
+                  text: "The project has three kinds of tests. Component tests in Vitest check the UI kit logic. Visual regression tests compare a block with a reference screenshot and catch accidental layout changes, especially when the theme changes. E2E tests in Playwright check that a customer can get from the catalog to an order.",
                 },
               },
               {
@@ -273,6 +280,12 @@ const brendmart = [
                 component: "ProjectCaseText",
                 data: {
                   text: "Sprints lasted two weeks. At the end of each one the client saw what was done, what was not and why, and together we planned the next two weeks.",
+                },
+              },
+              {
+                component: "ProjectCaseText",
+                data: {
+                  text: "This process made it possible to ship updates every two weeks without store downtime, and frequent style changes did not break the layout or the customer's path to an order.",
                 },
               },
             ],
