@@ -3,6 +3,8 @@ import { useSafeRuntimeConfig } from "#imports";
 import runtimeConfigSchema from "../runtimeConfig.schema";
 
 export default defineNitroPlugin(() => {
+  if (import.meta.prerender) return;
+
   const result = runtimeConfigSchema["~standard"].validate(useSafeRuntimeConfig());
 
   if (result instanceof Promise) {
@@ -18,6 +20,13 @@ export default defineNitroPlugin(() => {
       return `${path || "root"}: ${issue.message}`;
     });
 
-    throw new Error(`Invalid runtime config: ${fields.join("; ")}`);
+    const message = `Invalid runtime config: ${fields.join("; ")}`;
+
+    if (import.meta.dev) {
+      console.warn(message);
+      return;
+    }
+
+    throw new Error(message);
   }
 });
