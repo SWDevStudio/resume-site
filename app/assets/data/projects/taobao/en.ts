@@ -19,7 +19,7 @@ const taobao = [
       facts: [
         { key: "role", value: "Fullstack Developer" },
         { key: "team", value: "2 fullstack developers and a junior frontend developer" },
-        { key: "duration", value: "January 2025 – March 2026" },
+        { key: "duration", value: "January 2026 – March 2026" },
         { key: "status", value: "Completed, the site is live" },
       ],
     },
@@ -32,19 +32,19 @@ const taobao = [
       items: [
         {
           title: "Design and UI kit",
-          text: "The site design is entirely mine. The UI kit is built on Tailwind and daisyUI with a custom theme, so the look changes by switching the theme.",
+          text: "The site design is entirely mine. The UI kit is built on Tailwind and daisyUI with a custom theme, so the look changes by switching the theme. For the business, this means a new style for a promotion or a rebranding can be shown and rolled out in a day, without redoing the layout.",
         },
         {
           title: "Storefront in Nuxt",
-          text: "I proposed making the storefront a separate Nuxt application with server-side rendering and built its client side myself: Pinia, Russian and English interface, the layer of API requests.",
+          text: "I proposed making the storefront a separate Nuxt application with server-side rendering: pages open faster and are indexed better by search engines, and search is a direct source of customers for the store. I built its client side myself: Pinia, Russian and English interface, the layer of API requests.",
         },
         {
           title: "Admin panel",
-          text: "The client side of the operator workspace and its requests to the backend.",
+          text: "The client side of the operator workspace and its requests to the backend. The faster an operator processes an order, the sooner the customer gets the product, so the speed of the whole service depends directly on how convenient the admin panel is.",
         },
         {
           title: "Storefront API",
-          text: "Laravel endpoints that feed the storefront.",
+          text: "Laravel endpoints that feed the storefront. The cart and favorites work without signing up, so the customer gets to the order without an extra step, and the business loses fewer customers along the way.",
         },
       ],
     },
@@ -64,7 +64,7 @@ const taobao = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The client purchases and delivers products from China and Hong Kong. Its customers live in Russia and order IKEA, Apple devices for the Hong Kong market, clothing and shoes from Farfetch, computer components.",
+                  text: "The client purchases and delivers products from China and Hong Kong. Its customers live in Russia, and for many of them the service is a way to buy what has become unavailable or noticeably more expensive in Russian stores. China and Hong Kong are major trade hubs: they sell products of global brands, including European and American ones, often cheaper than in Russia. So customers order not only Chinese products through the service, but also IKEA furniture, Apple devices for the Hong Kong market, clothing and shoes from Farfetch, and computer components.",
                 },
               },
               {
@@ -142,18 +142,19 @@ const taobao = [
                     {
                       label: "STOREFRONT",
                       title: "Storefront",
-                      text: "Nuxt 4 with server-side rendering, Pinia and Nuxt i18n, a UI kit on Tailwind and daisyUI.",
+                      text: "Nuxt 4 with server-side rendering, Pinia and Nuxt i18n, a UI kit on Tailwind and daisyUI. The server sends the browser a ready page instead of building it on the customer's device. So the catalog opens faster even on a low-end phone, and search engines see every product and bring customers from search.",
+                    },
+                    {
+                      label: "ADMIN",
+                      title: "Admin panel",
+                      text: "An internal site for the service staff that customers never see. In it, operators receive and process orders and purchase requests, check that orders are complete before shipping and update the delivery statuses the customer sees in their account.",
                     },
                     {
                       label: "API",
                       title: "Public API",
                       text: "Cart, favorites and product blocks for the home page. The guest session relies on a signed cookie, so the customer does not have to sign up in advance.",
                       code: ["/api/public/v1", "catalog/block-products"],
-                    },
-                    {
-                      label: "ADMIN",
-                      title: "Admin panel",
-                      text: "The workspace of the service operators.",
+                      wide: true,
                     },
                     {
                       label: "BACKEND",
@@ -261,6 +262,10 @@ const taobao = [
                 id: "a11y",
                 name: "Accessibility in the UI kit",
                 rows: [
+                  {
+                    key: "problem",
+                    text: "The storefront is used by very different customers: on a phone on the go, with a keyboard only, with a screen reader or with low vision. Ready-made daisyUI components do not guarantee accessibility on their own. If it is not built into the UI kit from the start, the issues spread to every page, and some customers cannot place an order.",
+                  },
                   {
                     key: "solution",
                     text: "Accessibility is built into the UI kit itself: semantic page regions, a visible focus and a logical keyboard order, alt text on images, accessible names on buttons and links. Zooming is allowed, and the screen notch on phones is taken into account.",
