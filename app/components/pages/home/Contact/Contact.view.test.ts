@@ -16,9 +16,9 @@ import "~/assets/css/main.css";
 
 vi.mock("~/composables/useTheme", () => import("../../../../../test/mocks/useTheme"));
 
-const mocks = vi.hoisted(() => ({ submit: vi.fn() }));
+const mocks = vi.hoisted(() => ({ send: vi.fn() }));
 
-vi.mock("~/assets/api", () => ({ $api: { contact: { submit: mocks.submit } } }));
+vi.mock("~/assets/api", () => ({ $api: { contact: { send: mocks.send } } }));
 
 interface ContactCase {
   name: string;
@@ -175,7 +175,7 @@ function errors(screen: Screen) {
 
 const fieldSelectors: Record<string, string> = {
   name: ".input-field:nth-of-type(1) .input",
-  email: ".input-field:nth-of-type(2) .input",
+  contact: ".input-field:nth-of-type(2) .input",
   message: ".textarea",
   consent: ".checkbox",
 };
@@ -196,7 +196,7 @@ function submit(screen: Screen) {
 
 function fillValid(screen: Screen) {
   fill(screen, "name", "John Doe");
-  fill(screen, "email", "john@example.com");
+  fill(screen, "contact", "john@example.com");
   fill(screen, "message", "Hello there");
   field(screen, "consent").click();
 }
@@ -232,8 +232,8 @@ afterAll(async () => {
 });
 
 beforeEach(() => {
-  mocks.submit.mockReset();
-  mocks.submit.mockResolvedValue(undefined);
+  mocks.send.mockReset();
+  mocks.send.mockResolvedValue(undefined);
 });
 
 afterEach(async () => {
@@ -525,10 +525,10 @@ describe("behavior", () => {
 
       expect(errors(screen)).toEqual([dictionary.name, dictionary.email, dictionary.consent]);
       expect(field(screen, "name").getAttribute("aria-invalid")).toBe("true");
-      expect(field(screen, "email").getAttribute("aria-invalid")).toBe("true");
+      expect(field(screen, "contact").getAttribute("aria-invalid")).toBe("true");
       expect(field(screen, "message").getAttribute("aria-invalid")).toBeNull();
       expect(field(screen, "consent").getAttribute("aria-invalid")).toBe("true");
-      expect(mocks.submit).not.toHaveBeenCalled();
+      expect(mocks.send).not.toHaveBeenCalled();
       expect(alerts()).toHaveLength(0);
     });
 
@@ -560,29 +560,29 @@ describe("behavior", () => {
       expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(item.width);
     });
 
-    it("rejects an invalid email", async () => {
+    it("rejects a contact shorter than 3 characters", async () => {
       const screen = await renderCase({ width: 1440, height: 900 });
 
       fill(screen, "name", "John");
-      fill(screen, "email", "not-an-email");
+      fill(screen, "contact", "ab");
       field(screen, "consent").click();
       submit(screen);
       await vi.waitFor(() => expect(errors(screen)).toHaveLength(1));
 
-      expect(errors(screen)).toEqual([en.home.contact.form.errors.emailInvalid]);
-      expect(mocks.submit).not.toHaveBeenCalled();
+      expect(errors(screen)).toEqual([en.home.contact.form.errors.contactShort]);
+      expect(mocks.send).not.toHaveBeenCalled();
     });
 
     it("needs the consent even when everything else is valid", async () => {
       const screen = await renderCase({ width: 1440, height: 900 });
 
       fill(screen, "name", "John");
-      fill(screen, "email", "john@example.com");
+      fill(screen, "contact", "john@example.com");
       submit(screen);
       await vi.waitFor(() => expect(errors(screen)).toHaveLength(1));
 
       expect(errors(screen)).toEqual([en.home.contact.form.errors.consent]);
-      expect(mocks.submit).not.toHaveBeenCalled();
+      expect(mocks.send).not.toHaveBeenCalled();
     });
 
     it("translates the shown errors when the language changes", async () => {
@@ -613,16 +613,16 @@ describe("behavior", () => {
       const screen = await renderCase({ width: 1440, height: 900 });
 
       fill(screen, "name", "  John Doe  ");
-      fill(screen, "email", " john@example.com ");
+      fill(screen, "contact", " john@example.com ");
       fill(screen, "message", "Hello there");
       field(screen, "consent").click();
       submit(screen);
 
       await vi.waitFor(() => expect(alerts(".alert-success")).toHaveLength(1));
-      expect(mocks.submit).toHaveBeenCalledTimes(1);
-      expect(mocks.submit).toHaveBeenCalledWith({
+      expect(mocks.send).toHaveBeenCalledTimes(1);
+      expect(mocks.send).toHaveBeenCalledWith({
         name: "John Doe",
-        email: "john@example.com",
+        contact: "john@example.com",
         message: "Hello there",
         consent: true,
       });
@@ -633,7 +633,7 @@ describe("behavior", () => {
       );
       await vi.waitFor(() => {
         expect(field(screen, "name").value).toBe("");
-        expect(field(screen, "email").value).toBe("");
+        expect(field(screen, "contact").value).toBe("");
         expect(field(screen, "message").value).toBe("");
         expect((field(screen, "consent") as HTMLInputElement).checked).toBe(false);
       });
@@ -656,7 +656,7 @@ describe("behavior", () => {
 
     it("keeps the button busy while the message is being sent", async () => {
       let finish: () => void = () => {};
-      mocks.submit.mockImplementation(
+      mocks.send.mockImplementation(
         () =>
           new Promise<void>((resolve) => {
             finish = resolve;
@@ -691,20 +691,20 @@ describe("behavior", () => {
     });
 
     it("sends a message only once while the button is busy", async () => {
-      mocks.submit.mockImplementation(() => new Promise(() => {}));
+      mocks.send.mockImplementation(() => new Promise(() => {}));
       const screen = await renderCase({ width: 1440, height: 900 });
 
       fillValid(screen);
       submit(screen);
-      await vi.waitFor(() => expect(mocks.submit).toHaveBeenCalledTimes(1));
+      await vi.waitFor(() => expect(mocks.send).toHaveBeenCalledTimes(1));
       pick<HTMLFormElement>(screen, ".home-contact-form").requestSubmit();
       await new Promise((resolve) => setTimeout(resolve, 150));
 
-      expect(mocks.submit).toHaveBeenCalledTimes(1);
+      expect(mocks.send).toHaveBeenCalledTimes(1);
     });
 
     it("shows an error alert and keeps the typed values when the sending fails", async () => {
-      mocks.submit.mockRejectedValue(new Error("offline"));
+      mocks.send.mockRejectedValue(new Error("offline"));
       const screen = await renderCase({ width: 1440, height: 900 });
 
       fillValid(screen);
@@ -718,7 +718,7 @@ describe("behavior", () => {
       );
       expect(alerts(".alert-success")).toHaveLength(0);
       expect(field(screen, "name").value).toBe("John Doe");
-      expect(field(screen, "email").value).toBe("john@example.com");
+      expect(field(screen, "contact").value).toBe("john@example.com");
       expect((field(screen, "consent") as HTMLInputElement).checked).toBe(true);
       expect(pick<HTMLButtonElement>(screen, ".home-contact-submit").disabled).toBe(false);
     });
@@ -844,7 +844,7 @@ describe("behavior", () => {
     });
 
     it("keeps the busy button still", async () => {
-      mocks.submit.mockImplementation(() => new Promise(() => {}));
+      mocks.send.mockImplementation(() => new Promise(() => {}));
       const screen = await renderCase({ width: 1440, height: 900 });
       const spinner = pick(screen, ".home-contact-submit-spinner");
 

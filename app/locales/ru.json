@@ -102,8 +102,8 @@
       "form": {
         "name": "Имя*",
         "namePlaceholder": "Иван Иванов",
-        "email": "Адрес электронной почты*",
-        "emailPlaceholder": "example{'@'}email.com",
+        "email": "Telegram, телефон или email*",
+        "emailPlaceholder": "Telegram, телефон или email",
         "message": "Сообщение",
         "messagePlaceholder": "Здесь есть место для вашего проекта",
         "consent": "Я подтверждаю и соглашаюсь на хранение отправленных мной данных",
@@ -112,6 +112,9 @@
           "name": "Введите имя",
           "email": "Введите адрес почты",
           "emailInvalid": "Введите корректный адрес почты",
+          "contactShort": "Минимум 3 символа",
+          "contactLong": "Не больше 200 символов",
+          "message": "Введите сообщение",
           "consent": "Нужно согласие на хранение данных"
         },
         "success": {

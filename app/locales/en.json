@@ -102,8 +102,8 @@
       "form": {
         "name": "Name*",
         "namePlaceholder": "John Doe",
-        "email": "Email Address*",
-        "emailPlaceholder": "example{'@'}email.com",
+        "email": "Telegram, phone or email*",
+        "emailPlaceholder": "Telegram, phone or email",
         "message": "Message",
         "messagePlaceholder": "There is space for your project here",
         "consent": "I acknowledge and consent to the storage of my submitted information",
@@ -112,6 +112,9 @@
           "name": "Enter your name",
           "email": "Enter your email",
           "emailInvalid": "Enter a valid email",
+          "contactShort": "At least 3 characters",
+          "contactLong": "No more than 200 characters",
+          "message": "Enter a message",
           "consent": "Consent to the storage of your data is required"
         },
         "success": {

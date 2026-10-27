@@ -14,11 +14,10 @@
         aria-required="true"
       />
       <FormInput
-        name="email"
-        type="email"
+        name="contact"
+        type="text"
         :label="t('home.contact.form.email')"
         :placeholder="t('home.contact.form.emailPlaceholder')"
-        autocomplete="email"
         aria-required="true"
       />
       <FormTextarea
@@ -83,12 +82,13 @@ const schema = computed(() =>
   toTypedSchema(
     z.object({
       name: z.string().trim().min(1, t("home.contact.form.errors.name")),
-      email: z
+      contact: z
         .string()
         .trim()
         .min(1, t("home.contact.form.errors.email"))
-        .email(t("home.contact.form.errors.emailInvalid")),
-      message: z.string().optional(),
+        .min(3, t("home.contact.form.errors.contactShort"))
+        .max(200, t("home.contact.form.errors.contactLong")),
+      message: z.string().trim().min(1, t("home.contact.form.errors.message")),
       consent: z.literal(true, {
         errorMap: () => ({ message: t("home.contact.form.errors.consent") }),
       }),
@@ -100,14 +100,14 @@ const [sending, toggleSending] = useToggle(false);
 
 const { handleSubmit, resetForm } = useForm({
   validationSchema: schema,
-  initialValues: { name: "", email: "", message: "", consent: false },
+  initialValues: { name: "", contact: "", message: "", consent: false },
 });
 
 const onSubmit = handleSubmit(async (values) => {
   if (sending.value) return;
   toggleSending(true);
   try {
-    await $api.contact.submit(values);
+    await $api.contact.send(values);
     alert.success({
       title: t("home.contact.form.success.title"),
       description: t("home.contact.form.success.description"),
