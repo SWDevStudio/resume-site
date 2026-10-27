@@ -19,7 +19,7 @@ const qwixit = [
       facts: [
         { key: "role", value: "Fullstack Developer" },
         { key: "team", value: "3 fullstack developers and a PM" },
-        { key: "duration", value: "About 3 months to production" },
+        { key: "duration", value: "3 months to launch" },
         { key: "status", value: "Completed, the site is live" },
       ],
     },
@@ -31,20 +31,20 @@ const qwixit = [
       name: "What I did",
       items: [
         {
-          title: "The whole design",
-          text: "The storefront and the admin panel. About 50 reusable components are collected in Storybook and handed over to the client's team.",
+          title: "Design",
+          text: "Designed the storefront and the admin panel. About 50 reusable components are collected in Storybook and handed over to the client's team: new pages are built from ready blocks, and after handover the client develops the store on their own, without redesigning it.",
         },
         {
-          title: "Frontend",
-          text: "Frontend architecture and the client side of the storefront and the admin panel in Vue 3 and Pinia, including the layer of requests to the backend.",
+          title: "Client side",
+          text: "Architecture and the client side of the storefront and the admin panel in Vue 3 and Pinia, including the layer of requests to the backend. The storefront and the admin panel share components and one request layer, so new sections are added quickly, and the store launched in 3 months.",
         },
         {
           title: "Storefront API",
-          text: "Laravel API endpoints that feed the storefront.",
+          text: "Laravel endpoints that feed the storefront. They return exactly what a page needs, so a catalog of a million products does not slow down, and the customer gets to the order faster.",
         },
         {
           title: "Integrations and SEO",
-          text: "Payments, online chat, all the analytics and a Telegram bot that sends a notification about every order. The team had no SEO specialist, so I worked with Yandex Webmaster myself.",
+          text: "Payments, online chat, analytics and a Telegram bot that sends a notification about every order. Yandex Metrica, Google Analytics and the VK pixel show the client where customers come from and which ads pay off. I added SEO as an extra sales channel: set up product page indexing through Yandex Webmaster so customers find products right from search.",
         },
       ],
     },
@@ -163,7 +163,7 @@ const qwixit = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The client wanted a ready-made platform, so the team took tlcommerce as the base and reworked it heavily.",
+                  text: "The client wanted to launch quickly on a ready-made platform, so the team took tlcommerce as the base and reworked it heavily. Each layer of the architecture answers a specific business need.",
                 },
               },
               {
@@ -173,23 +173,23 @@ const qwixit = [
                     {
                       label: "STOREFRONT",
                       title: "Storefront",
-                      text: "A Vue 3 SPA with Pinia and SASS. Product pages are rendered on the server by Laravel.",
+                      text: "A Vue 3 SPA with Pinia and SASS. Product pages are rendered on the server by Laravel: customers come from search for a specific product, and search engines need a ready page.",
                     },
                     {
                       label: "API",
                       title: "Modular REST",
-                      text: "Catalog, categories and site settings, menus and sliders, sections of the home page and the header, interface dictionaries.",
+                      text: "Catalog, categories and site settings, menus and sliders, sections of the home page and the header, interface dictionaries. The modules are split so the operator can change menus, banners and home page sections without developers.",
                       code: ["ecommerce-core", "theme", "widgets", "locale"],
                     },
                     {
                       label: "SERVICES",
                       title: "Go modules",
-                      text: "Heavy queries and parallel computations live in Go modules, queues run on RabbitMQ.",
+                      text: "Heavy queries and parallel computations live in Go modules, queues run on RabbitMQ. This way a catalog of a million products handles load peaks, and customers do not wait for pages to load.",
                     },
                     {
                       label: "DATA",
                       title: "Storage",
-                      text: "PostgreSQL as the main database, Elasticsearch for search and the catalog, Redis for cache and sessions, ClickHouse for analytics, S3 / MinIO for media.",
+                      text: "PostgreSQL as the main database, Elasticsearch for search and the catalog, Redis for cache and sessions, ClickHouse for analytics, S3 / MinIO for media. Each storage has its own job: search across a million products and sales reports do not load the main database that holds the orders.",
                     },
                   ],
                 },
@@ -206,7 +206,7 @@ const qwixit = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The operator manages orders, products, promo codes and bonuses, changes banners and turns on holiday themes, for example for New Year. No release is needed for that: the home page and the header are assembled from widgets that come from the API.",
+                  text: "The operator manages orders, products, promo codes and bonuses, changes banners and turns on holiday themes, for example for New Year. All of this is set up in the admin panel, which has a section for each task. No release is needed for that: the home page and the header are assembled from widgets that come from the API.",
                 },
               },
               {
@@ -242,7 +242,7 @@ const qwixit = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The catalog is filled by parsing the websites of the stores the client is ready to deliver from.",
+                  text: "The catalog is filled automatically, by parsing. A special program goes through the websites of the US stores the client is ready to deliver from and collects their products: names, photos, prices and availability. This is how the catalog reached about a million products without adding each item by hand.",
                 },
               },
             ],
@@ -272,13 +272,13 @@ const qwixit = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "I wrote component tests in Vitest, visual regression tests against reference screenshots of blocks and E2E tests in Playwright for the critical scenarios.",
+                  text: "The project has three kinds of tests: component tests in Vitest, visual regression tests against reference screenshots of blocks and E2E tests in Playwright for the critical scenarios, from the catalog to payment. They catch bugs before the release, not after customer complaints.",
                 },
               },
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "Every task passes CI checks and a test stand, then on the planned release date it goes to a preprod stand identical to production. After acceptance the release rolls out to production without downtime, and in case of trouble it can be quickly rolled back to the previous stable version.",
+                  text: "Every task passes CI checks and a test stand, then on the planned release date it goes to a pre-release stand identical to the live site. After acceptance the release rolls out to the live site without downtime, and in case of trouble it can be quickly rolled back to the previous stable version.",
                 },
               },
               {
@@ -287,14 +287,14 @@ const qwixit = [
                   stages: [
                     { name: "develop", next: "test stand" },
                     { name: "preprod", next: "acceptance" },
-                    { name: "master", next: "production without downtime" },
+                    { name: "master", next: "live site without downtime" },
                   ],
                 },
               },
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "We worked in two-week sprints. After each one we showed the client what was done, what was not and why, and agreed on the plan for the next two weeks.",
+                  text: "The team worked in two-week sprints. After each one the client saw what was done, what was not and why, and agreed on the plan for the next two weeks together with the team. The well-tuned process directly shaped the result: the store launched in 3 months, releases did not break checkout, and 2.5 months after launch the client reached the goal of 300+ orders a month.",
                 },
               },
               {
@@ -334,10 +334,6 @@ const qwixit = [
                   {
                     key: "result",
                     text: "Product pages are served from the server, and search engines see the H1, the price and the schema.org markup: Product, BreadcrumbList, Organization, FAQPage.",
-                  },
-                  {
-                    key: "retro",
-                    text: "I would move the client side to a separate Nuxt app: the catalog is only partly rendered on the server, and the home page and the information pages stayed client-side.",
                   },
                 ],
               },
@@ -397,7 +393,7 @@ const qwixit = [
         {
           component: "ProjectCaseText",
           data: {
-            text: "The client's goal of 300+ orders a month was reached a few months after launch.",
+            text: "The client's goal of 300+ orders a month was reached 2.5 months after launch.",
           },
         },
       ],
