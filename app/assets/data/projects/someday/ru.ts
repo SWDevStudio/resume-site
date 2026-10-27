@@ -62,7 +62,7 @@ const someday = [
     component: "ProjectCaseChapter",
     data: {
       id: "context",
-      name: "Контекст и точка А",
+      name: "Контекст",
       blocks: [
         {
           component: "ProjectCaseChapter",
