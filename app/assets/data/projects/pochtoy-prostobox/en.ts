@@ -73,6 +73,35 @@ const pochtoyProstobox = [
                   text: "The company runs two brands on one platform. Pochtoy.com has been operating since 2008. Prostobox is the budget brand with delivery from $3.99 per parcel, and 79% of its shipments come from resellers and entrepreneurs.",
                 },
               },
+              {
+                component: "ProjectCaseResults",
+                data: {
+                  stats: [
+                    {
+                      value: "2.6M",
+                      label: "parcels shipped by Pochtoy.com since 2008",
+                    },
+                    {
+                      value: "200k+",
+                      label: "parcels shipped by Prostobox",
+                    },
+                    {
+                      value: "7,000+",
+                      label: "parcels a week by the counter on the sites",
+                    },
+                    {
+                      value: "20,000+",
+                      label: "Pochtoy.com customers",
+                    },
+                  ],
+                },
+              },
+              {
+                component: "ProjectCaseText",
+                data: {
+                  text: "The numbers were taken from the sites in October 2026.",
+                },
+              },
             ],
           },
         },
@@ -85,13 +114,13 @@ const pochtoyProstobox = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The team ran the sites under a support contract: the client paid monthly, and tasks were taken as they came. There were two main goals: keep the sites stable and make them load faster.",
+                  text: "The team maintained and developed the sites of both brands. There were two main goals. The first was stability: the sites had to run without failures in all four languages, and new features must not break the code shared by the two brands. The second was speed: the storefront had to serve pages faster, especially on mobile internet.",
                 },
               },
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "There are no speed measurements from before the work started, but by our estimate some pages took more than 5 seconds to load. The storefront had no pagination, no lazy loading of images and lacked other basics.",
+                  text: "Storefront pages took more than 5 seconds to load. Lists such as reviews were rendered in full with no pagination, all images loaded at once, and scripts and styles came in one shared bundle: on the Pochtoy home page the libraries alone weighed 930 KB.",
                 },
               },
             ],
@@ -115,7 +144,7 @@ const pochtoyProstobox = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "Both brands run on one Laravel backend: a shared session, the same paths and the same functions in the scripts. Each brand has its own domain, and its styles and scripts are layered on top of the shared ones.",
+                  text: "I started working on the problems with the architecture: it determined what could be sped up without breaking the other brand. Both brands run on one Laravel backend: a shared session, the same paths and the same functions in the scripts, so any change to the shared code affects both sites. Each brand kept its own domain, with its styles and scripts layered on top of the shared ones. This made it possible to split resources by page and brand, and to plug in new interactive parts as separate Vue 3 widgets without rewriting the server pages.",
                 },
               },
               {
@@ -164,7 +193,7 @@ const pochtoyProstobox = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "A customer writes a review of the service on an external platform and gets money to their balance for it. I built this TypeScript module: the frontend and the queries.",
+                  text: "Review Cashback is a feature that motivates customers to talk about the service on external platforms: for a review, the customer gets money to their balance. For the client, it brings a stream of genuine reviews where new customers read them — on maps, social networks and Trustpilot. Reviews with a photo and a tracking number build trust in the service, and the money stays on the balance and comes back with the next parcel. I built this TypeScript module: the frontend and the queries.",
                 },
               },
               {
@@ -282,6 +311,24 @@ const pochtoyProstobox = [
                   },
                 ],
               },
+              {
+                id: "release",
+                name: "Slow delivery of new features",
+                rows: [
+                  {
+                    key: "problem",
+                    text: "The storefront was built with outdated tools: jQuery, Laravel Mix and one shared bundle with no typing and no tests. Every new feature needed manual checks on both brands, so it took a long time to reach production.",
+                  },
+                  {
+                    key: "solution",
+                    text: "I started building new interactive parts as Vue 3 and TypeScript widgets: they plug into the server page and do not touch the rest of the code. I added component, visual and E2E tests so changes are checked automatically instead of by hand on two sites.",
+                  },
+                  {
+                    key: "result",
+                    text: "The delivery calculator and Review Cashback shipped as separate modules without affecting the rest of the storefront. Regressions are caught by tests before the release.",
+                  },
+                ],
+              },
             ],
           },
         },
@@ -292,27 +339,29 @@ const pochtoyProstobox = [
     component: "ProjectCaseChapter",
     data: {
       id: "results",
-      name: "Platform scale",
+      name: "Metrics and results",
       blocks: [
         {
           component: "ProjectCaseResults",
           data: {
             stats: [
               {
-                value: "2.6M",
-                label: "parcels shipped by Pochtoy.com since 2008",
+                value: "~700 KB",
+                label: "library bundle of the Pochtoy home page instead of 930 KB",
               },
               {
-                value: "200k+",
-                label: "parcels shipped by Prostobox",
+                value: "< 5 s",
+                label: "storefront page load, down from more than 5 seconds",
               },
               {
                 value: "7,000+",
-                label: "parcels a month by the weekly counter on the sites",
+                label:
+                  "parcels a week handled by both sites without failures, while they used to slow down and crash under load",
               },
               {
-                value: "20,000+",
-                label: "Pochtoy.com customers",
+                value: "3 test types",
+                label:
+                  "component, visual and E2E tests catch regressions before the release and replace manual checks of two brands",
               },
             ],
           },
@@ -320,7 +369,7 @@ const pochtoyProstobox = [
         {
           component: "ProjectCaseText",
           data: {
-            text: "The numbers were taken from the sites in October 2026. They show the scale of the platform I worked on, not the result of my work.",
+            text: "The storefronts of both brands got pagination, lazy-loaded images and separate scripts and styles for every page. Pages now load in under 5 seconds, and the sites handle more than 7,000 parcels a week without failures, while they used to slow down and sometimes crash under such load.",
           },
         },
       ],
