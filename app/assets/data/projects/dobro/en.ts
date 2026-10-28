@@ -23,7 +23,7 @@ const dobro = [
           value: "15 people: 5 frontend, 4 backend, 2 designers, 2 QA, a PM and a DevOps engineer",
         },
         { key: "duration", value: "Since March 2026" },
-        { key: "status", value: "In development, before release" },
+        { key: "status", value: "In development, launch planned for Q1 2027" },
       ],
     },
   },
@@ -34,20 +34,20 @@ const dobro = [
       name: "What I did",
       items: [
         {
-          title: "Architecture and stack",
-          text: "Chose the stack and laid down the frontend architecture: component layers ui → form → base → pages, Server Components by default, no any and no as casts, tests for every component.",
+          title: "Code",
+          text: "The codebase has 37 pages, 20 of them in the accounts, and 110 reusable components covered by tests. I wrote the UI kit and form fields, the accounts of non-profits and donors, the non-profit and fundraiser pages, the home page, the catalog, the header and footer, and the moderation section myself.",
         },
         {
           title: "The team",
-          text: "Joined as a developer and was made team lead a month later. Set tasks and priorities for four more developers, reviewed and merged PRs, wrote the guidelines and the onboarding document.",
+          text: "Set tasks and priorities for four frontend developers, reviewed and merged PRs. Wrote the guidelines and the onboarding document so new developers get into the project faster and write code in one style.",
         },
         {
-          title: "Code",
-          text: "93 tasks myself: the UI kit and form fields, the accounts of non-profits and donors, the non-profit and fundraiser pages, the home page, the catalog, the header and footer, the moderation section.",
+          title: "Architecture and stack",
+          text: "Chose the stack and laid down the frontend architecture. The client set React, and Next.js on top of it serves the fundraiser and non-profit pages ready-made from the server: search engines find them, and a donor sees the fundraiser at once, without waiting for it to load. Strict TypeScript with no any and no as casts catches errors before release, which matters where money goes through the site. Components are split into layers ui → form → base → pages, Server Components by default, and every component has tests.",
         },
         {
           title: "Performance",
-          text: "All of the optimization, from measurements to the report: 340 → 4552 rps across 17 routes, median response 919 → 69 ms.",
+          text: "The site handles 13 times more requests per second, and the server prepares a page in 69 ms instead of 919. For a charity platform this means the site does not slow down when many donors arrive at once, for example after a newsletter or during a big campaign. I did all of the optimization myself, from measurements to the report.",
         },
       ],
     },
@@ -82,13 +82,13 @@ const dobro = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "There was no old platform: this is a new product built from scratch to the client's specification since March 2026.",
+                  text: "The client already had a platform, but it was not taken as the basis. They ordered a new one from scratch, with new technical requirements and a completely new design. So the architecture, the design system and the integrations were built anew, with no legacy code. Development has been going on since March 2026 to the client's specification.",
                 },
               },
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The client set the stack: React. Apart from me, nobody on the frontend team had written React before. And there were many integrations: the digital ruble, payment in a modal window right on the site, Alfa-Bank, a multi-step onboarding for non-profits.",
+                  text: "The client also set the stack: React. Before the project, I was the only one on the frontend team who had written React, so the team had to learn the new stack fast. And there were many integrations: the digital ruble, payment in a modal window right on the site, Alfa-Bank, a multi-step onboarding for non-profits.",
                 },
               },
             ],
@@ -121,19 +121,19 @@ const dobro = [
                   steps: [
                     {
                       title: "Catalog",
-                      text: "Filters by city, area of help, the registry of socially oriented non-profits and digital ruble support",
+                      text: "Filters by city, area of help, the registry of socially oriented non-profits and digital ruble support. In development: a catalog with request caching, the filter reference data moved out of the HTML so the page loads faster",
                     },
                     {
                       title: "Fundraiser",
-                      text: "Progress, days left, reports and the transaction log",
+                      text: "Progress, days left, reports and the transaction log. In development: an ISR page that is served ready-made and updates itself",
                     },
                     {
                       title: "Cart",
-                      text: "Several fundraisers, one payment, split automatically",
+                      text: "Several fundraisers, one payment, split automatically. In development: cart state in Zustand, one payment form for all fundraisers",
                     },
                     {
                       title: "Payment",
-                      text: "A card in a modal window on the site, SBP or the digital ruble",
+                      text: "A card in a modal window on the site, SBP or the digital ruble. In development: payment methods come from the backend, card details are typed into the secure fields of the payment gateway",
                     },
                   ],
                 },
@@ -159,13 +159,28 @@ const dobro = [
                   steps: [
                     {
                       title: "Organization",
-                      text: "Sign-in via Gosuslugi, company details with suggestions",
+                      text: "Sign-in via Gosuslugi, company details with suggestions. In development: DaData suggestions through a server route, the key never reaches the browser",
                     },
-                    { title: "Questionnaire", text: "Information about the organization" },
-                    { title: "Account", text: "Sign-in via Alfa ID and opening an account" },
-                    { title: "Documents", text: "PDF upload" },
-                    { title: "Signing", text: "Signing the documents" },
-                    { title: "Completion", text: "The review outcome, rejection included" },
+                    {
+                      title: "Questionnaire",
+                      text: "Information about the organization. In development: forms on react-hook-form and zod, moderator remarks shown as field errors",
+                    },
+                    {
+                      title: "Account",
+                      text: "Sign-in via Alfa ID and opening an account. In development: Alfa ID connection and a return to the same step of the wizard",
+                    },
+                    {
+                      title: "Documents",
+                      text: "PDF upload. In development: file upload with a format check",
+                    },
+                    {
+                      title: "Signing",
+                      text: "Signing the documents. In development: the step stays locked until all documents are uploaded",
+                    },
+                    {
+                      title: "Completion",
+                      text: "The review outcome, rejection included. In development: a separate screen for each review outcome",
+                    },
                   ],
                 },
               },
@@ -185,31 +200,25 @@ const dobro = [
                     {
                       label: "STOREFRONT",
                       title: "Public storefront",
-                      text: "The home page, the fundraiser catalog, the fundraiser page, organizations, documents. The home page is static, fundraisers and non-profits use ISR, the catalog and organizations are dynamic with request caching.",
+                      text: "The home page, the fundraiser catalog, the fundraiser page, organizations, documents. The home page is static, fundraisers and non-profits use ISR, the catalog and organizations are dynamic with request caching. Public pages are served ready-made from the server: search engines find them, and a donor opens a fundraiser quickly from a link in social media or a newsletter.",
                     },
                     {
                       label: "ACCOUNTS",
                       title: "Accounts",
-                      text: "Donor and non-profit accounts, the moderation section. Data is loaded on the client: SWR and Zustand, forms on react-hook-form and zod.",
+                      text: "Donor and non-profit accounts, the moderation section. Data is loaded on the client: SWR and Zustand, forms on react-hook-form and zod. The accounts are personal and search engines do not need them, so data loads in the browser and does not load the server, and form validation does not let a questionnaire go out with errors.",
                     },
                     {
                       label: "SERVER",
                       title: "Next.js server routes",
-                      text: "A proxy to the API, DaData suggestions with the key kept on the server only, application metrics.",
+                      text: "A proxy to the API, DaData suggestions with the key kept on the server only, application metrics. Keys of paid services never reach the browser, so they cannot be stolen and their quota spent, and the metrics show growing load before users notice it.",
                       code: ["app/api/backend", "app/api/dadata", "app/metrics"],
                     },
                     {
                       label: "API",
                       title: "Backend REST",
-                      text: "Response types are generated from OpenAPI, so the frontend learns about a contract change at typecheck.",
+                      text: "Response types are generated from OpenAPI, so the frontend learns about a contract change at typecheck. Mismatches with the backend are caught before release, not on a donor's payment page.",
                     },
                   ],
-                },
-              },
-              {
-                component: "ProjectCaseText",
-                data: {
-                  text: "Tag-based cache invalidation is already in place: once the backend starts sending webhooks, the cache intervals can be raised many times over.",
                 },
               },
             ],
@@ -253,13 +262,13 @@ const dobro = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "My group built the integrations on the frontend. I did not write that code, but for each one I set the tasks and decided what to use.",
+                  text: "I led the frontend integration work: for each one I chose the approach and the tools, set the tasks for the group and accepted the result in review.",
                 },
               },
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "Payment methods come from the backend. A card is paid in a modal window on the site, but the card details are typed into the fields of the payment gateway, and the site never sees them. The cart and monthly donations can be paid by card or via SBP, the digital ruble works only for a one-time donation.",
+                  text: "Payment is one of the most complex parts of the platform: three methods, each with its own rules. A donor pays by card right on the site, in a modal window, without going to a bank page. The card number fields are embedded by the payment gateway, so the site neither sees nor stores the card details. With SBP, the donor confirms the payment in their bank's app, and the site waits for the answer and shows the result. The digital ruble is a new form of money from the Central Bank, and it can pay only for a one-time donation, while the cart and monthly donations are paid by card or via SBP. The backend decides which methods are available for each fundraiser and type of donation, and the site shows the donor only the suitable ones.",
                 },
               },
             ],

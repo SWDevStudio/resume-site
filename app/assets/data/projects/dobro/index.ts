@@ -47,7 +47,7 @@ const project = {
   text: {
     ru: {
       subtitle: "ПЛАТФОРМА ПОЖЕРТВОВАНИЙ · ЦИФРОВОЙ РУБЛЬ",
-      headline: "Сайт держит в 13 раз больше запросов: 340 → 4552 rps",
+      headline: "В 13 раз больше запросов в секунду",
       description:
         "Платформа пожертвований с проверенными фондами, цифровым рублём и кабинетами НКО. Генеральный партнёр — Альфа-Банк.",
       previewAlt: "Главная страница платформы Добро.рф",
@@ -57,7 +57,7 @@ const project = {
     },
     en: {
       subtitle: "DONATION PLATFORM · DIGITAL RUBLE",
-      headline: "The site handles 13 times more requests: 340 → 4552 rps",
+      headline: "13 times more requests per second",
       description:
         "A donation platform with verified charities, the digital ruble and accounts for non-profits. General partner: Alfa-Bank.",
       previewAlt: "Home page of the Dobro.rf platform",
