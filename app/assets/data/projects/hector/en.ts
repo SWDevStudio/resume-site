@@ -94,7 +94,7 @@ const hector = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The client needs everything to work on iOS and Android, yet nobody on the development team has an iOS device. On top of that the app works with device APIs, for example it reacts to a double tap on the back of an iPhone.",
+                  text: "The client needs everything to work on iOS and Android. The team works remotely from different cities, each on their own work computer, and an iPhone and a Mac are not part of a developer's core set of devices. So the iOS build and testing had to be set up so they would not depend on the devices at hand. On top of that the app works with device APIs, for example it reacts to a double tap on the back of an iPhone.",
                 },
               },
             ],
@@ -121,19 +121,19 @@ const hector = [
                   steps: [
                     {
                       title: "Configurator",
-                      text: "Protection: the number of agents, armed or not, dress code, a K9 handler, language. Or a car with a driver. Route, date, duration",
+                      text: "Protection: the number of agents, armed or not, dress code, a K9 handler, language. Or a car with a driver. Route, date, duration. In development: order state in Pinia, date and time wheels with seamless scrolling, address search through Photon and Nominatim, so the client puts an order together on one screen in a couple of minutes",
                     },
                     {
                       title: "Review",
-                      text: "The client checks the order and sends it to a manager",
+                      text: "The client checks the order and sends it to a manager. In development: the order review screen and a phone mask, so the manager gets the order with no mistakes in the contacts",
                     },
                     {
                       title: "Payment",
-                      text: "An itemized invoice, a status timeline, the order can be edited",
+                      text: "An itemized invoice, a status timeline, the order can be edited. In development: the active order screen with a status timeline. Editing an order takes the client back to the configurator with the data kept, so they do not build the order again",
                     },
                     {
                       title: "Live tracking",
-                      text: "The team on the map with ETA, the SOS button at hand",
+                      text: "The team on the map with ETA, the SOS button at hand. In development: a Leaflet map and a route through OSRM. The SOS button is pinned to the screen, so there is no need to look for it in a dangerous situation",
                     },
                   ],
                 },
@@ -150,7 +150,7 @@ const hector = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The team knew Vue, nobody knew Flutter, and React Native brings limitations for the web. Hector's design is complex: gradients, glass, transparency. Plain CSS in a WebView can do everything the designers drew, and Capacitor gives access to the device features.",
+                  text: "The stack was chosen around the team's strengths. The frontend developers are confident with Vue, and I know its ecosystem well myself. So from day one the team built the product instead of learning a new tool: this shortened the road to the demo and lowered the risk of errors. Vue with Capacitor brings other advantages too: one codebase for iOS and Android, an interface in plain CSS that lets Hector's complex design with gradients, glass and transparency match the mockups exactly, and access to the phone's features through plugins: biometrics, secure storage, system buttons. React Native and Flutter were considered too, but they would have given less freedom in the layout and taken time to learn.",
                 },
               },
             ],
@@ -229,7 +229,7 @@ const hector = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "The PIN is kept in the device's secure storage, sign-in works with Face ID or a fingerprint. The session runs on a token: on a 401 the app returns to the sign-in screen. The client and the agent have separate routes.",
+                  text: "Signing in to the app is protected the way banking apps do it: with a PIN, Face ID or a fingerprint. The PIN is kept in a protected part of the phone that other apps cannot reach. If the session expires, the app returns to the sign-in screen by itself, so a stranger cannot keep working in someone else's account. Clients and protection agents see only their own sections.",
                 },
               },
             ],
@@ -269,6 +269,12 @@ const hector = [
                   text: "We work in one-week sprints with a demo at the end of each. Tasks live in Jira, one branch per task, PRs with review.",
                 },
               },
+              {
+                component: "ProjectCaseText",
+                data: {
+                  text: "For the client this process means predictability. Every week they see a working version at the demo and can correct the course before a mistake gets expensive. The cloud iOS build and TestFlight make it possible to show the app on a real iPhone at any moment. For development, tests next to the code and the pre-push check catch errors before review, and five developers change shared code in parallel without breaking each other's work.",
+                },
+              },
             ],
           },
         },
@@ -287,11 +293,11 @@ const hector = [
             items: [
               {
                 id: "ios",
-                name: "iOS without iOS devices",
+                name: "The iOS build in a distributed team",
                 rows: [
                   {
                     key: "problem",
-                    text: "Everything has to work on iOS, but nobody on the team has an iPhone or a Mac to build and debug.",
+                    text: "Everything has to work on iOS. The team is spread across different cities and works on its own devices, and an iPhone and a Mac for building and debugging are not part of a developer's work set. We needed a way to build and test iOS without being tied to a specific device.",
                   },
                   {
                     key: "solution",
