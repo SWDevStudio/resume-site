@@ -10,6 +10,7 @@ import { useAsyncData, useSeoMeta } from "#imports";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { $api } from "~/assets/api";
+import { $metrika } from "~/assets/metrika";
 import Projects from "~/components/pages/projects/Projects/Projects.vue";
 
 const { t } = useI18n();
@@ -21,4 +22,6 @@ useSeoMeta({ title, description, ogTitle: title, ogDescription: description });
 
 const { data: projects } = await useAsyncData("projects", () => $api.projects.fetchList());
 const items = computed(() => projects.value ?? []);
+
+$metrika.projects.viewList();
 </script>
