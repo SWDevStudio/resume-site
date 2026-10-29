@@ -24,7 +24,6 @@ describe("skill panels", () => {
     expect(backend!.tiles.map((tile) => tile.class)).toEqual(
       frontend!.tiles.map((tile) => tile.class),
     );
-    expect(backend!.tiles.filter((tile) => tile.class === "home-skills-tile-wide")).toHaveLength(3);
     expect(skillWaveSteps).toBe(18);
   });
 

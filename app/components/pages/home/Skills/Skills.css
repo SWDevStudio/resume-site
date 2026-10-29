@@ -136,12 +136,13 @@
 
 .home-skills-panel {
   --card-fill: var(--color-base-200);
-  --card-min-height: --spacing(89);
+  --card-min-height: --spacing(57.5);
   --card-pad-top: --spacing(6);
   --card-pad-inline: --spacing(4);
   --home-skills-ear: --spacing(35);
   --home-skills-notch: --spacing(23.5);
-  --card-foot-position: right --spacing(0.125) top --spacing(66.5);
+  --home-skills-row: calc(--spacing(31) * 0.84);
+  --card-foot-position: right --spacing(0.125) top --spacing(37);
 
   @variant md {
     --card-min-height: --spacing(62.5);
@@ -149,6 +150,7 @@
     --card-pad-inline: --spacing(7.5);
     --home-skills-ear: --spacing(100);
     --home-skills-notch: --spacing(58);
+    --home-skills-row: --spacing(31);
     --card-foot-position: right --spacing(0.125) top --spacing(40);
   }
 
@@ -164,16 +166,12 @@
   }
 
   & .panel-content {
-    @apply flex-wrap;
-    gap: --spacing(2.5) --spacing(2.25);
+    @apply flex-wrap content-start justify-between overflow-hidden;
+    height: var(--home-skills-row);
+    gap: --spacing(4) --spacing(1.5);
 
     @variant md {
-      @apply flex-nowrap justify-start;
-      gap: --spacing(3.75);
-    }
-
-    @variant lg {
-      @apply justify-between;
+      column-gap: --spacing(3);
     }
   }
 
@@ -263,17 +261,9 @@
 }
 
 .home-skills-tile {
-  zoom: 0.87;
+  zoom: 0.84;
 
   @variant md {
     zoom: 1;
-  }
-}
-
-.home-skills-tile-wide {
-  @apply hidden;
-
-  @variant xl {
-    @apply block;
   }
 }

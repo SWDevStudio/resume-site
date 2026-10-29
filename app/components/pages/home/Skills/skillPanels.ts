@@ -41,21 +41,9 @@ export const skillPanelSources: SkillPanelSource[] = [
       { skill: SkillTile.Nuxt, swap: SkillTile.Vitest },
       { skill: SkillTile.TypeScript, swap: SkillTile.Jest },
       { skill: SkillTile.Tailwind, swap: SkillTile.Sass },
-      {
-        skill: SkillTile.JavaScript,
-        swap: SkillTile.Webpack,
-        class: "home-skills-tile-wide",
-      },
-      {
-        skill: SkillTile.Html5,
-        swap: SkillTile.Figma,
-        class: "home-skills-tile-wide",
-      },
-      {
-        skill: SkillTile.Css3,
-        swap: SkillTile.Capacitor,
-        class: "home-skills-tile-wide",
-      },
+      { skill: SkillTile.JavaScript, swap: SkillTile.Webpack },
+      { skill: SkillTile.Html5, swap: SkillTile.Figma },
+      { skill: SkillTile.Css3, swap: SkillTile.Capacitor },
     ],
   },
   {
@@ -69,21 +57,9 @@ export const skillPanelSources: SkillPanelSource[] = [
       { skill: SkillTile.Rust, swap: SkillTile.Tauri },
       { skill: SkillTile.Docker, swap: SkillTile.GitLab },
       { skill: SkillTile.GhActions, swap: SkillTile.Git },
-      {
-        skill: SkillTile.NestJs,
-        swap: SkillTile.NestJs,
-        class: "home-skills-tile-wide",
-      },
-      {
-        skill: SkillTile.Nginx,
-        swap: SkillTile.Nginx,
-        class: "home-skills-tile-wide",
-      },
-      {
-        skill: SkillTile.Redis,
-        swap: SkillTile.Redis,
-        class: "home-skills-tile-wide",
-      },
+      { skill: SkillTile.NestJs, swap: SkillTile.NestJs },
+      { skill: SkillTile.Nginx, swap: SkillTile.Nginx },
+      { skill: SkillTile.Redis, swap: SkillTile.Redis },
     ],
   },
 ];
