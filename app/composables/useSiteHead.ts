@@ -1,14 +1,24 @@
 import { computed } from "vue";
-import { useHead, useLocaleHead, useRoute, useRouteBaseName, useSafeRuntimeConfig } from "#imports";
+import {
+  useHead,
+  useLocaleHead,
+  useRoute,
+  useRouteBaseName,
+  useSafeRuntimeConfig,
+  useSwitchLocalePath,
+} from "#imports";
 import { useI18n } from "vue-i18n";
 import type { Link, Meta } from "@unhead/vue/types";
 import { LOCALES, OG_LOCALE, THEME_COLOR, type Locale } from "~/assets/const";
 import { useTheme } from "~/composables/useTheme";
+import sharePhoto from "~/components/pages/home/About/media/photo.webp?w=460&as=img";
 
 const SITE_NAME = "SOWA_DEV";
 const FONT_ROOT = "/fonts/";
 const HOME_ROUTE = "index";
 const OG_LOCALE_PROPERTY = "og:locale";
+const OG_URL_PROPERTY = "og:url";
+const X_DEFAULT = "x-default";
 
 const MARTIAN_LATIN = "martian-mono-100-800-latin.woff2";
 const MARTIAN_CYRILLIC = "martian-mono-100-800-cyrillic.woff2";
@@ -41,15 +51,27 @@ function isNotOgLocale(meta: Meta) {
   return !String(meta.property ?? "").startsWith(OG_LOCALE_PROPERTY);
 }
 
-function ogLocaleMeta(current: Locale): Meta[] {
+function ogLocaleMeta(current: Locale, alternates: readonly Locale[]): Meta[] {
   return [
     { key: "og-locale", property: OG_LOCALE_PROPERTY, content: OG_LOCALE[current] },
-    ...LOCALES.filter((locale) => locale !== current).map((locale) => ({
+    ...alternates.map((locale) => ({
       key: `og-locale-alternate-${locale}`,
       property: `${OG_LOCALE_PROPERTY}:alternate`,
       content: OG_LOCALE[locale],
     })),
   ];
+}
+
+function singleLocaleLinks(url: string, locale: Locale): Link[] {
+  return [
+    { key: "i18n-xd", rel: "alternate", hreflang: X_DEFAULT, href: url },
+    { key: `i18n-alt-${locale}`, rel: "alternate", hreflang: locale, href: url },
+    { key: "i18n-can", rel: "canonical", href: url },
+  ];
+}
+
+function withOgUrl(meta: Meta[], url: string): Meta[] {
+  return meta.map((item) => (item.property === OG_URL_PROPERTY ? { ...item, content: url } : item));
 }
 
 function verificationMeta(tokens: Record<string, string>): Meta[] {
@@ -66,7 +88,28 @@ export function useSiteHead() {
   const { t, locale } = useI18n();
   const { current } = useTheme();
   const runtimeConfig = useSafeRuntimeConfig();
-  const localeHead = useLocaleHead({ seo: Boolean(runtimeConfig.public.i18n.baseUrl) });
+  const { baseUrl } = runtimeConfig.public.i18n;
+  const route = useRoute();
+  const switchLocalePath = useSwitchLocalePath();
+  const localeHead = useLocaleHead({ seo: Boolean(baseUrl) });
+  const canonicalLocale = computed(() =>
+    LOCALES.find((code) => code === route.meta.canonicalLocale),
+  );
+  const seoHead = computed(() => {
+    const head = localeHead.value;
+    const target = canonicalLocale.value;
+    if (!target || !baseUrl) return head;
+    const url = `${baseUrl}${switchLocalePath(target)}`;
+    return { ...head, link: singleLocaleLinks(url, target), meta: withOgUrl(head.meta, url) };
+  });
+  const ogLocale = computed(() => {
+    const target = canonicalLocale.value;
+    if (target) return ogLocaleMeta(target, []);
+    return ogLocaleMeta(
+      locale.value,
+      LOCALES.filter((code) => code !== locale.value),
+    );
+  });
   const themeColor = computed(() => THEME_COLOR[current.value]);
   const verification = verificationMeta({
     "yandex-verification": runtimeConfig.public.yandexVerification,
@@ -75,23 +118,28 @@ export function useSiteHead() {
 
   if (import.meta.server) {
     const fonts = FONT_PRELOADS[locale.value];
-    const files = useRouteBaseName()(useRoute()) === HOME_ROUTE ? fonts.home : fonts.page;
+    const files = useRouteBaseName()(route) === HOME_ROUTE ? fonts.home : fonts.page;
     useHead({ link: files.map(fontPreload) });
   }
 
   useHead(() => ({
-    htmlAttrs: localeHead.value.htmlAttrs,
-    link: localeHead.value.link,
+    htmlAttrs: seoHead.value.htmlAttrs,
+    link: seoHead.value.link,
     titleTemplate,
     meta: [
-      ...localeHead.value.meta.filter(isNotOgLocale),
-      ...ogLocaleMeta(locale.value),
+      ...seoHead.value.meta.filter(isNotOgLocale),
+      ...ogLocale.value,
       ...verification,
       { name: "description", content: t("seo.home.description") },
       { name: "theme-color", content: themeColor.value },
       { property: "og:site_name", content: SITE_NAME },
       { property: "og:description", content: t("seo.home.description") },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: `${baseUrl}${sharePhoto.src}` },
+      { property: "og:image:width", content: String(sharePhoto.w) },
+      { property: "og:image:height", content: String(sharePhoto.h) },
+      { property: "og:image:alt", content: t("home.about.photoAlt") },
+      { name: "twitter:card", content: "summary" },
     ],
   }));
 }

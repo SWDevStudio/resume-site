@@ -1,6 +1,7 @@
 import { useHead, useLocalePath, useSafeRuntimeConfig } from "#imports";
 import { Route, SOCIAL_NETWORKS } from "~/assets/const";
 import type { ProfilePerson } from "~/assets/api/types/resume";
+import type { Locale } from "~/assets/const";
 import photo from "~/components/pages/home/About/media/photo.webp";
 
 const SCHEMA_CONTEXT = "https://schema.org";
@@ -12,7 +13,7 @@ export type StructuredNode = Record<string, unknown>;
 
 export interface SiteUrls {
   personId: string;
-  page: (path: string) => string;
+  page: (path: string, locale?: Locale) => string;
   asset: (path: string) => string;
 }
 
@@ -127,7 +128,7 @@ export function useSiteUrls(): SiteUrls {
   const { baseUrl } = useSafeRuntimeConfig().public.i18n;
   return {
     personId: `${baseUrl}${PERSON_FRAGMENT}`,
-    page: (path) => `${baseUrl}${localePath(path)}`,
+    page: (path, locale) => `${baseUrl}${localePath(path, locale)}`,
     asset: (path) => `${baseUrl}${path}`,
   };
 }

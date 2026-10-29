@@ -7,11 +7,11 @@
 </template>
 
 <script setup lang="ts">
-import { createError, useAsyncData, useRoute, useSeoMeta } from "#imports";
+import { createError, definePageMeta, useAsyncData, useRoute, useSeoMeta } from "#imports";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { $api } from "~/assets/api";
-import { Route } from "~/assets/const";
+import { POST_LOCALE, Route } from "~/assets/const";
 import type { BlogPostHeaderData } from "~/assets/api/types/blog";
 import BlogPost from "~/components/pages/blog/BlogPost/BlogPost.vue";
 import {
@@ -21,6 +21,8 @@ import {
   useSiteUrls,
   useStructuredData,
 } from "~/composables/useStructuredData";
+
+definePageMeta({ canonicalLocale: POST_LOCALE });
 
 const { t } = useI18n();
 const site = useSiteUrls();
@@ -56,7 +58,7 @@ useStructuredData(() => {
   const post = header.value;
   const person = data.value?.person;
   if (!post || !person) return [];
-  const url = site.page(Route.post(slug));
+  const url = site.page(Route.post(slug), POST_LOCALE);
   return [
     blogPostingNode(
       {
