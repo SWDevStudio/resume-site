@@ -1,6 +1,8 @@
 import pdfmake from "pdfmake";
 import vfs from "pdfmake/build/vfs_fonts.js";
+import { useSafeRuntimeConfig } from "#imports";
 import { LOCALES, type Locale } from "../../app/assets/const/locale";
+import { Route } from "../../app/assets/const/route";
 import { resumeToMarkdown } from "../../shared/utils/resumeToMarkdown";
 import { resumeToPdf } from "../../shared/utils/resumeToPdf";
 import { buildResume } from "../../app/assets/api/mock/build/resume";
@@ -35,14 +37,21 @@ export function resolveResumeLocale(value: string | undefined): Locale | undefin
   return LOCALES.find((locale) => locale === value);
 }
 
+function resumeUrl(locale: Locale) {
+  const baseUrl = useSafeRuntimeConfig().public.i18n.baseUrl.replace(/\/+$/, "");
+  return baseUrl ? `${baseUrl}/${locale}${Route.resume}` : undefined;
+}
+
 export function resumeMarkdown(locale: Locale) {
-  return resumeToMarkdown(buildResume(sources, locale));
+  return resumeToMarkdown(buildResume(sources, locale), resumeUrl(locale));
 }
 
 export function resumePdf(locale: Locale) {
   let pdf = pdfCache.get(locale);
   if (!pdf) {
-    pdf = pdfmake.createPdf(resumeToPdf(buildResume(sources, locale), locale)).getBuffer();
+    pdf = pdfmake
+      .createPdf(resumeToPdf(buildResume(sources, locale), locale, resumeUrl(locale)))
+      .getBuffer();
     pdf.catch(() => pdfCache.delete(locale));
     pdfCache.set(locale, pdf);
   }

@@ -99,7 +99,6 @@ export interface SkillsText {
 export interface JobText {
   title: string;
   company: string;
-  city: string;
   field?: string;
   period: string;
   duration: string;
@@ -115,7 +114,6 @@ export interface ResumeNarrative {
     caption: string;
     firstName: string;
     lastName: string;
-    specialization: string;
     contacts: ResumeContact[];
   };
   summary: ResumeSectionHead & { paragraphs: string[] };
@@ -129,7 +127,6 @@ export interface ResumeNarrative {
   education: ResumeSectionHead & { items: ResumeItem[] };
   additional: ResumeSectionHead & { items: ResumeItem[] };
   ai: ResumeSectionHead & { paragraphs: string[] };
-  personal: ResumeSectionHead & { items: ResumeData["personal"]["items"] };
   references: ResumeSectionHead & { items: ResumeItem[] };
 }
 

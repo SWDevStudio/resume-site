@@ -41,17 +41,18 @@ function compactProfile(data: ResumeData): string {
       .filter(Boolean)
       .join("\n"),
   );
-  const personal = data.personal.items.map(
-    (project) => `### ${project.name} (${project.stack.join(", ")})\n${project.description}`,
+  const cases = data.cases.items.map(
+    (entry) =>
+      `### ${entry.name} (${entry.stack.join(", ")})\n${[entry.description, ...entry.points].join("\n")}`,
   );
   return [
-    `# ${profile.firstName} ${profile.lastName}: ${profile.role} (${profile.stack.join(" / ")})`,
+    `# ${profile.firstName} ${profile.lastName}: ${profile.role}`,
     `## ${data.summary.name}\n${data.summary.paragraphs.join("\n")}`,
     `## ${data.skills.name}\n${list(data.skills.groups.map((group) => `${group.name}: ${group.skills.map((skill) => skill.name).join(", ")}`))}`,
     `## ${data.projects.name}\n${projects.join("\n\n")}`,
     `## ${data.experience.name}\n${data.experience.total}\n\n${jobs.join("\n\n")}`,
     `## ${data.ai.name}\n${data.ai.paragraphs.join("\n")}`,
-    `## ${data.personal.name}\n${personal.join("\n\n")}`,
+    `## ${data.cases.name}\n${cases.join("\n\n")}`,
     `## ${data.education.name}\n${list(data.education.items.map(item))}`,
   ].join("\n\n");
 }

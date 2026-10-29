@@ -30,9 +30,9 @@ export function buildResume(src: ResumeSources, locale: Locale): ResumeData {
   }));
   const linkPlaceholder =
     firstDefined(textLayers(src.projectsText, locale), (layer) => layer.linkPlaceholder) ?? "";
-  const items = buildProjects(src, locale).map((project) =>
-    toResumeProject(project, linkPlaceholder),
-  );
+  const items = buildProjects(src, locale)
+    .filter((project) => project.isFavorite)
+    .map((project) => toResumeProject(project, linkPlaceholder));
   return {
     ...resume,
     skills: { ...resume.skills, groups },

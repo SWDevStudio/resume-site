@@ -7,15 +7,6 @@
     </h1>
     <p class="resume-role">
       {{ profile.role }}
-      <span
-        class="resume-role-stack"
-        lang="en"
-        data-atom-skip
-      >
-        {{ stack }}
-      </span>
-      <br />
-      <span class="resume-role-focus">{{ profile.specialization }}</span>
     </p>
     <ResumeActions />
     <div
@@ -27,16 +18,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import ResumeActions from "./ResumeActions.vue";
 import ResumeContacts from "./ResumeContacts.vue";
 import type { ResumeProfile } from "~/assets/api/types/resume";
 
-const props = defineProps<{
+defineProps<{
   profile: ResumeProfile;
 }>();
-
-const stack = computed(() => `(${props.profile.stack.join(" / ")})`);
 </script>
 
 <style src="./ResumeHeader.css" />

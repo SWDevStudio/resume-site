@@ -1,9 +1,9 @@
 import type { Content, ContentText, TDocumentDefinitions } from "pdfmake/interfaces";
 import type {
+  ResumeCase,
   ResumeData,
   ResumeItem,
   ResumeJob,
-  ResumePersonalProject,
   ResumeProject,
 } from "../../app/assets/api/types/resume";
 
@@ -117,16 +117,29 @@ function projectBlock(project: ResumeProject): Content {
   };
 }
 
-function personalBlock(project: ResumePersonalProject): Content {
-  return {
-    stack: [
-      { text: project.name, style: "itemTitle" },
-      { text: project.stack.join(", "), style: "meta", margin: [0, 1, 0, 3] },
-      paragraph(project.description),
-    ],
-    unbreakable: true,
-    margin: [0, 0, 0, 6],
-  };
+function caseBlock(entry: ResumeCase): Content {
+  const stack: Content[] = [
+    {
+      columns: [
+        { text: entry.name, style: "itemTitle", width: "*" },
+        {
+          text: entry.period ?? "",
+          style: "meta",
+          alignment: "right",
+          width: META_WIDTH,
+          margin: [8, 2, 0, 0],
+        },
+      ],
+      margin: [0, 0, 0, 3],
+    },
+  ];
+  if (entry.role) {
+    stack.push({ text: entry.role, bold: true, color: COLOR.accent, margin: [0, 0, 0, 3] });
+  }
+  stack.push(paragraph(entry.description));
+  if (entry.points.length) stack.push(bullets(entry.points.map(plain)));
+  stack.push({ text: entry.stack.join(", "), style: "meta", margin: [0, 1, 0, 0] });
+  return { stack, unbreakable: true, margin: [0, 0, 0, 9] };
 }
 
 function jobHead(job: ResumeJob, labels: Labels): Content[] {
@@ -147,7 +160,7 @@ function jobHead(job: ResumeJob, labels: Labels): Content[] {
       columns: [
         { text: job.title, bold: true, color: COLOR.accent, width: "*" },
         {
-          text: `${job.city} · ${job.duration}`,
+          text: job.duration,
           style: "meta",
           alignment: "right",
           width: META_WIDTH,
@@ -213,20 +226,26 @@ function listChunks(items: ResumeItem[]): Content[] {
   return withHead([], items.map(lead));
 }
 
-export function resumeToPdf(data: ResumeData, locale: string): TDocumentDefinitions {
+export function resumeToPdf(
+  data: ResumeData,
+  locale: string,
+  siteUrl?: string,
+): TDocumentDefinitions {
   const { profile } = data;
   const name = `${profile.firstName} ${profile.lastName}`;
 
   const header: Content[] = [
+    ...(siteUrl
+      ? [
+          {
+            text: [plain(`${data.footer.latestVersion}: `), anchor(siteUrl, siteUrl)],
+            style: "meta",
+            margin: [0, 0, 0, 6],
+          } satisfies Content,
+        ]
+      : []),
     { text: name, style: "name" },
-    {
-      text: [
-        { text: profile.role, bold: true },
-        plain(` (${profile.stack.join(" / ")}) `),
-        { text: profile.specialization, color: COLOR.muted },
-      ],
-      style: "role",
-    },
+    { text: profile.role, bold: true, style: "role" },
     { text: profile.caption, style: "meta", margin: [0, 0, 0, 8] },
     ...profile.contacts.map((contact): Content => ({
       text: [
@@ -237,6 +256,10 @@ export function resumeToPdf(data: ResumeData, locale: string): TDocumentDefiniti
     })),
   ];
 
+  const cases = data.cases.items.length
+    ? section(data.cases.name, data.cases.items.map(caseBlock))
+    : [];
+
   return {
     pageSize: "A4",
     pageMargins: [PAGE.margin.left, PAGE.margin.top, PAGE.margin.right, PAGE.margin.bottom],
@@ -244,8 +267,6 @@ export function resumeToPdf(data: ResumeData, locale: string): TDocumentDefiniti
     info: {
       title: `${name} — ${profile.role}`,
       author: name,
-      subject: profile.specialization,
-      keywords: profile.stack.join(", "),
     },
     defaultStyle: { font: "Roboto", fontSize: 9.5, lineHeight: 1.28, color: COLOR.text },
     styles: {
@@ -262,10 +283,13 @@ export function resumeToPdf(data: ResumeData, locale: string): TDocumentDefiniti
       ...section(data.skills.name, data.skills.groups.map(skillRow)),
       ...section(data.projects.name, data.projects.items.map(projectBlock)),
       ...section(data.experience.name, experienceChunks(data.experience)),
+      ...cases,
       ...section(data.education.name, listChunks(data.education.items)),
       ...section(data.additional.name, listChunks(data.additional.items)),
-      ...section(data.ai.name, data.ai.paragraphs.map(paragraph)),
-      ...section(data.personal.name, data.personal.items.map(personalBlock)),
+      ...section(data.ai.name, [
+        ...data.ai.paragraphs.map(paragraph),
+        ...(data.ai.link ? [{ text: [anchor(data.ai.link.label, data.ai.link.href)] }] : []),
+      ]),
       ...section(data.references.name, listChunks(data.references.items)),
     ],
     footer: (current: number, total: number): Content => ({

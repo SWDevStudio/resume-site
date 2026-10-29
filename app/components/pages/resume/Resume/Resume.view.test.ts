@@ -146,10 +146,10 @@ const sectionKeys = [
   "skills",
   "projects",
   "experience",
+  "cases",
   "education",
   "additional",
   "ai",
-  "personal",
   "references",
 ] as const;
 
@@ -186,15 +186,11 @@ describe("content", () => {
     expect(pickAll(screen, "h1")).toHaveLength(1);
     expect(text(pick(screen, ".resume-caption"))).toBe("CURRICULUM VITAE · UPDATED OCTOBER 2026");
     expect(text(pick(screen, "h1"))).toBe("Michael Malakhov");
-    expect(visibleText(pick(screen, ".resume-role"))).toBe(
-      "Fullstack Developer (Vue.js / React / TypeScript) — Programmer, developer",
-    );
+    expect(visibleText(pick(screen, ".resume-role"))).toBe("Fullstack Developer");
     expect(profile.firstName).toBe("Michael");
-    const stack = pick(screen, ".resume-role-stack");
-    expect(text(stack)).toBe("(Vue.js / React / TypeScript)");
-    expect(stack.getAttribute("lang")).toBe("en");
-    expect(stack.hasAttribute("data-atom-skip")).toBe(true);
-    expect(getComputedStyle(stack).fontFamily).toContain("Righteous");
+    expect(pick(screen, ".resume-role").children).toHaveLength(0);
+    expect(pick(screen, ".resume-role-stack")).toBeNull();
+    expect(pick(screen, ".resume-role-focus")).toBeNull();
   });
 
   it("renders the contacts with safe links", async () => {
@@ -207,7 +203,7 @@ describe("content", () => {
       "@kotaroSWQ",
       "swdevstudio@gmail.com",
       "Male, 27 years old, born 28 April 1999",
-      "Russia, work permit: Russia",
+      "Russia",
       "Willing to relocate, willing to travel for work",
     ]);
     const anchors = values.slice(0, 2).map((item) => item.querySelector("a")!);
@@ -262,10 +258,10 @@ describe("content", () => {
       "02 — SKILLS",
       "03 — PROJECTS",
       "04 — EXPERIENCE",
-      "05 — EDUCATION",
-      "06 — ADDITIONAL",
-      "07 — AI TOOLS",
-      "08 — PERSONAL",
+      "05 — OWN PRODUCTS",
+      "06 — EDUCATION",
+      "07 — ADDITIONAL",
+      "08 — AI TOOLS",
       "09 — REFERENCES",
     ]);
     expect(pickAll(screen, ".page-section-rule")).toHaveLength(9);
@@ -290,16 +286,17 @@ describe("content", () => {
       "H2 Technical Skills #skills",
       "H2 Selected Projects #projects",
       "H2 Work Experience #experience",
-      "H3 Freedom International Group — IT Team Lead (Frontend) #freedom",
-      "H3 Brendmart — Senior Frontend Developer #brendmart",
-      "H3 Pochtoy.com LLC — Senior Frontend Developer #pochtoy",
-      "H3 CDEK.Market — Frontend Developer #cdek-market",
+      "H3 Freedom International Group — Development Team Lead #freedom",
+      "H3 Freelance — Fullstack Developer #freelance",
+      "H3 Brendmart — Fullstack Developer #brendmart",
+      "H3 Pochtoy.com LLC — Fullstack Developer #pochtoy",
+      "H3 CDEK.Market — Middle Frontend Developer #cdek-market",
       "H3 To The Moon Mobile Ltd — Frontend Developer #to-the-moon",
       "H3 Amigoweb — Junior Frontend Developer #amigoweb",
+      "H2 Products I Built #cases",
       "H2 Education #education",
       "H2 Additional Information #additional",
       "H2 AI Tools in Development #ai",
-      "H2 Personal Projects #personal",
       "H2 References #references",
     ]);
     expect(pickAll(screen, ".page-section-level-4")).toHaveLength(0);
@@ -311,9 +308,9 @@ describe("content", () => {
     const paragraphs = [...section.querySelectorAll(".resume-text")].map((item) => text(item));
 
     expect(paragraphs).toEqual(resumeData.summary.paragraphs);
-    expect(paragraphs).toHaveLength(5);
+    expect(paragraphs).toHaveLength(4);
     expect(paragraphs[0]).toBe(
-      "Frontend developer and team lead with 7+ years of commercial experience building product web applications on Vue.js/Nuxt and React/Next.js (SPA + SSR).",
+      "Fullstack developer and team lead with 7+ years of commercial experience. Frontend on Vue.js, Nuxt, React and Next.js (SPA + SSR), backend on Laravel, NestJS and Express.",
     );
     expect(section.querySelectorAll("[data-atom-skip]")).toHaveLength(0);
   });
@@ -325,30 +322,36 @@ describe("content", () => {
 
     expect(rows.map((item) => text(item.querySelector(".resume-list-lead")))).toEqual([
       "Frontend:",
-      "Backend & DevOps:",
+      "Backend:",
       "Lead & soft skills:",
       "Additional:",
     ]);
     expect(text(rows[1])).toBe(
-      "Backend & DevOps: Node.js, NestJS, Laravel, Rust, PostgreSQL, SQL, MongoDB, Redis, REST API, JSON, Docker, Kubernetes, Terraform, Nginx, CI/CD, GitHub Actions",
+      "Backend: Node.js, NestJS, Express, Laravel, Rust, PostgreSQL, Redis, REST API, Docker, Nginx, CI/CD, GitHub Actions",
     );
-    expect(text(rows[2])).toContain("Lead & soft skills: Team management, Team leadership");
-    expect(text(rows[3])).toContain("Additional: Vite, Webpack, Git, GitHub, GitLab, Figma, Sass");
+    expect(text(rows[2])).toBe(
+      "Lead & soft skills: Team management, Task assignment for developers, Workload balancing, Task decomposition and estimation, Team workload analytics, Tracking sprint progress and risks, Technical and architectural decisions, Confluence, Code Review, Training and development, Agile, Scrum",
+    );
+    expect(text(rows[3])).toContain("Additional: Vite, Webpack, Git, GitHub, GitLab, Figma, Redux");
     expect(text(rows[3])).toContain("Claude Code, Codex, Gemini, MCP, Atlassian Rovo");
-    expect(text(rows[3])).toMatch(/GitHub Copilot, LLM$/);
-    expect(text(rows[0])).toContain("JavaScript (ES6+), TypeScript, HTML5, CSS3, SCSS, Vue.js");
+    expect(text(rows[3])).toMatch(/GitHub Copilot, AI agents$/);
+    expect(text(rows[0])).toContain("JavaScript (ES6+), TypeScript, HTML5, CSS3, Sass, Vue.js");
     const terms = section.querySelectorAll("[data-atom-skip]");
     expect(terms).toHaveLength(6);
     expect(rows[2]!.querySelector("[data-atom-skip]")).toBeNull();
     for (const term of terms) expect(term.getAttribute("lang")).toBe("en");
   });
 
-  it("renders the portfolio projects with links, tags and English names", async () => {
+  it("renders only the favorite portfolio projects with links, tags and English names", async () => {
     const screen = await renderResume({ width: 1440, height: 900 });
     const cards = pickAll(screen, "section[aria-labelledby='projects'] .resume-project");
 
     const sources = staticSources("en");
-    const projects = buildProjects(sources, "en");
+    const catalog = buildProjects(sources, "en");
+    const projects = catalog.filter((project) => project.isFavorite);
+
+    expect(projects.length).toBeGreaterThan(0);
+    expect(projects.length).toBeLessThan(catalog.length);
 
     expect(cards).toHaveLength(projects.length);
     expect(cards.map((card) => text(card.querySelector("h3")))).toEqual(
@@ -391,21 +394,22 @@ describe("content", () => {
     });
   });
 
-  it("renders the six jobs with their periods, teams, lists and stacks", async () => {
+  it("renders the seven jobs with their periods without a city, teams, lists and stacks", async () => {
     const screen = await renderResume({ width: 1440, height: 900 });
     const jobs = pickAll(screen, ".page-section-level-3");
 
     expect(
       text(pick(screen, "section[aria-labelledby='experience'] > .page-section-body > p")),
     ).toBe("Total experience: 7 years 6 months");
-    expect(jobs).toHaveLength(6);
+    expect(jobs).toHaveLength(7);
     expect(jobs.map((job) => text(job.querySelector(".page-section-meta")))).toEqual([
-      "March 2026 — present · Moscow",
-      "January 2025 — March 2026 · Bishkek",
-      "October 2023 — January 2025 · Moscow",
-      "October 2021 — October 2023 · Novosibirsk",
-      "April 2021 — October 2021 · Moscow",
-      "April 2019 — April 2021 · Magnitogorsk",
+      "March 2026 — present",
+      "March 2025 — April 2025",
+      "January 2025 — March 2026",
+      "October 2023 — January 2025",
+      "October 2021 — October 2023",
+      "April 2021 — October 2021",
+      "April 2019 — April 2021",
     ]);
     const first = jobs[0]!;
     expect([...first.querySelectorAll(".resume-block-title")].map((title) => text(title))).toEqual([
@@ -416,33 +420,34 @@ describe("content", () => {
     ]);
     expect(first.querySelectorAll(".resume-block")[0]!.querySelectorAll("li")).toHaveLength(2);
     expect(text(first.querySelector(".resume-block li"))).toBe(
-      "dobro.ru: web platform on React 19 + Next.js.",
+      "dobro.ru: charity fundraising platform on Next.js 16 (App Router) + React 19. Catalog of fundraisers and NGOs, donation payments, NGO and donor accounts.",
     );
     expect(text(first.querySelectorAll(".resume-text")[0])).toBe(
       "Financial sector, investment company (development of the group's portfolio products) · freedomgroupint.com",
     );
     expect(text(first.querySelectorAll(".resume-text")[1])).toBe(
-      "Team: 4 frontend (direct reports), 5 backend, 3 designers, 2 QA, 1 product",
+      "Team: 5 frontend (me and 4 direct reports), 4 backend, 2 designers, 2 QA, 1 PM, 1 DevOps",
     );
     expect(first.querySelector<HTMLAnchorElement>(".resume-link")!.href).toBe(
       "https://freedomgroupint.com/",
     );
-    expect(first.querySelectorAll(".resume-block")[1]!.querySelectorAll("li")).toHaveLength(8);
-    expect(first.querySelectorAll(".resume-block")[2]!.querySelectorAll("li")).toHaveLength(5);
+    expect(first.querySelectorAll(".resume-block")[1]!.querySelectorAll("li")).toHaveLength(9);
+    expect(first.querySelectorAll(".resume-block")[2]!.querySelectorAll("li")).toHaveLength(10);
     for (const job of jobs) {
       const stack = job.querySelector(".resume-block:last-child [data-atom-skip]")!;
       expect(stack.getAttribute("lang")).toBe("en");
     }
-    const pochtoy = jobs[2]!;
+    const pochtoy = jobs[3]!;
     expect(text(pochtoy.querySelector(".resume-block:last-child .resume-text"))).toBe(
-      "Vue.js (Vue 3), React, JavaScript (ES6+), TypeScript, jQuery, Laravel (Blade), Webpack, REST API, DevTools, data adaptation and normalization, legacy refactoring",
+      "TypeScript, Tailwind CSS, Vue.js (Vue 3), JavaScript (ES6+), jQuery, Laravel (Blade), Webpack, HTML5, CSS3, REST API, Git, Chrome DevTools, Lighthouse, cross-browser layout, legacy refactoring",
     );
     expect(pochtoy.querySelectorAll(".resume-block:last-child [data-atom-skip]")).toHaveLength(1);
-    expect(jobs[3]!.querySelector(".resume-link")).toBeNull();
-    expect(jobs[4]!.querySelectorAll(".resume-block")).toHaveLength(3);
+    expect(jobs[1]!.querySelector(".resume-link")).toBeNull();
+    expect(jobs[4]!.querySelector(".resume-link")).toBeNull();
+    expect(jobs[5]!.querySelectorAll(".resume-block")).toHaveLength(3);
   });
 
-  it("renders education, additional information, AI tools, personal project and references", async () => {
+  it("renders education, additional information, AI tools and references", async () => {
     const screen = await renderResume({ width: 1440, height: 900 });
     const items = (id: string) =>
       [
@@ -455,31 +460,70 @@ describe("content", () => {
     ]);
     expect(items("additional")).toEqual([
       "Languages: Russian: native. English: A2 (spoken). Read technical documentation, specifications and English-language sources fluently.",
-      "Employment type: full-time, part-time, project work / one-off assignment.",
+      "Employment type: full-time, part-time.",
       "Work format: remote, hybrid, on-site.",
-      "Preferred commute time: does not matter.",
-      "Driving: Own car. Category B licence.",
+      "Commute time: does not matter.",
+      "Driving: own car, category B driver's license.",
     ]);
     expect(items("references")).toEqual([
-      "FIX PRICE: Roman Khadzhaev (Senior Frontend Developer)",
+      "Joint projects: Roman Khadzhaev (Senior Developer, FIX PRICE), co-author of several of my own projects",
       "CDEK.Market: Roman Olennikov (team lead)",
     ]);
+    const ai = pick(screen, "section[aria-labelledby='ai']");
+    const paragraphs = [...ai.querySelectorAll(".resume-text")];
+    expect(paragraphs.slice(0, -1).map((item) => text(item))).toEqual(resumeData.ai.paragraphs);
+    const article = paragraphs.at(-1)!.querySelector<HTMLAnchorElement>(".resume-link")!;
+    expect(text(article)).toBe(resumeData.ai.link!.label);
+    expect(article.getAttribute("href")).toBe(resumeData.ai.link!.href);
+    expect(article.target).toBe("_blank");
+    expect(article.rel).toBe("noopener noreferrer");
+    expect(pick(screen, "section[aria-labelledby='personal']")).toBeNull();
+  });
+
+  it("renders the own products with their period, role, points and English stack", async () => {
+    const screen = await renderResume({ width: 1440, height: 900 });
+    const section = pick(screen, "section[aria-labelledby='cases']");
+    const cards = [...section.querySelectorAll(".resume-project")];
+    const items = resumeData.cases.items;
+
+    expect(cards.map((card) => text(card.querySelector("h3")))).toEqual([
+      "Someday",
+      "Tamriel Codex",
+    ]);
     expect(
-      [...pick(screen, "section[aria-labelledby='ai']").querySelectorAll(".resume-text")].map(
-        (item) => text(item),
+      cards.map((card) =>
+        [...card.querySelectorAll(".resume-project-subtitle")].map((item) => text(item)),
       ),
-    ).toEqual(resumeData.ai.paragraphs);
-    const personal = pick(screen, "section[aria-labelledby='personal'] .resume-project");
-    expect(text(personal.querySelector("h3"))).toBe(
-      "Desktop application for working with ESP32 devices",
-    );
-    expect(text(personal.querySelector(".resume-project-subtitle"))).toBe(
-      "Tauri (Rust + Vue/TypeScript)",
-    );
-    expect(text(personal.querySelector(".resume-text"))).toBe(
-      resumeData.personal.items[0]!.description,
-    );
-    expect(personal.querySelector("[data-atom-skip]")!.getAttribute("lang")).toBe("en");
+    ).toEqual([
+      [
+        "Since October 2025 · Lead software developer in a team of three",
+        items[0]!.stack.join(", "),
+      ],
+      ["10 days · Fullstack developer, end-to-end project", items[1]!.stack.join(", ")],
+    ]);
+    cards.forEach((card, position) => {
+      const entry = items[position]!;
+      const terms = [...card.querySelectorAll("[data-atom-skip]")];
+
+      expect(text(card.querySelector(".resume-text"))).toBe(entry.description);
+      expect([...card.querySelectorAll(".resume-list-item")].map((item) => text(item))).toEqual(
+        entry.points,
+      );
+      expect(terms.map((item) => text(item))).toEqual([entry.name, entry.stack.join(", ")]);
+      for (const term of terms) expect(term.getAttribute("lang")).toBe("en");
+    });
+    expect(
+      section.compareDocumentPosition(pick(screen, "section[aria-labelledby='experience']")) &
+        Node.DOCUMENT_POSITION_PRECEDING,
+    ).toBeTruthy();
+  });
+
+  it("drops the section of the own products when there are none", async () => {
+    const data: ResumeData = { ...resumeData, cases: { ...resumeData.cases, items: [] } };
+    const screen = await renderResume({ width: 1440, height: 900 }, "en", data);
+
+    expect(pick(screen, "section[aria-labelledby='cases']")).toBeNull();
+    expect(pickAll(screen, ".page-section-root")).toHaveLength(8);
   });
 
   it("renders the footer with the back to top link", async () => {
@@ -501,7 +545,7 @@ describe("content", () => {
     expect(anchors.map((link) => link.style.getPropertyValue("--page-sections-depth"))).toEqual(
       navEntries(resumeData).map((item) => String(item.depth)),
     );
-    expect(navIds).toHaveLength(15);
+    expect(navIds).toHaveLength(16);
   });
 
   it("counts only the sections of the first level in the phone pill", async () => {
@@ -523,7 +567,7 @@ describe("content", () => {
     expect(pickAll(screen, ".page-section-label").map((item) => text(item))[0]).toBe(
       "01 — ОБО МНЕ",
     );
-    expect(text(pick(screen, ".resume-role-stack"))).toBe("(Vue.js / React / TypeScript)");
+    expect(text(pick(screen, ".resume-role"))).toBe("Fullstack Developer");
     const rows = [
       ...pick(screen, "section[aria-labelledby='skills']").querySelectorAll(".resume-list-item"),
     ];
@@ -541,8 +585,9 @@ describe("content", () => {
     expect(text(job.querySelector(".page-section-heading"))).toContain(
       "Freedom International Group — Руководитель группы разработки",
     );
-    expect(text(job.querySelector(".page-section-meta"))).toBe(
-      "Март 2026 — настоящее время · Москва",
+    expect(text(job.querySelector(".page-section-meta"))).toBe("Март 2026 — настоящее время");
+    expect(text(pick(screen, "section[aria-labelledby='cases'] .page-section-label"))).toBe(
+      "05 — СОБСТВЕННЫЕ ПРОДУКТЫ",
     );
   });
 
@@ -561,7 +606,8 @@ describe("content", () => {
       ),
     ).toEqual(navIds.map((id) => `#${id}`));
     expect(root.querySelectorAll("h2")).toHaveLength(9);
-    expect(root.querySelectorAll(".page-section-level-3")).toHaveLength(6);
+    expect(root.querySelectorAll(".page-section-level-3")).toHaveLength(7);
+    expect(root.querySelector("#cases")).not.toBeNull();
     expect(root.querySelector(".resume-action")?.getAttribute("href")).toBe("/resume/en.pdf");
   });
 
@@ -893,7 +939,8 @@ describe("state animations", () => {
 
   it("does not light a project link that has no address", async () => {
     const screen = await renderResume({ width: 1440, height: 900 });
-    const link = pickAll(screen, ".resume-project .resume-link")[2]!;
+    const link = pickAll(screen, ".resume-project .resume-link")[0]!;
+    expect(link.hasAttribute("href")).toBe(false);
     link.scrollIntoView({ block: "center" });
     const idle = getComputedStyle(link).color;
 
@@ -972,7 +1019,7 @@ describe("state animations", () => {
     jump("experience");
     await expect.poll(current).toBe("Work Experience");
     jump("pochtoy");
-    await expect.poll(current).toBe("Pochtoy.com LLC — Senior Frontend Developer");
+    await expect.poll(current).toBe("Pochtoy.com LLC — Fullstack Developer");
     jump("projects");
     await expect.poll(current).toBe("Selected Projects");
     window.scrollTo({ top: 0, behavior: "instant" });

@@ -39,6 +39,15 @@
         <ResumeExperience :experience="data.experience" />
       </PageSection>
       <PageSection
+        v-if="hasCases"
+        :id="data.cases.id"
+        :name="data.cases.name"
+        :label="data.cases.label"
+        ruled
+      >
+        <ResumeCases :cases="data.cases" />
+      </PageSection>
+      <PageSection
         :id="data.education.id"
         :name="data.education.name"
         :label="data.education.label"
@@ -67,14 +76,15 @@
         ruled
       >
         <ResumeParagraphs :paragraphs="data.ai.paragraphs" />
-      </PageSection>
-      <PageSection
-        :id="data.personal.id"
-        :name="data.personal.name"
-        :label="data.personal.label"
-        ruled
-      >
-        <ResumePersonal :personal="data.personal" />
+        <p
+          v-if="aiLink"
+          class="resume-text"
+        >
+          <ResumeLink
+            :href="aiLink.href"
+            :label="aiLink.label"
+          />
+        </p>
       </PageSection>
       <PageSection
         :id="data.references.id"
@@ -93,24 +103,29 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import PageSection from "~/components/pages/shared/PageSections/PageSection.vue";
 import PageSections from "~/components/pages/shared/PageSections/PageSections.vue";
 import type { ResumeData } from "~/assets/api/types/resume";
+import ResumeCases from "./ResumeCases.vue";
 import ResumeExperience from "./ResumeExperience.vue";
 import ResumeFooter from "./ResumeFooter.vue";
 import ResumeHeader from "./ResumeHeader.vue";
+import ResumeLink from "./ResumeLink.vue";
 import ResumeList from "./ResumeList.vue";
 import ResumeParagraphs from "./ResumeParagraphs.vue";
-import ResumePersonal from "./ResumePersonal.vue";
 import ResumeProjects from "./ResumeProjects.vue";
 import ResumeSkills from "./ResumeSkills.vue";
 
-defineProps<{
+const props = defineProps<{
   data: ResumeData;
 }>();
 
 const { t } = useI18n();
+
+const hasCases = computed(() => props.data.cases.items.length > 0);
+const aiLink = computed(() => props.data.ai.link);
 </script>
 
 <style src="./Resume.css" />

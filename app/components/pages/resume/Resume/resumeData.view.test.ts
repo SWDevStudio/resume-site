@@ -29,20 +29,26 @@ describe.each(Object.entries(files) as ["en" | "ru", ResumeData][])(
   (locale, data) => {
     const groups = buildSkillGroups(staticSources(locale), locale);
 
-    it("lists the projects of the canon in its order with its names and indexes", () => {
-      expect(data.projects.items.map((item) => item.id)).toEqual(
-        canonProjects.map((item) => item.id),
+    it("lists only the favorite projects of the canon in its order with their names and indexes", () => {
+      const favorites = canonProjects.filter((item) => item.isFavorite);
+      const indexes = new Map(
+        canonProjects.map((item, position) => [item.id, String(position + 1).padStart(2, "0")]),
       );
+
+      expect(favorites.length).toBeLessThan(canonProjects.length);
+      expect(data.projects.items.map((item) => item.id)).toEqual(favorites.map((item) => item.id));
       expect(data.projects.items.map((item) => item.name)).toEqual(
-        canonProjects.map((item) => item.name),
+        favorites.map((item) => item.name),
       );
       expect(data.projects.items.map((item) => item.index)).toEqual(
-        canonProjects.map((_, position) => String(position + 1).padStart(2, "0")),
+        favorites.map((item) => indexes.get(item.id)),
       );
     });
 
     it("derives the texts and tags of the projects from the list of the cards", () => {
-      const projects = buildProjects(staticSources(locale), locale);
+      const projects = buildProjects(staticSources(locale), locale).filter(
+        (project) => project.isFavorite,
+      );
 
       expect(data.projects.items).toHaveLength(projects.length);
       projects.forEach((project, position) => {
@@ -122,17 +128,17 @@ describe.each(Object.entries(files) as ["en" | "ru", ResumeData][])(
       }
     });
 
-    it("keeps the first 35 additional skills at the lengths the typing keyframes of the home toolkit are built for", () => {
+    it("keeps the 33 additional skills at the lengths the typing keyframes of the home toolkit are built for", () => {
       const additional = groups.find((group) => group.id === "additional")!.skills;
       const toolkit = buildToolkit(additional);
 
       expect(toolkit.static).toEqual(["Vite", "Webpack", "Git", "GitHub", "GitLab", "Figma"]);
+      expect(additional).toHaveLength(33);
       expect(toolkit.typed.map((item) => item.text.length)).toEqual([
-        4, 5, 6, 4, 5, 10, 9, 4, 11, 5, 6, 3, 14, 7, 3, 14, 5, 4, 15, 3, 9, 10, 7, 4, 7, 9, 9, 10,
-        10,
+        5, 6, 4, 5, 10, 9, 4, 11, 5, 6, 3, 14, 7, 3, 14, 5, 4, 15, 3, 9, 7, 9, 9, 10, 10, 14, 9,
       ]);
-      expect(toolkit.typed[0]!.text).toBe("Sass");
-      expect(toolkit.typed.at(-1)!.text).toBe("Lighthouse");
+      expect(toolkit.typed[0]!.text).toBe("Redux");
+      expect(toolkit.typed.at(-1)!.text).toBe("AI agents");
     });
 
     it("keeps the names of the technologies in English", () => {
@@ -143,7 +149,11 @@ describe.each(Object.entries(files) as ["en" | "ru", ResumeData][])(
       for (const job of data.experience.jobs) {
         for (const item of job.stack) expect(item).toMatch(/^[\x20-\x7e]+$/);
       }
-      expect(data.profile.stack).toEqual(["Vue.js", "React", "TypeScript"]);
+      for (const entry of data.cases.items) {
+        expect(entry.name).toMatch(/^[\x20-\x7e]+$/);
+        for (const item of entry.stack) expect(item).toMatch(/^[\x20-\x7e]+$/);
+      }
+      expect(data.profile).not.toHaveProperty("stack");
     });
   },
 );

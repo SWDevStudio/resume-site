@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { LOCALES } from "~/assets/const";
 import { buildProjects, buildResume, buildSkillGroups } from "../../app/assets/api/mock/build";
 import { staticSources } from "../../app/assets/api/mock/sources.static";
+import type { Content } from "pdfmake/interfaces";
 import type { ProjectView, SkillGroupView } from "../../app/assets/api/types/catalog";
 import type { ResumeData } from "../../app/assets/api/types/resume";
 import { resumeToMarkdown } from "./resumeToMarkdown";
@@ -17,11 +18,16 @@ const ru = files.ru;
 
 const entries = LOCALES.map((locale) => ({ locale, data: files[locale] }));
 
+const siteUrl = (locale: string) => `https://example.com/${locale}/resume`;
+
 const groupsOf = (locale: (typeof LOCALES)[number]): SkillGroupView[] =>
   buildSkillGroups(staticSources(locale), locale);
 
 const projectsOf = (locale: (typeof LOCALES)[number]): ProjectView[] =>
-  buildProjects(staticSources(locale), locale);
+  buildProjects(staticSources(locale), locale).filter((project) => project.isFavorite);
+
+const otherProjectsOf = (locale: (typeof LOCALES)[number]): ProjectView[] =>
+  buildProjects(staticSources(locale), locale).filter((project) => !project.isFavorite);
 
 const SKIPPED_KEYS = new Set(["id", "index"]);
 
@@ -55,6 +61,7 @@ function headings(markdown: string, level: number) {
 
 describe.each(entries)("resumeToMarkdown of $locale", ({ locale, data }) => {
   const markdown = resumeToMarkdown(data);
+  const linked = resumeToMarkdown(data, siteUrl(locale));
   const plain = markdown.replaceAll("\\", "");
 
   it("names every group and every skill of the registry of the skills", () => {
@@ -81,31 +88,73 @@ describe.each(entries)("resumeToMarkdown of $locale", ({ locale, data }) => {
     expect(markdown.endsWith("\n\n")).toBe(false);
   });
 
+  it("starts with the line of the latest version when the site address is known", () => {
+    const url = siteUrl(locale);
+
+    expect(
+      linked.startsWith(
+        `*${data.footer.latestVersion}: [${url}](${url})*\n\n# ${data.profile.firstName} ${data.profile.lastName}\n`,
+      ),
+    ).toBe(true);
+    expect(linked.slice(linked.indexOf("\n\n") + 2)).toBe(markdown);
+    expect(markdown).not.toContain(data.footer.latestVersion);
+  });
+
   it("has a second level heading for every section in the order of the page", () => {
     expect(headings(markdown, 2)).toEqual([
       data.summary.name,
       data.skills.name,
       data.projects.name,
       data.experience.name,
+      data.cases.name,
       data.education.name,
       data.additional.name,
       data.ai.name,
-      data.personal.name,
       data.references.name,
     ]);
   });
 
-  it("has a heading for every job and every project", () => {
+  it("has a heading for every job, every project and every own product", () => {
     expect(headings(markdown, 3)).toEqual(
       [
         ...data.projects.items.map((item) => item.name),
         ...data.experience.jobs.map((job) => job.company),
-        ...data.personal.items.map((item) => item.name),
+        ...data.cases.items.map((item) => item.name),
       ].map((name) => expect.stringContaining(name)),
     );
     expect(headings(markdown, 4)).toHaveLength(
       data.experience.jobs.reduce((sum, job) => sum + (job.projects.length ? 4 : 3), 0),
     );
+  });
+
+  it("writes the period, role, points and stack of every own product", () => {
+    expect(data.cases.items.length).toBeGreaterThan(0);
+    for (const entry of data.cases.items) {
+      const start = plain.indexOf(`### ${entry.name}\n`);
+      const block = plain.slice(start, plain.indexOf("\n#", start + 1));
+
+      expect(start).toBeGreaterThan(plain.indexOf(`## ${data.cases.name}\n`));
+      expect(block).toContain(`*${[entry.period, entry.role].filter(Boolean).join(" · ")}*`);
+      expect(block).toContain(entry.description);
+      for (const point of entry.points) expect(block).toContain(`- ${point}`);
+      expect(block).toContain(entry.stack.join(", "));
+    }
+  });
+
+  it("writes the period of a job without a city", () => {
+    for (const job of data.experience.jobs) {
+      expect(plain).toContain(`*${job.period} (${job.duration})*`);
+    }
+  });
+
+  it("puts the link of the AI section under its paragraphs", () => {
+    const link = data.ai.link!;
+    const ai = plain.slice(
+      plain.indexOf(`## ${data.ai.name}`),
+      plain.indexOf(`## ${data.references.name}`),
+    );
+
+    expect(ai).toContain(`[${link.label}](${link.href})`);
   });
 
   it("names every company, title, skill, project and contact from the JSON", () => {
@@ -121,7 +170,10 @@ describe.each(entries)("resumeToMarkdown of $locale", ({ locale, data }) => {
     for (const contact of data.profile.contacts) expect(plain).toContain(contact.value);
   });
 
-  it("writes the name, subtitle, description, role, result, tags and link of every project of the catalog", () => {
+  it("writes the name, subtitle, description, role, result, tags and link of every favorite project", () => {
+    for (const project of otherProjectsOf(locale)) {
+      expect(plain).not.toContain(`### ${project.name} — `);
+    }
     for (const project of projectsOf(locale)) {
       expect(plain).toContain(`### ${project.name} — `);
       if (project.host) expect(plain).toContain(`[${project.host}](${project.url})`);
@@ -134,7 +186,8 @@ describe.each(entries)("resumeToMarkdown of $locale", ({ locale, data }) => {
   });
 
   it("does not lose a single text of the JSON", () => {
-    const missing = strings(data).filter((text) => !plain.includes(text));
+    const full = linked.replaceAll("\\", "");
+    const missing = strings(data).filter((text) => !full.includes(text));
 
     expect(missing).toEqual([]);
   });
@@ -149,7 +202,7 @@ describe.each(entries)("resumeToMarkdown of $locale", ({ locale, data }) => {
   it("escapes the Markdown characters of the text but not the underscores", () => {
     const changed = resumeToMarkdown({
       ...data,
-      footer: { copyright: "a*b_c`d[e]f\\g" },
+      footer: { ...data.footer, copyright: "a*b_c`d[e]f\\g" },
     });
 
     expect(changed).toContain("a\\*b_c\\`d\\[e\\]f\\\\g");
@@ -183,6 +236,8 @@ describe("resumeToMarkdown", () => {
 describe.each(entries)("resumeToPdf of $locale", ({ locale, data }) => {
   const definition = resumeToPdf(data, locale);
   const text = collect(definition.content).join("\n");
+  const linked = resumeToPdf(data, locale, siteUrl(locale));
+  const linkedText = collect(linked.content).join("\n");
 
   it("names every group and every skill of the registry of the skills", () => {
     for (const group of groupsOf(locale)) {
@@ -191,7 +246,8 @@ describe.each(entries)("resumeToPdf of $locale", ({ locale, data }) => {
     }
   });
 
-  it("writes the index, name, subtitle, description, role, result, tags and link of every project of the catalog", () => {
+  it("writes the index, name, subtitle, description, role, result, tags and link of every favorite project", () => {
+    for (const project of otherProjectsOf(locale)) expect(text).not.toContain(project.subtitle);
     for (const project of projectsOf(locale)) {
       expect(text).toContain(project.index);
       expect(text).toContain(project.name);
@@ -215,10 +271,42 @@ describe.each(entries)("resumeToPdf of $locale", ({ locale, data }) => {
 
   it("does not lose a single text of the JSON", () => {
     const missing = strings(data).filter(
-      (item) => !text.includes(item) && item !== data.footer.copyright,
+      (item) => !linkedText.includes(item) && item !== data.footer.copyright,
     );
 
     expect(missing).toEqual([]);
+  });
+
+  it("starts with a clickable line of the latest version only when the site address is known", () => {
+    const url = siteUrl(locale);
+    const [first, second] = linked.content as Content[];
+    const name = `${data.profile.firstName} ${data.profile.lastName}`;
+
+    expect((first as { text: { text: string }[] }).text.map((part) => part.text).join("")).toBe(
+      `${data.footer.latestVersion}: ${url}`,
+    );
+    expect(JSON.stringify(first)).toContain(`"link":"${url}"`);
+    expect(second).toMatchObject({ text: name });
+    expect((definition.content as Content[])[0]).toMatchObject({ text: name });
+    expect(text).not.toContain(data.footer.latestVersion);
+  });
+
+  it("writes the own products after the experience with their points and stack", () => {
+    expect(text.indexOf(data.cases.name)).toBeGreaterThan(text.indexOf(data.experience.name));
+    expect(text.indexOf(data.cases.name)).toBeLessThan(text.indexOf(data.education.name));
+    for (const entry of data.cases.items) {
+      expect(text).toContain(entry.name);
+      if (entry.period) expect(text).toContain(entry.period);
+      if (entry.role) expect(text).toContain(entry.role);
+      for (const point of entry.points) expect(text).toContain(point);
+      expect(text).toContain(entry.stack.join(", "));
+    }
+  });
+
+  it("writes the duration of a job without a city", () => {
+    const values = collect(definition.content);
+
+    for (const job of data.experience.jobs) expect(values).toContain(job.duration);
   });
 
   it("makes the links of the contacts, the sites and the projects clickable", () => {
@@ -234,6 +322,7 @@ describe.each(entries)("resumeToPdf of $locale", ({ locale, data }) => {
         "mailto:swdevstudio@gmail.com",
         "https://brendmart.com/",
         "https://freedomgroupint.com",
+        data.ai.link!.href,
       ]),
     );
   });

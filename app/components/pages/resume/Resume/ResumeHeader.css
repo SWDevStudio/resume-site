@@ -49,14 +49,6 @@
   }
 }
 
-.resume-role-stack {
-  font-family: "Righteous", "Righteous Fallback", sans-serif;
-}
-
-.resume-role-focus {
-  color: var(--color-brand-ink);
-}
-
 .resume-rule {
   height: --spacing(0.25);
   margin: --spacing(2) 0rem --spacing(1);

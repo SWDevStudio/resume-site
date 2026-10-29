@@ -47,18 +47,20 @@ export interface ResumeProject {
   tags: string[];
 }
 
-export interface ResumePersonalProject {
+export interface ResumeCase {
   id: string;
   name: string;
-  stack: string[];
+  period?: string;
+  role?: string;
   description: string;
+  points: string[];
+  stack: string[];
 }
 
 export interface ResumeJob {
   id: string;
   title: string;
   company: string;
-  city: string;
   site?: string;
   field?: string;
   period: string;
@@ -90,8 +92,6 @@ export interface ResumeProfile {
   firstName: string;
   lastName: string;
   role: string;
-  stack: string[];
-  specialization: string;
   contacts: ResumeContact[];
 }
 
@@ -105,10 +105,10 @@ export interface ResumeData {
     labels: ResumeExperienceLabels;
     jobs: ResumeJob[];
   };
+  cases: ResumeSectionHead & { items: ResumeCase[] };
   education: ResumeSectionHead & { items: ResumeItem[] };
   additional: ResumeSectionHead & { items: ResumeItem[] };
-  ai: ResumeSectionHead & { paragraphs: string[] };
-  personal: ResumeSectionHead & { items: ResumePersonalProject[] };
+  ai: ResumeSectionHead & { paragraphs: string[]; link?: ResumeLink };
   references: ResumeSectionHead & { items: ResumeItem[] };
-  footer: { copyright: string };
+  footer: { copyright: string; latestVersion: string };
 }

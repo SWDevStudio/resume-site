@@ -320,10 +320,13 @@ describe.each(LOCALES)("the projects built for %s", (locale: Locale) => {
     expect(qwixit.tags.slice(0, 3)).not.toContain(text.tags.seo);
   });
 
-  it("derives the projects of the resume from the same list, text of the card included", () => {
+  it("derives the projects of the resume from the favorites of the same list, text of the card included", () => {
     const items = buildResume(staticSources(locale), locale).projects.items;
-    expect(items).toHaveLength(list.length);
-    list.forEach((project, position) => {
+    const favorites = list.filter((project) => project.isFavorite);
+
+    expect(favorites.map((project) => project.id)).toEqual(FAVORITES);
+    expect(items).toHaveLength(favorites.length);
+    favorites.forEach((project, position) => {
       const item = items[position]!;
 
       expect(item.id).toBe(project.id);
@@ -336,15 +339,20 @@ describe.each(LOCALES)("the projects built for %s", (locale: Locale) => {
       expect(item.role).toBe(project.role);
       expect(item.result).toBe(project.result);
       expect(item.tags).toEqual(project.tags);
-      expect(item.tags).toEqual(canon[position]!.tags.map((tag) => text.tags[tag]));
+      expect(item.tags).toEqual(
+        canon.find((entry) => entry.id === project.id)!.tags.map((tag) => text.tags[tag]),
+      );
     });
   });
 
-  it("gives the resume the four tags of Qwixit and the placeholder instead of a missing link", () => {
+  it("leaves the projects that are not favorite out of the resume and gives the placeholder instead of a missing link", () => {
     const items = buildResume(staticSources(locale), locale).projects.items;
     const tamrielCodex = items.find((item) => item.id === "tamriel-codex")!;
 
-    expect(items.find((item) => item.id === "qwixit")!.tags).toHaveLength(4);
+    expect(items.map((item) => item.id)).toEqual(FAVORITES);
+    for (const project of list.filter((entry) => !entry.isFavorite)) {
+      expect(items.map((item) => item.id)).not.toContain(project.id);
+    }
     expect(tamrielCodex.link).toEqual({ label: text.linkPlaceholder, href: null });
   });
 

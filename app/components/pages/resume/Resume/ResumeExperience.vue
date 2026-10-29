@@ -30,7 +30,7 @@ const jobs = computed(() =>
   props.experience.jobs.map((job) => ({
     ...job,
     name: `${job.company} — ${job.title}`,
-    meta: `${job.period} · ${job.city}`,
+    meta: job.period,
   })),
 );
 </script>

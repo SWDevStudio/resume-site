@@ -331,6 +331,35 @@ const resumes = {
 
 const resumeSources: ResumeSources = { ...sources, ...skillsSources, resume: resumes };
 
+const allFavoriteSources: ResumeSources = {
+  ...resumeSources,
+  projects: canon.map((project) => ({ ...project, isFavorite: true })),
+};
+
+const alphaItem = {
+  id: "alpha",
+  index: "01",
+  name: "Alpha",
+  link: { label: "alpha.example.com", href: "https://alpha.example.com/path" },
+  subtitle: "А",
+  description: "А1",
+  role: "Р1",
+  result: "Е1",
+  tags: ["Один", "Два"],
+};
+
+const betaItem = {
+  id: "beta",
+  index: "02",
+  name: "Beta",
+  link: { label: "[ссылка]", href: null },
+  subtitle: "Б",
+  description: "Б1",
+  role: "Р2",
+  result: "Е2",
+  tags: ["Два"],
+};
+
 describe("buildSkillGroups", () => {
   it("keeps the order of the canon and takes the flag terms from the kind of the group", () => {
     const groups = buildSkillGroups(skillsSources, "ru");
@@ -454,42 +483,41 @@ describe("buildResume", () => {
     });
   });
 
-  it("keeps the head of the projects section and fills the items from the project list", () => {
+  it("keeps the head of the projects section and fills the items with the favorite projects only", () => {
     expect(buildResume(resumeSources, "ru").projects).toEqual({
       id: "projects",
       label: "03",
       name: "Проекты",
-      items: [
-        {
-          id: "alpha",
-          index: "01",
-          name: "Alpha",
-          link: { label: "alpha.example.com", href: "https://alpha.example.com/path" },
-          subtitle: "А",
-          description: "А1",
-          role: "Р1",
-          result: "Е1",
-          tags: ["Один", "Два"],
-        },
-        {
-          id: "beta",
-          index: "02",
-          name: "Beta",
-          link: { label: "[ссылка]", href: null },
-          subtitle: "Б",
-          description: "Б1",
-          role: "Р2",
-          result: "Е2",
-          tags: ["Два"],
-        },
-      ],
+      items: [alphaItem],
     });
   });
 
-  it("takes the placeholder of the link from the locale and the Russian one when it has none", () => {
-    const items = buildResume(resumeSources, "en").projects.items;
-    const noPlaceholder: ResumeSources = {
+  it("keeps the order and the index of the catalog for the favorites", () => {
+    const reordered: ResumeSources = {
       ...resumeSources,
+      projects: [
+        { ...canon[0]!, isFavorite: false },
+        { ...canon[1]!, isFavorite: true },
+      ],
+    };
+
+    expect(buildResume(reordered, "ru").projects.items).toEqual([betaItem]);
+    expect(buildResume(allFavoriteSources, "ru").projects.items).toEqual([alphaItem, betaItem]);
+  });
+
+  it("gives no items when no project is a favorite", () => {
+    const none: ResumeSources = {
+      ...resumeSources,
+      projects: canon.map((project) => ({ ...project, isFavorite: false })),
+    };
+
+    expect(buildResume(none, "ru").projects.items).toEqual([]);
+  });
+
+  it("takes the placeholder of the link from the locale and the Russian one when it has none", () => {
+    const items = buildResume(allFavoriteSources, "en").projects.items;
+    const noPlaceholder: ResumeSources = {
+      ...allFavoriteSources,
       projectsText: {
         ru: sources.projectsText.ru,
         en: { ...sources.projectsText.en!, linkPlaceholder: undefined as unknown as string },

@@ -50,14 +50,14 @@ describe("resume data files", () => {
           data.skills.id,
           data.projects.id,
           data.experience.id,
+          data.cases.id,
           data.education.id,
           data.additional.id,
           data.ai.id,
-          data.personal.id,
           data.references.id,
         ],
         jobs: data.experience.jobs.map((job) => job.id),
-        personal: data.personal.items.map((item) => item.id),
+        cases: data.cases.items.map((item) => item.id),
         contacts: data.profile.contacts.map((item) => item.id),
       };
     }
@@ -67,7 +67,7 @@ describe("resume data files", () => {
       const own = ids(data);
       expect(own.sections).toEqual(ids(english).sections);
       expect(own.jobs).toEqual(ids(english).jobs);
-      expect(own.personal).toEqual(ids(english).personal);
+      expect(own.cases).toEqual(ids(english).cases);
       expect(own.contacts).toEqual(ids(english).contacts);
     }
   });
@@ -88,16 +88,21 @@ describe("resume data files", () => {
         data.projects.id,
         data.experience.id,
         ...data.experience.jobs.map((job) => job.id),
+        data.cases.id,
+        ...data.cases.items.map((item) => item.id),
         data.education.id,
         data.additional.id,
         data.ai.id,
-        data.personal.id,
         data.references.id,
       ];
 
       expect(new Set(anchors).size).toBe(anchors.length);
       for (const id of anchors) expect(id).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
     }
+  });
+
+  it.each(entries)("keeps no city in the jobs of $locale", ({ data }) => {
+    for (const job of data.experience.jobs) expect(job).not.toHaveProperty("city");
   });
 
   it.each(entries)("takes the contact links of $locale from the social constants", ({ data }) => {

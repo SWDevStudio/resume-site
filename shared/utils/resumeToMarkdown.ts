@@ -39,7 +39,7 @@ function job(entry: ResumeJob, labels: ResumeData["experience"]["labels"]) {
     .join(" · ");
   const blocks = [
     `### ${escape(entry.company)} — ${escape(entry.title)}`,
-    `*${escape(`${entry.period} (${entry.duration}) · ${entry.city}`)}*`,
+    `*${escape(`${entry.period} (${entry.duration})`)}*`,
     field,
     `**${escape(labels.team)}:** ${escape(entry.team)}`,
     entry.projects.length ? `#### ${labels.projects}\n\n${bullets(entry.projects.map(item))}` : "",
@@ -50,7 +50,7 @@ function job(entry: ResumeJob, labels: ResumeData["experience"]["labels"]) {
   return blocks.filter(Boolean).join("\n\n");
 }
 
-export function resumeToMarkdown(data: ResumeData): string {
+export function resumeToMarkdown(data: ResumeData, siteUrl?: string): string {
   const { profile } = data;
   const name = `${profile.firstName} ${profile.lastName}`;
 
@@ -62,7 +62,7 @@ export function resumeToMarkdown(data: ResumeData): string {
 
   const head = [
     `# ${escape(name)}`,
-    `**${escape(profile.role)} (${escape(profile.stack.join(" / "))})** ${escape(profile.specialization)}`,
+    `**${escape(profile.role)}**`,
     escape(profile.caption),
     contacts,
   ].join("\n\n");
@@ -82,15 +82,21 @@ export function resumeToMarkdown(data: ResumeData): string {
     ].join("\n\n"),
   );
 
-  const personal = data.personal.items.map((project) =>
-    [
-      `### ${escape(project.name)}`,
-      `*${escape(project.stack.join(", "))}*`,
-      escape(project.description),
-    ].join("\n\n"),
-  );
+  const cases = data.cases.items.map((entry) => {
+    const meta = [entry.period, entry.role].filter(Boolean).join(" · ");
+    return [
+      `### ${escape(entry.name)}`,
+      meta ? `*${escape(meta)}*` : "",
+      escape(entry.description),
+      entry.points.length ? bullets(entry.points.map(escape)) : "",
+      escape(entry.stack.join(", ")),
+    ]
+      .filter(Boolean)
+      .join("\n\n");
+  });
 
   const parts = [
+    siteUrl && `*${escape(data.footer.latestVersion)}: ${link(siteUrl, siteUrl)}*`,
     head,
     section(data.summary.name, data.summary.paragraphs.map(escape).join("\n\n")),
     section(data.skills.name, skills.join("\n")),
@@ -100,13 +106,17 @@ export function resumeToMarkdown(data: ResumeData): string {
       escape(data.experience.total),
       ...data.experience.jobs.map((entry) => job(entry, data.experience.labels)),
     ),
+    cases.length > 0 && section(data.cases.name, ...cases),
     section(data.education.name, bullets(data.education.items.map(item))),
     section(data.additional.name, bullets(data.additional.items.map(item))),
-    section(data.ai.name, data.ai.paragraphs.map(escape).join("\n\n")),
-    section(data.personal.name, ...personal),
+    section(
+      data.ai.name,
+      data.ai.paragraphs.map(escape).join("\n\n"),
+      data.ai.link !== undefined && projectLink(data.ai.link),
+    ),
     section(data.references.name, bullets(data.references.items.map(item))),
     escape(data.footer.copyright),
   ];
 
-  return `${parts.join("\n\n")}\n`;
+  return `${parts.filter(Boolean).join("\n\n")}\n`;
 }
