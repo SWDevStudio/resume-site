@@ -54,7 +54,7 @@
     --home-contact-pattern-height: --spacing(75);
     --home-contact-koi-left: calc(50% + --spacing(103));
     --home-contact-koi-right: auto;
-    --home-contact-koi-top: --spacing(2);
+    --home-contact-koi-top: --spacing(16);
   }
 
   @apply pointer-events-none absolute inset-0 overflow-hidden;
@@ -229,7 +229,7 @@
 
   @variant lg {
     --home-contact-koi-left: calc(50% + --spacing(100));
-    --home-contact-koi-top: --spacing(2.5);
+    --home-contact-koi-top: --spacing(16.5);
     --home-contact-koi-width: --spacing(40);
     --home-contact-koi-height: --spacing(52.5);
   }

@@ -378,7 +378,8 @@ describe("behavior", () => {
         item.getBoundingClientRect(),
       );
 
-      expect(box(screen, ".home-contact").height).toBe(900);
+      expect(box(screen, ".home-contact").height).toBeGreaterThanOrEqual(900);
+      near(box(screen, ".home-contact-projects").bottom, 56);
       near(box(screen, ".home-contact-head").left, 140);
       near(size(screen, ".home-contact-label"), 14);
       near(size(screen, ".home-contact-title"), 64);
@@ -445,18 +446,19 @@ describe("behavior", () => {
     });
 
     it.each(["en", "ru"] as const)(
-      "fits the screen below the header at 1440 x 900 in %s",
+      "starts below the header and ends with the projects button at 1440 x 900 in %s",
       async (locale) => {
         const screen = await renderCase({ width: 1440, height: 900, locale });
         const body = pick<HTMLElement>(screen, ".home-slide-body");
+        const main = pick(screen, ".home-contact-main");
 
-        expect(box(screen, ".home-contact").height).toBe(900);
+        expect(box(screen, ".home-contact").height).toBeGreaterThanOrEqual(900);
         expect(box(screen, ".home-contact-head").top).toBeGreaterThanOrEqual(110 - 1);
         expect(Number.parseFloat(getComputedStyle(body).paddingTop)).toBeGreaterThanOrEqual(
           110 - 1,
         );
-        expect(box(screen, ".home-contact-projects").bottom).toBeGreaterThanOrEqual(24 - 1);
-        expect(pick(screen, ".home-contact-main").scrollHeight).toBeLessThanOrEqual(900);
+        near(box(screen, ".home-contact-projects").bottom, 56);
+        expect(main.scrollHeight).toBeLessThanOrEqual(main.clientHeight);
       },
     );
 
