@@ -21,6 +21,12 @@ const resume = {
         href: SOCIAL.email.href,
       },
       {
+        id: "linkedin",
+        label: SOCIAL.linkedin.label,
+        value: "Mikhail Malakhov",
+        href: SOCIAL.linkedin.href,
+      },
+      {
         id: "personal",
         label: "Personal",
         value: "Male, 27 years old, born 28 April 1999",
@@ -529,14 +535,6 @@ const resume = {
         lead: "Work format:",
         text: "remote, hybrid, on-site.",
       },
-      {
-        lead: "Commute time:",
-        text: "does not matter.",
-      },
-      {
-        lead: "Driving:",
-        text: "own car, category B driver's license.",
-      },
     ],
   },
   ai: {
@@ -544,7 +542,7 @@ const resume = {
     label: "08 — AI TOOLS",
     name: "AI Tools in Development",
     paragraphs: [
-      "Idodom, a 3D furniture configurator for an online store: a FastAPI microservice, a three.js model editor, an admin panel and a storefront. Built it in a week with a pipeline of Claude Code agents: 197 tasks, 71 hours of agent work, about 38k lines of code. My part: specs for the agents, the pipeline design and the decisions. A separate agent writes tests before the code, so there is nearly 3x as much test code as application code, and there were almost no fixes after delivery. Each stage is accepted by a single reviewer: 2–6x fewer review comments than with task-by-task review. I track cost in tokens per task and cut it from 23M to 15M.",
+      "Idodom, a 3D furniture configurator for an online store: a FastAPI microservice, a three.js model editor, an admin panel and a storefront. Built it in a week with a pipeline of Claude Code agents: 197 tasks, 71 hours of agent work, about 38k lines of code. My part: specs for the agents, the pipeline design and the decisions. A separate agent writes tests before the code, so there is nearly 3x as much test code as application code, and there were almost no fixes after delivery. Each stage is accepted by a single reviewer: 2–6x fewer review comments than with task-by-task review. Cut token spend per task by about 35%.",
       "Since 2024 I have used AI agents on every project: Claude Code, Codex, GitHub Copilot. For each project I write architecture rules, skills and subagents so the agents follow the team's conventions.",
     ],
     link: {

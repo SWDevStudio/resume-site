@@ -4,7 +4,7 @@ import { createI18n } from "vue-i18n";
 import { cdp, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-vue";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { Locale } from "~/assets/const";
+import { SOCIAL, type Locale } from "~/assets/const";
 import en from "~/locales/en.json";
 import ru from "~/locales/ru.json";
 import TheHeader from "~/components/global/TheHeader/TheHeader.vue";
@@ -198,22 +198,31 @@ describe("content", () => {
     const labels = pickAll(screen, ".resume-contacts-label").map((item) => text(item));
     const values = pickAll(screen, ".resume-contacts-value");
 
-    expect(labels).toEqual(["Telegram", "Email", "Personal", "Citizenship", "Relocation"]);
+    expect(labels).toEqual([
+      "Telegram",
+      "Email",
+      "LinkedIn",
+      "Personal",
+      "Citizenship",
+      "Relocation",
+    ]);
     expect(values.map((item) => text(item))).toEqual([
       "@kotaroSWQ",
       "swdevstudio@gmail.com",
+      "Mikhail Malakhov",
       "Male, 27 years old, born 28 April 1999",
       "Russia",
       "Willing to relocate, willing to travel for work",
     ]);
-    const anchors = values.slice(0, 2).map((item) => item.querySelector("a")!);
+    const anchors = values.slice(0, 3).map((item) => item.querySelector("a")!);
     expect(anchors.map((link) => link.getAttribute("href"))).toEqual([
       "https://t.me/kotaroSWQ",
       "mailto:swdevstudio@gmail.com",
+      SOCIAL.linkedin.href,
     ]);
     for (const link of anchors) expect(link.rel).toBe("noopener noreferrer");
-    expect(anchors.map((link) => link.getAttribute("target"))).toEqual(["_blank", null]);
-    for (const value of values.slice(2)) expect(value.querySelector("a")).toBeNull();
+    expect(anchors.map((link) => link.getAttribute("target"))).toEqual(["_blank", null, "_blank"]);
+    for (const value of values.slice(3)) expect(value.querySelector("a")).toBeNull();
   });
 
   it("renders the download buttons as links to the resume files of the site language", async () => {
@@ -462,8 +471,6 @@ describe("content", () => {
       "Languages: Russian: native. English: A2 (spoken). Read technical documentation, specifications and English-language sources fluently.",
       "Employment type: full-time, part-time.",
       "Work format: remote, hybrid, on-site.",
-      "Commute time: does not matter.",
-      "Driving: own car, category B driver's license.",
     ]);
     expect(items("references")).toEqual([
       "Joint projects: Roman Khadzhaev (Senior Developer, FIX PRICE), co-author of several of my own projects",
