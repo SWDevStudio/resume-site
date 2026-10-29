@@ -81,6 +81,7 @@ export interface ProjectText {
   subtitle: string;
   headline: string;
   description: string;
+  metaDescription?: string;
   previewAlt: string;
   role: string;
   result: string;
@@ -146,6 +147,7 @@ export interface ProjectView {
   subtitle: string;
   headline: string;
   description: string;
+  metaDescription?: string;
   tags: string[];
   stack: string[];
   role: string;

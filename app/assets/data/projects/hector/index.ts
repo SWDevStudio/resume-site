@@ -62,6 +62,8 @@ const project = {
       headline: "An iOS and Android app with the iOS build in the cloud",
       description:
         "An app for booking personal protection and a car with a driver: live tracking of the team on a map and an SOS button. The service operates in Europe and the UAE.",
+      metaDescription:
+        "An app for booking personal protection and a chauffeured car: live tracking of the team on a map and an SOS button. The service operates in Europe and the UAE.",
       previewAlt:
         "Screens of the Hector app: choosing protection, live tracking of the team, order review and the SOS screen",
       role: "Frontend Team Lead in a team of 15: architecture and the choice of Vue 3 with Capacitor, tasks and code review for four more developers, the initial project setup, components and the first order screens. I presented the app to the client myself.",

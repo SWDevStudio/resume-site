@@ -54,6 +54,8 @@ const project = {
       headline: "Speeding up the storefronts of two brands on one platform",
       description:
         "A service that delivers purchases from US stores: a warehouse in tax-free Delaware, buying items on the customer's behalf, shipping to Russia, Kazakhstan, Belarus and other countries.",
+      metaDescription:
+        "A service delivering purchases from US stores: a tax-free Delaware warehouse, buying items for the customer, shipping to Russia, Kazakhstan, Belarus and more.",
       previewAlt: "Home page of Pochtoy.com and the mobile home page of Prostobox",
       role: "Fullstack Developer in a team of three developers and a PM: the storefront frontend, its database queries and faster page loading.",
       result:

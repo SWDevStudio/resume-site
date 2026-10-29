@@ -14,6 +14,7 @@ export interface ProjectCaseHeaderData {
   name: string;
   headline: string;
   description: string;
+  metaDescription?: string;
   url: string | null;
   tone: ProjectCaseTone;
 }

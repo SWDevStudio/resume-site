@@ -31,6 +31,7 @@ const CYRILLIC = /[Ѐ-ӿ]/;
 const PROJECT_CANON_KEYS = ["id", "isFavorite", "name", "stack", "tags", "tone", "url"];
 const PROJECT_CANON_OPTIONAL_KEYS = ["caseStack", "preview", "previewFrame", "previewMobile"];
 const PROJECT_TEXT_KEYS = ["description", "headline", "previewAlt", "result", "role", "subtitle"];
+const PROJECT_TEXT_OPTIONAL_KEYS = ["metaDescription"];
 const CATALOG = [
   "dobro",
   "hector",
@@ -214,7 +215,11 @@ describe("the text of the projects", () => {
     });
 
     it("keeps only the text of a project and no facts", () => {
-      for (const item of Object.values(data.items)) expect(keysOf(item)).toEqual(PROJECT_TEXT_KEYS);
+      for (const item of Object.values(data.items)) {
+        expect(keysOf(item).filter((key) => !PROJECT_TEXT_OPTIONAL_KEYS.includes(key))).toEqual(
+          PROJECT_TEXT_KEYS,
+        );
+      }
       expect(keysOf(data)).toEqual(["items", "linkPlaceholder", "tags"]);
     });
 
@@ -228,9 +233,13 @@ describe("the text of the projects", () => {
 
   it("keeps the same schema in every language", () => {
     const base = texts.find((file) => file.locale === DEFAULT_LOCALE)!;
-    const schema = (data: ProjectsText) => [...new Set(leafPaths(data))].sort();
+    const required = (path: string) =>
+      !PROJECT_TEXT_OPTIONAL_KEYS.some((key) => path.endsWith(`.${key}:string`) || path === key);
+    const schema = (data: ProjectsText) => [...new Set(leafPaths(data).filter(required))].sort();
     const keys = (data: ProjectsText) =>
-      Object.fromEntries(Object.entries(data.items).map(([id, item]) => [id, keysOf(item)]));
+      Object.fromEntries(
+        Object.entries(data.items).map(([id, item]) => [id, keysOf(item).filter(required)]),
+      );
 
     for (const file of texts) {
       expect(schema(file.data)).toEqual(schema(base.data));
@@ -427,6 +436,10 @@ describe.each(LOCALES)("the cases built for %s", (locale: Locale) => {
         subtitle: text.items[id]!.subtitle,
         name: project.name,
         headline: text.items[id]!.headline,
+        description: text.items[id]!.description,
+        ...(text.items[id]!.metaDescription
+          ? { metaDescription: text.items[id]!.metaDescription }
+          : {}),
         url: project.url,
         tone: project.tone,
       });

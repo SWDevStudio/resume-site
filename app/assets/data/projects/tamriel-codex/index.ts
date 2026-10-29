@@ -47,6 +47,8 @@ const project = {
       headline: "Офлайн-справочник для Android и Windows за 10 дней, к дате игры",
       description:
         "Справочник и записная книжка игрока для полигонной ролевой игры по миру The Elder Scrolls: правила, лор и новости с быстрым поиском, свои заметки и обмен ими через QR без интернета.",
+      metaDescription:
+        "Справочник и записная книжка игрока для полигонной ролевой игры по миру The Elder Scrolls: правила, лор и новости с поиском, заметки и обмен ими по QR офлайн.",
       previewAlt: "Главный экран приложения Tamriel Codex",
       role: "Fullstack-разработчик, проект под ключ: интерфейс, локальная база, сборки под Android и Windows, выгрузка данных игры из группы VK и обмен заметками через QR.",
       result:
@@ -57,6 +59,8 @@ const project = {
       headline: "An offline handbook for Android and Windows in 10 days, ready by game day",
       description:
         "A handbook and player's notebook for a live-action role-playing game set in The Elder Scrolls world: rules, lore and news with fast search, personal notes and sharing them by QR without internet.",
+      metaDescription:
+        "A handbook and player notebook for a live-action role-playing game in The Elder Scrolls world: rules, lore and news with search, notes and offline QR sharing.",
       previewAlt: "Home screen of the Tamriel Codex app",
       role: "Fullstack developer, end to end: the interface, the local database, the Android and Windows builds, exporting the game data from the VK group and sharing notes by QR.",
       result:
