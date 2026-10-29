@@ -13,18 +13,21 @@
       </span>
       <p class="home-skills-toolkit">
         <span class="sr-only">{{ toolkitLabel }}</span>
-        <span aria-hidden="true">
+        <span
+          class="home-skills-line"
+          aria-hidden="true"
+        >
           <span class="home-skills-prompt">&gt;</span>
-          <template
-            v-for="item in toolkitStatic"
-            :key="item"
-          >
-            <span class="home-skills-static">
+          <span class="home-skills-statics">
+            <span
+              v-for="item in toolkitStatic"
+              :key="item"
+              class="home-skills-static"
+            >
               <span>{{ item }}</span>
               <span class="home-skills-separator">·</span>
             </span>
-            <wbr />
-          </template>
+          </span>
           <span
             ref="typing"
             class="home-skills-typing"

@@ -790,10 +790,36 @@ describe("behavior", () => {
       ).not.toContain(SKILL_TILE_META[removed].label);
     });
 
+    it.each([
+      { width: 1440, height: 900 },
+      { width: 768, height: 900 },
+      { width: 390, height: 780 },
+    ])("keeps the toolkit on one line at $width", async (item) => {
+      const screen = await renderCase(item);
+      const line = pick(screen, ".home-skills-line").getBoundingClientRect();
+      const statics = pick(screen, ".home-skills-statics");
+      const lineHeight = Number.parseFloat(getComputedStyle(statics).lineHeight);
+      const typing = pick(screen, ".home-skills-typing").getBoundingClientRect();
+      const shown = pickAll(screen, ".home-skills-static").filter(
+        (item) => item.getBoundingClientRect().top < statics.getBoundingClientRect().bottom,
+      );
+
+      near(line.height, lineHeight, 1);
+      expect(getComputedStyle(statics).overflow).toBe("hidden");
+      expect(shown.length).toBeGreaterThan(0);
+      for (const item of shown) near(item.getBoundingClientRect().top, line.top, 1);
+      near(typing.top, line.top, 1);
+      expect(typing.right).toBeLessThanOrEqual(line.right + 0.5);
+      expect(line.right - typing.right).toBeLessThan(
+        Number.parseFloat(getComputedStyle(statics).fontSize) * 20,
+      );
+      expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(item.width);
+    });
+
     it("takes the toolkit from the additional group of the data", async () => {
       const data = structuredClone(groupsOf.en);
       additionalOf(data)[0]!.name = "Vite 7";
-      additionalOf(data)[6]!.name = "Sass 2";
+      additionalOf(data)[TOOLKIT_STATIC_COUNT]!.name = "Sass 2";
       const screen = await renderCase({ width: 1440, height: 900 }, data);
 
       expect(pickAll(screen, ".home-skills-static")[0]!.textContent).toBe("Vite 7·");
