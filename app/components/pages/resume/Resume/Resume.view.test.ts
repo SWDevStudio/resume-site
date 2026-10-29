@@ -300,7 +300,7 @@ describe("content", () => {
       "H3 Brendmart — Fullstack Developer #brendmart",
       "H3 Pochtoy.com LLC — Fullstack Developer #pochtoy",
       "H3 CDEK.Market — Middle Frontend Developer #cdek-market",
-      "H3 To The Moon Mobile Ltd — Frontend Developer #to-the-moon",
+      "H3 To The Moon Mobile Ltd — Fullstack Developer #to-the-moon",
       "H3 Amigoweb — Junior Frontend Developer #amigoweb",
       "H2 Products I Built #cases",
       "H2 Education #education",

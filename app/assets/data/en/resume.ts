@@ -394,7 +394,7 @@ const resume = {
       },
       {
         id: "to-the-moon",
-        title: "Frontend Developer",
+        title: "Fullstack Developer",
         company: "To The Moon Mobile Ltd",
         field: "Telecommunications. Mobile communications",
         period: "April 2021 — October 2021",
@@ -402,14 +402,27 @@ const resume = {
         team: "2 frontend, 2 backend, 1 project",
         projects: [],
         responsibilities: [
-          "Developing corporate web applications on React: internal dashboards, services and business tools.",
+          "Developing corporate web applications on React and their Express backend: internal dashboards, services and business tools.",
         ],
         achievements: [
           "Built the company's internal dashboards and business tools from scratch: data tables with user filters.",
           "Integrated the frontend with the company's internal APIs and business services.",
+          "Developed and extended Express API endpoints and PostgreSQL queries for the needs of internal dashboards and tools.",
           "Increased interface resilience by adding handling of edge cases and API errors instead of failing on unexpected server responses.",
         ],
-        stack: ["JavaScript (ES6+)", "React", "HTML5", "CSS3", "SPA", "REST API", "Web API", "Git"],
+        stack: [
+          "JavaScript (ES6+)",
+          "React",
+          "HTML5",
+          "CSS3",
+          "SPA",
+          "Node.js",
+          "Express",
+          "PostgreSQL",
+          "REST API",
+          "Web API",
+          "Git",
+        ],
         practices: ["modular SPA architecture"],
       },
       {
