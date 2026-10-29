@@ -478,15 +478,46 @@ describe("anchors and scrolling", () => {
     await expect.poll(() => text(current(screen))).toBe("Business");
   });
 
-  it("switches the current chapter when a heading passes the reading line", async () => {
-    const screen = await renderSample({ width: 1440, height: 900 });
-    const heading = headingOf(screen, "Results");
-    const top = heading.getBoundingClientRect().top + window.scrollY;
+  it.each([
+    { name: "desktop", width: 1440, height: 900 },
+    { name: "short desktop", width: 1440, height: 700 },
+    { name: "mobile", width: 390, height: 780 },
+  ])(
+    "switches the current chapter when its heading rises to 30% of the window on $name",
+    async (item) => {
+      const screen = await renderSample(item);
+      const line = item.height * 0.3;
 
-    scrollToTop(top - 300);
-    await expect.poll(() => text(current(screen))).toBe("The goal");
-    scrollToTop(top - 90);
-    await expect.poll(() => text(current(screen))).toBe("Results");
+      for (const [name, previous] of [
+        ["Results", "The goal"],
+        ["The situation", "Business"],
+      ] as const) {
+        const heading = headingOf(screen, name);
+        const top = heading.getBoundingClientRect().top + window.scrollY;
+
+        scrollToTop(top - line - 20);
+        await expect.poll(() => text(current(screen))).toBe(previous);
+        scrollToTop(top - line + 10);
+        await expect.poll(() => text(current(screen))).toBe(name);
+      }
+    },
+  );
+
+  it("keeps the chapter it jumped to current while the next heading is above the reading line", async () => {
+    const screen = await renderSample({ width: 1440, height: 900 });
+    const anchor = links(screen).find((link) => text(link) === "The process")!;
+    const heading = headingOf(screen, "The process");
+    const child = headingOf(screen, "Design");
+
+    anchor.click();
+    await expect
+      .poll(() => Math.round(heading.getBoundingClientRect().top), { timeout: 3000 })
+      .toBe(102);
+    expect(child.getBoundingClientRect().top).toBeLessThan(900 * 0.3);
+    await expect.poll(() => text(current(screen))).toBe("The process");
+
+    scrollToTop(window.scrollY + 20);
+    await expect.poll(() => text(current(screen))).toBe("Design");
   });
 
   it("jumps to the section with a plain anchor and does not write a hash handler of its own", async () => {

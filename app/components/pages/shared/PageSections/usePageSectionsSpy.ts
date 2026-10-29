@@ -1,13 +1,13 @@
-import { computed, onMounted, ref, watch } from "vue";
-import { useIntersectionObserver, useWindowSize } from "@vueuse/core";
+import { computed, onMounted, watch } from "vue";
+import { useEventListener, useIntersectionObserver, useWindowSize } from "@vueuse/core";
 import type { SectionsRegistry } from "./usePageSections";
 
 const TOLERANCE = 4;
-const BAND = 2;
+const READING_LINE = 0.3;
 
 export function usePageSectionsSpy(registry: SectionsRegistry) {
   const { width, height } = useWindowSize();
-  const line = ref(0);
+  let line = 0;
 
   const targets = computed(() =>
     registry.entries.value
@@ -15,19 +15,24 @@ export function usePageSectionsSpy(registry: SectionsRegistry) {
       .filter((element): element is HTMLElement => element !== null),
   );
 
-  const rootMargin = computed(() => {
-    const bottom = Math.max(0, height.value - line.value - BAND);
-    return `-${line.value}px 0px -${bottom}px 0px`;
-  });
-
   function measure() {
-    const heading = targets.value[0]?.querySelector<HTMLElement>(".page-section-heading");
+    const element = targets.value[0];
+    const heading = element?.querySelector<HTMLElement>(".page-section-heading") ?? element;
     if (!heading) return;
     const offset = Number.parseFloat(getComputedStyle(heading).scrollMarginTop) || 0;
-    line.value = Math.round(offset + TOLERANCE);
+    line = Math.round(Math.max(offset + TOLERANCE, height.value * READING_LINE));
   }
 
-  useIntersectionObserver(targets, () => registry.settle(line.value + BAND), { rootMargin });
+  function settle() {
+    registry.settle(line, TOLERANCE);
+  }
+
+  function update() {
+    measure();
+    settle();
+  }
+
+  useEventListener("scroll", settle, { passive: true });
 
   const last = computed(() => {
     const element = registry.entries.value.at(-1)?.element;
@@ -41,14 +46,14 @@ export function usePageSectionsSpy(registry: SectionsRegistry) {
       registry.setEnd(
         record !== undefined && record.isIntersecting && record.intersectionRatio >= 1,
       );
-      registry.settle(line.value + BAND);
+      settle();
     },
     { threshold: [1] },
   );
 
-  watch([width, targets], measure, { flush: "post" });
+  watch([width, height, targets], update, { flush: "post" });
   onMounted(() => {
     registry.mounted.value = true;
-    measure();
+    update();
   });
 }

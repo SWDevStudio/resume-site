@@ -36,7 +36,7 @@ export interface SectionsRegistry {
   add: (entry: SectionEntry, parent: SectionEntry | null) => void;
   remove: (entry: SectionEntry, parent: SectionEntry | null) => void;
   reorder: (parent: SectionEntry | null) => void;
-  settle: (line: number) => void;
+  settle: (line: number, tolerance: number) => void;
   setEnd: (value: boolean) => void;
   nextUid: () => number;
 }
@@ -112,10 +112,22 @@ export function createSectionsRegistry(): SectionsRegistry {
     list.sort((first, second) => precedes(first.element!, second.element!));
   }
 
-  function settle(line: number) {
+  function headingAt(index: number) {
+    const element = entries.value[index]?.element;
+    return element?.querySelector<HTMLElement>(".page-section-heading") ?? element;
+  }
+
+  function passed(index: number, tolerance: number) {
+    const heading = headingAt(index);
+    if (!heading) return true;
+    const margin = Number.parseFloat(getComputedStyle(heading).scrollMarginTop) || 0;
+    return heading.getBoundingClientRect().top < margin - tolerance;
+  }
+
+  function settle(line: number, tolerance: number) {
     const above = flat.value.filter((_, index) => {
-      const top = entries.value[index]?.element?.getBoundingClientRect().top;
-      return top !== undefined && top < line;
+      const top = headingAt(index)?.getBoundingClientRect().top;
+      return top !== undefined && top < line && (index === 0 || passed(index - 1, tolerance));
     });
     kept.value = above.at(-1)?.id ?? null;
   }
