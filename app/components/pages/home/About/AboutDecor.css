@@ -46,7 +46,7 @@
     --home-about-pattern-bottom: auto;
     --home-about-pattern-width: --spacing(150);
     --home-about-pattern-height: --spacing(62.5);
-    --home-about-crane-top: --spacing(6.5);
+    --home-about-crane-top: --spacing(16);
   }
 
   @apply pointer-events-none absolute inset-0 overflow-hidden;
@@ -215,7 +215,7 @@
   @variant lg {
     --home-about-crane-left: calc(50% - --spacing(35));
     --home-about-crane-right: auto;
-    --home-about-crane-top: --spacing(5.5);
+    --home-about-crane-top: --spacing(15);
     --home-about-crane-width: --spacing(47.5);
     --home-about-crane-height: --spacing(51.75);
   }
