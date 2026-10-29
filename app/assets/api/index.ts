@@ -3,20 +3,31 @@ import type { ProjectBlock } from "~/assets/api/types/projectCase";
 import { assistant } from "./assistant";
 import { blog } from "./blog";
 import { contact } from "./contact";
-import { buildCase, buildProjects, buildResume, buildSkillGroups } from "~/assets/api/mock/build";
+import {
+  buildCase,
+  buildPerson,
+  buildProjects,
+  buildResume,
+  buildSkillGroups,
+} from "~/assets/api/mock/build";
 import { resolveLocale } from "./locale";
 import {
   loadCaseBlocks,
+  loadPersonSources,
   loadProjectsSources,
   loadResumeSources,
   loadSkillsSources,
 } from "./sources";
-import type { ResumeData } from "~/assets/api/types/resume";
+import type { ProfilePerson, ResumeData } from "~/assets/api/types/resume";
 
 const profile = {
   async fetchResume(): Promise<ResumeData> {
     const locale = resolveLocale();
     return buildResume(await loadResumeSources(locale), locale);
+  },
+  async fetchPerson(): Promise<ProfilePerson> {
+    const locale = resolveLocale();
+    return buildPerson(await loadPersonSources(locale), locale);
   },
 };
 

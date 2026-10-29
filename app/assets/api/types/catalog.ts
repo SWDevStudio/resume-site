@@ -193,6 +193,15 @@ export type ResumeFile = Omit<ResumeData, "skills" | "projects"> & {
   projects: ResumeSectionHead;
 };
 
+export interface PersonCanon {
+  alternateNames: string[];
+}
+
+export interface PersonSources extends SkillsSources {
+  person: PersonCanon;
+  resume: ByLocale<ResumeFile>;
+}
+
 export interface ResumeSources extends ProjectsSources, SkillsSources {
   resume: ByLocale<ResumeFile>;
 }

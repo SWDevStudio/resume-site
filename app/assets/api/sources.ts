@@ -1,12 +1,13 @@
 import type { ProjectBlock } from "~/assets/api/types/projectCase";
 import type {
+  PersonSources,
   ProjectsSources,
   ResumeFile,
   ResumeSources,
   SkillsSources,
   SkillsText,
 } from "~/assets/api/types/catalog";
-import { DEFAULT_LOCALE, type Locale } from "../const/locale";
+import { DEFAULT_LOCALE, LOCALES, type Locale } from "../const/locale";
 import { buildSkillRegistry } from "~/assets/api/mock/build/skills";
 import { loadProjectMedia } from "~/assets/api/mock/media";
 
@@ -65,6 +66,20 @@ export async function loadResumeSources(locale: Locale): Promise<ResumeSources> 
     loadTexts(textResume, "resume", locale),
   ]);
   return { ...projects, ...skills, resume };
+}
+
+export async function loadPersonSources(locale: Locale): Promise<PersonSources> {
+  const [person, skills, entries] = await Promise.all([
+    import("../data/canon/person").then((module) => module.default),
+    loadSkillsSources(locale),
+    Promise.all(
+      LOCALES.map(
+        async (layer) => [layer, await textResume[`../data/${layer}/resume.ts`]?.()] as const,
+      ),
+    ),
+  ]);
+  const resume = Object.fromEntries(entries.filter(([, data]) => data !== undefined));
+  return { ...skills, person, resume };
 }
 
 export async function loadCaseBlocks(slug: string, locale: Locale): Promise<ProjectBlock[] | null> {

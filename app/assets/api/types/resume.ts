@@ -95,6 +95,13 @@ export interface ResumeProfile {
   contacts: ResumeContact[];
 }
 
+export interface ProfilePerson {
+  name: string;
+  alternateNames: string[];
+  role: string;
+  skills: string[];
+}
+
 export interface ResumeData {
   profile: ResumeProfile;
   summary: ResumeSectionHead & { paragraphs: string[] };
