@@ -1,7 +1,7 @@
 <template>
   <UiFolder
     class="home-projects-card"
-    :class="tone.cardClass"
+    :class="cardClasses"
     :data="data"
   >
     <template #actions>
@@ -59,6 +59,10 @@ const { t } = useI18n();
 
 const tone = computed(() => projectTones[props.project.tone]);
 const cover = computed(() => props.project.preview ?? props.project.previewMobile);
+const cardClasses = computed(() => [
+  tone.value.cardClass,
+  { "home-projects-card-phone": !props.project.preview },
+]);
 const data = computed<FolderData>(() => ({
   index: props.project.index,
   title: props.project.name,

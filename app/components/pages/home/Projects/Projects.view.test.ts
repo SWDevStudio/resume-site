@@ -67,16 +67,16 @@ async function setReducedMotion(value: "reduce" | "no-preference") {
   });
 }
 
-const CARD_PROJECTS = ["qwixit", "brendmart", "tamriel-codex"];
+const CARD_PROJECTS = ["dobro", "hector", "brendmart", "tamriel-codex"];
 
 const media = await loadProjectMedia();
 
-function cardSources(locale: Locale) {
+function cardSources(locale: Locale, ids = CARD_PROJECTS) {
   const sources = staticSources(locale);
   return {
     ...sources,
     media,
-    projects: sources.projects.filter((project) => CARD_PROJECTS.includes(project.id)),
+    projects: sources.projects.filter((project) => ids.includes(project.id)),
   };
 }
 
@@ -84,6 +84,21 @@ const lists = {
   en: buildProjects(cardSources("en"), "en"),
   ru: buildProjects(cardSources("ru"), "ru"),
 };
+
+const qwixitLists = {
+  en: buildProjects(cardSources("en", ["qwixit"]), "en"),
+  ru: buildProjects(cardSources("ru", ["qwixit"]), "ru"),
+};
+
+const toneTokens = {
+  primary: "--color-primary",
+  secondary: "--color-secondary",
+  accent: "--color-accent",
+};
+
+function cover(project: (typeof lists.en)[number]) {
+  return project.preview ?? project.previewMobile;
+}
 
 const CARD_TAGS = 3;
 
@@ -101,7 +116,10 @@ function createApp(locale: Locale) {
   return createI18n({ legacy: false, locale, messages: { ru, en } });
 }
 
-async function renderCase(item: Pick<ProjectsCase, "width" | "height" | "locale" | "tall">) {
+async function renderCase(
+  item: Pick<ProjectsCase, "width" | "height" | "locale" | "tall">,
+  source = lists,
+) {
   await page.viewport(item.width, item.tall ?? item.height);
   const locale = item.locale ?? "en";
   document.documentElement.lang = locale;
@@ -110,7 +128,7 @@ async function renderCase(item: Pick<ProjectsCase, "width" | "height" | "locale"
       h(
         "div",
         { class: "bg-base-100 font-body text-base-content" },
-        h(Projects, { projects: lists[locale] }),
+        h(Projects, { projects: source[locale] }),
       ),
     { global: { plugins: [createApp(locale)] } },
   );
@@ -173,7 +191,10 @@ const dictionaries = { en, ru };
 
 beforeAll(async () => {
   await page.viewport(1440, 900);
-  await document.fonts.load('400 1em "Righteous"', "My Projects Qwixit Brendmart Tamriel Codex");
+  await document.fonts.load(
+    '400 1em "Righteous"',
+    "My Projects Dobro.rf Hector Brendmart Tamriel Codex Qwixit",
+  );
   await document.fonts.load('700 1em "Montserrat Alternates"', "Мои проекты");
   await document.fonts.load('300 1em "Martian Mono"', "04 — PROJECTS FASHION MARKETPLACE");
   await document.fonts.load('400 1em "Martian Mono"', "Read case LIVE SITE Читать кейс");
@@ -231,7 +252,7 @@ describe("behavior", () => {
   });
 
   it.each(["en", "ru"] as const)(
-    "renders the heading and three project cards in %s",
+    "renders the heading and four project cards in %s",
     async (locale) => {
       const screen = await renderCase({ width: 1440, height: 900, locale });
       const slide = pick<HTMLElement>(screen, ".home-projects");
@@ -249,11 +270,12 @@ describe("behavior", () => {
       );
       expect(pick(screen, ".home-projects-accent").textContent).toBe(dictionary.titleAccent);
       expect(pick(screen, ".home-projects-description").textContent).toBe(dictionary.description);
-      expect(cards).toHaveLength(3);
+      expect(cards).toHaveLength(4);
       expect(cards.map((item) => text(item.querySelector(".card-title")))).toEqual([
-        "01 Qwixit",
-        "02 Brendmart",
-        "03 Tamriel Codex",
+        "01 Dobro.rf",
+        "02 Hector",
+        "03 Brendmart",
+        "04 Tamriel Codex",
       ]);
       expect(cards.map((item) => text(item.querySelector(".card-subtitle")))).toEqual(
         list.map((project) => project.subtitle),
@@ -268,43 +290,68 @@ describe("behavior", () => {
         list.map((project) => project.previewAlt),
       );
       expect(pickAll(screen, ".home-projects-read").map((item) => text(item))).toEqual(
-        Array(3).fill(dictionary.readCase),
+        Array(4).fill(dictionary.readCase),
       );
       expect(pickAll(screen, ".home-projects-live").map((item) => text(item))).toEqual(
-        Array(3).fill(dictionary.liveSite),
+        Array(4).fill(dictionary.liveSite),
       );
       expect(cards.every((item) => item.classList.contains("folder"))).toBe(true);
       expect(pick(screen, ".home-projects-decor").getAttribute("aria-hidden")).toBe("true");
     },
   );
 
-  it("shows the three project previews", async () => {
+  it("shows the four project previews", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
     const images = pickAll<HTMLImageElement>(screen, ".card-media-image");
 
-    expect(images).toHaveLength(3);
+    expect(images).toHaveLength(4);
     for (const image of images) {
       expect(image.complete).toBe(true);
       expect(image.naturalWidth).toBeGreaterThan(0);
     }
-    expect(new Set(images.map((image) => image.src)).size).toBe(3);
+    expect(new Set(images.map((image) => image.src)).size).toBe(4);
     expect(images.map((image) => image.getAttribute("src"))).toEqual(
-      lists.en.map((project) => project.preview?.src),
+      lists.en.map((project) => cover(project)?.src),
     );
     expect(images.map((image) => image.getAttribute("srcset"))).toEqual(
       lists.en.map((project) =>
-        project.preview?.variants.map((variant) => `${variant.src} ${variant.width}w`).join(", "),
+        cover(project)
+          ?.variants.map((variant) => `${variant.src} ${variant.width}w`)
+          .join(", "),
       ),
     );
-    expect(lists.en.every((project) => (project.preview?.variants.length ?? 0) > 1)).toBe(true);
+    expect(lists.en.every((project) => (cover(project)?.variants.length ?? 0) > 1)).toBe(true);
     expect(images.every((image) => image.getAttribute("sizes"))).toBe(true);
+  });
+
+  it("crops the phone preview of a project without a desktop preview from the top", async () => {
+    const screen = await renderCase({ width: 1440, height: 900 });
+    const cards = pickAll(screen, ".home-projects-card");
+
+    expect(lists.en.map((project) => project.preview === null)).toEqual([
+      false,
+      true,
+      false,
+      false,
+    ]);
+    expect(cards.map((card) => card.classList.contains("home-projects-card-phone"))).toEqual([
+      false,
+      true,
+      false,
+      false,
+    ]);
+    expect(
+      cards.map(
+        (card) => getComputedStyle(card.querySelector(".card-media-image")!).objectPosition,
+      ),
+    ).toEqual(["50% 50%", "50% 0%", "50% 50%", "50% 50%"]);
   });
 
   it.each(["en", "ru"] as const)(
     "shows the first three of the four tags of Qwixit in %s",
     async (locale) => {
-      const screen = await renderCase({ width: 1440, height: 900, locale });
-      const qwixit = lists[locale][0]!;
+      const screen = await renderCase({ width: 1440, height: 900, locale }, qwixitLists);
+      const qwixit = qwixitLists[locale][0]!;
       const shown = [...pickAll(screen, ".home-projects-card")[0]!.querySelectorAll(".card-tag")];
 
       expect(qwixit.tags).toHaveLength(4);
@@ -327,6 +374,8 @@ describe("behavior", () => {
       item.getBoundingClientRect(),
     );
     const dots = pick(screen, ".home-projects-dots");
+    const track = pick<HTMLElement>(screen, ".home-projects-track");
+    const left = pick(screen, ".home-projects").getBoundingClientRect().left;
 
     expect(box(screen, ".home-projects").height).toBe(900);
     near(box(screen, ".home-projects-head").left, 140);
@@ -336,15 +385,25 @@ describe("behavior", () => {
     near(size(screen, ".home-projects-card .card-title"), 28);
     near(size(screen, ".home-projects-card .card-subtitle"), 12);
     near(size(screen, ".home-projects-card .card-text"), 14);
-    near(cards[0]!.left - pick(screen, ".home-projects").getBoundingClientRect().left, 140);
+    near(cards[0]!.left - left, 140);
     for (const card of cards) near(card.width, (1160 - 64) / 3);
     near(cards[1]!.left - cards[0]!.right, 32);
     near(cards[2]!.left - cards[1]!.right, 32);
+    near(cards[3]!.left - cards[2]!.right, 32);
+    near(cards[2]!.right - left, 1300);
+    expect(cards[3]!.left - left).toBeGreaterThan(1300);
     expect(cards[0]!.height).toBeGreaterThanOrEqual(cards.at(1)!.height - 1);
-    near(cards[0]!.height, cards[2]!.height);
-    expect(getComputedStyle(dots).display).toBe("none");
+    near(cards[0]!.height, cards[3]!.height);
+    expect(getComputedStyle(dots).display).toBe("flex");
+    expect(
+      pickAll(screen, ".home-projects-dot").map((dot) => dot.getBoundingClientRect().width),
+    ).toEqual([26, 10, 10, 10]);
     near(box(screen, ".home-projects-read").width, 127, 1);
-    expect(getComputedStyle(pick(screen, ".home-projects-track")).flexDirection).toBe("row");
+    expect(getComputedStyle(track).flexDirection).toBe("row");
+    expect(getComputedStyle(track).overflowX).toBe("auto");
+    expect(getComputedStyle(track).scrollSnapType).toContain("x");
+    expect(track.scrollWidth).toBeGreaterThan(track.clientWidth);
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(1440);
   });
 
   it("lays out like the mockup on tablet", async () => {
@@ -367,7 +426,7 @@ describe("behavior", () => {
     expect(getComputedStyle(track).overflowX).toBe("auto");
     expect(getComputedStyle(track).scrollSnapType).toContain("x");
     expect(getComputedStyle(pick(screen, ".home-projects-dots")).display).toBe("flex");
-    expect(dots.map((dot) => dot.getBoundingClientRect().width)).toEqual([26, 10, 10]);
+    expect(dots.map((dot) => dot.getBoundingClientRect().width)).toEqual([26, 10, 10, 10]);
     near(dots[0]!.getBoundingClientRect().height, 4);
     near(dots[1]!.getBoundingClientRect().left - dots[0]!.getBoundingClientRect().right, 10);
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(768);
@@ -386,6 +445,7 @@ describe("behavior", () => {
     for (const card of cards) near(card.width, 350);
     near(cards[1]!.top - cards[0]!.bottom, 32);
     near(cards[2]!.top - cards[1]!.bottom, 32);
+    near(cards[3]!.top - cards[2]!.bottom, 32);
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(390);
   });
 
@@ -451,8 +511,11 @@ describe("behavior", () => {
         header - 1,
       );
       expect(
-        pick(screen, ".home-projects-track").getBoundingClientRect().bottom - slide.top,
+        pick(screen, ".home-projects-list").getBoundingClientRect().bottom - slide.top,
       ).toBeLessThanOrEqual(900 - 24);
+      for (const card of pickAll(screen, ".home-projects-card")) {
+        expect(card.getBoundingClientRect().bottom - slide.top).toBeLessThanOrEqual(900 - 24);
+      }
     },
   );
 
@@ -471,35 +534,43 @@ describe("behavior", () => {
   it("colours every card with its own accent", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
     const cards = pickAll(screen, ".home-projects-card");
-    const tokens = ["--color-primary", "--color-secondary", "--color-accent"];
-    const inks = ["--color-primary-ink", "--color-secondary-ink", "--color-accent-ink"];
 
+    expect(lists.en.map((project) => project.tone)).toEqual([
+      "secondary",
+      "primary",
+      "secondary",
+      "accent",
+    ]);
     cards.forEach((card, index) => {
+      const token = toneTokens[lists.en[index]!.tone];
       expect(getComputedStyle(card.querySelector(".card-index")!).color).toBe(
-        resolve(inks[index]!),
+        resolve(`${token}-ink`),
       );
       expect(getComputedStyle(card.querySelector(".card-subtitle")!).color).toBe(
-        resolve(inks[index]!),
+        resolve(`${token}-ink`),
       );
       const accent = getComputedStyle(card).getPropertyValue("--home-projects-accent").trim();
       expect(accent).toBe(
-        getComputedStyle(document.documentElement).getPropertyValue(tokens[index]!).trim(),
+        getComputedStyle(document.documentElement).getPropertyValue(token).trim(),
       );
       expect(getComputedStyle(card).getPropertyValue("--card-mark-color").trim()).toBe(accent);
       expect(getComputedStyle(card).getPropertyValue("--card-side-color").trim()).toBe(accent);
     });
     const buttons = pickAll(screen, ".home-projects-read");
     expect(buttons.map((item) => item.classList.contains("btn-primary"))).toEqual([
+      false,
       true,
       false,
       false,
     ]);
     expect(buttons.map((item) => item.classList.contains("btn-secondary"))).toEqual([
+      true,
       false,
       true,
       false,
     ]);
     expect(buttons.map((item) => item.classList.contains("btn-accent"))).toEqual([
+      false,
       false,
       false,
       true,
@@ -563,23 +634,40 @@ describe("behavior", () => {
     expect(light).not.toBe(dark);
   });
 
-  it("links the live site in a new tab and disables the link of the project without a site", async () => {
+  it("links the live site in a new tab and disables the links of the projects without a site", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
     const links = pickAll<HTMLAnchorElement>(screen, ".home-projects-live");
 
     expect(links.map((item) => item.getAttribute("href"))).toEqual([
-      "https://qwixit.com/",
+      null,
+      "https://hectorvip.com/",
       "https://brendmart.com/",
       null,
     ]);
-    expect(links.map((item) => item.getAttribute("target"))).toEqual(Array(3).fill("_blank"));
-    expect(links.map((item) => item.getAttribute("rel"))).toEqual(
-      Array(3).fill("noopener noreferrer"),
-    );
-    expect(links.map((item) => item.getAttribute("aria-disabled"))).toEqual([null, null, "true"]);
-    expect(getComputedStyle(links[2]!).pointerEvents).toBe("none");
+    expect(links.map((item) => item.getAttribute("target"))).toEqual([
+      null,
+      "_blank",
+      "_blank",
+      null,
+    ]);
+    expect(links.map((item) => item.getAttribute("rel"))).toEqual([
+      null,
+      "noopener noreferrer",
+      "noopener noreferrer",
+      null,
+    ]);
+    expect(links.map((item) => item.getAttribute("role"))).toEqual(["link", null, null, "link"]);
+    expect(links.map((item) => item.getAttribute("aria-disabled"))).toEqual([
+      "true",
+      null,
+      null,
+      "true",
+    ]);
+    expect(getComputedStyle(links[0]!).pointerEvents).toBe("none");
+    expect(getComputedStyle(links[3]!).pointerEvents).toBe("none");
     expect(lists.en.map((item) => item.url)).toEqual([
-      "https://qwixit.com/",
+      null,
+      "https://hectorvip.com/",
       "https://brendmart.com/",
       null,
     ]);
@@ -589,9 +677,10 @@ describe("behavior", () => {
     const screen = await renderCase({ width: 1440, height: 900 });
     const links = pickAll<HTMLAnchorElement>(screen, ".home-projects-read");
 
-    expect(links.map((item) => item.tagName)).toEqual(["A", "A", "A"]);
+    expect(links.map((item) => item.tagName)).toEqual(["A", "A", "A", "A"]);
     expect(links.map((item) => item.getAttribute("href"))).toEqual([
-      "/projects/qwixit",
+      "/projects/dobro",
+      "/projects/hector",
       "/projects/brendmart",
       "/projects/tamriel-codex",
     ]);
@@ -721,6 +810,20 @@ describe("behavior", () => {
     await userEvent.unhover(page.elementLocator(document.body));
   });
 
+  it("scrolls the fourth project into the slide on a dot click on desktop", async () => {
+    const screen = await renderCase({ width: 1440, height: 900 });
+    const dots = pickAll<HTMLElement>(screen, ".home-projects-dot");
+    const slide = () => pick(screen, ".home-projects").getBoundingClientRect();
+    const fourth = () => pickAll(screen, ".home-projects-card")[3]!.getBoundingClientRect();
+
+    expect(fourth().left - slide().left).toBeGreaterThan(1300);
+    await userEvent.click(page.elementLocator(dots[3]!));
+    expect(dots[3]!.classList.contains("home-projects-dot-active")).toBe(true);
+    await vi.waitFor(() => near(fourth().left - slide().left, 140, 2), { timeout: 5000 });
+    expect(fourth().right - slide().left).toBeLessThanOrEqual(1300 + 1);
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(1440);
+  });
+
   describe("project switch on tablet", () => {
     it("marks the first project and switches on a dot click", async () => {
       const screen = await renderCase({ width: 768, height: 900 });
@@ -732,14 +835,17 @@ describe("behavior", () => {
         "Show project 1",
         "Show project 2",
         "Show project 3",
+        "Show project 4",
       ]);
       expect(dots.map((dot) => dot.classList.contains("home-projects-dot-active"))).toEqual([
         true,
         false,
         false,
+        false,
       ]);
       expect(dots.map((dot) => dot.getAttribute("aria-current"))).toEqual([
         "true",
+        "false",
         "false",
         "false",
       ]);
@@ -749,6 +855,7 @@ describe("behavior", () => {
         false,
         false,
         true,
+        false,
       ]);
       expect(transitioning(dots[2]!, "width")).toBe(true);
       finishAnimations();
@@ -839,8 +946,8 @@ describe("behavior", () => {
 
     expect(html).toContain('id="projects"');
     expect(html).toContain("home-projects-title");
-    expect(html).toContain("Qwixit");
-    expect(html.match(/class="folder /g)).toHaveLength(3);
-    expect(html.match(/home-projects-dot /g)).toHaveLength(3);
+    expect(html).toContain("Dobro.rf");
+    expect(html.match(/class="folder /g)).toHaveLength(4);
+    expect(html.match(/home-projects-dot /g)).toHaveLength(4);
   });
 });

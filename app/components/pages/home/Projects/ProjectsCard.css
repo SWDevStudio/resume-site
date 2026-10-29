@@ -64,8 +64,19 @@
   }
 
   & .card-media {
+    @apply min-h-0;
     height: auto;
     aspect-ratio: 313 / 240;
+
+    @variant xl {
+      aspect-ratio: 16 / 10;
+    }
+  }
+
+  & .card-text {
+    @variant xl {
+      @apply line-clamp-5;
+    }
   }
 
   & .card-text,
@@ -114,6 +125,10 @@
   }
 }
 
+.home-projects-card-phone .card-media-image {
+  @apply object-top;
+}
+
 :lang(ru) .home-projects-card {
   & .card-text,
   & .card-tag {
@@ -156,7 +171,6 @@
   }
 
   @variant xl {
-    @apply min-w-0 flex-1;
-    width: auto;
+    width: calc((100% - --spacing(16)) / 3);
   }
 }

@@ -34,21 +34,20 @@
   }
 
   @variant xl {
-    @apply overflow-visible;
-    margin: 0rem;
-    padding: 0rem;
-    scroll-snap-type: none;
-
     &::after {
-      @apply hidden;
+      flex-basis: calc(100% - (100% - --spacing(16)) / 3 - --spacing(8));
     }
   }
 }
 
 .home-projects-dots {
-  @apply hidden justify-center md:flex xl:hidden;
+  @apply hidden justify-center md:flex;
   gap: --spacing(2.5);
   margin-top: --spacing(10);
+
+  @variant xl {
+    margin-top: --spacing(2);
+  }
 }
 
 .home-projects-dot {
@@ -70,6 +69,10 @@
 
   @variant motion-reduce {
     @apply transition-none;
+
+    &::before {
+      @apply transition-none;
+    }
   }
 }
 
