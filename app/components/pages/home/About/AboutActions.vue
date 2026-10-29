@@ -13,8 +13,7 @@
     </UiButton>
     <UiButton
       class="home-about-action btn-primary"
-      type="button"
-      @click="scrollTo('projects')"
+      :to="Route.projects"
     >
       <UiIcon
         name="arrow-right"
@@ -28,6 +27,7 @@
 <script setup lang="ts">
 import UiIcon from "~/components/ui/UiIcon/UiIcon.vue";
 import { useI18n } from "vue-i18n";
+import { Route } from "~/assets/const";
 import UiButton from "~/components/ui/UiButton/UiButton.vue";
 
 const { t } = useI18n();

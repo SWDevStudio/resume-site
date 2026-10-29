@@ -23,7 +23,24 @@
             Fullstack Developer.
           </p>
         </div>
-        <p class="home-about-description">{{ t("home.about.description") }}</p>
+        <I18nT
+          keypath="home.about.description"
+          tag="p"
+          class="home-about-description"
+        >
+          <template
+            v-for="term in descriptionTerms"
+            :key="term.slot"
+            #[term.slot]
+          >
+            <span
+              lang="en"
+              data-atom-skip
+            >
+              {{ term.text }}
+            </span>
+          </template>
+        </I18nT>
         <AboutActions />
       </div>
       <AboutPhoto />
@@ -32,13 +49,28 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
+import { I18nT, useI18n } from "vue-i18n";
 import HomeSlide from "~/components/pages/home/HomeSlide/HomeSlide.vue";
 import AboutActions from "./AboutActions.vue";
 import AboutDecor from "./AboutDecor.vue";
 import AboutPhoto from "./AboutPhoto.vue";
 
 const { t } = useI18n();
+
+const descriptionTerms = [
+  { slot: "fullstack", text: "Fullstack" },
+  { slot: "frontend", text: "Frontend" },
+  { slot: "vue", text: "Vue.js" },
+  { slot: "nuxt", text: "Nuxt" },
+  { slot: "react", text: "React" },
+  { slot: "next", text: "Next.js" },
+  { slot: "backend", text: "backend" },
+  { slot: "laravel", text: "Laravel" },
+  { slot: "nest", text: "NestJS" },
+  { slot: "express", text: "Express" },
+  { slot: "ai", text: "AI" },
+  { slot: "skills", text: "skills" },
+];
 </script>
 
 <style src="./About.css" />

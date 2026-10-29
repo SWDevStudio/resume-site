@@ -4,7 +4,7 @@ import { createI18n } from "vue-i18n";
 import { cdp, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-vue";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { Locale } from "~/assets/const";
+import { Route, type Locale } from "~/assets/const";
 import en from "~/locales/en.json";
 import ru from "~/locales/ru.json";
 import { useThemeLayersPrefetch } from "~/composables/useThemeLayers";
@@ -83,6 +83,25 @@ async function prefetchThemeLayers(screen: { container: HTMLElement }) {
   screen.container.getBoundingClientRect();
 }
 
+const descriptionTerms: Record<string, string> = {
+  fullstack: "Fullstack",
+  frontend: "Frontend",
+  vue: "Vue.js",
+  nuxt: "Nuxt",
+  react: "React",
+  next: "Next.js",
+  backend: "backend",
+  laravel: "Laravel",
+  nest: "NestJS",
+  express: "Express",
+  ai: "AI",
+  skills: "skills",
+};
+
+function description(message: string) {
+  return message.replace(/\{(\w+)\}/g, (_, key: string) => descriptionTerms[key]!);
+}
+
 function createApp(locale: Locale) {
   return createI18n({ legacy: false, locale, messages: { ru, en } });
 }
@@ -127,7 +146,8 @@ beforeAll(async () => {
   await document.fonts.load('700 1em "Montserrat Alternates"', "Привет, я Михаил");
   await document.fonts.load('300 1em "Martian Mono"', "01 — ABOUT ME OPEN TO PROJECTS");
   await document.fonts.load('400 1em "Martian Mono"', "CONTACT ME PROJECTS");
-  await document.fonts.load('400 1em "Share Tech Mono"', "[Three or four sentences]");
+  await document.fonts.load('400 1em "Share Tech Mono"', description(en.home.about.description));
+  await document.fonts.load('400 1em "Share Tech Mono"', description(ru.home.about.description));
   await cdp().send("Emulation.setScrollbarsHidden", { hidden: true });
 });
 
@@ -199,7 +219,9 @@ describe("behavior", () => {
     expect(pick(screen, ".home-about-role").getAttribute("lang")).toBe("en");
     expect(pick(screen, ".home-about-role").hasAttribute("data-atom-skip")).toBe(true);
     expect(getComputedStyle(pick(screen, ".home-about-role")).fontFamily).toContain("Righteous");
-    expect(pick(screen, ".home-about-description").textContent).toBe(en.home.about.description);
+    expect(pick(screen, ".home-about-description").textContent).toBe(
+      description(en.home.about.description),
+    );
     expect(actions.map((item) => item.textContent?.trim())).toEqual([
       en.home.about.contact,
       en.home.about.projects,
@@ -222,7 +244,9 @@ describe("behavior", () => {
     expect(pick(screen, ".home-about-role").getAttribute("lang")).toBe("en");
     expect(pick(screen, ".home-about-role").hasAttribute("data-atom-skip")).toBe(true);
     expect(getComputedStyle(pick(screen, ".home-about-role")).fontFamily).toContain("Righteous");
-    expect(pick(screen, ".home-about-description").textContent).toBe(ru.home.about.description);
+    expect(pick(screen, ".home-about-description").textContent).toBe(
+      description(ru.home.about.description),
+    );
     expect(pick(screen, ".home-about-status").textContent?.trim()).toBe(ru.home.about.status);
     expect(pick(screen, ".home-about-photo-image").getAttribute("alt")).toBe(
       ru.home.about.photoAlt,
@@ -233,6 +257,30 @@ describe("behavior", () => {
       ),
     ).toEqual([ru.home.about.contact, ru.home.about.projects]);
   });
+
+  it.each(["en", "ru"] as const)(
+    "marks every technical term of the description as English in %s",
+    async (locale) => {
+      const screen = await renderCase({ width: 1440, height: 900, locale });
+      const paragraph = pick(screen, ".home-about-description");
+      const terms = [...paragraph.querySelectorAll("[data-atom-skip]")];
+      const messages = { en, ru }[locale];
+      const keys = [...messages.home.about.description.matchAll(/\{(\w+)\}/g)].map(
+        (match) => match[1]!,
+      );
+
+      expect(paragraph.tagName).toBe("P");
+      expect(keys).toHaveLength(Object.keys(descriptionTerms).length);
+      expect(terms.map((item) => item.textContent)).toEqual(
+        keys.map((key) => descriptionTerms[key]),
+      );
+      for (const term of terms) {
+        expect(term.getAttribute("lang"), term.textContent!).toBe("en");
+        expect(term.tagName).toBe("SPAN");
+      }
+      expect(paragraph.querySelectorAll("[lang]")).toHaveLength(terms.length);
+    },
+  );
 
   it("lays out like the mockup on desktop", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
@@ -433,7 +481,7 @@ describe("behavior", () => {
     expect(light).not.toBe(dark);
   });
 
-  it("scrolls to the contact and projects sections from the actions", async () => {
+  it("scrolls to the contact section and links to the projects page from the actions", async () => {
     const scrolled = vi.fn();
     const contact = document.createElement("section");
     const projects = document.createElement("section");
@@ -450,7 +498,11 @@ describe("behavior", () => {
     contact.remove();
     projects.remove();
 
-    expect(scrolled.mock.calls).toEqual([["contact"], ["projects"]]);
+    expect(scrolled.mock.calls).toEqual([["contact"]]);
+    expect(actions[0]!.tagName).toBe("BUTTON");
+    expect(actions[1]!.tagName).toBe("A");
+    expect(actions[1]!.getAttribute("href")).toBe(Route.projects);
+    expect(actions[1]!.hasAttribute("type")).toBe(false);
   });
 
   describe("reduced motion", () => {
