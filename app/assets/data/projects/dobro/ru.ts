@@ -17,7 +17,7 @@ const dobro = [
     component: "ProjectCaseFacts",
     data: {
       facts: [
-        { key: "role", value: "Тимлид фронтенд-разработки" },
+        { key: "role", value: "Frontend Team Lead" },
         {
           key: "team",
           value: "15 человек: 5 frontend, 4 backend, 2 дизайнера, 2 QA, PM и DevOps",

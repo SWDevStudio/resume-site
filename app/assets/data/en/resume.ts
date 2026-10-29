@@ -79,7 +79,7 @@ const resume = {
     jobs: [
       {
         id: "freedom",
-        title: "Development Team Lead",
+        title: "Frontend Team Lead",
         company: "Freedom International Group",
         site: "freedomgroupint.com",
         field:

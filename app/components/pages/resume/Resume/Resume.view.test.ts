@@ -295,7 +295,7 @@ describe("content", () => {
       "H2 Technical Skills #skills",
       "H2 Selected Projects #projects",
       "H2 Work Experience #experience",
-      "H3 Freedom International Group — Development Team Lead #freedom",
+      "H3 Freedom International Group — Frontend Team Lead #freedom",
       "H3 Freelance — Fullstack Developer #freelance",
       "H3 Brendmart — Fullstack Developer #brendmart",
       "H3 Pochtoy.com LLC — Fullstack Developer #pochtoy",
@@ -590,7 +590,7 @@ describe("content", () => {
     ).toEqual(navIds.map((id) => `#${id}`));
     const job = pick(screen, ".page-section-level-3");
     expect(text(job.querySelector(".page-section-heading"))).toContain(
-      "Freedom International Group — Руководитель группы разработки",
+      "Freedom International Group — Frontend Team Lead",
     );
     expect(text(job.querySelector(".page-section-meta"))).toBe("Март 2026 — настоящее время");
     expect(text(pick(screen, "section[aria-labelledby='cases'] .page-section-label"))).toBe(

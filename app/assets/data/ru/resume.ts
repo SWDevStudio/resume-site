@@ -79,7 +79,7 @@ const resume = {
     jobs: [
       {
         id: "freedom",
-        title: "Руководитель группы разработки",
+        title: "Frontend Team Lead",
         company: "Freedom International Group",
         site: "freedomgroupint.com",
         field: "Финансовый сектор, инвестиционная компания (разработка продуктов портфеля группы)",
