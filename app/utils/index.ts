@@ -1,4 +1,5 @@
 import { containerImageSizes, imageSizes } from "./imageSizes";
 import { imageSrcset } from "./imageSrcset";
+import { closestImageVariant, type SizedImage } from "./imageVariant";
 
-export { containerImageSizes, imageSizes, imageSrcset };
+export { closestImageVariant, containerImageSizes, imageSizes, imageSrcset, type SizedImage };

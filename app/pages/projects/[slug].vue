@@ -13,7 +13,7 @@ import { useI18n } from "vue-i18n";
 import { $api } from "~/assets/api";
 import { Route } from "~/assets/const";
 import { $metrika } from "~/assets/metrika";
-import type { ProjectCaseHeaderData } from "~/assets/api/types/projectCase";
+import type { ProjectCaseCoverData, ProjectCaseHeaderData } from "~/assets/api/types/projectCase";
 import ProjectCase from "~/components/pages/projects/ProjectCase/ProjectCase.vue";
 import { useLocale } from "~/composables/useLocale";
 import {
@@ -23,6 +23,9 @@ import {
   useSiteUrls,
   useStructuredData,
 } from "~/composables/useStructuredData";
+import { closestImageVariant } from "~/utils";
+
+const OG_IMAGE_WIDTH = 1200;
 
 const { t } = useI18n();
 const { locale } = useLocale();
@@ -49,11 +52,33 @@ const header = computed(
       ProjectCaseHeaderData | undefined,
 );
 
+const cover = computed(
+  () =>
+    blocks.value?.find((block) => block.component === "ProjectCaseCover")?.data as
+      ProjectCaseCoverData | undefined,
+);
+
+const shareImage = computed(() => {
+  const image = cover.value?.image ?? cover.value?.imageMobile;
+  return image ? closestImageVariant(image, OG_IMAGE_WIDTH) : undefined;
+});
+
 const title = () =>
   t("seo.project.title", { project: header.value?.name, author: data.value?.person.name });
-const description = () => header.value?.description;
+const description = () => header.value?.metaDescription ?? header.value?.description;
 
-useSeoMeta({ title, description, ogTitle: title, ogDescription: description, ogType: "article" });
+useSeoMeta({
+  title,
+  description,
+  ogTitle: title,
+  ogDescription: description,
+  ogType: "article",
+  ogImage: () => shareImage.value && site.asset(shareImage.value.src),
+  ogImageWidth: () => shareImage.value?.width,
+  ogImageHeight: () => shareImage.value?.height,
+  ogImageAlt: () => shareImage.value && cover.value?.imageAlt,
+  twitterCard: () => shareImage.value && "summary_large_image",
+});
 
 useStructuredData(() => {
   const project = header.value;
