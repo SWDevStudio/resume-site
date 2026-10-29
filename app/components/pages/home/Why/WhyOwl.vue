@@ -19,8 +19,8 @@ import owlDay from "./media/owl-cyber-sakura.webp?w=200;358&as=img";
 import owlNight from "./media/owl-torii-synth.webp?w=200;300;400&as=img";
 
 const { layers } = useThemeLayers({
-  "torii-synth": { image: "home-why-owl-night", media: decorImage(owlNight, 28, 35, 35) },
-  "cyber-sakura": { image: "home-why-owl-day", media: decorImage(owlDay, 29.75, 37, 43) },
+  "torii-synth": { image: "home-why-owl-night", media: decorImage(owlNight, 28, 24.5, 24.5) },
+  "cyber-sakura": { image: "home-why-owl-day", media: decorImage(owlDay, 29.75, 26, 26) },
 });
 </script>
 

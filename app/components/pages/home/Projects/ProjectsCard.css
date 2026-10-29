@@ -7,12 +7,6 @@
   --home-projects-ink: var(--color-primary-ink);
   --home-projects-line: 60%;
   --home-projects-soft: 8%;
-  --home-projects-glow-alpha: 14%;
-  --home-projects-glow-y: 0rem;
-  --home-projects-glow-blur: --spacing(4);
-  --home-projects-hover-alpha: 30%;
-  --home-projects-hover-y: 0rem;
-  --home-projects-hover-blur: --spacing(5);
   --home-projects-btn-alpha: 55%;
   --home-projects-media-end: color-mix(in oklab, var(--home-projects-accent) 25%, transparent);
 
@@ -20,12 +14,6 @@
     --folder-fill: color-mix(in srgb, white 88%, var(--color-base-100));
     --home-projects-line: 75%;
     --home-projects-soft: 10%;
-    --home-projects-glow-alpha: 22%;
-    --home-projects-glow-y: --spacing(3.5);
-    --home-projects-glow-blur: --spacing(6.5);
-    --home-projects-hover-alpha: 36%;
-    --home-projects-hover-y: --spacing(4.5);
-    --home-projects-hover-blur: --spacing(8);
     --home-projects-media-end: color-mix(in srgb, var(--home-projects-accent) 43%, white);
   }
 
@@ -44,14 +32,8 @@
     transparent
   );
   --folder-line-hover: var(--home-projects-accent);
-  --folder-glow: drop-shadow(
-    0 var(--home-projects-glow-y) var(--home-projects-glow-blur)
-      color-mix(in oklab, var(--home-projects-accent) var(--home-projects-glow-alpha), transparent)
-  );
-  --folder-glow-hover: drop-shadow(
-    0 var(--home-projects-hover-y) var(--home-projects-hover-blur)
-      color-mix(in oklab, var(--home-projects-accent) var(--home-projects-hover-alpha), transparent)
-  );
+  --folder-glow: none;
+  --folder-glow-hover: none;
   --card-mark-color: var(--home-projects-accent);
   --card-side-color: var(--home-projects-accent);
   --card-foot-color: color-mix(in oklab, var(--home-projects-accent) 60%, transparent);
@@ -63,10 +45,22 @@
     color: var(--home-projects-ink);
   }
 
+  @variant max-md {
+    --card-min-height: 0rem;
+    --card-pad-top: --spacing(8);
+    --card-pad-inline: --spacing(5);
+    --card-pad-bottom: --spacing(5);
+    --card-gap: --spacing(3);
+  }
+
   & .card-media {
     @apply min-h-0;
     height: auto;
     aspect-ratio: 313 / 240;
+
+    @variant max-md {
+      aspect-ratio: 16 / 10;
+    }
 
     @variant xl {
       aspect-ratio: 16 / 10;
@@ -74,6 +68,10 @@
   }
 
   & .card-text {
+    @variant max-md {
+      @apply line-clamp-3;
+    }
+
     @variant xl {
       @apply line-clamp-5;
     }
@@ -98,13 +96,11 @@
   --home-projects-accent: var(--color-secondary);
   --home-projects-ink: var(--color-secondary-ink);
   --home-projects-line: 55%;
-  --home-projects-glow-alpha: 12%;
   --home-projects-btn-alpha: 50%;
 
   :where([data-theme="cyber-sakura"]) & {
     --home-projects-line: 60%;
     --home-projects-soft: 8%;
-    --home-projects-glow-alpha: 18%;
   }
 }
 
@@ -113,13 +109,11 @@
   --home-projects-ink: var(--color-accent-ink);
   --home-projects-line: 65%;
   --home-projects-soft: 10%;
-  --home-projects-glow-alpha: 16%;
   --home-projects-btn-alpha: 60%;
 
   :where([data-theme="cyber-sakura"]) & {
     --home-projects-line: 85%;
     --home-projects-soft: 14%;
-    --home-projects-glow-alpha: 30%;
     --card-media-start: #a57bff;
     --home-projects-media-end: #dcc8ff;
   }
@@ -165,12 +159,14 @@
 }
 
 .home-projects-card {
+  @apply min-w-0 flex-1;
+
   @variant md {
     @apply flex-none;
     width: --spacing(82.5);
   }
 
   @variant xl {
-    width: calc((100% - --spacing(16)) / 3);
+    width: 100%;
   }
 }

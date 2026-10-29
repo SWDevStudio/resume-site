@@ -27,6 +27,8 @@
     "@vueuse/nuxt": "^15.0.0",
     "ai": "^7.0.153",
     "altcha-lib": "^2.6.0",
+    "embla-carousel-vue": "^8.6.0",
+    "embla-carousel-wheel-gestures": "^8.1.0",
     "eventsource-parser": "^3.1.1",
     "linkedom": "^0.18.14",
     "nuxt": "^4.6.2",

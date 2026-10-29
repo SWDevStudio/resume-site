@@ -48,7 +48,7 @@
 
 .home-contact > .home-slide-body {
   @variant lg {
-    padding-bottom: --spacing(6);
+    padding-bottom: --spacing(14);
   }
 }
 
@@ -105,7 +105,7 @@
 }
 
 .home-contact-columns {
-  @apply grid;
+  @apply my-auto grid;
   gap: --spacing(14);
 
   @variant lg {

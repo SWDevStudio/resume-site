@@ -1,0 +1,31 @@
+@reference "~/assets/css/main.css";
+
+.home-why-features {
+  @apply relative z-1 flex flex-wrap;
+  gap: --spacing(7);
+  margin-top: --spacing(2);
+
+  @variant lg {
+    margin-top: calc(--spacing(9) - var(--home-why-main-gap));
+  }
+}
+
+.home-why-feature {
+  --home-why-feature-ink: var(--color-primary-ink);
+
+  flex: 1 1 --spacing(85);
+
+  & .feature-box {
+    @apply flex-1;
+    --card-side-color: var(--home-why-feature-ink);
+  }
+
+  & .card-index,
+  & .feature-prompt::before {
+    color: var(--home-why-feature-ink);
+  }
+}
+
+.home-why-feature-accent {
+  --home-why-feature-ink: var(--color-accent-ink);
+}

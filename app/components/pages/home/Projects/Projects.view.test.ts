@@ -12,6 +12,7 @@ import { useThemeLayersPrefetch } from "~/composables/useThemeLayers";
 import en from "~/locales/en.json";
 import ru from "~/locales/ru.json";
 import Projects from "./Projects.vue";
+import { cycleTones } from "./projects";
 import { setTheme } from "../../../../../test/mocks/useTheme";
 import "~/assets/css/fonts.css";
 import "~/assets/css/main.css";
@@ -164,6 +165,28 @@ function box(screen: Screen, selector: string) {
     width: rect.width,
     height: rect.height,
   };
+}
+
+async function drag(screen: Screen, distance: number) {
+  const viewport = pick<HTMLElement>(screen, ".home-projects-viewport");
+  const rect = viewport.getBoundingClientRect();
+  const y = rect.top + rect.height / 2;
+  const from = rect.left + rect.width / 2;
+  const mouse = (type: string, x: number) =>
+    new MouseEvent(type, { bubbles: true, cancelable: true, button: 0, clientX: x, clientY: y });
+
+  viewport.dispatchEvent(mouse("mousedown", from));
+  for (let step = 1; step <= 10; step++) {
+    document.dispatchEvent(mouse("mousemove", from + (distance * step) / 10));
+    await new Promise((done) => setTimeout(done, 16));
+  }
+  document.dispatchEvent(mouse("mouseup", from + distance));
+}
+
+function activeDot(screen: Screen) {
+  return pickAll(screen, ".home-projects-dot").findIndex((dot) =>
+    dot.classList.contains("home-projects-dot-active"),
+  );
 }
 
 function near(value: number, expected: number, tolerance = 1) {
@@ -374,10 +397,22 @@ describe("behavior", () => {
       item.getBoundingClientRect(),
     );
     const dots = pick(screen, ".home-projects-dots");
+    const viewport = pick<HTMLElement>(screen, ".home-projects-viewport");
     const track = pick<HTMLElement>(screen, ".home-projects-track");
     const left = pick(screen, ".home-projects").getBoundingClientRect().left;
 
-    expect(box(screen, ".home-projects").height).toBe(900);
+    expect(box(screen, ".home-projects").height).toBeGreaterThanOrEqual(900);
+    near(
+      box(screen, ".home-projects-list").top - box(screen, ".home-projects-head").top,
+      box(screen, ".home-projects-head").height + 64,
+    );
+    near(
+      box(screen, ".home-projects-dots").top -
+        (box(screen, ".home-projects-viewport").top +
+          box(screen, ".home-projects-viewport").height -
+          32),
+      24,
+    );
     near(box(screen, ".home-projects-head").left, 140);
     near(size(screen, ".home-projects-label"), 14);
     near(size(screen, ".home-projects-title"), 64);
@@ -400,14 +435,16 @@ describe("behavior", () => {
     ).toEqual([26, 10, 10, 10]);
     near(box(screen, ".home-projects-read").width, 127, 1);
     expect(getComputedStyle(track).flexDirection).toBe("row");
-    expect(getComputedStyle(track).overflowX).toBe("auto");
-    expect(getComputedStyle(track).scrollSnapType).toContain("x");
-    expect(track.scrollWidth).toBeGreaterThan(track.clientWidth);
+    expect(getComputedStyle(viewport).overflowX).toBe("hidden");
+    near(viewport.getBoundingClientRect().left - left, 140);
+    near(viewport.getBoundingClientRect().right - left, 1300);
+    expect(track.style.transform).toContain("translate");
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(1440);
   });
 
   it("lays out like the mockup on tablet", async () => {
     const screen = await renderCase({ width: 768, height: 900 });
+    const viewport = pick<HTMLElement>(screen, ".home-projects-viewport");
     const track = pick<HTMLElement>(screen, ".home-projects-track");
     const cards = pickAll(screen, ".home-projects-card").map((item) =>
       item.getBoundingClientRect(),
@@ -422,9 +459,9 @@ describe("behavior", () => {
     near(cards[1]!.right, 724);
     expect(cards[2]!.left).toBeLessThan(768);
     expect(cards[2]!.left).toBeGreaterThan(740);
-    expect(track.scrollWidth).toBeGreaterThan(track.clientWidth);
-    expect(getComputedStyle(track).overflowX).toBe("auto");
-    expect(getComputedStyle(track).scrollSnapType).toContain("x");
+    expect(getComputedStyle(viewport).overflowX).toBe("hidden");
+    near(viewport.getBoundingClientRect().right, 736);
+    expect(track.style.transform).toContain("translate");
     expect(getComputedStyle(pick(screen, ".home-projects-dots")).display).toBe("flex");
     expect(dots.map((dot) => dot.getBoundingClientRect().width)).toEqual([26, 10, 10, 10]);
     near(dots[0]!.getBoundingClientRect().height, 4);
@@ -432,21 +469,48 @@ describe("behavior", () => {
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(768);
   });
 
-  it("lays out like the mockup on mobile", async () => {
+  it("slides the cards on mobile with the next one peeking from the edge", async () => {
     const screen = await renderCase({ width: 390, height: 780 });
+    const viewport = pick<HTMLElement>(screen, ".home-projects-viewport");
     const cards = pickAll(screen, ".home-projects-card").map((item) =>
       item.getBoundingClientRect(),
     );
+    const left = pick(screen, ".home-projects").getBoundingClientRect().left;
 
     near(box(screen, ".home-projects-head").left, 20);
     near(size(screen, ".home-projects-title"), 44);
-    expect(getComputedStyle(pick(screen, ".home-projects-track")).flexDirection).toBe("column");
-    expect(getComputedStyle(pick(screen, ".home-projects-dots")).display).toBe("none");
-    for (const card of cards) near(card.width, 350);
-    near(cards[1]!.top - cards[0]!.bottom, 32);
-    near(cards[2]!.top - cards[1]!.bottom, 32);
-    near(cards[3]!.top - cards[2]!.bottom, 32);
+    expect(getComputedStyle(pick(screen, ".home-projects-track")).flexDirection).toBe("row");
+    expect(getComputedStyle(viewport).overflowX).toBe("hidden");
+    near(viewport.getBoundingClientRect().left - left, 0);
+    near(viewport.getBoundingClientRect().width, 390);
+    expect(pick<HTMLElement>(screen, ".home-projects-track").style.transform).toContain(
+      "translate",
+    );
+    expect(getComputedStyle(pick(screen, ".home-projects-dots")).display).toBe("flex");
+    near(cards[0]!.left - left, 20);
+    for (const card of cards) near(card.width, 310);
+    near(cards[1]!.left - cards[0]!.right, 32);
+    near(cards[1]!.top, cards[0]!.top);
+    near(390 - (cards[1]!.left - left), 28);
+    for (const card of cards) expect(card.height).toBeLessThanOrEqual(520);
+    for (const text of pickAll(screen, ".home-projects-card .card-text")) {
+      expect(getComputedStyle(text).webkitLineClamp).toBe("3");
+    }
+    expect(getComputedStyle(pick(screen, ".home-projects-card .card-media")).aspectRatio).toBe(
+      "16 / 10",
+    );
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(390);
+  });
+
+  it("follows the dragged card on mobile", async () => {
+    const screen = await renderCase({ width: 390, height: 780 });
+    const left = () => pick(screen, ".home-projects").getBoundingClientRect().left;
+    const card = (index: number) =>
+      pickAll(screen, ".home-projects-card")[index]!.getBoundingClientRect();
+
+    await drag(screen, -150);
+    await vi.waitFor(() => expect(activeDot(screen)).toBe(1));
+    await vi.waitFor(() => near(card(1).left - left(), 20, 1), { timeout: 5000 });
   });
 
   it.each([
@@ -460,8 +524,8 @@ describe("behavior", () => {
   ])("keeps everything inside the slide at $width in $locale", async (item) => {
     const screen = await renderCase(item);
     const slide = pick(screen, ".home-projects").getBoundingClientRect();
-    const track = pick(screen, ".home-projects-track");
-    const scrolls = getComputedStyle(track).overflowX === "auto";
+    const viewport = pick(screen, ".home-projects-viewport");
+    const clips = getComputedStyle(viewport).overflowX === "hidden";
     const parts = [
       ".home-projects-label",
       ".home-projects-title",
@@ -473,12 +537,15 @@ describe("behavior", () => {
 
     for (const selector of parts) {
       for (const element of screen.container.querySelectorAll(selector)) {
-        if (scrolls && selector === ".home-projects-card") continue;
+        if (clips && selector === ".home-projects-card") continue;
         const rect = element.getBoundingClientRect();
         expect(rect.left, selector).toBeGreaterThanOrEqual(slide.left);
         expect(rect.right, selector).toBeLessThanOrEqual(slide.right + 0.5);
       }
     }
+    const window = viewport.getBoundingClientRect();
+    expect(window.left).toBeGreaterThanOrEqual(slide.left);
+    expect(window.right).toBeLessThanOrEqual(slide.right + 0.5);
     for (const card of screen.container.querySelectorAll(".home-projects-card")) {
       const area = card.getBoundingClientRect();
       for (const part of card.querySelectorAll(
@@ -497,7 +564,7 @@ describe("behavior", () => {
   });
 
   it.each(["en", "ru"] as const)(
-    "fits the screen below the header at 1440 x 900 in %s",
+    "starts below the header and keeps the cards on the slide at 1440 x 900 in %s",
     async (locale) => {
       const screen = await renderCase({ width: 1440, height: 900, locale });
       const slide = pick(screen, ".home-projects").getBoundingClientRect();
@@ -505,16 +572,16 @@ describe("behavior", () => {
       const main = pick(screen, ".home-projects-main").getBoundingClientRect();
       const header = 110;
 
-      expect(slide.height).toBe(900);
+      expect(slide.height).toBeGreaterThanOrEqual(900);
       expect(main.top - slide.top).toBeGreaterThanOrEqual(header - 1);
       expect(Number.parseFloat(getComputedStyle(body).paddingTop)).toBeGreaterThanOrEqual(
         header - 1,
       );
       expect(
-        pick(screen, ".home-projects-list").getBoundingClientRect().bottom - slide.top,
-      ).toBeLessThanOrEqual(900 - 24);
+        pick(screen, ".home-projects-list").getBoundingClientRect().bottom,
+      ).toBeLessThanOrEqual(slide.bottom - 24);
       for (const card of pickAll(screen, ".home-projects-card")) {
-        expect(card.getBoundingClientRect().bottom - slide.top).toBeLessThanOrEqual(900 - 24);
+        expect(card.getBoundingClientRect().bottom).toBeLessThanOrEqual(slide.bottom - 24);
       }
     },
   );
@@ -531,9 +598,10 @@ describe("behavior", () => {
     expect(head.top - slide.top).toBeGreaterThanOrEqual(item.header - 1);
   });
 
-  it("colours every card with its own accent", async () => {
+  it("cycles the card colours by position whatever tone the project has", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
     const cards = pickAll(screen, ".home-projects-card");
+    const tones = cycleTones(cards.length);
 
     expect(lists.en.map((project) => project.tone)).toEqual([
       "secondary",
@@ -541,8 +609,9 @@ describe("behavior", () => {
       "secondary",
       "accent",
     ]);
+    expect(tones).toEqual(["primary", "secondary", "accent", "secondary"]);
     cards.forEach((card, index) => {
-      const token = toneTokens[lists.en[index]!.tone];
+      const token = toneTokens[tones[index]!];
       expect(getComputedStyle(card.querySelector(".card-index")!).color).toBe(
         resolve(`${token}-ink`),
       );
@@ -555,27 +624,41 @@ describe("behavior", () => {
       );
       expect(getComputedStyle(card).getPropertyValue("--card-mark-color").trim()).toBe(accent);
       expect(getComputedStyle(card).getPropertyValue("--card-side-color").trim()).toBe(accent);
+      expect(getComputedStyle(card).getPropertyValue("--folder-glow").trim()).toBe("none");
     });
-    const buttons = pickAll(screen, ".home-projects-read");
-    expect(buttons.map((item) => item.classList.contains("btn-primary"))).toEqual([
-      false,
-      true,
-      false,
-      false,
-    ]);
-    expect(buttons.map((item) => item.classList.contains("btn-secondary"))).toEqual([
-      true,
-      false,
-      true,
-      false,
-    ]);
-    expect(buttons.map((item) => item.classList.contains("btn-accent"))).toEqual([
-      false,
-      false,
-      false,
-      true,
-    ]);
+    expect(
+      pickAll(screen, ".home-projects-read").map((item) =>
+        ["btn-primary", "btn-secondary", "btn-accent"].find((name) =>
+          item.classList.contains(name),
+        ),
+      ),
+    ).toEqual(["btn-primary", "btn-secondary", "btn-accent", "btn-secondary"]);
+    expect(
+      pickAll(screen, ".home-projects-dot").map((item) =>
+        ["primary", "secondary", "accent"].find((name) =>
+          item.classList.contains(`home-projects-dot-${name}`),
+        ),
+      ),
+    ).toEqual(["primary", "secondary", "accent", "secondary"]);
   });
+
+  it.each([2, 3, 4, 5, 6, 7, 9, 10, 12])(
+    "never puts two cards of one colour next to each other in a loop of %i",
+    (count) => {
+      const tones = cycleTones(count);
+
+      expect(tones).toHaveLength(count);
+      tones.forEach((tone, index) => {
+        expect(tone, `${index}`).not.toBe(tones[(index + 1) % count]);
+      });
+      expect(tones.slice(0, count - 1)).toEqual(
+        Array.from(
+          { length: count - 1 },
+          (_, index) => ["primary", "secondary", "accent"][index % 3],
+        ),
+      );
+    },
+  );
 
   it("mounts only the layer of the current theme until the theme switch is intended", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
@@ -603,7 +686,6 @@ describe("behavior", () => {
     expect(transitioning(night, "visibility")).toBe(true);
     expect(transitioning(day, "opacity")).toBe(true);
     expect(transitioning(accent, "--home-projects-accent-via")).toBe(true);
-    expect(transitioning(frame, "filter")).toBe(true);
     expect(transitioning(frame, "clip-path", "::before")).toBe(true);
     expect(transitioning(live, "color")).toBe(true);
     for (const animation of document.getAnimations()) {
@@ -827,7 +909,6 @@ describe("behavior", () => {
   describe("project switch on tablet", () => {
     it("marks the first project and switches on a dot click", async () => {
       const screen = await renderCase({ width: 768, height: 900 });
-      const track = pick<HTMLElement>(screen, ".home-projects-track");
       const dots = pickAll<HTMLElement>(screen, ".home-projects-dot");
       const label = (index: number) => dots[index]!.getAttribute("aria-label");
 
@@ -859,10 +940,6 @@ describe("behavior", () => {
       ]);
       expect(transitioning(dots[2]!, "width")).toBe(true);
       finishAnimations();
-      track.style.scrollBehavior = "auto";
-      track.scrollTo({ left: 0 });
-      await nextTick();
-      await userEvent.click(page.elementLocator(dots[2]!));
       await vi.waitFor(
         () => {
           const third = pickAll(screen, ".home-projects-card")[2]!.getBoundingClientRect();
@@ -880,22 +957,38 @@ describe("behavior", () => {
       expect(getComputedStyle(dots[2]!).opacity).toBe("1");
     });
 
-    it("follows the scroll position", async () => {
+    it("follows the dragged card and snaps it to the start", async () => {
       const screen = await renderCase({ width: 768, height: 900 });
-      const track = pick<HTMLElement>(screen, ".home-projects-track");
-      const dots = pickAll<HTMLElement>(screen, ".home-projects-dot");
-      track.style.scrollBehavior = "auto";
-      track.style.scrollSnapType = "none";
+      const slide = () => pick(screen, ".home-projects").getBoundingClientRect();
+      const card = (index: number) =>
+        pickAll(screen, ".home-projects-card")[index]!.getBoundingClientRect();
 
-      track.scrollTo({ left: 362 });
-      await vi.waitFor(() =>
-        expect(dots[1]!.classList.contains("home-projects-dot-active")).toBe(true),
-      );
-      track.scrollTo({ left: 0 });
-      await vi.waitFor(() =>
-        expect(dots[0]!.classList.contains("home-projects-dot-active")).toBe(true),
-      );
-      expect(dots[1]!.classList.contains("home-projects-dot-active")).toBe(false);
+      await drag(screen, -200);
+      await vi.waitFor(() => expect(activeDot(screen)).toBe(1));
+      await vi.waitFor(() => near(card(1).left - slide().left, 32, 1), { timeout: 5000 });
+
+      await drag(screen, 200);
+      await vi.waitFor(() => expect(activeDot(screen)).toBe(0));
+      await vi.waitFor(() => near(card(0).left - slide().left, 32, 1), { timeout: 5000 });
+    });
+
+    it("loops from the last project to the first and back", async () => {
+      const screen = await renderCase({ width: 768, height: 900 });
+      const dots = pickAll<HTMLElement>(screen, ".home-projects-dot");
+      const slide = () => pick(screen, ".home-projects").getBoundingClientRect();
+      const card = (index: number) =>
+        pickAll(screen, ".home-projects-card")[index]!.getBoundingClientRect();
+
+      await drag(screen, 200);
+      await vi.waitFor(() => expect(activeDot(screen)).toBe(dots.length - 1));
+      await vi.waitFor(() => near(card(dots.length - 1).left - slide().left, 32, 1), {
+        timeout: 5000,
+      });
+      near(card(0).left - card(dots.length - 1).right, 32, 1);
+
+      await drag(screen, -200);
+      await vi.waitFor(() => expect(activeDot(screen)).toBe(0));
+      await vi.waitFor(() => near(card(0).left - slide().left, 32, 1), { timeout: 5000 });
     });
   });
 
@@ -927,15 +1020,21 @@ describe("behavior", () => {
       expect(getComputedStyle(night).visibility).toBe("hidden");
     });
 
-    it("moves the dots without animation", async () => {
+    it("moves the dots and jumps to the card without animation", async () => {
       const screen = await renderCase({ width: 768, height: 900 });
       const dots = pickAll<HTMLElement>(screen, ".home-projects-dot");
+      const slide = pick(screen, ".home-projects").getBoundingClientRect();
 
-      await userEvent.click(page.elementLocator(dots[1]!));
+      await userEvent.click(page.elementLocator(dots[2]!));
+      await nextTick();
 
-      expect(transitioning(dots[1]!, "width")).toBe(false);
-      expect(dots[1]!.classList.contains("home-projects-dot-active")).toBe(true);
-      expect(getComputedStyle(pick(screen, ".home-projects-track")).scrollBehavior).toBe("auto");
+      expect(transitioning(dots[2]!, "width")).toBe(false);
+      expect(dots[2]!.classList.contains("home-projects-dot-active")).toBe(true);
+      near(
+        pickAll(screen, ".home-projects-card")[2]!.getBoundingClientRect().left - slide.left,
+        32,
+        1,
+      );
     });
   });
 

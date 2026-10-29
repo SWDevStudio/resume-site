@@ -13,7 +13,7 @@ export interface Toolkit {
   style: Record<string, string>;
 }
 
-export const TOOLKIT_STATIC_COUNT = 6;
+export const TOOLKIT_STATIC_COUNT = 9;
 export const TOOLKIT_TYPED_COUNT = 29;
 
 export function buildToolkit(skills: SkillView[]): Toolkit {

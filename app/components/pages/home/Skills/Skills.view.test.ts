@@ -286,6 +286,26 @@ function seekTyping(time: number) {
   }
 }
 
+function shownTiles(panel: Element) {
+  const row = panel.querySelector(".panel-content")!.getBoundingClientRect();
+  return [...panel.querySelectorAll<HTMLElement>(".skill-tile")].filter(
+    (tile) => tile.getBoundingClientRect().top < row.bottom - 1,
+  );
+}
+
+function expectOneEvenRow(panel: Element) {
+  const row = panel.querySelector(".panel-content")!.getBoundingClientRect();
+  const tiles = shownTiles(panel).map((tile) => tile.getBoundingClientRect());
+  const gaps = tiles.slice(1).map((tile, index) => tile.left - tiles[index]!.right);
+
+  expect(new Set(tiles.map((tile) => Math.round(tile.top))).size).toBe(1);
+  near(tiles[0]!.left, row.left);
+  near(tiles.at(-1)!.right, row.right);
+  for (const gap of gaps) near(gap, gaps[0]!, 0.5);
+  expect(getComputedStyle(panel.querySelector(".panel-content")!).overflow).toBe("hidden");
+  return { tiles, gaps };
+}
+
 function near(value: number, expected: number, tolerance = 1) {
   expect(Math.abs(value - expected)).toBeLessThanOrEqual(tolerance);
 }
@@ -482,9 +502,7 @@ describe("behavior", () => {
   it("lays out like the mockup on tablet", async () => {
     const screen = await renderCase({ width: 768, height: 900, tall: true });
     const panels = pickAll<HTMLElement>(screen, ".home-skills-panel");
-    const visible = [...panels[0]!.querySelectorAll<HTMLElement>(".skill-tile")].filter(
-      (tile) => getComputedStyle(tile).display !== "none",
-    );
+    const visible = shownTiles(panels[0]!);
 
     near(box(screen, ".home-skills-title").left, 32);
     near(fontSize(screen, ".home-skills-title"), 56);
@@ -495,10 +513,7 @@ describe("behavior", () => {
     near(box(screen, "", panels[1]).top - box(screen, "", panels[0]).top, 250 * 0.9 + 32 * 0.9);
     expect(visible).toHaveLength(6);
     near(visible[0]!.getBoundingClientRect().width, 108 * 0.9);
-    near(
-      visible[1]!.getBoundingClientRect().left - visible[0]!.getBoundingClientRect().right,
-      15 * 0.9,
-    );
+    for (const panel of panels) expectOneEvenRow(panel);
     near(box(screen, ".home-skills-band").left, 0);
     near(box(screen, ".home-skills-band").right, 0);
   });
@@ -506,19 +521,16 @@ describe("behavior", () => {
   it("lays out like the mockup on mobile", async () => {
     const screen = await renderCase({ width: 390, height: 780, tall: true });
     const panels = pickAll<HTMLElement>(screen, ".home-skills-panel");
-    const visible = [...panels[0]!.querySelectorAll<HTMLElement>(".skill-tile")].filter(
-      (tile) => getComputedStyle(tile).display !== "none",
-    );
-    const rows = new Set(visible.map((tile) => Math.round(tile.getBoundingClientRect().top)));
+    const visible = shownTiles(panels[0]!);
 
     near(box(screen, ".home-skills-title").left, 20);
     near(fontSize(screen, ".home-skills-title"), 44);
     near(box(screen, "", panels[0]).left, 20);
     near(box(screen, "", panels[0]).width, 350);
-    near(box(screen, "", panels[0]).height, 356);
-    near(visible[0]!.getBoundingClientRect().width, 108 * 0.87);
-    expect(visible).toHaveLength(6);
-    expect(rows.size).toBe(2);
+    near(box(screen, "", panels[0]).height, 230);
+    near(visible[0]!.getBoundingClientRect().width, 108 * 0.84);
+    expect(visible).toHaveLength(3);
+    for (const panel of panels) expectOneEvenRow(panel);
     near(box(screen, ".home-skills-band").left, 0);
     near(box(screen, ".home-skills-band").right, 0);
   });
@@ -555,8 +567,7 @@ describe("behavior", () => {
     }
     for (const panel of pickAll(screen, ".home-skills-panel")) {
       const rect = panel.getBoundingClientRect();
-      for (const tile of panel.querySelectorAll(".skill-tile")) {
-        if (getComputedStyle(tile).display === "none") continue;
+      for (const tile of shownTiles(panel)) {
         const tileRect = tile.getBoundingClientRect();
         expect(tileRect.left).toBeGreaterThanOrEqual(rect.left);
         expect(tileRect.right).toBeLessThanOrEqual(rect.right);
@@ -568,13 +579,20 @@ describe("behavior", () => {
   it.each([
     { width: 1440, visible: 9 },
     { width: 1280, visible: 9 },
-    { width: 1279, visible: 6 },
-    { width: 1024, visible: 6 },
-  ])("shows $visible frontend tiles at $width", async ({ width, visible }) => {
-    const screen = await renderCase({ width, height: 900 });
-    const tiles = pickAll<HTMLElement>(screen, ".home-skills-panel:first-child .skill-tile");
+    { width: 1024, visible: 7 },
+    { width: 900, visible: 7 },
+    { width: 768, visible: 6 },
+    { width: 600, visible: 5 },
+    { width: 390, visible: 3 },
+    { width: 360, visible: 3 },
+  ])("fits $visible tiles in one even row at $width", async ({ width, visible }) => {
+    const screen = await renderCase({ width, height: 900, tall: width < 1024 });
 
-    expect(tiles.filter((tile) => getComputedStyle(tile).display !== "none")).toHaveLength(visible);
+    for (const panel of pickAll(screen, ".home-skills-panel")) {
+      expect(shownTiles(panel)).toHaveLength(visible);
+      const { gaps } = expectOneEvenRow(panel);
+      expect(Math.min(...gaps)).toBeGreaterThanOrEqual(5);
+    }
   });
 
   it.each(["en", "ru"] as const)(
@@ -806,10 +824,36 @@ describe("behavior", () => {
       ).not.toContain(SKILL_TILE_META[removed].label);
     });
 
+    it.each([
+      { width: 1440, height: 900 },
+      { width: 768, height: 900 },
+      { width: 390, height: 780 },
+    ])("keeps the toolkit on one line at $width", async (item) => {
+      const screen = await renderCase(item);
+      const line = pick(screen, ".home-skills-line").getBoundingClientRect();
+      const statics = pick(screen, ".home-skills-statics");
+      const lineHeight = Number.parseFloat(getComputedStyle(statics).lineHeight);
+      const typing = pick(screen, ".home-skills-typing").getBoundingClientRect();
+      const shown = pickAll(screen, ".home-skills-static").filter(
+        (item) => item.getBoundingClientRect().top < statics.getBoundingClientRect().bottom,
+      );
+
+      near(line.height, lineHeight, 1);
+      expect(getComputedStyle(statics).overflow).toBe("hidden");
+      expect(shown.length).toBeGreaterThan(0);
+      for (const item of shown) near(item.getBoundingClientRect().top, line.top, 1);
+      near(typing.top, line.top, 1);
+      expect(typing.right).toBeLessThanOrEqual(line.right + 0.5);
+      expect(line.right - typing.right).toBeLessThan(
+        Number.parseFloat(getComputedStyle(statics).fontSize) * 20,
+      );
+      expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(item.width);
+    });
+
     it("takes the toolkit from the additional group of the data", async () => {
       const data = structuredClone(groupsOf.en);
       additionalOf(data)[0]!.name = "Vite 7";
-      additionalOf(data)[6]!.name = "Sass 2";
+      additionalOf(data)[TOOLKIT_STATIC_COUNT]!.name = "Sass 2";
       const screen = await renderCase({ width: 1440, height: 900 }, data);
 
       expect(pickAll(screen, ".home-skills-static")[0]!.textContent).toBe("Vite 7·");

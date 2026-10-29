@@ -1,14 +1,18 @@
 <template>
   <div class="home-projects-list">
     <div
-      ref="track"
-      class="home-projects-track"
+      ref="viewport"
+      class="home-projects-viewport"
     >
-      <ProjectsCard
-        v-for="project in projects"
-        :key="project.id"
-        :project="project"
-      />
+      <div class="home-projects-track">
+        <div
+          v-for="project in items"
+          :key="project.id"
+          class="home-projects-slide"
+        >
+          <ProjectsCard :project="project" />
+        </div>
+      </div>
     </div>
     <div
       class="home-projects-dots"
@@ -30,24 +34,38 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { useEventListener } from "@vueuse/core";
+import { computed, ref, watch } from "vue";
+import { usePreferredReducedMotion } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
+import emblaCarouselVue from "embla-carousel-vue";
+import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
+import type { EmblaCarouselType, EmblaOptionsType } from "embla-carousel";
 import type { ProjectView } from "~/assets/api/types/catalog";
 import ProjectsCard from "./ProjectsCard.vue";
-import { projectTones } from "./projects";
+import { cycleTones, projectTones } from "./projects";
 
 const props = defineProps<{
   projects: ProjectView[];
 }>();
 
+const CAROUSEL: EmblaOptionsType = {
+  loop: true,
+  align: "start",
+};
+
 const { t } = useI18n();
 
-const track = ref<HTMLElement | null>(null);
+const [viewport, carousel] = emblaCarouselVue(CAROUSEL, [WheelGesturesPlugin()]);
+const motion = usePreferredReducedMotion();
 const current = ref(0);
 
+const items = computed(() => {
+  const tones = cycleTones(props.projects.length);
+  return props.projects.map((project, index) => ({ ...project, tone: tones[index]! }));
+});
+
 const dots = computed(() =>
-  props.projects.map((project, index) => {
+  items.value.map((project, index) => {
     const active = index === current.value;
     return {
       key: project.id,
@@ -59,53 +77,22 @@ const dots = computed(() =>
   }),
 );
 
-function cards() {
-  return [...(track.value?.children ?? [])] as HTMLElement[];
+function sync(api: EmblaCarouselType) {
+  current.value = api.selectedScrollSnap();
 }
 
-function start() {
-  return track.value ? Number.parseFloat(getComputedStyle(track.value).paddingLeft) : 0;
-}
-
-let target: number | null = null;
-
-function release() {
-  target = null;
-}
-
-function sync() {
-  const element = track.value;
-  if (!element) return;
-  if (target !== null) {
-    if (Math.abs(element.scrollLeft - target) > 1) return;
-    release();
-  }
-  let nearest = 0;
-  let distance = Number.POSITIVE_INFINITY;
-  cards().forEach((card, index) => {
-    const gap = Math.abs(card.offsetLeft - start() - element.scrollLeft);
-    if (gap < distance) {
-      distance = gap;
-      nearest = index;
-    }
-  });
-  current.value = nearest;
-}
+watch(carousel, (api) => {
+  if (!api) return;
+  api.on("select", sync).on("reInit", sync);
+  sync(api);
+});
 
 function show(index: number) {
-  const card = cards()[index];
-  if (!card) return;
+  const api = carousel.value;
+  if (!api) return;
   current.value = index;
-  target = card.offsetLeft - start();
-  track.value?.scrollTo({ left: target });
+  api.scrollTo(index, motion.value === "reduce");
 }
-
-useEventListener(track, "scroll", sync, { passive: true });
-useEventListener(track, "scrollend", () => {
-  release();
-  sync();
-});
-useEventListener(track, "pointerdown", release, { passive: true });
 </script>
 
 <style src="./ProjectsList.css" />

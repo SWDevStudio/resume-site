@@ -38,21 +38,18 @@
   @variant md {
     --home-why-title-size: --spacing(11.5);
     --home-why-title-width: --spacing(120);
-    --home-why-owl-night-width: --spacing(35);
-    --home-why-owl-night-height: --spacing(48);
-    --home-why-owl-night-sink: --spacing(1.25);
-    --home-why-owl-day-width: --spacing(37);
-    --home-why-owl-day-height: --spacing(53.25);
-    --home-why-owl-day-sink: --spacing(1.25);
+    --home-why-owl-night-width: --spacing(24.5);
+    --home-why-owl-night-height: --spacing(33.6);
+    --home-why-owl-night-sink: --spacing(1);
+    --home-why-owl-day-width: --spacing(26);
+    --home-why-owl-day-height: --spacing(37.4);
+    --home-why-owl-day-sink: --spacing(1);
   }
 
   @variant lg {
     --home-why-title-size: --spacing(14);
     --home-why-title-width: none;
-    --home-why-main-gap: --spacing(7);
-    --home-why-owl-day-width: --spacing(43);
-    --home-why-owl-day-height: --spacing(61.75);
-    --home-why-owl-day-sink: --spacing(1.5);
+    --home-why-main-gap: --spacing(4);
   }
 
   :where([data-theme="cyber-sakura"]) & {
@@ -63,6 +60,12 @@
   }
 
   @apply overflow-hidden bg-base-100;
+}
+
+.home-why > .home-slide-body {
+  @variant lg {
+    padding-bottom: --spacing(12);
+  }
 }
 
 .home-why-main {
