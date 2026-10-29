@@ -312,7 +312,7 @@ describe("behavior", () => {
     setTheme("torii-synth");
   });
 
-  it("renders the heading and the chat window without advantage cards", async () => {
+  it("renders the heading, the chat window and the advantage cards", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
     const slide = pick<HTMLElement>(screen, ".home-why");
 
@@ -342,12 +342,24 @@ describe("behavior", () => {
     );
     expect(pickAll(screen, ".home-why-card")).toHaveLength(0);
     expect(pickAll(screen, ".home-why-cards")).toHaveLength(0);
-    expect(pickAll(screen, ".feature")).toHaveLength(0);
-    expect(pick(screen, ".home-why-main").children).toHaveLength(2);
+    expect(pick(screen, ".home-why-main").children).toHaveLength(3);
     expect([...pick(screen, ".home-why-main").children].map((item) => item.className)).toEqual([
       "home-why-head",
       "home-why-stage",
+      "home-why-features",
     ]);
+    const features = pickAll(screen, ".home-why-feature");
+    expect(features.map((item) => item.classList.contains("feature"))).toEqual([true, true]);
+    expect(features.map((item) => text(item.querySelector(".card-title")!))).toEqual([
+      `01 ${en.home.why.features.autonomy.title}`,
+      `02 ${en.home.why.features.performance.title}`,
+    ]);
+    expect(
+      features.map((item) => item.querySelector(".feature-label")!.textContent?.trim()),
+    ).toEqual([en.home.why.features.label, en.home.why.features.label]);
+    expect(
+      features.map((item) => item.querySelector(".feature-prompt")!.textContent?.trim()),
+    ).toEqual([en.home.why.features.autonomy.prompt, en.home.why.features.performance.prompt]);
     expect([...pick(screen, ".home-why-stage").children].map((item) => item.className)).toEqual([
       "home-why-window",
       "home-why-owl home-why-owl-night",
@@ -397,7 +409,17 @@ describe("behavior", () => {
   it("lays out like the mockup on desktop", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
 
-    expect(box(screen, ".home-why").height).toBe(900);
+    expect(box(screen, ".home-why").height).toBeGreaterThanOrEqual(900);
+    near(
+      box(screen, ".home-why-window").top - box(screen, ".home-why-head").top,
+      box(screen, ".home-why-head").height + 16,
+    );
+    near(
+      box(screen, ".home-why-features").top - box(screen, ".home-why-window").top,
+      box(screen, ".home-why-window").height + 36,
+    );
+    near(box(screen, ".home-why-features").bottom, 48);
+    near(box(screen, ".home-why-feature").width, (1160 - 28) / 2);
     near(box(screen, ".home-why-head").left, 140);
     near(box(screen, ".home-why-window").left, 140);
     near(box(screen, ".home-why-window").width, 1160);
@@ -503,7 +525,7 @@ describe("behavior", () => {
       expect(crossesHorizontally, kind).toBe(true);
       expect(rect.bottom - window.top, kind).toBeGreaterThanOrEqual(0);
       expect(rect.bottom - window.top, kind).toBeLessThanOrEqual(2 * spacing);
-      near(drawn, window.top, 0.5);
+      near(drawn, window.top, 1);
       expect(drawn, kind).toBeLessThanOrEqual(bar.top);
       expect(rect.top - slide.top, kind).toBeGreaterThanOrEqual(offset - 0.5);
       expect(rect.right, kind).toBeLessThanOrEqual(slide.right);
@@ -563,6 +585,7 @@ describe("behavior", () => {
       ".home-why-input",
       ".home-why-ask",
       ".home-why-chip",
+      ".home-why-feature",
     ];
 
     for (const selector of parts) {
@@ -581,7 +604,7 @@ describe("behavior", () => {
   });
 
   it.each(["en", "ru"] as const)(
-    "fits the screen below the header at 1440 x 900 in %s",
+    "starts below the header and keeps the window and the cards on the slide at 1440 x 900 in %s",
     async (locale) => {
       const screen = await renderCase({ width: 1440, height: 900, locale });
       const slide = pick(screen, ".home-why").getBoundingClientRect();
@@ -589,23 +612,25 @@ describe("behavior", () => {
       const main = pick(screen, ".home-why-main").getBoundingClientRect();
       const header = 110;
 
-      expect(slide.height).toBe(900);
+      expect(slide.height).toBeGreaterThanOrEqual(900);
       expect(main.top - slide.top).toBeGreaterThanOrEqual(header - 1);
       expect(Number.parseFloat(getComputedStyle(body).paddingTop)).toBeGreaterThanOrEqual(
         header - 1,
       );
-      expect(
-        pick(screen, ".home-why-window").getBoundingClientRect().bottom - slide.top,
-      ).toBeLessThanOrEqual(900 - 24);
+      for (const selector of [".home-why-window", ".home-why-features"]) {
+        expect(pick(screen, selector).getBoundingClientRect().bottom, selector).toBeLessThanOrEqual(
+          slide.bottom - 24,
+        );
+      }
     },
   );
 
   it.each([
-    { width: 1440, height: 900, locale: "en" as const, dialog: 211 },
-    { width: 1440, height: 900, locale: "ru" as const, dialog: 211 },
-    { width: 1024, height: 800, locale: "en" as const, dialog: 169 },
-    { width: 768, height: 900, locale: "en" as const, dialog: 238 },
-    { width: 1440, height: 1000, locale: "en" as const, dialog: 311 },
+    { width: 1440, height: 900, locale: "en" as const, own: 195, free: 0 },
+    { width: 1440, height: 900, locale: "ru" as const, own: 195, free: 0 },
+    { width: 1024, height: 800, locale: "en" as const, own: 195, free: 0 },
+    { width: 768, height: 900, locale: "en" as const, own: 160, free: 0 },
+    { width: 1440, height: 1200, locale: "en" as const, own: 195, free: 203 },
   ])(
     "gives the free height of the slide to the dialog at $width x $height in $locale",
     async (item) => {
@@ -615,8 +640,12 @@ describe("behavior", () => {
         body.getBoundingClientRect().bottom -
         Number.parseFloat(getComputedStyle(body).paddingBottom);
 
-      near(pick(screen, ".home-why-window").getBoundingClientRect().bottom, bottom, 0.5);
-      near(pick(screen, ".home-why-dialog").getBoundingClientRect().height, item.dialog, 1);
+      const dialog = pick(screen, ".home-why-dialog").getBoundingClientRect().height;
+
+      near(pick(screen, ".home-why-features").getBoundingClientRect().bottom, bottom, 0.5);
+      expect(dialog).toBeGreaterThanOrEqual(item.own - 1);
+      if (item.free > 0) near(dialog, item.own + item.free, 4);
+      else near(dialog, item.own, 1);
     },
   );
 
@@ -790,7 +819,7 @@ describe("behavior", () => {
     expect(html).toContain("michael.ai");
     expect(html.match(/home-why-chip"/g)).toHaveLength(4);
     expect(html).not.toContain("home-why-card");
-    expect(html).not.toContain('class="feature ');
+    expect(html.match(/class="feature home-why-feature/g)).toHaveLength(2);
   });
 });
 

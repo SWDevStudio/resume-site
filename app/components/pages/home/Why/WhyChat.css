@@ -4,7 +4,7 @@
   --home-why-dialog-height: --spacing(40);
 
   @variant lg {
-    --home-why-dialog-height: --spacing(30);
+    --home-why-dialog-height: --spacing(48.75);
   }
 
   --home-why-input: #0b0a10;
