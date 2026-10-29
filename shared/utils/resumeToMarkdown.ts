@@ -74,7 +74,9 @@ export function resumeToMarkdown(data: ResumeData, siteUrl?: string): string {
 
   const projects = data.projects.items.map((project) =>
     [
-      `### ${escape(project.name)} — ${projectLink(project.link)}`,
+      project.link.href
+        ? `### ${escape(project.name)} — ${projectLink(project.link)}`
+        : `### ${escape(project.name)}`,
       `*${escape(project.subtitle)}*`,
       escape(project.description),
       bullets([escape(project.role), escape(project.result)]),

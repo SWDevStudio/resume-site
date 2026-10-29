@@ -39,6 +39,7 @@ function strings(value: unknown, key = ""): string[] {
   }
   if (Array.isArray(value)) return value.flatMap((item) => strings(item, key));
   if (value !== null && typeof value === "object") {
+    if (key === "link" && "href" in value && !value.href) return [];
     return Object.entries(value).flatMap(([name, child]) => strings(child, name));
   }
   return [];
@@ -175,13 +176,29 @@ describe.each(entries)("resumeToMarkdown of $locale", ({ locale, data }) => {
       expect(plain).not.toContain(`### ${project.name} — `);
     }
     for (const project of projectsOf(locale)) {
-      expect(plain).toContain(`### ${project.name} — `);
-      if (project.host) expect(plain).toContain(`[${project.host}](${project.url})`);
+      if (project.url) {
+        expect(plain).toContain(`### ${project.name} — `);
+        if (project.host) expect(plain).toContain(`[${project.host}](${project.url})`);
+      } else {
+        expect(plain).toContain(`### ${project.name}\n`);
+        expect(plain).not.toContain(`### ${project.name} — `);
+      }
       expect(plain).toContain(`*${project.subtitle}*`);
       expect(plain).toContain(project.description);
       expect(plain).toContain(project.role);
       expect(plain).toContain(project.result);
       expect(plain).toContain(project.tags.join(", "));
+    }
+  });
+
+  it("writes only the name in the heading of a project without a site", () => {
+    const unlinked = data.projects.items.filter((project) => !project.link.href);
+
+    expect(unlinked.length).toBeGreaterThan(0);
+    for (const project of unlinked) {
+      expect(markdown).toContain(`\n### ${project.name}\n`);
+      expect(markdown).not.toContain(`### ${project.name} — `);
+      expect(plain).not.toContain(project.link.label);
     }
   });
 
@@ -257,6 +274,26 @@ describe.each(entries)("resumeToPdf of $locale", ({ locale, data }) => {
       expect(text).toContain(project.role);
       expect(text).toContain(project.result);
       expect(text).toContain(project.tags.join(", "));
+    }
+  });
+
+  it("writes only the index and the name in the headline of a project without a site", () => {
+    const unlinked = data.projects.items.filter((project) => !project.link.href);
+    const headlines: { text?: unknown; style?: string }[][] = [];
+    JSON.parse(JSON.stringify(definition.content), (_key, value: unknown) => {
+      const parts = (value as { text?: unknown } | null)?.text;
+      if (Array.isArray(parts) && parts.some((part) => part?.style === "itemTitle")) {
+        headlines.push(parts);
+      }
+      return value;
+    });
+
+    expect(unlinked.length).toBeGreaterThan(0);
+    for (const project of unlinked) {
+      const headline = headlines.find((parts) => parts.some((part) => part.text === project.name));
+
+      expect(headline?.map((part) => part.text)).toEqual([`${project.index}  `, project.name]);
+      expect(text).not.toContain(project.link.label);
     }
   });
 

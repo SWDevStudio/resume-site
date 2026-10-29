@@ -101,8 +101,7 @@ function projectBlock(project: ResumeProject): Content {
   const headline: ContentText[] = [
     { text: `${project.index}  `, color: COLOR.muted },
     { text: project.name, style: "itemTitle" },
-    plain("  "),
-    anchor(project.link.label, project.link.href),
+    ...(project.link.href ? [plain("  "), anchor(project.link.label, project.link.href)] : []),
   ];
   return {
     stack: [
