@@ -49,6 +49,7 @@ export default defineNuxtConfig({
     inlineStyles: false,
   },
   experimental: {
+    sharedPrerenderData: false,
     defaults: {
       nuxtLink: {
         prefetchOn: { visibility: false, interaction: true },
