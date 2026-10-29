@@ -4,7 +4,7 @@ const project = {
   id: "dobro",
   name: "Dobro.rf",
   tone: "secondary",
-  url: null,
+  url: "https://blago.dobro.ru/",
   preview: "dobro/media/preview.webp",
   previewMobile: "dobro/media/preview-mobile.webp",
   tags: ["payments", "accounts", "team-lead"],
