@@ -772,7 +772,6 @@ describe("behavior", () => {
     expect(typingAnimations().every((animation) => animation.playState === "running")).toBe(true);
     screen.unmount();
 
-    document.documentElement.style.scrollSnapType = "none";
     window.scrollTo({ top: 0, behavior: "instant" });
     try {
       const hidden = await renderCase({ width: 1440, height: 900 }, undefined, 3000);
@@ -785,7 +784,6 @@ describe("behavior", () => {
       await waitDecorReady(hidden);
       expect(typingAnimations().every((animation) => animation.playState === "running")).toBe(true);
     } finally {
-      document.documentElement.style.scrollSnapType = "";
       window.scrollTo({ top: 0, behavior: "instant" });
     }
   });
@@ -1174,7 +1172,6 @@ describe("behavior", () => {
     it("waits for the panels to come on the screen and stops while they are off it", async () => {
       const before = vi.getTimerCount();
       const first = tiles.map((tile) => SKILL_TILE_META[tile.skill].label);
-      document.documentElement.style.scrollSnapType = "none";
       window.scrollTo({ top: 0, behavior: "instant" });
       try {
         const screen = await renderCase({ width: 1440, height: 900 }, undefined, 3000);
@@ -1193,7 +1190,6 @@ describe("behavior", () => {
         window.scrollTo({ top: 0, behavior: "instant" });
         await expect.poll(() => vi.getTimerCount()).toBe(before);
       } finally {
-        document.documentElement.style.scrollSnapType = "";
         window.scrollTo({ top: 0, behavior: "instant" });
       }
     });

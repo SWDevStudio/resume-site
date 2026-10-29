@@ -10,8 +10,6 @@
   }
 
   @apply relative isolate overflow-hidden bg-base-100 leading-[normal] font-light;
-  scroll-snap-align: end;
-  scroll-snap-stop: always;
 }
 
 .the-footer-body {
