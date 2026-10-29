@@ -21,7 +21,30 @@ const COLOR = {
 
 const LANGUAGE: Record<string, string> = { ru: "ru-RU", en: "en-US" };
 
+export const PDF_SYMBOL_FONT = "Symbols";
+const SYMBOLS = /(→)/;
+
 type Labels = ResumeData["experience"]["labels"];
+
+function symbolParts(text: string): ContentText[] {
+  return text
+    .split(SYMBOLS)
+    .filter(Boolean)
+    .map((part) => (SYMBOLS.test(part) ? { text: part, font: PDF_SYMBOL_FONT } : { text: part }));
+}
+
+function withSymbols<T>(node: T): T {
+  if (Array.isArray(node)) return node.map(withSymbols) as T;
+  if (node === null || typeof node !== "object") return node;
+  return Object.fromEntries(
+    Object.entries(node).map(([key, value]) => [
+      key,
+      key === "text" && typeof value === "string" && SYMBOLS.test(value)
+        ? symbolParts(value)
+        : withSymbols(value),
+    ]),
+  ) as T;
+}
 
 function anchor(label: string, href: string | null | undefined): ContentText {
   if (!href) return { text: label };
@@ -276,7 +299,7 @@ export function resumeToPdf(
       itemTitle: { fontSize: 10.5, bold: true },
       block: { fontSize: 9.5, bold: true, color: COLOR.accent, margin: [0, 3, 0, 2] },
     },
-    content: [
+    content: withSymbols([
       ...header,
       ...section(data.summary.name, data.summary.paragraphs.map(paragraph)),
       ...section(data.skills.name, data.skills.groups.map(skillRow)),
@@ -290,6 +313,6 @@ export function resumeToPdf(
         ...(data.ai.link ? [{ text: [anchor(data.ai.link.label, data.ai.link.href)] }] : []),
       ]),
       ...section(data.references.name, listChunks(data.references.items)),
-    ],
+    ]),
   };
 }

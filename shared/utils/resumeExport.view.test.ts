@@ -6,7 +6,7 @@ import type { Content } from "pdfmake/interfaces";
 import type { ProjectView, SkillGroupView } from "../../app/assets/api/types/catalog";
 import type { ResumeData } from "../../app/assets/api/types/resume";
 import { resumeToMarkdown } from "./resumeToMarkdown";
-import { resumeToPdf } from "./resumeToPdf";
+import { PDF_SYMBOL_FONT, resumeToPdf } from "./resumeToPdf";
 
 const files: Record<(typeof LOCALES)[number], ResumeData> = {
   en: buildResume(staticSources("en"), "en"),
@@ -45,11 +45,28 @@ function strings(value: unknown, key = ""): string[] {
   return [];
 }
 
+function inline(value: unknown): string {
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) return value.map(inline).join("");
+  if (value !== null && typeof value === "object" && "text" in value) return inline(value.text);
+  return "";
+}
+
 function collect(value: unknown): string[] {
   if (typeof value === "string") return [value];
   if (Array.isArray(value)) return value.flatMap(collect);
-  if (value !== null && typeof value === "object") return Object.values(value).flatMap(collect);
+  if (value !== null && typeof value === "object") {
+    const values = Object.values(value).flatMap(collect);
+    return "text" in value && Array.isArray(value.text) ? [inline(value.text), ...values] : values;
+  }
   return [];
+}
+
+function textNodes(value: unknown): { text: unknown; font?: unknown }[] {
+  if (Array.isArray(value)) return value.flatMap(textNodes);
+  if (value === null || typeof value !== "object") return [];
+  const own = "text" in value ? [value as { text: unknown; font?: unknown }] : [];
+  return [...own, ...Object.values(value).flatMap(textNodes)];
 }
 
 function headings(markdown: string, level: number) {
@@ -362,6 +379,42 @@ describe.each(entries)("resumeToPdf of $locale", ({ locale, data }) => {
         data.ai.link!.href,
       ]),
     );
+  });
+
+  it("draws the arrow with the fallback font and the text around it with the default one", () => {
+    const changed: ResumeData = structuredClone(data);
+    changed.summary.paragraphs[0] = "340 → 4552 rps, 919 → 69 ms";
+    changed.projects.items[0]!.result = "→ 4552 rps";
+    const nodes = textNodes(resumeToPdf(changed, locale).content);
+    const partsOf = (text: string) => nodes.find((node) => inline(node.text) === text)?.text;
+
+    expect(partsOf(changed.summary.paragraphs[0]!)).toEqual([
+      { text: "340 " },
+      { text: "→", font: PDF_SYMBOL_FONT },
+      { text: " 4552 rps, 919 " },
+      { text: "→", font: PDF_SYMBOL_FONT },
+      { text: " 69 ms" },
+    ]);
+    expect(partsOf(changed.projects.items[0]!.result)).toEqual([
+      { text: "→", font: PDF_SYMBOL_FONT },
+      { text: " 4552 rps" },
+    ]);
+  });
+
+  it("leaves no arrow outside a fragment of the fallback font", () => {
+    const strays = textNodes(linked.content).filter(
+      (node) =>
+        typeof node.text === "string" &&
+        node.text.includes("→") &&
+        (node.text !== "→" || node.font !== PDF_SYMBOL_FONT),
+    );
+
+    expect(strays).toEqual([]);
+    expect(
+      textNodes(linked.content).filter(
+        (node) => node.font === PDF_SYMBOL_FONT && node.text !== "→",
+      ),
+    ).toEqual([]);
   });
 
   it("has no footer with the copyright and the page numbers", () => {
