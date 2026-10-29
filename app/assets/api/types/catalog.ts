@@ -7,6 +7,7 @@ import type {
 } from "./resume";
 import type { Locale } from "../../const/locale";
 import type { ImageAsset } from "./media";
+import type { ResumeInfographic } from "./resumeInfographic";
 
 export type Tone = "primary" | "secondary" | "accent";
 
@@ -194,4 +195,13 @@ export type ResumeFile = Omit<ResumeData, "skills" | "projects"> & {
 
 export interface ResumeSources extends ProjectsSources, SkillsSources {
   resume: ByLocale<ResumeFile>;
+}
+
+export type ResumeInfographicFile = Omit<ResumeInfographic, "name" | "ai"> & {
+  ai: Omit<ResumeInfographic["ai"], "link">;
+};
+
+export interface ResumeInfographicSources {
+  resume: ByLocale<ResumeFile>;
+  resumeInfographic: ByLocale<ResumeInfographicFile>;
 }
