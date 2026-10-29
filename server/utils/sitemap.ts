@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, LOCALES, type Locale } from "../../app/assets/const/locale";
+import { DEFAULT_LOCALE, LOCALES, POST_LOCALE, type Locale } from "../../app/assets/const/locale";
 import { Route } from "../../app/assets/const/route";
 import { projects } from "../../app/assets/data/projects";
 import posts from "../../app/assets/data/blog/posts";
@@ -28,8 +28,11 @@ export function indexablePaths(): string[] {
     ...projects.map((project) => Route.project(project.id)),
     Route.resume,
     Route.blog,
-    ...posts.map((post) => Route.post(post.slug)),
   ];
+}
+
+function postPaths(): string[] {
+  return posts.map((post) => Route.post(post.slug));
 }
 
 function alternateLink(hreflang: string, href: string): string {
@@ -47,10 +50,21 @@ function sitemapEntry(baseUrl: string, path: string, locale: Locale): string {
   ].join("\n");
 }
 
+function postEntry(baseUrl: string, path: string): string {
+  return [
+    "  <url>",
+    `    <loc>${escapeXml(`${baseUrl}${localizedPath(POST_LOCALE, path)}`)}</loc>`,
+    "  </url>",
+  ].join("\n");
+}
+
 export function sitemapXml(baseUrl: string): string {
-  const entries = indexablePaths().flatMap((path) =>
-    LOCALES.map((locale) => sitemapEntry(baseUrl, path, locale)),
-  );
+  const entries = [
+    ...indexablePaths().flatMap((path) =>
+      LOCALES.map((locale) => sitemapEntry(baseUrl, path, locale)),
+    ),
+    ...postPaths().map((path) => postEntry(baseUrl, path)),
+  ];
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
