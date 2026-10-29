@@ -5,38 +5,32 @@
   grid-area: list;
 }
 
+.home-projects-viewport {
+  @variant md {
+    @apply overflow-hidden;
+    margin-block: --spacing(-8);
+    padding-block: --spacing(8);
+  }
+}
+
 .home-projects-track {
   @apply flex flex-col;
   gap: --spacing(8);
 
   @variant md {
-    @apply flex-row overflow-x-auto overflow-y-hidden;
-    margin-block: --spacing(-8);
-    margin-inline: --spacing(-8);
-    padding: --spacing(8);
-    scroll-padding-inline: --spacing(8);
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
+    @apply flex-row gap-0;
+    touch-action: pan-y pinch-zoom;
+  }
+}
 
-    &::-webkit-scrollbar {
-      @apply hidden;
-    }
-
-    &::after {
-      @apply flex-none;
-      content: "";
-      flex-basis: calc(100% - --spacing(82.5) - --spacing(8));
-    }
-
-    @variant motion-safe {
-      scroll-behavior: smooth;
-    }
+.home-projects-slide {
+  @variant md {
+    @apply flex min-w-0 flex-none;
+    padding-right: --spacing(8);
   }
 
   @variant xl {
-    &::after {
-      flex-basis: calc(100% - (100% - --spacing(16)) / 3 - --spacing(8));
-    }
+    width: calc((100% - --spacing(16)) / 3 + --spacing(8));
   }
 }
 

@@ -25,3 +25,15 @@ export const projectTones: Record<Tone, ProjectToneClasses> = {
     button: "btn-accent",
   },
 };
+
+const TONE_CYCLE: Tone[] = ["primary", "secondary", "accent"];
+
+export function cycleTones(count: number): Tone[] {
+  const tones = Array.from({ length: count }, (_, index) => TONE_CYCLE[index % TONE_CYCLE.length]!);
+  const first = tones[0];
+  const previous = tones.at(-2);
+  if (count > 2 && tones.at(-1) === first) {
+    tones[count - 1] = TONE_CYCLE.find((tone) => tone !== first && tone !== previous)!;
+  }
+  return tones;
+}

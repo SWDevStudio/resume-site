@@ -149,6 +149,6 @@
   }
 
   @variant xl {
-    width: calc((100% - --spacing(16)) / 3);
+    width: 100%;
   }
 }
