@@ -67,7 +67,7 @@ const dobro = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "Dobro.rf is a platform for transparent charity, with Alfa-Bank as its general partner. Donors make one-time and recurring donations, put several fundraisers into one cart and see their history. Non-profits and private organizers go through onboarding, upload documents, create fundraisers and follow the statistics. Moderators review the fundraisers.",
+                  text: "Dobro.rf (dobro.ru) is a platform for transparent charity, with Alfa-Bank as its general partner. Donors make one-time and recurring donations, put several fundraisers into one cart and see their history. Non-profits and private organizers go through onboarding, upload documents, create fundraisers and follow the statistics. Moderators review the fundraisers.",
                 },
               },
             ],
