@@ -228,7 +228,7 @@ function controlled() {
 }
 
 async function ask(screen: Awaited<ReturnType<typeof renderCase>>, question: string) {
-  const input = pick<HTMLInputElement>(screen, ".home-why-textbox");
+  const input = pick<HTMLTextAreaElement>(screen, ".home-why-textbox");
   await userEvent.click(page.elementLocator(input));
   await userEvent.fill(page.elementLocator(input), question);
   await userEvent.click(page.elementLocator(pick(screen, ".home-why-ask")));
@@ -332,7 +332,7 @@ describe("behavior", () => {
     expect(pick(screen, ".home-why-avatar").textContent).toBe(en.home.why.chat.avatar);
     expect(pick(screen, ".home-why-bubble").textContent).toBe(en.home.why.chat.greeting);
     expect(text(pick(screen, ".home-why-prompt"))).toBe(">");
-    expect(pick<HTMLInputElement>(screen, ".home-why-textbox").placeholder).toBe(
+    expect(pick<HTMLTextAreaElement>(screen, ".home-why-textbox").placeholder).toBe(
       en.home.why.chat.placeholder,
     );
     expect(text(pick(screen, ".home-why-ask"))).toBe(en.home.why.chat.ask);
@@ -390,7 +390,7 @@ describe("behavior", () => {
     );
     expect(text(pick(screen, ".home-why-status"))).toBe(ru.home.why.chat.status);
     expect(pick(screen, ".home-why-bubble").textContent).toBe(ru.home.why.chat.greeting);
-    expect(pick<HTMLInputElement>(screen, ".home-why-textbox").placeholder).toBe(
+    expect(pick<HTMLTextAreaElement>(screen, ".home-why-textbox").placeholder).toBe(
       ru.home.why.chat.placeholder,
     );
     expect(text(pick(screen, ".home-why-ask"))).toBe(ru.home.why.chat.ask);
@@ -860,7 +860,7 @@ describe("chat states", () => {
       agent.end();
       await expect.poll(() => text(lastBubble(screen))).toBe(reply);
       await expect
-        .poll(() => pick<HTMLInputElement>(screen, ".home-why-textbox").disabled)
+        .poll(() => pick<HTMLTextAreaElement>(screen, ".home-why-textbox").disabled)
         .toBe(false);
     }
     finishAnimations();
@@ -903,12 +903,12 @@ describe("chat", () => {
   it("renders a real labelled text field", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
     const form = pick<HTMLFormElement>(screen, ".home-why-input");
-    const input = pick<HTMLInputElement>(screen, ".home-why-textbox");
+    const input = pick<HTMLTextAreaElement>(screen, ".home-why-textbox");
     const button = pick<HTMLButtonElement>(screen, ".home-why-ask");
     const dialog = pick(screen, ".home-why-dialog");
 
     expect(form.tagName).toBe("FORM");
-    expect(input.type).toBe("text");
+    expect(input.tagName).toBe("TEXTAREA");
     expect(input.getAttribute("aria-label")).toBe(en.home.why.chat.inputLabel);
     expect(input.autocomplete).toBe("off");
     expect(input.maxLength).toBeGreaterThan(0);
@@ -929,7 +929,7 @@ describe("chat", () => {
     const message = pick(screen, ".home-why-message-user");
     expect(text(message)).toBe("How fast can you start?");
     expect(message.parentElement).toBe(pick(screen, ".home-why-thread"));
-    expect(pick<HTMLInputElement>(screen, ".home-why-textbox").value).toBe("");
+    expect(pick<HTMLTextAreaElement>(screen, ".home-why-textbox").value).toBe("");
     expect(agent.calls.map((call) => call.question)).toEqual(["How fast can you start?"]);
     expect(agent.calls[0]!.context?.reply).toBe(en.home.why.chat.mockReply);
     expect(getComputedStyle(message).flexDirection).toBe("row-reverse");
@@ -939,7 +939,7 @@ describe("chat", () => {
     const agent = controlled();
     agentOverride.current = agent.agent;
     const screen = await renderCase({ width: 1440, height: 900 });
-    const input = pick<HTMLInputElement>(screen, ".home-why-textbox");
+    const input = pick<HTMLTextAreaElement>(screen, ".home-why-textbox");
 
     await userEvent.click(page.elementLocator(input));
     await userEvent.fill(page.elementLocator(input), "Enter works");
@@ -950,11 +950,56 @@ describe("chat", () => {
     expect(agent.calls).toHaveLength(1);
   });
 
+  it("breaks the line with Shift+Enter without sending", async () => {
+    const agent = controlled();
+    agentOverride.current = agent.agent;
+    const screen = await renderCase({ width: 1440, height: 900 });
+    const input = pick<HTMLTextAreaElement>(screen, ".home-why-textbox");
+
+    await userEvent.click(page.elementLocator(input));
+    await userEvent.keyboard("first{Shift>}{Enter}{/Shift}second");
+
+    expect(input.value).toBe("first\nsecond");
+    expect(agent.calls).toHaveLength(0);
+    expect(bubbles(screen)).toHaveLength(1);
+  });
+
+  it("grows the field up to five lines and collapses it after sending", async () => {
+    const agent = controlled();
+    agentOverride.current = agent.agent;
+    const screen = await renderCase({ width: 1440, height: 900 });
+    const input = pick<HTMLTextAreaElement>(screen, ".home-why-textbox");
+    const frame = pick<HTMLElement>(screen, ".home-why-textbox-frame");
+    const line = Number.parseFloat(getComputedStyle(input).lineHeight);
+    const single = input.getBoundingClientRect().height;
+
+    near(single, line);
+    expect(getComputedStyle(input).resize).toBe("none");
+
+    await userEvent.click(page.elementLocator(input));
+    await userEvent.fill(page.elementLocator(input), "1\n2\n3");
+    await expect.poll(() => input.getBoundingClientRect().height).toBeGreaterThan(line * 2.5);
+    expect(transitioning(frame, "height")).toBe(true);
+    finishAnimations();
+    near(frame.getBoundingClientRect().height, input.getBoundingClientRect().height);
+
+    await userEvent.fill(page.elementLocator(input), "1\n2\n3\n4\n5\n6\n7\n8");
+    await expect.poll(() => input.scrollHeight).toBeGreaterThan(line * 7);
+    near(input.getBoundingClientRect().height, line * 5);
+    expect(getComputedStyle(input).overflowY).toBe("auto");
+
+    await userEvent.keyboard("{Enter}");
+    await expect.poll(() => bubbles(screen)).toHaveLength(3);
+    await expect.poll(() => input.getBoundingClientRect().height).toBeLessThan(line * 1.5);
+    finishAnimations();
+    near(frame.getBoundingClientRect().height, single);
+  });
+
   it("does not send an empty or blank line", async () => {
     const agent = controlled();
     agentOverride.current = agent.agent;
     const screen = await renderCase({ width: 1440, height: 900 });
-    const input = pick<HTMLInputElement>(screen, ".home-why-textbox");
+    const input = pick<HTMLTextAreaElement>(screen, ".home-why-textbox");
     const button = pick<HTMLButtonElement>(screen, ".home-why-ask");
 
     await userEvent.click(page.elementLocator(input));
@@ -1082,7 +1127,7 @@ describe("chat", () => {
     const button = pick<HTMLButtonElement>(screen, ".home-why-ask");
     const arrow = pick<HTMLElement>(screen, ".home-why-ask-arrow");
     const spinner = pick<HTMLElement>(screen, ".home-why-ask-spinner");
-    const input = pick<HTMLInputElement>(screen, ".home-why-textbox");
+    const input = pick<HTMLTextAreaElement>(screen, ".home-why-textbox");
 
     await ask(screen, "question");
     await expect.poll(() => button.getAttribute("aria-busy")).toBe("true");
@@ -1118,7 +1163,7 @@ describe("chat", () => {
     const agent = controlled();
     agentOverride.current = agent.agent;
     const screen = await renderCase({ width: 1440, height: 900 });
-    const input = pick<HTMLInputElement>(screen, ".home-why-textbox");
+    const input = pick<HTMLTextAreaElement>(screen, ".home-why-textbox");
 
     for (const chip of pickAll(screen, ".home-why-chip")) {
       await userEvent.click(page.elementLocator(chip));
@@ -1136,7 +1181,7 @@ describe("chat", () => {
     const agent = controlled();
     agentOverride.current = agent.agent;
     const screen = await renderCase({ width: 1440, height: 900 });
-    const input = pick<HTMLInputElement>(screen, ".home-why-textbox");
+    const input = pick<HTMLTextAreaElement>(screen, ".home-why-textbox");
 
     await ask(screen, "will fail");
     await expect.poll(() => bubbles(screen)).toHaveLength(3);
@@ -1222,7 +1267,7 @@ describe("chat", () => {
       agent.push(en.home.why.chat.mockReply);
       agent.end();
       await expect
-        .poll(() => pick<HTMLInputElement>(screen, ".home-why-textbox").disabled)
+        .poll(() => pick<HTMLTextAreaElement>(screen, ".home-why-textbox").disabled)
         .toBe(false);
     }
 
@@ -1301,6 +1346,18 @@ describe("chat", () => {
       );
       expect(transitioning(pick(screen, ".home-why-ask-arrow"), "opacity")).toBe(false);
       agent.end();
+    });
+
+    it("resizes the field without animation", async () => {
+      const screen = await renderCase({ width: 1440, height: 900 });
+      const input = pick<HTMLTextAreaElement>(screen, ".home-why-textbox");
+      const frame = pick<HTMLElement>(screen, ".home-why-textbox-frame");
+      const line = Number.parseFloat(getComputedStyle(input).lineHeight);
+
+      await userEvent.click(page.elementLocator(input));
+      await userEvent.fill(page.elementLocator(input), "1\n2\n3");
+      await expect.poll(() => frame.getBoundingClientRect().height).toBeGreaterThan(line * 2.5);
+      expect(transitioning(frame, "height")).toBe(false);
     });
   });
 });

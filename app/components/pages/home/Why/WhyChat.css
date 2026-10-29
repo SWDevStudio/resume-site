@@ -98,7 +98,7 @@
 }
 
 .home-why-field {
-  @apply flex min-w-0 flex-1 cursor-text items-baseline self-stretch;
+  @apply flex min-w-0 flex-1 cursor-text items-start self-stretch;
   font-family: "Share Tech Mono", ui-monospace, monospace;
   font-size: --spacing(4);
   line-height: 1.6;
@@ -109,8 +109,18 @@
   margin-right: 1ch;
 }
 
+.home-why-textbox-frame {
+  @apply block min-w-0 flex-1 overflow-hidden;
+  transition-property: height;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
 .home-why-textbox {
-  @apply min-w-0 flex-1 appearance-none border-0 bg-transparent p-0 text-base-content input-caret outline-hidden;
+  @apply block w-full resize-none appearance-none overflow-x-hidden overflow-y-auto border-0 bg-transparent p-0 text-base-content input-caret outline-hidden;
+  max-height: 8em;
   font: inherit;
   transition-property: color, opacity;
 

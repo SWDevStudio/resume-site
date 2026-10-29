@@ -40,19 +40,25 @@
         >
           &gt;
         </span>
-        <input
-          ref="input"
-          v-model="draft"
-          class="home-why-textbox ym-disable-keys"
-          type="text"
-          enterkeyhint="send"
-          autocomplete="off"
-          :maxlength="maxLength"
-          :placeholder="t('home.why.chat.placeholder')"
-          :aria-label="t('home.why.chat.inputLabel')"
-          :disabled="inputDisabled"
-          @focus="prepare"
-        />
+        <span
+          class="home-why-textbox-frame"
+          :style="frameStyle"
+        >
+          <textarea
+            ref="input"
+            v-model="draft"
+            class="home-why-textbox ym-disable-keys"
+            rows="1"
+            enterkeyhint="send"
+            autocomplete="off"
+            :maxlength="maxLength"
+            :placeholder="t('home.why.chat.placeholder')"
+            :aria-label="t('home.why.chat.inputLabel')"
+            :disabled="inputDisabled"
+            @focus="prepare"
+            @keydown.enter="onEnter"
+          />
+        </span>
       </label>
       <UiButton
         class="home-why-ask"
@@ -94,7 +100,7 @@
 
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from "vue";
-import { useMediaQuery } from "@vueuse/core";
+import { useMediaQuery, useTextareaAutosize } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import UiButton from "~/components/ui/UiButton/UiButton.vue";
 import UiIcon from "~/components/ui/UiIcon/UiIcon.vue";
@@ -104,7 +110,10 @@ import type { WhyMessageData } from "./useWhyChat";
 
 const { t } = useI18n();
 const dialog = ref<HTMLElement | null>(null);
-const input = ref<HTMLInputElement | null>(null);
+const input = ref<HTMLTextAreaElement | null>(null);
+const frameHeight = ref<number | null>(null);
+
+const IME_KEY_CODE = 229;
 
 const { messages, status, draft, busy, locked, canSend, maxLength, send, fill, prepare } =
   useWhyChat(dialog);
@@ -127,8 +136,25 @@ const thread = computed(() =>
 const askDisabled = computed(() => !canSend.value);
 const inputDisabled = computed(() => busy.value || locked.value);
 
+function syncFrame() {
+  const field = input.value;
+  if (field) frameHeight.value = field.getBoundingClientRect().height;
+}
+
+useTextareaAutosize({ element: input, input: draft, onResize: syncFrame });
+
+const frameStyle = computed(() =>
+  frameHeight.value === null ? undefined : { height: `${frameHeight.value}px` },
+);
+
 function onSubmit() {
   if (canSend.value) void send();
+}
+
+function onEnter(event: KeyboardEvent) {
+  if (event.shiftKey || event.isComposing || event.keyCode === IME_KEY_CODE) return;
+  event.preventDefault();
+  onSubmit();
 }
 
 async function onChip(label: string) {
