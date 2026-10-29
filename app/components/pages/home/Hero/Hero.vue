@@ -12,14 +12,16 @@
       :class="item.class"
     />
 
-    <h1
+    <h1 class="home-hero-name">{{ name }}</h1>
+
+    <p
       class="home-hero-title"
       lang="en"
       data-atom-skip
     >
       <span class="home-hero-title-top">Fullstack</span>
       <span class="home-hero-title-bottom">Developer</span>
-    </h1>
+    </p>
 
     <HeroSocials />
 
@@ -53,6 +55,10 @@ import HeroDay from "./HeroDay.vue";
 import HeroNight from "./HeroNight.vue";
 import HeroSocials from "./HeroSocials.vue";
 import { HERO_IMAGE_FADE_NOSCRIPT } from "./heroImageFade";
+
+defineProps<{
+  name: string;
+}>();
 
 const { t } = useI18n();
 const { locale } = useLocale();

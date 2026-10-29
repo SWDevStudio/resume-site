@@ -1,6 +1,9 @@
 <template>
   <div class="home">
-    <Hero />
+    <Hero
+      :name="name"
+      data-atom-async="home-person"
+    />
     <About />
     <Skills
       v-if="skillGroups"

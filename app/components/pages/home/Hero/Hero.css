@@ -29,6 +29,9 @@
   --home-hero-title-size: --spacing(13);
   --home-hero-title-indent: --spacing(9);
   --home-hero-title-scale: 1;
+  --home-hero-title-line-bottom: --spacing(119.5);
+  --home-hero-name-size: --spacing(3.5);
+  --home-hero-name-gap: --spacing(3);
   --home-hero-rail-top: auto;
   --home-hero-rail-right: --spacing(5);
   --home-hero-rail-bottom: --spacing(9);
@@ -60,6 +63,8 @@
     --home-hero-title-left: --spacing(14);
     --home-hero-title-size: --spacing(21);
     --home-hero-title-indent: --spacing(19);
+    --home-hero-name-size: --spacing(4.5);
+    --home-hero-name-gap: --spacing(4);
     --home-hero-rail-top: --spacing(42.5);
     --home-hero-rail-right: --spacing(10);
     --home-hero-rail-bottom: --spacing(27.5);
@@ -92,6 +97,8 @@
     --home-hero-title-left: --spacing(79.25);
     --home-hero-title-size: clamp(--spacing(10), 7.8vw, --spacing(28.08));
     --home-hero-title-indent: clamp(--spacing(10), 12vw, --spacing(43.2));
+    --home-hero-name-size: --spacing(5);
+    --home-hero-name-gap: --spacing(5);
     --home-hero-rail-right: clamp(--spacing(4), 10%, --spacing(36));
     --home-hero-cta-left: clamp(--spacing(5), 12%, --spacing(43.2));
   }
@@ -108,6 +115,8 @@
   --home-hero-glow-primary: drop-shadow(0 0 --spacing(1.5) var(--color-primary))
     drop-shadow(0 0 --spacing(4.5) color-mix(in oklab, var(--color-primary) 60%, transparent));
   --home-hero-rail-glow: 0 0 --spacing(2.5) var(--color-primary);
+  --home-hero-name-glow: 0 0 --spacing(2.5)
+    color-mix(in oklab, var(--color-primary) 60%, transparent);
 
   :where([data-theme="cyber-sakura"]) & {
     --home-hero-night: 0;
@@ -127,6 +136,8 @@
       drop-shadow(0 0 --spacing(4.5) transparent);
     --home-hero-rail-glow: 0 0 --spacing(2)
       color-mix(in oklab, var(--color-primary) 70%, transparent);
+    --home-hero-name-glow: 0 0 --spacing(2.5)
+      color-mix(in oklab, var(--color-base-100) 90%, transparent);
   }
 
   @apply overflow-hidden;
@@ -197,6 +208,24 @@
   background: var(--home-hero-scrim);
 }
 
+.home-hero-name {
+  @apply absolute m-0 font-body font-light tracking-[.3em] whitespace-nowrap text-primary-ink uppercase;
+  top: calc(
+    var(--home-hero-title-line-bottom) - var(--home-hero-title-size) *
+      var(--home-hero-title-scale) * 1.02 - var(--home-hero-name-gap)
+  );
+  left: var(--home-hero-title-left);
+  translate: 0 -100%;
+  font-size: var(--home-hero-name-size);
+  line-height: 1.6;
+  text-shadow: var(--home-hero-name-glow);
+  transition-property: color, text-shadow;
+
+  @variant motion-reduce {
+    @apply transition-none;
+  }
+}
+
 .home-hero-title {
   @apply pointer-events-none absolute top-0 m-0 font-normal uppercase;
   font-family: "Righteous", "Righteous Fallback", sans-serif;
@@ -224,7 +253,7 @@
 
 .home-hero-title-top {
   @apply left-0;
-  bottom: --spacing(105.5);
+  bottom: calc(--spacing(225) - var(--home-hero-title-line-bottom));
   color: color-mix(in oklab, var(--color-brand) var(--home-hero-fill-brand), transparent);
   -webkit-text-stroke-color: var(--color-brand);
   filter: var(--home-hero-glow-brand);
