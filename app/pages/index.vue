@@ -10,7 +10,7 @@
     <Why />
     <Projects
       v-if="projects"
-      :projects="favoriteProjects"
+      :projects="projects"
       data-atom-async="home-projects"
     />
     <Contact />
@@ -18,7 +18,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import { useAsyncData, useSeoMeta } from "#imports";
 import { useI18n } from "vue-i18n";
 import { $api } from "~/assets/api";
@@ -37,7 +36,4 @@ useSeoMeta({ title, ogTitle: title });
 
 const { data: skillGroups } = await useAsyncData("home-skills", () => $api.skills.fetchGroups());
 const { data: projects } = await useAsyncData("home-projects", () => $api.projects.fetchList());
-const favoriteProjects = computed(
-  () => projects.value?.filter((project) => project.isFavorite) ?? [],
-);
 </script>

@@ -80,12 +80,12 @@ describe("slides", () => {
     expect(fetchList).toHaveBeenCalledTimes(1);
     expect(section("projects").getAttribute("data-atom-async")).toBe("home-projects");
     expect(section("projects").querySelectorAll(".home-projects-card")).toHaveLength(
-      catalog.filter((project) => project.isFavorite).length,
+      catalog.length,
     );
     fetchList.mockRestore();
   });
 
-  it("shows only favorite projects on the home page", async () => {
+  it("shows every project on the home page, favorite or not", async () => {
     const projects = await $api.projects.fetchList();
     const fetchList = vi
       .spyOn($api.projects, "fetchList")
@@ -95,8 +95,8 @@ describe("slides", () => {
     try {
       await renderPage();
       const cards = section("projects").querySelectorAll(".home-projects-card");
-      expect(cards).toHaveLength(1);
-      expect(cards[0]!.textContent).toContain(projects[1]!.name);
+      expect(cards).toHaveLength(projects.length);
+      expect(cards[0]!.textContent).toContain(projects[0]!.name);
     } finally {
       fetchList.mockRestore();
     }
