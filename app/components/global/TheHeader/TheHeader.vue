@@ -77,7 +77,7 @@ import TheHeaderThemeSwitch from "./TheHeaderThemeSwitch.vue";
 
 const items = [
   { key: "about", label: "nav.about", to: Route.about },
-  { key: "portfolio", label: "nav.portfolio", to: Route.resume },
+  { key: "resume", label: "nav.resume", to: Route.resume },
   // { key: "blog", label: "nav.blog", to: Route.blog },
   { key: "projects", label: "nav.projects", to: Route.projects },
 ] as const;

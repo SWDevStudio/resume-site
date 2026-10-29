@@ -53,7 +53,7 @@ const root = () => document.documentElement;
 const section = (id: string) => document.getElementById(id)!;
 
 beforeAll(async () => {
-  await document.fonts.load('300 1em "Martian Mono"', "About Portfolio Blog Contact");
+  await document.fonts.load('300 1em "Martian Mono"', "About Resume Blog Contact");
 });
 
 afterEach(async () => {
