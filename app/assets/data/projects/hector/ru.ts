@@ -260,7 +260,7 @@ const hector = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "Pre-push с тестами и линтом настроил я, Codemagic — DevOps команды. Android собирается подписанным bundle из Android Studio.",
+                  text: "Pre-push с тестами и линтом и сборку iOS в Codemagic настроил я. Android собирается подписанным bundle из Android Studio.",
                 },
               },
               {

@@ -260,7 +260,7 @@ const hector = [
               {
                 component: "ProjectCaseText",
                 data: {
-                  text: "I set up the pre-push with tests and lint, the team's DevOps engineer set up Codemagic. Android is built as a signed bundle from Android Studio.",
+                  text: "I set up the pre-push with tests and lint and the iOS build in Codemagic. Android is built as a signed bundle from Android Studio.",
                 },
               },
               {
