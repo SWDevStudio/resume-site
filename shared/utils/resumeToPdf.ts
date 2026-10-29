@@ -291,12 +291,5 @@ export function resumeToPdf(
       ]),
       ...section(data.references.name, listChunks(data.references.items)),
     ],
-    footer: (current: number, total: number): Content => ({
-      text: `${data.footer.copyright}  ·  ${current} / ${total}`,
-      alignment: "center",
-      fontSize: 8,
-      color: COLOR.muted,
-      margin: [PAGE.margin.left, 18, PAGE.margin.right, 0],
-    }),
   };
 }

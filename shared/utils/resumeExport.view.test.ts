@@ -364,10 +364,9 @@ describe.each(entries)("resumeToPdf of $locale", ({ locale, data }) => {
     );
   });
 
-  it("puts the copyright and the page numbers into the footer", () => {
-    const footer = definition.footer as (page: number, pages: number) => { text: string };
-
-    expect(footer(2, 5).text).toBe(`${data.footer.copyright}  ·  2 / 5`);
+  it("has no footer with the copyright and the page numbers", () => {
+    expect(definition.footer).toBeUndefined();
+    expect(text).not.toContain(data.footer.copyright);
   });
 
   it("keeps a section heading together with the first block under it", () => {
