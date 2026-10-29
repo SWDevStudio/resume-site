@@ -469,23 +469,48 @@ describe("behavior", () => {
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(768);
   });
 
-  it("lays out like the mockup on mobile", async () => {
+  it("slides the cards on mobile with the next one peeking from the edge", async () => {
     const screen = await renderCase({ width: 390, height: 780 });
+    const viewport = pick<HTMLElement>(screen, ".home-projects-viewport");
     const cards = pickAll(screen, ".home-projects-card").map((item) =>
       item.getBoundingClientRect(),
     );
+    const left = pick(screen, ".home-projects").getBoundingClientRect().left;
 
     near(box(screen, ".home-projects-head").left, 20);
     near(size(screen, ".home-projects-title"), 44);
-    expect(getComputedStyle(pick(screen, ".home-projects-track")).flexDirection).toBe("column");
-    expect(getComputedStyle(pick(screen, ".home-projects-viewport")).overflowX).toBe("visible");
-    expect(pick<HTMLElement>(screen, ".home-projects-track").style.transform).toBe("");
-    expect(getComputedStyle(pick(screen, ".home-projects-dots")).display).toBe("none");
-    for (const card of cards) near(card.width, 350);
-    near(cards[1]!.top - cards[0]!.bottom, 32);
-    near(cards[2]!.top - cards[1]!.bottom, 32);
-    near(cards[3]!.top - cards[2]!.bottom, 32);
+    expect(getComputedStyle(pick(screen, ".home-projects-track")).flexDirection).toBe("row");
+    expect(getComputedStyle(viewport).overflowX).toBe("hidden");
+    near(viewport.getBoundingClientRect().left - left, 0);
+    near(viewport.getBoundingClientRect().width, 390);
+    expect(pick<HTMLElement>(screen, ".home-projects-track").style.transform).toContain(
+      "translate",
+    );
+    expect(getComputedStyle(pick(screen, ".home-projects-dots")).display).toBe("flex");
+    near(cards[0]!.left - left, 20);
+    for (const card of cards) near(card.width, 310);
+    near(cards[1]!.left - cards[0]!.right, 32);
+    near(cards[1]!.top, cards[0]!.top);
+    near(390 - (cards[1]!.left - left), 28);
+    for (const card of cards) expect(card.height).toBeLessThanOrEqual(520);
+    for (const text of pickAll(screen, ".home-projects-card .card-text")) {
+      expect(getComputedStyle(text).webkitLineClamp).toBe("3");
+    }
+    expect(getComputedStyle(pick(screen, ".home-projects-card .card-media")).aspectRatio).toBe(
+      "16 / 10",
+    );
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(390);
+  });
+
+  it("follows the dragged card on mobile", async () => {
+    const screen = await renderCase({ width: 390, height: 780 });
+    const left = () => pick(screen, ".home-projects").getBoundingClientRect().left;
+    const card = (index: number) =>
+      pickAll(screen, ".home-projects-card")[index]!.getBoundingClientRect();
+
+    await drag(screen, -150);
+    await vi.waitFor(() => expect(activeDot(screen)).toBe(1));
+    await vi.waitFor(() => near(card(1).left - left(), 20, 1), { timeout: 5000 });
   });
 
   it.each([

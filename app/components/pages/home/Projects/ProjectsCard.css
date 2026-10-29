@@ -45,10 +45,22 @@
     color: var(--home-projects-ink);
   }
 
+  @variant max-md {
+    --card-min-height: 0rem;
+    --card-pad-top: --spacing(8);
+    --card-pad-inline: --spacing(5);
+    --card-pad-bottom: --spacing(5);
+    --card-gap: --spacing(3);
+  }
+
   & .card-media {
     @apply min-h-0;
     height: auto;
     aspect-ratio: 313 / 240;
+
+    @variant max-md {
+      aspect-ratio: 16 / 10;
+    }
 
     @variant xl {
       aspect-ratio: 16 / 10;
@@ -56,6 +68,10 @@
   }
 
   & .card-text {
+    @variant max-md {
+      @apply line-clamp-3;
+    }
+
     @variant xl {
       @apply line-clamp-5;
     }
@@ -143,6 +159,8 @@
 }
 
 .home-projects-card {
+  @apply min-w-0 flex-1;
+
   @variant md {
     @apply flex-none;
     width: --spacing(82.5);

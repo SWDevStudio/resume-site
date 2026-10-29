@@ -6,27 +6,31 @@
 }
 
 .home-projects-viewport {
+  @apply overflow-hidden;
+  margin-block: --spacing(-8);
+  margin-inline: --spacing(-5);
+  padding-block: --spacing(8);
+
   @variant md {
-    @apply overflow-hidden;
-    margin-block: --spacing(-8);
-    padding-block: --spacing(8);
+    margin-inline: 0rem;
   }
 }
 
 .home-projects-track {
-  @apply flex flex-col;
-  gap: --spacing(8);
-
-  @variant md {
-    @apply flex-row gap-0;
-    touch-action: pan-y pinch-zoom;
-  }
+  @apply flex flex-row;
+  touch-action: pan-y pinch-zoom;
 }
 
 .home-projects-slide {
+  @apply flex min-w-0 flex-none;
+  width: calc(100% - --spacing(12));
+  padding-right: --spacing(3);
+  padding-left: --spacing(5);
+
   @variant md {
-    @apply flex min-w-0 flex-none;
+    width: auto;
     padding-right: --spacing(8);
+    padding-left: 0rem;
   }
 
   @variant xl {
@@ -35,9 +39,13 @@
 }
 
 .home-projects-dots {
-  @apply hidden justify-center md:flex;
+  @apply flex justify-center;
   gap: --spacing(2.5);
-  margin-top: --spacing(14);
+  margin-top: --spacing(8);
+
+  @variant md {
+    margin-top: --spacing(14);
+  }
 
   @variant xl {
     margin-top: --spacing(6);

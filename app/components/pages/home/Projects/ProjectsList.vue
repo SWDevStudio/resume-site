@@ -51,7 +51,6 @@ const props = defineProps<{
 const CAROUSEL: EmblaOptionsType = {
   loop: true,
   align: "start",
-  breakpoints: { "(max-width: 47.99rem)": { active: false } },
 };
 
 const { t } = useI18n();
