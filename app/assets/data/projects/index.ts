@@ -13,16 +13,16 @@ import hector from "./hector";
 import { projectLabels } from "./labels";
 
 export const projectDefinitions = [
-  qwixit,
+  dobro,
+  hector,
   brendmart,
+  tamrielCodex,
+  qwixit,
   taobao,
   pochtoyProstobox,
   cdekShopping,
   flyPost,
-  tamrielCodex,
   someday,
-  dobro,
-  hector,
 ];
 
 export const projects = projectDefinitions.map(

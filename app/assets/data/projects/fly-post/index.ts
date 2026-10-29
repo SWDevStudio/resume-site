@@ -26,6 +26,7 @@ const project = {
     { label: "MSW", own: true },
     { label: "ky", own: true },
     { label: "maska", own: true },
+    { label: "Vitest", own: true },
     { label: "NestJS", own: true },
     { label: "Swagger", own: true },
     { label: "PostgreSQL", own: true },

@@ -14,14 +14,21 @@ import { buildCase } from "~/assets/api/mock/build";
 import { loadProjectMedia } from "~/assets/api/mock/media";
 import { staticSources } from "~/assets/api/mock/sources.static";
 import brendmartFile from "~/assets/data/projects/brendmart/en";
+import { projectDefinitions } from "~/assets/data/projects";
 import qwixitFile from "~/assets/data/projects/qwixit/en";
 import tamrielCodexFile from "~/assets/data/projects/tamriel-codex/en";
 import type {
   ProjectBlock,
+  ProjectCaseChallengesData,
+  ProjectCaseChapterData,
   ProjectCaseCoverData,
+  ProjectCaseCtaData,
   ProjectCaseHeaderData,
   ProjectCaseMetaData,
   ProjectCaseNextData,
+  ProjectCaseResultsData,
+  ProjectCaseRoleData,
+  ProjectCaseTextData,
 } from "~/assets/api/types/projectCase";
 import type { ProjectStackItem } from "~/assets/api/types/catalog";
 import { setTheme } from "../../../../../test/mocks/useTheme";
@@ -65,6 +72,78 @@ const projectCases = Object.entries(caseFiles).map(([slug, blocks]) => ({
 }));
 
 const qwixit = projectCases[0]!;
+
+interface Section {
+  id: string;
+  name: string;
+  heading: string;
+  level: 2 | 3;
+}
+
+function sectionsOf(blocks: ProjectBlock[], level: 2 | 3 = 2): Section[] {
+  return blocks.flatMap((block): Section[] => {
+    if (block.component === "ProjectCaseRole") {
+      const data = block.data as unknown as ProjectCaseRoleData;
+      return [{ id: data.id, name: data.name, heading: data.name, level }];
+    }
+    if (block.component === "ProjectCaseChapter") {
+      const data = block.data as unknown as ProjectCaseChapterData;
+      return [
+        { id: data.id, name: data.name, heading: data.name, level },
+        ...sectionsOf(data.blocks, 3),
+      ];
+    }
+    if (block.component === "ProjectCaseChallenges") {
+      const data = block.data as unknown as ProjectCaseChallengesData;
+      return data.items.map((item) => ({
+        id: item.id,
+        name: item.name,
+        heading: item.name,
+        level: 3 as const,
+      }));
+    }
+    if (block.component === "ProjectCaseCta") {
+      const data = block.data as unknown as ProjectCaseCtaData;
+      return [{ id: data.id, name: en.projects.case.cta.nav, heading: data.title, level }];
+    }
+    return [];
+  });
+}
+
+function textsOf(blocks: ProjectBlock[]): string[] {
+  return blocks.flatMap((block) => {
+    if (block.component === "ProjectCaseText") {
+      return [(block.data as unknown as ProjectCaseTextData).text];
+    }
+    if (block.component === "ProjectCaseChapter") {
+      return textsOf((block.data as unknown as ProjectCaseChapterData).blocks);
+    }
+    return [];
+  });
+}
+
+function findBlocks(blocks: ProjectBlock[], component: string): ProjectBlock[] {
+  return blocks.flatMap((block) => [
+    ...(block.component === component ? [block] : []),
+    ...(block.component === "ProjectCaseChapter"
+      ? findBlocks((block.data as unknown as ProjectCaseChapterData).blocks, component)
+      : []),
+  ]);
+}
+
+const qwixitSections = sectionsOf(qwixit.blocks);
+const qwixitStats = (
+  findBlocks(qwixit.blocks, "ProjectCaseResults")[0]!.data as unknown as ProjectCaseResultsData
+).stats;
+
+function nextOf(slug: string) {
+  const ids = projectDefinitions.map((project) => project.id);
+  const index = ids.indexOf(slug);
+  return {
+    slug: ids[(index + 1) % ids.length]!,
+    label: String(((index + 1) % ids.length) + 1).padStart(2, "0"),
+  };
+}
 
 function caseStackOf(slug: string) {
   return sources.projects.find((project) => project.id === slug)!.caseStack ?? [];
@@ -227,7 +306,16 @@ describe("data", () => {
   });
 
   it("chains the next project and wraps around", () => {
-    expect(projectCases.map((item) => item.next.slug)).toEqual(["brendmart", "taobao", "someday"]);
+    const ids = projectDefinitions.map((project) => project.id);
+
+    expect(projectCases.map((item) => item.next.slug)).toEqual(
+      projectCases.map((item) => nextOf(item.slug).slug),
+    );
+    expect(projectCases.map((item) => item.next.index)).toEqual(
+      projectCases.map((item) => nextOf(item.slug).label),
+    );
+    expect(nextOf(ids.at(-1)!).slug).toBe(ids[0]);
+    expect(nextOf(ids[0]!).label).toBe("02");
   });
 
   it("skips a block of an unknown component and keeps the rest", async () => {
@@ -303,18 +391,12 @@ describe("content", () => {
     expect(root.classList.contains("container")).toBe(true);
     expect(pickAll(screen, "h1")).toHaveLength(1);
     expect(text(pick(screen, "h1"))).toBe(`Qwixit: ${qwixit.header.headline}`);
-    expect(text(pick(screen, "h1"))).toBe(
-      "Qwixit: [headline result, e.g. from zero to 10k orders a month]",
-    );
+    expect(qwixit.header.headline.length).toBeGreaterThan(0);
     expect(text(pick(screen, ".project-case-label"))).toBe(
-      "01 · FASHION MARKETPLACE · US DELIVERY",
+      `${qwixit.header.index} · ${qwixit.header.subtitle}`,
     );
-    expect(pickAll(screen, ".project-case-tag").map((tag) => text(tag))).toEqual([
-      "E-commerce",
-      "Full-Stack",
-      "Payments",
-      "SEO",
-    ]);
+    expect(pickAll(screen, ".project-case-tag").map((tag) => text(tag))).toEqual(qwixit.meta.tags);
+    expect(qwixit.meta.tags.length).toBeGreaterThan(0);
     expect(text(pick(screen, ".project-case-stack-label"))).toBe("Stack:");
     expect(qwixit.meta.stack).toEqual(caseStackOf("qwixit"));
     expectStack(screen, qwixit.meta.stack);
@@ -325,53 +407,34 @@ describe("content", () => {
     expect(pick(screen, ".project-case-title [data-atom-skip]").getAttribute("lang")).toBe("en");
   });
 
-  it("renders every chapter and subsection with its placeholder text", async () => {
+  it("renders every chapter and subsection with its text", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
     const headings = pickAll(screen, ".page-section-heading");
 
     expect(headings.map((heading) => `${heading.tagName} ${text(heading)} #${heading.id}`)).toEqual(
-      [
-        "H2 About the project #about",
-        "H3 Business #business",
-        "H3 The situation #situation",
-        "H3 The goal #goal",
-        "H3 The solution #solution",
-        "H3 Results #results",
-        "H2 The process #process",
-        "H3 Design #design",
-        "H3 Development #development",
-        "H3 Search engine optimization #seo",
-        "H3 Integrations #integrations",
-      ],
+      qwixitSections.map((section) => `H${section.level} ${section.heading} #${section.id}`),
     );
-    expect(pickAll(screen, ".project-case-text").map((item) => text(item))).toEqual([
-      "[Who the client is and what they sell: one or two sentences.]",
-      "[What was there before you came in: the problem, the numbers, the constraints.]",
-      "[What the client wanted to achieve and how success was measured.]",
-      "[The approach in a nutshell: what you proposed and why.]",
-      "[What these numbers mean for the business, in one sentence.]",
-      "[Research, prototypes, the design system, key screens.]",
-      "[Stack, architecture, the trickiest parts and how you solved them.]",
-      "[Technical SEO, Core Web Vitals, structured data, content.]",
-      "[Payments, CRM, delivery services, stock updates.]",
-    ]);
-    expect(pickAll(screen, ".page-section-root")).toHaveLength(2);
+    expect(qwixitSections.length).toBeGreaterThan(10);
+    expect(pickAll(screen, ".project-case-text").map((item) => text(item))).toEqual(
+      textsOf(qwixit.blocks).map((item) => item.replace(/\s+/g, " ").trim()),
+    );
+    expect(pickAll(screen, ".page-section-root")).toHaveLength(
+      qwixitSections.filter((section) => section.level === 2).length,
+    );
   });
 
-  it("renders the three result numbers inside the results subsection", async () => {
+  it("renders the result numbers inside the results section", async () => {
     const screen = await renderCase({ width: 1440, height: 900 });
     const results = pick(screen, "section[aria-labelledby='results']");
+    const inside = { container: results } as Screen;
 
-    expect(
-      pickAll({ container: results } as Screen, ".project-case-stat-value").map((item) =>
-        text(item),
-      ),
-    ).toEqual(["[+000%]", "[0.0 s]", "[00k]"]);
-    expect(
-      pickAll({ container: results } as Screen, ".project-case-stat-label").map((item) =>
-        text(item),
-      ),
-    ).toEqual(["[organic traffic]", "[LCP on mobile]", "[orders a month]"]);
+    expect(qwixitStats.length).toBeGreaterThan(1);
+    expect(pickAll(inside, ".project-case-stat-value").map((item) => text(item))).toEqual(
+      qwixitStats.map((stat) => stat.value),
+    );
+    expect(pickAll(inside, ".project-case-stat-label").map((item) => text(item))).toEqual(
+      qwixitStats.map((stat) => stat.label),
+    );
     expect(pickAll(screen, ".project-case-results")).toHaveLength(1);
   });
 
@@ -379,34 +442,16 @@ describe("content", () => {
     const screen = await renderCase({ width: 1440, height: 900 });
     const anchors = pickAll<HTMLAnchorElement>(screen, ".page-sections-nav-link");
 
-    expect(anchors.map((link) => text(link))).toEqual([
-      "About the project",
-      "Business",
-      "The situation",
-      "The goal",
-      "The solution",
-      "Results",
-      "The process",
-      "Design",
-      "Development",
-      "Search engine optimization",
-      "Integrations",
-    ]);
-    expect(anchors.map((link) => link.getAttribute("href"))).toEqual([
-      "#about",
-      "#business",
-      "#situation",
-      "#goal",
-      "#solution",
-      "#results",
-      "#process",
-      "#design",
-      "#development",
-      "#seo",
-      "#integrations",
-    ]);
+    expect(anchors.map((link) => text(link))).toEqual(
+      qwixitSections.map((section) => section.name),
+    );
+    expect(anchors.map((link) => link.getAttribute("href"))).toEqual(
+      qwixitSections.map((section) => `#${section.id}`),
+    );
     expect(text(pick(screen, ".page-sections-nav-title"))).toBe("On this page");
-    expect(text(anchors.find((link) => link.getAttribute("aria-current")))).toBe("Business");
+    expect(text(anchors.find((link) => link.getAttribute("aria-current")))).toBe(
+      qwixitSections[0]!.name,
+    );
   });
 
   it("links back to all projects, to the live site and to the next project", async () => {
@@ -423,12 +468,14 @@ describe("content", () => {
     expect(text(live)).toBe("Live site");
     expect(getComputedStyle(live).textTransform).toBe("uppercase");
     expect(live.classList.contains("btn")).toBe(true);
-    expect(next.getAttribute("href")).toBe("/projects/brendmart");
-    expect(text(pick(screen, ".project-case-next-label"))).toBe("Next project · 02");
+    expect(next.getAttribute("href")).toBe(`/projects/${nextOf("qwixit").slug}`);
+    expect(text(pick(screen, ".project-case-next-label"))).toBe(
+      `Next project · ${nextOf("qwixit").label}`,
+    );
     expect(getComputedStyle(pick(screen, ".project-case-next-label")).textTransform).toBe(
       "uppercase",
     );
-    expect(text(pick(screen, ".project-case-next-name"))).toBe("Brendmart");
+    expect(text(pick(screen, ".project-case-next-name"))).toBe(qwixit.next.name);
   });
 
   it.each(projectCases)("renders the case of $header.name", async (item) => {
@@ -488,9 +535,11 @@ describe("content", () => {
     expect(text(pick(screen, ".project-case-live"))).toBe(ru.projects.case.liveSite);
     expect(text(pick(screen, ".project-case-stack-label"))).toBe(`${ru.projects.case.stack}:`);
     expect(text(pick(screen, ".project-case-stack-legend"))).toBe(ru.projects.case.stackOwn);
-    expect(text(pick(screen, ".project-case-next-label"))).toBe(`${ru.projects.case.next} · 02`);
+    expect(text(pick(screen, ".project-case-next-label"))).toBe(
+      `${ru.projects.case.next} · ${nextOf("qwixit").label}`,
+    );
     expect(text(pick(screen, "h1"))).toBe(`Qwixit: ${qwixit.header.headline}`);
-    expect(text(pick(screen, ".page-section-heading"))).toBe("About the project");
+    expect(text(pick(screen, ".page-section-heading"))).toBe(qwixitSections[0]!.name);
   });
 
   it("renders the whole case and its navigation on the server", async () => {
@@ -530,7 +579,7 @@ describe("content", () => {
     ]);
     expect(root.querySelectorAll("h2")).toHaveLength(6);
     expect(root.querySelector(".project-case-next")?.getAttribute("href")).toBe(
-      "/projects/someday",
+      `/projects/${nextOf("tamriel-codex").slug}`,
     );
     expect(root.querySelector(".project-case-live")?.hasAttribute("href")).toBe(false);
   });
@@ -538,7 +587,9 @@ describe("content", () => {
   it("counts the sections in the mobile pill", async () => {
     const screen = await renderCase({ width: 390, height: 780 });
 
-    expect(text(pick(screen, ".page-sections-nav-summary"))).toBe("Business · 11 sections");
+    expect(text(pick(screen, ".page-sections-nav-summary"))).toBe(
+      `${qwixitSections[0]!.name} · ${qwixitSections.length} sections`,
+    );
     expect(text(pick(screen, ".page-sections-nav-title"))).toBe("On this page");
   });
 });
@@ -567,7 +618,7 @@ describe("layout like the mockup", () => {
     near(cover.height, 440);
     near(rect(screen, ".project-case-live").height, 44);
     near(size(screen, ".project-case-title"), 52);
-    near(size(screen, ".page-section-root > .page-section-heading"), 40);
+    near(size(screen, "#context"), 40);
     near(size(screen, ".page-section-level-3 > .page-section-heading"), 24);
     near(size(screen, ".project-case-text"), 16);
     near(size(screen, ".project-case-stat-value"), 34);
@@ -594,7 +645,7 @@ describe("layout like the mockup", () => {
     near(cover.width, 704);
     near(cover.height, 400);
     near(size(screen, ".project-case-title"), 44);
-    near(size(screen, ".page-section-root > .page-section-heading"), 36);
+    near(size(screen, "#context"), 36);
     near(size(screen, ".page-section-level-3 > .page-section-heading"), 22);
     near(size(screen, ".project-case-stat-value"), 32);
     near(rect(screen, ".project-case-meta").top - cover.bottom, 32);
@@ -616,7 +667,7 @@ describe("layout like the mockup", () => {
     near(cover.width, 350);
     near(cover.height, 240);
     near(size(screen, ".project-case-title"), 32);
-    near(size(screen, ".page-section-root > .page-section-heading"), 30);
+    near(size(screen, "#context"), 30);
     near(size(screen, ".page-section-level-3 > .page-section-heading"), 20);
     near(size(screen, ".project-case-text"), 14);
     near(size(screen, ".project-case-stat-value"), 28);
@@ -651,19 +702,23 @@ describe("layout like the mockup", () => {
   });
 
   it.each([
-    { width: 1440, columns: 3 },
-    { width: 768, columns: 3 },
-    { width: 390, columns: 1 },
+    { width: 1440, columns: 2 },
+    { width: 768, columns: 2 },
+    { width: 390, columns: 2 },
   ])("shows the result cells in $columns column(s) at $width", async ({ width, columns }) => {
     const screen = await renderCase({ width, height: 900 });
     const cells = pickAll(screen, ".project-case-stat").map((cell) => cell.getBoundingClientRect());
     const grid = rect(screen, ".project-case-stats");
 
+    expect(cells).toHaveLength(qwixitStats.length);
     expect(new Set(cells.map((cell) => Math.round(cell.left))).size).toBe(columns);
+    expect(new Set(cells.map((cell) => Math.round(cell.top))).size).toBe(
+      Math.ceil(qwixitStats.length / columns),
+    );
     near(grid.width, rect(screen, ".project-case-results").width - 2);
     for (const cell of cells) near(cell.width, (grid.width - (columns - 1)) / columns);
-    if (columns === 3) near(cells[1]!.left - cells[0]!.right, 1);
-    if (columns === 1) near(cells[1]!.top - cells[0]!.bottom, 1);
+    near(cells[1]!.left - cells[0]!.right, 1);
+    near(cells[columns]!.top - cells[0]!.bottom, 1);
   });
 
   it("places the laptop and the phone on the cover in proportion to its width", async () => {
@@ -698,7 +753,12 @@ describe("layout like the mockup", () => {
       expect(image.naturalWidth).toBeGreaterThan(0);
       expect(getComputedStyle(image).objectFit).toBe("cover");
     }
-    expect(images[0]!.src).toBe(images[1]!.src);
+    const { image, imageMobile } = qwixit.cover;
+    expect(image).not.toBeNull();
+    expect(imageMobile).not.toBeNull();
+    expect(images[0]!.getAttribute("src")).toBe(image!.src);
+    expect(images[1]!.getAttribute("src")).toBe(imageMobile!.src);
+    expect(images[0]!.src).not.toBe(images[1]!.src);
     expect(getComputedStyle(pick(screen, ".project-case-phone")).transform).not.toBe("none");
   });
 
@@ -870,19 +930,18 @@ describe("state animations", () => {
     const anchors = () => pickAll(screen, ".page-sections-nav-link");
     const current = () =>
       text(anchors().find((link) => link.getAttribute("aria-current") === "location"));
-    const heading = document.getElementById("development")!;
+    const nameOf = (id: string) => qwixitSections.find((section) => section.id === id)!.name;
+    const scrollTo = (id: string) =>
+      window.scrollTo({
+        top: document.getElementById(id)!.getBoundingClientRect().top + window.scrollY - 102,
+        behavior: "instant",
+      });
 
-    window.scrollTo({
-      top: heading.getBoundingClientRect().top + window.scrollY - 102,
-      behavior: "instant",
-    });
-    await expect.poll(current).toBe("Integrations");
-    window.scrollTo({
-      top: document.getElementById("solution")!.getBoundingClientRect().top + window.scrollY - 102,
-      behavior: "instant",
-    });
-    await expect.poll(current).toBe("The solution");
+    scrollTo("integrations");
+    await expect.poll(current).toBe(nameOf("integrations"));
+    scrollTo("situation");
+    await expect.poll(current).toBe(nameOf("situation"));
     window.scrollTo({ top: 0, behavior: "instant" });
-    await expect.poll(current).toBe("Business");
+    await expect.poll(current).toBe(qwixitSections[0]!.name);
   });
 });

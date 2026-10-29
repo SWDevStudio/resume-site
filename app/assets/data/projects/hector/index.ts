@@ -44,7 +44,7 @@ const project = {
     { label: "TestFlight" },
     { label: "BrowserStack" },
   ],
-  isFavorite: false,
+  isFavorite: true,
   text: {
     ru: {
       subtitle: "МОБИЛЬНОЕ ПРИЛОЖЕНИЕ · ЛИЧНАЯ ОХРАНА",

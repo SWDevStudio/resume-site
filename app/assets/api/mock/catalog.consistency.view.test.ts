@@ -32,17 +32,18 @@ const PROJECT_CANON_KEYS = ["id", "isFavorite", "name", "stack", "tags", "tone",
 const PROJECT_CANON_OPTIONAL_KEYS = ["caseStack", "preview", "previewFrame", "previewMobile"];
 const PROJECT_TEXT_KEYS = ["description", "headline", "previewAlt", "result", "role", "subtitle"];
 const CATALOG = [
-  "qwixit",
+  "dobro",
+  "hector",
   "brendmart",
+  "tamriel-codex",
+  "qwixit",
   "taobao",
   "pochtoy-prostobox",
   "cdek-shopping",
   "fly-post",
-  "tamriel-codex",
   "someday",
-  "dobro",
-  "hector",
 ];
+const FAVORITES = ["dobro", "hector", "brendmart", "tamriel-codex"];
 const TEXT_KEYS = [
   "subtitle",
   "description",
@@ -176,8 +177,20 @@ describe("the canon of the projects", () => {
 
   it("keeps the order that sets the index and the next project", () => {
     expect(canon.map((project) => project.id)).toEqual(CATALOG);
-    expect(canon[0]!.tags).toHaveLength(4);
-    expect(canon[0]!.tags[3]).toBe("seo");
+  });
+
+  it("marks as favorite the first four projects and no other", () => {
+    expect(canon.filter((project) => project.isFavorite).map((project) => project.id)).toEqual(
+      FAVORITES,
+    );
+    expect(canon.slice(0, FAVORITES.length).map((project) => project.id)).toEqual(FAVORITES);
+  });
+
+  it("keeps four tags for Qwixit with SEO the fourth", () => {
+    const qwixit = canon.find((project) => project.id === "qwixit")!;
+
+    expect(qwixit.tags).toHaveLength(4);
+    expect(qwixit.tags[3]).toBe("seo");
   });
 
   it("holds no text in a natural language", () => {
@@ -486,7 +499,8 @@ describe("the changes in one place", () => {
     renamed[0]!.name = "Renamed";
 
     expect(buildProjects({ ...sources, projects: renamed }, "ru")[0]!.name).toBe("Renamed");
-    expect(buildProjects(sources, "ru")[0]!.name).toBe("Qwixit");
+    expect(buildProjects(sources, "ru")[0]!.name).toBe(sources.projects[0]!.name);
+    expect(sources.projects[0]!.name).not.toBe("Renamed");
   });
 
   it("reach the header and the next block of the cases built from a renamed canon", () => {
@@ -498,7 +512,7 @@ describe("the changes in one place", () => {
       return buildCase(id, { ...sources, projects: renamed }, file.blocks, "ru")!;
     };
 
-    expect(dataOf<ProjectCaseHeaderData>(blocks("qwixit"), "ProjectCaseHeader").name).toBe(
+    expect(dataOf<ProjectCaseHeaderData>(blocks(canon[0]!.id), "ProjectCaseHeader").name).toBe(
       "Renamed",
     );
     expect(dataOf<ProjectCaseNextData>(blocks(canon.at(-1)!.id), "ProjectCaseNext").name).toBe(

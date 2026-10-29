@@ -38,8 +38,9 @@ const project = {
     { label: "oxlint", own: true },
     { label: "oxfmt", own: true },
     { label: "Playwright", own: true },
+    { label: "Vitest", own: true },
   ],
-  isFavorite: false,
+  isFavorite: true,
   text: {
     ru: {
       subtitle: "ОФЛАЙН-СПРАВОЧНИК · РОЛЕВАЯ ИГРА",

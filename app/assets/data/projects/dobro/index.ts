@@ -10,7 +10,7 @@ const project = {
   tags: ["payments", "accounts", "team-lead"],
   stack: [
     { id: "next-js", label: "Next.js 16" },
-    "react-19",
+    { id: "react", label: "React 19" },
     "type-script",
     { id: "tailwind", label: "Tailwind 4" },
     "zustand",
@@ -40,10 +40,10 @@ const project = {
     { label: "GSAP" },
     { label: "@use-gesture" },
     { label: "TanStack Virtual" },
-    { label: "Docker" },
+    { label: "Docker", own: true },
     { label: "GitHub Actions" },
   ],
-  isFavorite: false,
+  isFavorite: true,
   text: {
     ru: {
       subtitle: "ПЛАТФОРМА ПОЖЕРТВОВАНИЙ · ЦИФРОВОЙ РУБЛЬ",

@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { LOCALES, type Locale } from "~/assets/const";
 import enResume from "~/assets/data/en/resume";
 import ruResume from "~/assets/data/ru/resume";
+import { projects as catalog } from "~/assets/data/projects";
 import { $api } from "./index";
 import { buildProjects, buildResume, buildSkillGroups } from "~/assets/api/mock/build";
 import { loadProjectMedia } from "~/assets/api/mock/media";
@@ -63,8 +64,10 @@ describe("$api.projects.fetchList", () => {
     const en = await $api.projects.fetchList();
 
     expect(ru.map((project) => project.id)).toEqual(en.map((project) => project.id));
-    expect(ru[0]!.subtitle).toBe("МАРКЕТПЛЕЙС ОДЕЖДЫ · ДОСТАВКА ИЗ США");
-    expect(en[0]!.subtitle).toBe("FASHION MARKETPLACE · US DELIVERY");
+    expect(ru.map((project) => project.id)).toEqual(catalog.map((project) => project.id));
+    expect(ru[0]!.id).toBe("dobro");
+    expect(ru[0]!.subtitle).toBe("ПЛАТФОРМА ПОЖЕРТВОВАНИЙ · ЦИФРОВОЙ РУБЛЬ");
+    expect(en[0]!.subtitle).toBe("DONATION PLATFORM · DIGITAL RUBLE");
     expect(ru[0]!.name).toBe(en[0]!.name);
   });
 });
