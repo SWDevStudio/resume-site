@@ -1,7 +1,7 @@
 <template>
   <div
     class="page-terminal"
-    aria-hidden="true"
+    :aria-hidden="hidden"
   >
     <div class="page-terminal-monitor">
       <div class="page-terminal-body">
@@ -12,7 +12,7 @@
             :srcset="shot.srcset"
             :sizes="DEVICE_SCREEN_SIZES"
             :src="shot.src"
-            alt=""
+            :alt="alt"
             :loading="loading"
             decoding="async"
           />
@@ -39,10 +39,13 @@ import { imageSrcset } from "~/utils";
 const props = withDefaults(
   defineProps<{
     image: ImageAsset | null;
+    alt?: string;
     loading?: "lazy" | "eager";
   }>(),
-  { loading: "lazy" },
+  { alt: "", loading: "lazy" },
 );
+
+const hidden = computed(() => (props.alt ? undefined : "true"));
 
 const shot = computed(() =>
   props.image ? { src: props.image.src, srcset: imageSrcset(props.image) } : null,

@@ -491,7 +491,7 @@ describe("content", () => {
     expect(pickAll(screen, ".project-case-tag").map((tag) => text(tag))).toEqual(item.meta.tags);
     expect(item.meta.stack).toEqual(caseStackOf(item.slug));
     expectStack(screen, item.meta.stack);
-    expect(pick(screen, ".project-case-cover [role='img']").getAttribute("aria-label")).toBe(
+    expect(pick(screen, ".project-case-cover img:not([alt=''])").getAttribute("alt")).toBe(
       item.cover.imageAlt,
     );
     expect(

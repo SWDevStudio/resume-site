@@ -3,8 +3,6 @@
     <div
       class="project-case-stage"
       :class="modeClass"
-      role="img"
-      :aria-label="data.imageAlt"
     >
       <span
         class="project-case-grid"
@@ -13,6 +11,7 @@
       <PageTerminal
         v-if="terminal"
         :image="data.image"
+        :alt="data.imageAlt"
         loading="eager"
       />
       <template v-else>
@@ -28,7 +27,7 @@
                 :srcset="screen.srcset"
                 :sizes="DEVICE_SCREEN_SIZES"
                 :src="screen.src"
-                alt=""
+                :alt="data.imageAlt"
               />
             </div>
           </div>
@@ -47,7 +46,7 @@
               :srcset="phone.srcset"
               :sizes="phone.sizes"
               :src="phone.src"
-              alt=""
+              :alt="phone.alt"
             />
             <span class="project-case-island" />
           </div>
@@ -87,6 +86,7 @@ const phone = computed(() => {
       src: props.data.imageMobile.src,
       srcset: imageSrcset(props.data.imageMobile),
       sizes: screen.value ? DEVICE_PHONE_SIZES : DEVICE_PHONE_SOLO_SIZES,
+      alt: screen.value ? "" : props.data.imageAlt,
     };
   }
   if (screen.value) {
@@ -95,6 +95,7 @@ const phone = computed(() => {
       src: screen.value.src,
       srcset: screen.value.srcset,
       sizes: DEVICE_SCREEN_SIZES,
+      alt: "",
     };
   }
   return null;
