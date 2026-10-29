@@ -4,7 +4,7 @@ export type AssistantLanguage = (typeof ASSISTANT_LANGUAGES)[number];
 
 export const DEFAULT_ASSISTANT_LANGUAGE: AssistantLanguage = "ru";
 
-export const ASSISTANT_MESSAGE_MIN_LENGTH = 150;
+export const ASSISTANT_MESSAGE_MIN_LENGTH = 1;
 export const ASSISTANT_MESSAGE_MAX_LENGTH = 2000;
 export const ASSISTANT_MAX_MESSAGES = 10;
 

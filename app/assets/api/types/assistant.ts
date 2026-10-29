@@ -1,6 +1,6 @@
 import type { Locale } from "../../const/locale";
 
-export const ASSISTANT_MESSAGE_MIN_LENGTH = 150;
+export const ASSISTANT_MESSAGE_MIN_LENGTH = 1;
 export const ASSISTANT_MESSAGE_MAX_LENGTH = 2000;
 export const ASSISTANT_MAX_MESSAGES = 10;
 
