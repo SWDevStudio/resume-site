@@ -76,7 +76,7 @@ import TheHeaderLangSwitch from "./TheHeaderLangSwitch.vue";
 import TheHeaderThemeSwitch from "./TheHeaderThemeSwitch.vue";
 
 const items = [
-  { key: "about", label: "nav.about", to: Route.home },
+  { key: "home", label: "nav.home", to: Route.home },
   { key: "resume", label: "nav.resume", to: Route.resume },
   // { key: "blog", label: "nav.blog", to: Route.blog },
   { key: "projects", label: "nav.projects", to: Route.projects },
