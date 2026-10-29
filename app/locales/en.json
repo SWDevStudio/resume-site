@@ -265,17 +265,26 @@
   },
   "seo": {
     "home": {
-      "description": "Michael’s portfolio: projects, blog, resume and contacts."
+      "title": "{name} — Fullstack Developer: Vue, Nuxt, React",
+      "description": "Fullstack and frontend developer, team lead, 7+ years. Vue.js, Nuxt, React, Next.js, TypeScript, Node.js. E-commerce and mobile case studies, PDF resume."
     },
     "projects": {
-      "description": "Michael’s projects and case studies: goals, solutions and results."
+      "title": "Case Studies — {name}, Fullstack Developer",
+      "description": "E-commerce, platform and mobile app case studies: CDEK.Shopping, Brendmart, Qwixit, Taobao.at, Hector and more. Goals, Vue, Nuxt and React stack, results."
+    },
+    "project": {
+      "title": "{project} — Case Study · {author}"
     },
     "blog": {
-      "description": "Michael’s blog: articles, tools and video tutorials on web development."
+      "title": "Blog — {name}: Vue, Nuxt and Web Development",
+      "description": "Articles, tools and video tutorials on web development: Vue, Nuxt, Next.js, SEO and performance. By {name}, fullstack developer."
+    },
+    "post": {
+      "title": "{post} · {author}"
     },
     "resume": {
-      "title": "Resume",
-      "description": "Michael’s resume: experience, skills and projects."
+      "title": "Resume — {name}, Fullstack Developer (PDF)",
+      "description": "Resume of {name}: frontend team lead and fullstack developer, 7.5 years. Vue.js, Nuxt, React, Next.js, Laravel, NestJS. PDF and Markdown."
     }
   },
   "error": {

@@ -265,17 +265,26 @@
   },
   "seo": {
     "home": {
-      "description": "Сайт-портфолио Михаила: проекты, блог, резюме и контакты."
+      "title": "{name} — Fullstack-разработчик: Vue, Nuxt, React",
+      "description": "Fullstack- и Frontend-разработчик, тимлид, 7+ лет. Vue, Nuxt, React, Next.js, TypeScript, Node.js. Кейсы e-commerce и мобильных приложений, резюме PDF."
     },
     "projects": {
-      "description": "Проекты и кейсы Михаила: задачи, решения и результаты."
+      "title": "Кейсы и проекты — {name}, fullstack-разработчик",
+      "description": "Кейсы e-commerce, платформ и приложений: CDEK.Shopping, Brendmart, Qwixit, Taobao.at, Hector и другие. Задачи, стек Vue, Nuxt, React и результаты в цифрах."
+    },
+    "project": {
+      "title": "{project} — кейс разработки · {author}"
     },
     "blog": {
-      "description": "Блог Михаила: статьи, инструменты и видеоуроки о веб-разработке."
+      "title": "Блог — {name}: статьи о Vue, Nuxt и веб-разработке",
+      "description": "Статьи, инструменты и видеоуроки о веб-разработке: Vue, Nuxt, Next.js, SEO и производительность. Автор — {name}, fullstack-разработчик."
+    },
+    "post": {
+      "title": "{post} · {author}"
     },
     "resume": {
-      "title": "Резюме",
-      "description": "Резюме Михаила: опыт, навыки и проекты."
+      "title": "Резюме — {name}, Fullstack-разработчик (PDF)",
+      "description": "{name}: Frontend Team Lead и fullstack-разработчик, 7,5 лет опыта. Vue, Nuxt, React, Next.js, Laravel, NestJS. Резюме в PDF и Markdown."
     }
   },
   "error": {

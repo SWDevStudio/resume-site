@@ -70,6 +70,8 @@ export default defineNuxtConfig({
     },
     public: {
       yandexMetrikaId: "",
+      yandexVerification: "9aefc6b5a6aa7cad",
+      googleSiteVerification: "HbqS7hPSzh4FModX9Wg8eu4bRm1KCwl7hr0N6z19gVk",
     },
   },
   safeRuntimeConfig: {

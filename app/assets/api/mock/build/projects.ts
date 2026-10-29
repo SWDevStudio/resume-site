@@ -64,6 +64,7 @@ export function buildCase(
       subtitle: project.subtitle,
       name: project.name,
       headline: project.headline,
+      description: project.description,
       url: project.url,
       tone: project.tone,
     },

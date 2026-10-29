@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, LOCALE_COOKIE, LOCALES, type Locale } from "./locale";
+import { DEFAULT_LOCALE, LOCALE_COOKIE, LOCALES, OG_LOCALE, type Locale } from "./locale";
 import { CONTACT_CHANNELS, SOCIAL, SOCIAL_NETWORKS, type SocialKey } from "./social";
 import { Route } from "./route";
 import {
@@ -16,6 +16,7 @@ export {
   DEFAULT_THEME,
   LOCALE_COOKIE,
   LOCALES,
+  OG_LOCALE,
   Route,
   SOCIAL,
   SOCIAL_NETWORKS,

@@ -5,3 +5,8 @@ export type Locale = (typeof LOCALES)[number];
 export const DEFAULT_LOCALE: Locale = "ru";
 
 export const LOCALE_COOKIE = "locale";
+
+export const OG_LOCALE: Record<Locale, string> = {
+  ru: "ru_RU",
+  en: "en_US",
+};

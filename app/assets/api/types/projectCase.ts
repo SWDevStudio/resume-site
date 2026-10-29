@@ -13,6 +13,7 @@ export interface ProjectCaseHeaderData {
   subtitle: string;
   name: string;
   headline: string;
+  description: string;
   url: string | null;
   tone: ProjectCaseTone;
 }

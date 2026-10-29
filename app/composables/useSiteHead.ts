@@ -1,13 +1,14 @@
 import { computed } from "vue";
 import { useHead, useLocaleHead, useRoute, useRouteBaseName, useSafeRuntimeConfig } from "#imports";
 import { useI18n } from "vue-i18n";
-import type { Link } from "@unhead/vue/types";
-import { THEME_COLOR, type Locale } from "~/assets/const";
+import type { Link, Meta } from "@unhead/vue/types";
+import { LOCALES, OG_LOCALE, THEME_COLOR, type Locale } from "~/assets/const";
 import { useTheme } from "~/composables/useTheme";
 
 const SITE_NAME = "SOWA_DEV";
 const FONT_ROOT = "/fonts/";
 const HOME_ROUTE = "index";
+const OG_LOCALE_PROPERTY = "og:locale";
 
 const MARTIAN_LATIN = "martian-mono-100-800-latin.woff2";
 const MARTIAN_CYRILLIC = "martian-mono-100-800-cyrillic.woff2";
@@ -36,8 +37,29 @@ function fontPreload(file: string): Link {
   };
 }
 
+function isNotOgLocale(meta: Meta) {
+  return !String(meta.property ?? "").startsWith(OG_LOCALE_PROPERTY);
+}
+
+function ogLocaleMeta(current: Locale): Meta[] {
+  return [
+    { key: "og-locale", property: OG_LOCALE_PROPERTY, content: OG_LOCALE[current] },
+    ...LOCALES.filter((locale) => locale !== current).map((locale) => ({
+      key: `og-locale-alternate-${locale}`,
+      property: `${OG_LOCALE_PROPERTY}:alternate`,
+      content: OG_LOCALE[locale],
+    })),
+  ];
+}
+
+function verificationMeta(tokens: Record<string, string>): Meta[] {
+  return Object.entries(tokens)
+    .filter(([, content]) => content !== "")
+    .map(([name, content]) => ({ name, content }));
+}
+
 function titleTemplate(title?: string) {
-  return title ? `${title} · ${SITE_NAME}` : SITE_NAME;
+  return title || SITE_NAME;
 }
 
 export function useSiteHead() {
@@ -46,6 +68,10 @@ export function useSiteHead() {
   const runtimeConfig = useSafeRuntimeConfig();
   const localeHead = useLocaleHead({ seo: Boolean(runtimeConfig.public.i18n.baseUrl) });
   const themeColor = computed(() => THEME_COLOR[current.value]);
+  const verification = verificationMeta({
+    "yandex-verification": runtimeConfig.public.yandexVerification,
+    "google-site-verification": runtimeConfig.public.googleSiteVerification,
+  });
 
   if (import.meta.server) {
     const fonts = FONT_PRELOADS[locale.value];
@@ -58,7 +84,9 @@ export function useSiteHead() {
     link: localeHead.value.link,
     titleTemplate,
     meta: [
-      ...localeHead.value.meta,
+      ...localeHead.value.meta.filter(isNotOgLocale),
+      ...ogLocaleMeta(locale.value),
+      ...verification,
       { name: "description", content: t("seo.home.description") },
       { name: "theme-color", content: themeColor.value },
       { property: "og:site_name", content: SITE_NAME },
