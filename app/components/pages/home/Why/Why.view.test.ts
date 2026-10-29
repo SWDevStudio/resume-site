@@ -626,11 +626,11 @@ describe("behavior", () => {
   );
 
   it.each([
-    { width: 1440, height: 900, locale: "en" as const, own: 195, free: 0 },
-    { width: 1440, height: 900, locale: "ru" as const, own: 195, free: 0 },
-    { width: 1024, height: 800, locale: "en" as const, own: 195, free: 0 },
-    { width: 768, height: 900, locale: "en" as const, own: 160, free: 0 },
-    { width: 1440, height: 1200, locale: "en" as const, own: 195, free: 203 },
+    { width: 1440, height: 900, locale: "en" as const, own: 360, free: 0 },
+    { width: 1440, height: 900, locale: "ru" as const, own: 360, free: 0 },
+    { width: 1024, height: 800, locale: "en" as const, own: 360, free: 0 },
+    { width: 768, height: 900, locale: "en" as const, own: 320, free: 0 },
+    { width: 1440, height: 1200, locale: "en" as const, own: 360, free: 38 },
   ])(
     "gives the free height of the slide to the dialog at $width x $height in $locale",
     async (item) => {
@@ -652,7 +652,7 @@ describe("behavior", () => {
   it("keeps the dialog at its own height when the slide has no free space", async () => {
     const screen = await renderCase({ width: 390, height: 780, tall: 2200 });
 
-    near(pick(screen, ".home-why-dialog").getBoundingClientRect().height, 160, 1);
+    near(pick(screen, ".home-why-dialog").getBoundingClientRect().height, 320, 1);
   });
 
   it.each([
@@ -882,7 +882,7 @@ describe("chat states", () => {
       expect(rect.left).toBeGreaterThanOrEqual(dialog.left - 0.5);
       expect(rect.right).toBeLessThanOrEqual(dialog.right + 0.5);
     }
-    near(last.getBoundingClientRect().bottom, dialog.bottom, 40);
+    expect(last.getBoundingClientRect().top).toBeGreaterThanOrEqual(dialog.top - 0.5);
     expect(last.getBoundingClientRect().bottom).toBeLessThanOrEqual(dialog.bottom + 0.5);
     expect(pick(screen, ".home-why-message-user").getBoundingClientRect().right).toBeGreaterThan(
       last.getBoundingClientRect().right,
@@ -1276,6 +1276,7 @@ describe("chat", () => {
     expect(dialog.getBoundingClientRect().height).toBe(dialogHeight);
     expect(dialog.scrollHeight).toBeGreaterThan(dialog.clientHeight + 100);
     expect(getComputedStyle(dialog).overflowY).toBe("auto");
+    expect(getComputedStyle(dialog).overscrollBehaviorY).toBe("auto");
     await settleScroll(screen);
     expect(dialog.scrollTop).toBeGreaterThan(100);
   });

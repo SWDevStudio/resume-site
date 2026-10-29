@@ -1,10 +1,10 @@
 @reference "~/assets/css/main.css";
 
 .home-why-body {
-  --home-why-dialog-height: --spacing(40);
+  --home-why-dialog-height: --spacing(80);
 
   @variant lg {
-    --home-why-dialog-height: --spacing(48.75);
+    --home-why-dialog-height: --spacing(90);
   }
 
   --home-why-input: #0b0a10;
@@ -40,7 +40,7 @@
 }
 
 .home-why-dialog {
-  @apply shrink-0 grow overflow-x-hidden overflow-y-auto overscroll-contain;
+  @apply shrink-0 grow overflow-x-hidden overflow-y-auto;
   height: var(--home-why-dialog-height);
   padding-inline-end: --spacing(1);
   scrollbar-gutter: stable;
