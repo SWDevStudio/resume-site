@@ -4,8 +4,12 @@ import { projects as canonProjectsFile } from "~/assets/data/projects";
 import canonSkillsFile from "~/assets/data/canon/skills";
 import { skillTileId } from "~/components/pages/home/Skills/skillIds";
 import { skillPanelSources } from "~/components/pages/home/Skills/skillPanels";
-import { buildToolkit } from "~/components/pages/home/Skills/toolkit";
-import { SKILL_TILE_META, SkillTile } from "~/components/ui/UiSkillTile/skillTile";
+import {
+  TOOLKIT_STATIC_COUNT,
+  TOOLKIT_TYPED_COUNT,
+  buildToolkit,
+} from "~/components/pages/home/Skills/toolkit";
+import { SKILL_TILE_META, type SkillTile } from "~/components/ui/UiSkillTile/skillTile";
 import type { ProjectCanon, SkillsCanon, SkillsText } from "~/assets/api/types/catalog";
 import {
   buildResume,
@@ -31,7 +35,7 @@ const ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const CYRILLIC = /[Ѐ-ӿ]/;
 const ASCII = /^[\x20-\x7e]+$/;
 const GROUPS = ["frontend", "backend", "lead", "additional"];
-const TOOLKIT_SIZE = 35;
+const TOOLKIT_SIZE = TOOLKIT_STATIC_COUNT + TOOLKIT_TYPED_COUNT;
 
 const textFiles = import.meta.glob<SkillsText>(["../../data/*/skills.ts", "!../../data/canon/**"], {
   eager: true,
@@ -254,8 +258,13 @@ describe("the tiles and the toolkit of the home slide", () => {
   const groups = buildSkillGroups(staticSources(DEFAULT_LOCALE), DEFAULT_LOCALE);
   const flat = groups.flatMap((group) => group.skills);
 
-  it("has a skill in the registry for every tile, with the label the tile shows", () => {
-    for (const tile of Object.values(SkillTile)) {
+  it("has a skill in the registry for every tile of the panels, with the label the tile shows", () => {
+    const used = new Set<SkillTile>(
+      skillPanelSources.flatMap((panel) => panel.tiles.flatMap((tile) => [tile.skill, tile.swap])),
+    );
+
+    expect(used.size).toBeGreaterThan(0);
+    for (const tile of used) {
       const skill = flat.find((item) => item.id === skillTileId(tile));
 
       expect(skill, tile).toBeDefined();
@@ -278,9 +287,13 @@ describe("the tiles and the toolkit of the home slide", () => {
     const additional = groups.find((group) => group.id === "additional")!.skills;
     const toolkit = buildToolkit(additional);
 
-    expect(additional.length).toBeGreaterThanOrEqual(TOOLKIT_SIZE);
+    const shown = Math.min(additional.length, TOOLKIT_SIZE);
+
+    expect(additional.length).toBeGreaterThan(TOOLKIT_STATIC_COUNT);
+    expect(toolkit.static).toHaveLength(TOOLKIT_STATIC_COUNT);
+    expect(toolkit.typed).toHaveLength(shown - TOOLKIT_STATIC_COUNT);
     expect([...toolkit.static, ...toolkit.typed.map((item) => item.text)]).toEqual(
-      additional.slice(0, TOOLKIT_SIZE).map((skill) => skill.name),
+      additional.slice(0, shown).map((skill) => skill.name),
     );
   });
 });

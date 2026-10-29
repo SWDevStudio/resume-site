@@ -71,17 +71,17 @@ export const skillPanelSources: SkillPanelSource[] = [
       { skill: SkillTile.GhActions, swap: SkillTile.Git },
       {
         skill: SkillTile.NestJs,
+        swap: SkillTile.NestJs,
+        class: "home-skills-tile-wide",
+      },
+      {
+        skill: SkillTile.Nginx,
         swap: SkillTile.Nginx,
         class: "home-skills-tile-wide",
       },
       {
-        skill: SkillTile.MongoDb,
+        skill: SkillTile.Redis,
         swap: SkillTile.Redis,
-        class: "home-skills-tile-wide",
-      },
-      {
-        skill: SkillTile.Kubernetes,
-        swap: SkillTile.Terraform,
         class: "home-skills-tile-wide",
       },
     ],

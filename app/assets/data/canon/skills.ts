@@ -24,7 +24,7 @@ const skills = {
           kind: "tech",
         },
         {
-          id: "scss",
+          id: "sass",
           kind: "tech",
         },
         {
@@ -39,10 +39,6 @@ const skills = {
         },
         {
           id: "react",
-          kind: "tech",
-        },
-        {
-          id: "react-19",
           kind: "tech",
         },
         {
@@ -97,6 +93,10 @@ const skills = {
           kind: "tech",
         },
         {
+          id: "express",
+          kind: "tech",
+        },
+        {
           id: "laravel",
           kind: "tech",
         },
@@ -109,14 +109,6 @@ const skills = {
           kind: "tech",
         },
         {
-          id: "sql",
-          kind: "tech",
-        },
-        {
-          id: "mongo-db",
-          kind: "tech",
-        },
-        {
           id: "redis",
           kind: "tech",
         },
@@ -125,19 +117,7 @@ const skills = {
           kind: "tech",
         },
         {
-          id: "json",
-          kind: "tech",
-        },
-        {
           id: "docker",
-          kind: "tech",
-        },
-        {
-          id: "kubernetes",
-          kind: "tech",
-        },
-        {
-          id: "terraform",
           kind: "tech",
         },
         {
@@ -162,18 +142,6 @@ const skills = {
         {
           id: "team-management",
           kind: "soft",
-        },
-        {
-          id: "team-leadership",
-          kind: "soft",
-        },
-        {
-          id: "leadership",
-          kind: "soft",
-        },
-        {
-          id: "teamleading",
-          kind: "tech",
         },
         {
           id: "task-setting",
@@ -208,35 +176,7 @@ const skills = {
           kind: "tech",
         },
         {
-          id: "development-management",
-          kind: "soft",
-        },
-        {
-          id: "organizational-skills",
-          kind: "soft",
-        },
-        {
-          id: "analytical-thinking",
-          kind: "soft",
-        },
-        {
-          id: "process-management",
-          kind: "soft",
-        },
-        {
-          id: "planning",
-          kind: "soft",
-        },
-        {
           id: "mentoring",
-          kind: "soft",
-        },
-        {
-          id: "business-communication",
-          kind: "soft",
-        },
-        {
-          id: "management-skills",
           kind: "soft",
         },
         {
@@ -275,10 +215,6 @@ const skills = {
         },
         {
           id: "figma",
-          kind: "tech",
-        },
-        {
-          id: "sass",
           kind: "tech",
         },
         {
@@ -362,18 +298,6 @@ const skills = {
           kind: "tech",
         },
         {
-          id: "nuxt-2-3-4",
-          kind: "tech",
-        },
-        {
-          id: "ssr-isr",
-          kind: "tech",
-        },
-        {
-          id: "rest",
-          kind: "tech",
-        },
-        {
           id: "graph-ql",
           kind: "tech",
         },
@@ -398,7 +322,7 @@ const skills = {
           kind: "tech",
         },
         {
-          id: "llm",
+          id: "ai-agents",
           kind: "tech",
         },
       ],

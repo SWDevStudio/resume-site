@@ -109,7 +109,7 @@
   @apply inline-block overflow-hidden align-top whitespace-nowrap;
   width: calc(var(--home-skills-type-max) * 1ch);
   height: 1lh;
-  animation: home-skills-type-window 76.86s linear infinite;
+  animation: home-skills-type-window 73.2s linear infinite;
 
   @variant motion-reduce {
     @apply animate-none;
@@ -118,7 +118,7 @@
 
 .home-skills-type-strip {
   @apply block;
-  animation: home-skills-type-strip 76.86s linear infinite;
+  animation: home-skills-type-strip 73.2s linear infinite;
 
   @variant motion-reduce {
     @apply animate-none;
@@ -161,7 +161,7 @@
   background-color: var(--home-skills-cursor-color);
   box-shadow: var(--home-skills-cursor-glow);
   animation:
-    home-skills-type-window 76.86s linear infinite,
+    home-skills-type-window 73.2s linear infinite,
     home-skills-blink 1s linear infinite;
   transition-property: background-color, box-shadow;
 
@@ -188,352 +188,328 @@
 @keyframes home-skills-type-window {
   0% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
-    animation-timing-function: steps(4, end);
-  }
-
-  0.442%,
-  2.264% {
-    transform: translateX(calc((4 - var(--home-skills-type-max)) * 1ch));
-    animation-timing-function: steps(4, end);
-  }
-
-  2.498%,
-  2.888% {
-    transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(5, end);
   }
 
-  3.441%,
-  5.263% {
+  0.581%,
+  2.493% {
     transform: translateX(calc((5 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(5, end);
   }
 
-  5.556%,
-  5.946% {
+  2.801%,
+  3.21% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(6, end);
   }
 
-  6.609%,
-  8.431% {
+  3.907%,
+  5.82% {
     transform: translateX(calc((6 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(6, end);
   }
 
-  8.782%,
-  9.173% {
+  6.189%,
+  6.598% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(4, end);
   }
 
-  9.615%,
-  11.436% {
+  7.063%,
+  8.975% {
     transform: translateX(calc((4 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(4, end);
   }
 
-  11.671%,
-  12.061% {
+  9.221%,
+  9.631% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(5, end);
   }
 
-  12.614%,
-  14.435% {
+  10.212%,
+  12.124% {
     transform: translateX(calc((5 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(5, end);
   }
 
-  14.728%,
-  15.118% {
+  12.432%,
+  12.842% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(10, end);
   }
 
-  16.224%,
-  18.046% {
+  14.003%,
+  15.915% {
     transform: translateX(calc((10 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(10, end);
   }
 
-  18.631%,
-  19.022% {
+  16.53%,
+  16.94% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(9, end);
   }
 
-  20.017%,
-  21.838% {
+  17.985%,
+  19.898% {
     transform: translateX(calc((9 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(9, end);
   }
 
-  22.365%,
-  22.756% {
+  20.451%,
+  20.861% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(4, end);
   }
 
-  23.198%,
-  25.02% {
+  21.325%,
+  23.238% {
     transform: translateX(calc((4 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(4, end);
   }
 
-  25.254%,
-  25.644% {
+  23.484%,
+  23.893% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(11, end);
   }
 
-  26.861%,
-  28.682% {
+  25.171%,
+  27.083% {
     transform: translateX(calc((11 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(11, end);
   }
 
-  29.326%,
-  29.716% {
+  27.76%,
+  28.169% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(5, end);
   }
 
-  30.269%,
-  32.091% {
+  28.75%,
+  30.663% {
     transform: translateX(calc((5 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(5, end);
   }
 
-  32.384%,
-  32.774% {
+  30.97%,
+  31.38% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(6, end);
   }
 
-  33.437%,
-  35.259% {
+  32.077%,
+  33.989% {
     transform: translateX(calc((6 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(6, end);
   }
 
-  35.61%,
-  36.001% {
+  34.358%,
+  34.768% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(3, end);
   }
 
-  36.332%,
-  38.154% {
+  35.116%,
+  37.029% {
     transform: translateX(calc((3 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(3, end);
   }
 
-  38.329%,
-  38.72% {
+  37.213%,
+  37.623% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(14, end);
   }
 
-  40.268%,
-  42.09% {
+  39.249%,
+  41.161% {
     transform: translateX(calc((14 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(14, end);
   }
 
-  42.909%,
-  43.3% {
+  42.022%,
+  42.432% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(7, end);
   }
 
-  44.074%,
-  45.895% {
+  43.245%,
+  45.157% {
     transform: translateX(calc((7 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(7, end);
   }
 
-  46.305%,
-  46.695% {
+  45.587%,
+  45.997% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(3, end);
   }
 
-  47.027%,
-  48.849% {
+  46.346%,
+  48.258% {
     transform: translateX(calc((3 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(3, end);
   }
 
-  49.024%,
-  49.415% {
+  48.443%,
+  48.852% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(14, end);
   }
 
-  50.963%,
-  52.784% {
+  50.478%,
+  52.391% {
     transform: translateX(calc((14 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(14, end);
   }
 
-  53.604%,
-  53.994% {
+  53.251%,
+  53.661% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(5, end);
   }
 
-  54.547%,
-  56.369% {
+  54.242%,
+  56.154% {
     transform: translateX(calc((5 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(5, end);
   }
 
-  56.661%,
-  57.052% {
+  56.462%,
+  56.872% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(4, end);
   }
 
-  57.494%,
-  59.316% {
+  57.336%,
+  59.249% {
     transform: translateX(calc((4 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(4, end);
   }
 
-  59.55%,
-  59.94% {
+  59.495%,
+  59.904% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(15, end);
   }
 
-  61.599%,
-  63.421% {
+  61.646%,
+  63.559% {
     transform: translateX(calc((15 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(15, end);
   }
 
-  64.299%,
-  64.689% {
+  64.481%,
+  64.891% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(3, end);
   }
 
-  65.021%,
-  66.842% {
+  65.239%,
+  67.152% {
     transform: translateX(calc((3 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(3, end);
   }
 
-  67.018%,
-  67.408% {
+  67.336%,
+  67.746% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(9, end);
   }
 
-  68.404%,
-  70.225% {
+  68.791%,
+  70.704% {
     transform: translateX(calc((9 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(9, end);
   }
 
-  70.752%,
-  71.142% {
-    transform: translateX(calc(var(--home-skills-type-max) * -1ch));
-    animation-timing-function: steps(10, end);
-  }
-
-  72.248%,
-  74.07% {
-    transform: translateX(calc((10 - var(--home-skills-type-max)) * 1ch));
-    animation-timing-function: steps(10, end);
-  }
-
-  74.655%,
-  75.046% {
+  71.257%,
+  71.667% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(7, end);
   }
 
-  75.82%,
-  77.641% {
+  72.48%,
+  74.392% {
     transform: translateX(calc((7 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(7, end);
   }
 
-  78.051%,
-  78.441% {
-    transform: translateX(calc(var(--home-skills-type-max) * -1ch));
-    animation-timing-function: steps(4, end);
-  }
-
-  78.884%,
-  80.705% {
-    transform: translateX(calc((4 - var(--home-skills-type-max)) * 1ch));
-    animation-timing-function: steps(4, end);
-  }
-
-  80.939%,
-  81.33% {
-    transform: translateX(calc(var(--home-skills-type-max) * -1ch));
-    animation-timing-function: steps(7, end);
-  }
-
-  82.104%,
-  83.925% {
-    transform: translateX(calc((7 - var(--home-skills-type-max)) * 1ch));
-    animation-timing-function: steps(7, end);
-  }
-
-  84.335%,
-  84.725% {
+  74.822%,
+  75.232% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(9, end);
   }
 
-  85.721%,
-  87.542% {
+  76.277%,
+  78.19% {
     transform: translateX(calc((9 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(9, end);
   }
 
-  88.069%,
-  88.46% {
+  78.743%,
+  79.153% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(9, end);
   }
 
-  89.455%,
-  91.276% {
+  80.198%,
+  82.111% {
     transform: translateX(calc((9 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(9, end);
   }
 
-  91.803%,
-  92.194% {
+  82.664%,
+  83.074% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(10, end);
   }
 
-  93.3%,
-  95.121% {
+  84.235%,
+  86.148% {
     transform: translateX(calc((10 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(10, end);
   }
 
-  95.706%,
-  96.097% {
+  86.762%,
+  87.172% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
     animation-timing-function: steps(10, end);
   }
 
-  97.203%,
-  99.024% {
+  88.333%,
+  90.246% {
     transform: translateX(calc((10 - var(--home-skills-type-max)) * 1ch));
     animation-timing-function: steps(10, end);
   }
 
-  99.61%,
+  90.861%,
+  91.27% {
+    transform: translateX(calc(var(--home-skills-type-max) * -1ch));
+    animation-timing-function: steps(14, end);
+  }
+
+  92.896%,
+  94.809% {
+    transform: translateX(calc((14 - var(--home-skills-type-max)) * 1ch));
+    animation-timing-function: steps(14, end);
+  }
+
+  95.669%,
+  96.079% {
+    transform: translateX(calc(var(--home-skills-type-max) * -1ch));
+    animation-timing-function: steps(9, end);
+  }
+
+  97.124%,
+  99.037% {
+    transform: translateX(calc((9 - var(--home-skills-type-max)) * 1ch));
+    animation-timing-function: steps(9, end);
+  }
+
+  99.59%,
   100% {
     transform: translateX(calc(var(--home-skills-type-max) * -1ch));
   }
@@ -542,437 +518,407 @@
 @keyframes home-skills-type-strip {
   0% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), 0rem);
-    animation-timing-function: steps(4, end);
+    animation-timing-function: steps(5, end);
   }
 
-  0.442%,
-  2.264% {
-    transform: translate(calc((var(--home-skills-type-max) - 4) * 1ch), 0rem);
-    animation-timing-function: steps(4, end);
+  0.581%,
+  2.493% {
+    transform: translate(calc((var(--home-skills-type-max) - 5) * 1ch), 0rem);
+    animation-timing-function: steps(5, end);
   }
 
-  2.498% {
+  2.801% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), 0rem);
   }
 
-  2.888% {
+  3.21% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(1 * -1lh));
-    animation-timing-function: steps(5, end);
-  }
-
-  3.441%,
-  5.263% {
-    transform: translate(calc((var(--home-skills-type-max) - 5) * 1ch), calc(1 * -1lh));
-    animation-timing-function: steps(5, end);
-  }
-
-  5.556% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(1 * -1lh));
-  }
-
-  5.946% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(2 * -1lh));
     animation-timing-function: steps(6, end);
   }
 
-  6.609%,
-  8.431% {
-    transform: translate(calc((var(--home-skills-type-max) - 6) * 1ch), calc(2 * -1lh));
+  3.907%,
+  5.82% {
+    transform: translate(calc((var(--home-skills-type-max) - 6) * 1ch), calc(1 * -1lh));
     animation-timing-function: steps(6, end);
   }
 
-  8.782% {
+  6.189% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(1 * -1lh));
+  }
+
+  6.598% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(2 * -1lh));
+    animation-timing-function: steps(4, end);
+  }
+
+  7.063%,
+  8.975% {
+    transform: translate(calc((var(--home-skills-type-max) - 4) * 1ch), calc(2 * -1lh));
+    animation-timing-function: steps(4, end);
+  }
+
+  9.221% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(2 * -1lh));
   }
 
-  9.173% {
+  9.631% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(3 * -1lh));
-    animation-timing-function: steps(4, end);
-  }
-
-  9.615%,
-  11.436% {
-    transform: translate(calc((var(--home-skills-type-max) - 4) * 1ch), calc(3 * -1lh));
-    animation-timing-function: steps(4, end);
-  }
-
-  11.671% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(3 * -1lh));
-  }
-
-  12.061% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(4 * -1lh));
     animation-timing-function: steps(5, end);
   }
 
-  12.614%,
-  14.435% {
-    transform: translate(calc((var(--home-skills-type-max) - 5) * 1ch), calc(4 * -1lh));
+  10.212%,
+  12.124% {
+    transform: translate(calc((var(--home-skills-type-max) - 5) * 1ch), calc(3 * -1lh));
     animation-timing-function: steps(5, end);
   }
 
-  14.728% {
+  12.432% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(3 * -1lh));
+  }
+
+  12.842% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(4 * -1lh));
+    animation-timing-function: steps(10, end);
+  }
+
+  14.003%,
+  15.915% {
+    transform: translate(calc((var(--home-skills-type-max) - 10) * 1ch), calc(4 * -1lh));
+    animation-timing-function: steps(10, end);
+  }
+
+  16.53% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(4 * -1lh));
   }
 
-  15.118% {
+  16.94% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(5 * -1lh));
-    animation-timing-function: steps(10, end);
-  }
-
-  16.224%,
-  18.046% {
-    transform: translate(calc((var(--home-skills-type-max) - 10) * 1ch), calc(5 * -1lh));
-    animation-timing-function: steps(10, end);
-  }
-
-  18.631% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(5 * -1lh));
-  }
-
-  19.022% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(6 * -1lh));
     animation-timing-function: steps(9, end);
   }
 
-  20.017%,
-  21.838% {
-    transform: translate(calc((var(--home-skills-type-max) - 9) * 1ch), calc(6 * -1lh));
+  17.985%,
+  19.898% {
+    transform: translate(calc((var(--home-skills-type-max) - 9) * 1ch), calc(5 * -1lh));
     animation-timing-function: steps(9, end);
   }
 
-  22.365% {
+  20.451% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(5 * -1lh));
+  }
+
+  20.861% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(6 * -1lh));
+    animation-timing-function: steps(4, end);
+  }
+
+  21.325%,
+  23.238% {
+    transform: translate(calc((var(--home-skills-type-max) - 4) * 1ch), calc(6 * -1lh));
+    animation-timing-function: steps(4, end);
+  }
+
+  23.484% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(6 * -1lh));
   }
 
-  22.756% {
+  23.893% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(7 * -1lh));
-    animation-timing-function: steps(4, end);
-  }
-
-  23.198%,
-  25.02% {
-    transform: translate(calc((var(--home-skills-type-max) - 4) * 1ch), calc(7 * -1lh));
-    animation-timing-function: steps(4, end);
-  }
-
-  25.254% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(7 * -1lh));
-  }
-
-  25.644% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(8 * -1lh));
     animation-timing-function: steps(11, end);
   }
 
-  26.861%,
-  28.682% {
-    transform: translate(calc((var(--home-skills-type-max) - 11) * 1ch), calc(8 * -1lh));
+  25.171%,
+  27.083% {
+    transform: translate(calc((var(--home-skills-type-max) - 11) * 1ch), calc(7 * -1lh));
     animation-timing-function: steps(11, end);
   }
 
-  29.326% {
+  27.76% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(7 * -1lh));
+  }
+
+  28.169% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(8 * -1lh));
+    animation-timing-function: steps(5, end);
+  }
+
+  28.75%,
+  30.663% {
+    transform: translate(calc((var(--home-skills-type-max) - 5) * 1ch), calc(8 * -1lh));
+    animation-timing-function: steps(5, end);
+  }
+
+  30.97% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(8 * -1lh));
   }
 
-  29.716% {
+  31.38% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(9 * -1lh));
-    animation-timing-function: steps(5, end);
-  }
-
-  30.269%,
-  32.091% {
-    transform: translate(calc((var(--home-skills-type-max) - 5) * 1ch), calc(9 * -1lh));
-    animation-timing-function: steps(5, end);
-  }
-
-  32.384% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(9 * -1lh));
-  }
-
-  32.774% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(10 * -1lh));
     animation-timing-function: steps(6, end);
   }
 
-  33.437%,
-  35.259% {
-    transform: translate(calc((var(--home-skills-type-max) - 6) * 1ch), calc(10 * -1lh));
+  32.077%,
+  33.989% {
+    transform: translate(calc((var(--home-skills-type-max) - 6) * 1ch), calc(9 * -1lh));
     animation-timing-function: steps(6, end);
   }
 
-  35.61% {
+  34.358% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(9 * -1lh));
+  }
+
+  34.768% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(10 * -1lh));
+    animation-timing-function: steps(3, end);
+  }
+
+  35.116%,
+  37.029% {
+    transform: translate(calc((var(--home-skills-type-max) - 3) * 1ch), calc(10 * -1lh));
+    animation-timing-function: steps(3, end);
+  }
+
+  37.213% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(10 * -1lh));
   }
 
-  36.001% {
+  37.623% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(11 * -1lh));
-    animation-timing-function: steps(3, end);
-  }
-
-  36.332%,
-  38.154% {
-    transform: translate(calc((var(--home-skills-type-max) - 3) * 1ch), calc(11 * -1lh));
-    animation-timing-function: steps(3, end);
-  }
-
-  38.329% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(11 * -1lh));
-  }
-
-  38.72% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(12 * -1lh));
     animation-timing-function: steps(14, end);
   }
 
-  40.268%,
-  42.09% {
-    transform: translate(calc((var(--home-skills-type-max) - 14) * 1ch), calc(12 * -1lh));
+  39.249%,
+  41.161% {
+    transform: translate(calc((var(--home-skills-type-max) - 14) * 1ch), calc(11 * -1lh));
     animation-timing-function: steps(14, end);
   }
 
-  42.909% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(12 * -1lh));
+  42.022% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(11 * -1lh));
   }
 
-  43.3% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(13 * -1lh));
+  42.432% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(12 * -1lh));
     animation-timing-function: steps(7, end);
   }
 
-  44.074%,
-  45.895% {
-    transform: translate(calc((var(--home-skills-type-max) - 7) * 1ch), calc(13 * -1lh));
+  43.245%,
+  45.157% {
+    transform: translate(calc((var(--home-skills-type-max) - 7) * 1ch), calc(12 * -1lh));
     animation-timing-function: steps(7, end);
   }
 
-  46.305% {
+  45.587% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(12 * -1lh));
+  }
+
+  45.997% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(13 * -1lh));
+    animation-timing-function: steps(3, end);
+  }
+
+  46.346%,
+  48.258% {
+    transform: translate(calc((var(--home-skills-type-max) - 3) * 1ch), calc(13 * -1lh));
+    animation-timing-function: steps(3, end);
+  }
+
+  48.443% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(13 * -1lh));
   }
 
-  46.695% {
+  48.852% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(14 * -1lh));
-    animation-timing-function: steps(3, end);
-  }
-
-  47.027%,
-  48.849% {
-    transform: translate(calc((var(--home-skills-type-max) - 3) * 1ch), calc(14 * -1lh));
-    animation-timing-function: steps(3, end);
-  }
-
-  49.024% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(14 * -1lh));
-  }
-
-  49.415% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(15 * -1lh));
     animation-timing-function: steps(14, end);
   }
 
-  50.963%,
-  52.784% {
-    transform: translate(calc((var(--home-skills-type-max) - 14) * 1ch), calc(15 * -1lh));
+  50.478%,
+  52.391% {
+    transform: translate(calc((var(--home-skills-type-max) - 14) * 1ch), calc(14 * -1lh));
     animation-timing-function: steps(14, end);
   }
 
-  53.604% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(15 * -1lh));
+  53.251% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(14 * -1lh));
   }
 
-  53.994% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(16 * -1lh));
+  53.661% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(15 * -1lh));
     animation-timing-function: steps(5, end);
   }
 
-  54.547%,
-  56.369% {
-    transform: translate(calc((var(--home-skills-type-max) - 5) * 1ch), calc(16 * -1lh));
+  54.242%,
+  56.154% {
+    transform: translate(calc((var(--home-skills-type-max) - 5) * 1ch), calc(15 * -1lh));
     animation-timing-function: steps(5, end);
   }
 
-  56.661% {
+  56.462% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(15 * -1lh));
+  }
+
+  56.872% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(16 * -1lh));
+    animation-timing-function: steps(4, end);
+  }
+
+  57.336%,
+  59.249% {
+    transform: translate(calc((var(--home-skills-type-max) - 4) * 1ch), calc(16 * -1lh));
+    animation-timing-function: steps(4, end);
+  }
+
+  59.495% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(16 * -1lh));
   }
 
-  57.052% {
+  59.904% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(17 * -1lh));
-    animation-timing-function: steps(4, end);
-  }
-
-  57.494%,
-  59.316% {
-    transform: translate(calc((var(--home-skills-type-max) - 4) * 1ch), calc(17 * -1lh));
-    animation-timing-function: steps(4, end);
-  }
-
-  59.55% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(17 * -1lh));
-  }
-
-  59.94% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(18 * -1lh));
     animation-timing-function: steps(15, end);
   }
 
-  61.599%,
-  63.421% {
-    transform: translate(calc((var(--home-skills-type-max) - 15) * 1ch), calc(18 * -1lh));
+  61.646%,
+  63.559% {
+    transform: translate(calc((var(--home-skills-type-max) - 15) * 1ch), calc(17 * -1lh));
     animation-timing-function: steps(15, end);
   }
 
-  64.299% {
+  64.481% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(17 * -1lh));
+  }
+
+  64.891% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(18 * -1lh));
+    animation-timing-function: steps(3, end);
+  }
+
+  65.239%,
+  67.152% {
+    transform: translate(calc((var(--home-skills-type-max) - 3) * 1ch), calc(18 * -1lh));
+    animation-timing-function: steps(3, end);
+  }
+
+  67.336% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(18 * -1lh));
   }
 
-  64.689% {
+  67.746% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(19 * -1lh));
-    animation-timing-function: steps(3, end);
-  }
-
-  65.021%,
-  66.842% {
-    transform: translate(calc((var(--home-skills-type-max) - 3) * 1ch), calc(19 * -1lh));
-    animation-timing-function: steps(3, end);
-  }
-
-  67.018% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(19 * -1lh));
-  }
-
-  67.408% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(20 * -1lh));
     animation-timing-function: steps(9, end);
   }
 
-  68.404%,
-  70.225% {
-    transform: translate(calc((var(--home-skills-type-max) - 9) * 1ch), calc(20 * -1lh));
+  68.791%,
+  70.704% {
+    transform: translate(calc((var(--home-skills-type-max) - 9) * 1ch), calc(19 * -1lh));
     animation-timing-function: steps(9, end);
   }
 
-  70.752% {
+  71.257% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(19 * -1lh));
+  }
+
+  71.667% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(20 * -1lh));
+    animation-timing-function: steps(7, end);
+  }
+
+  72.48%,
+  74.392% {
+    transform: translate(calc((var(--home-skills-type-max) - 7) * 1ch), calc(20 * -1lh));
+    animation-timing-function: steps(7, end);
+  }
+
+  74.822% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(20 * -1lh));
   }
 
-  71.142% {
+  75.232% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(21 * -1lh));
+    animation-timing-function: steps(9, end);
+  }
+
+  76.277%,
+  78.19% {
+    transform: translate(calc((var(--home-skills-type-max) - 9) * 1ch), calc(21 * -1lh));
+    animation-timing-function: steps(9, end);
+  }
+
+  78.743% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(21 * -1lh));
+  }
+
+  79.153% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(22 * -1lh));
+    animation-timing-function: steps(9, end);
+  }
+
+  80.198%,
+  82.111% {
+    transform: translate(calc((var(--home-skills-type-max) - 9) * 1ch), calc(22 * -1lh));
+    animation-timing-function: steps(9, end);
+  }
+
+  82.664% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(22 * -1lh));
+  }
+
+  83.074% {
+    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(23 * -1lh));
     animation-timing-function: steps(10, end);
   }
 
-  72.248%,
-  74.07% {
-    transform: translate(calc((var(--home-skills-type-max) - 10) * 1ch), calc(21 * -1lh));
+  84.235%,
+  86.148% {
+    transform: translate(calc((var(--home-skills-type-max) - 10) * 1ch), calc(23 * -1lh));
     animation-timing-function: steps(10, end);
   }
 
-  74.655% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(21 * -1lh));
-  }
-
-  75.046% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(22 * -1lh));
-    animation-timing-function: steps(7, end);
-  }
-
-  75.82%,
-  77.641% {
-    transform: translate(calc((var(--home-skills-type-max) - 7) * 1ch), calc(22 * -1lh));
-    animation-timing-function: steps(7, end);
-  }
-
-  78.051% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(22 * -1lh));
-  }
-
-  78.441% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(23 * -1lh));
-    animation-timing-function: steps(4, end);
-  }
-
-  78.884%,
-  80.705% {
-    transform: translate(calc((var(--home-skills-type-max) - 4) * 1ch), calc(23 * -1lh));
-    animation-timing-function: steps(4, end);
-  }
-
-  80.939% {
+  86.762% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(23 * -1lh));
   }
 
-  81.33% {
+  87.172% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(24 * -1lh));
-    animation-timing-function: steps(7, end);
+    animation-timing-function: steps(10, end);
   }
 
-  82.104%,
-  83.925% {
-    transform: translate(calc((var(--home-skills-type-max) - 7) * 1ch), calc(24 * -1lh));
-    animation-timing-function: steps(7, end);
+  88.333%,
+  90.246% {
+    transform: translate(calc((var(--home-skills-type-max) - 10) * 1ch), calc(24 * -1lh));
+    animation-timing-function: steps(10, end);
   }
 
-  84.335% {
+  90.861% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(24 * -1lh));
   }
 
-  84.725% {
+  91.27% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(25 * -1lh));
-    animation-timing-function: steps(9, end);
+    animation-timing-function: steps(14, end);
   }
 
-  85.721%,
-  87.542% {
-    transform: translate(calc((var(--home-skills-type-max) - 9) * 1ch), calc(25 * -1lh));
-    animation-timing-function: steps(9, end);
+  92.896%,
+  94.809% {
+    transform: translate(calc((var(--home-skills-type-max) - 14) * 1ch), calc(25 * -1lh));
+    animation-timing-function: steps(14, end);
   }
 
-  88.069% {
+  95.669% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(25 * -1lh));
   }
 
-  88.46% {
+  96.079% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(26 * -1lh));
     animation-timing-function: steps(9, end);
   }
 
-  89.455%,
-  91.276% {
+  97.124%,
+  99.037% {
     transform: translate(calc((var(--home-skills-type-max) - 9) * 1ch), calc(26 * -1lh));
     animation-timing-function: steps(9, end);
   }
 
-  91.803% {
+  99.59% {
     transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(26 * -1lh));
-  }
-
-  92.194% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(27 * -1lh));
-    animation-timing-function: steps(10, end);
-  }
-
-  93.3%,
-  95.121% {
-    transform: translate(calc((var(--home-skills-type-max) - 10) * 1ch), calc(27 * -1lh));
-    animation-timing-function: steps(10, end);
-  }
-
-  95.706% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(27 * -1lh));
-  }
-
-  96.097% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(28 * -1lh));
-    animation-timing-function: steps(10, end);
-  }
-
-  97.203%,
-  99.024% {
-    transform: translate(calc((var(--home-skills-type-max) - 10) * 1ch), calc(28 * -1lh));
-    animation-timing-function: steps(10, end);
-  }
-
-  99.61% {
-    transform: translate(calc(var(--home-skills-type-max) * 1ch), calc(28 * -1lh));
   }
 
   100% {

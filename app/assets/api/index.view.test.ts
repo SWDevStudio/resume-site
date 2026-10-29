@@ -102,15 +102,35 @@ describe("$api.skills.fetchGroups", () => {
     }
   });
 
-  it("resolves the stack of every project from the registry of the skills", async () => {
+  it("resolves the stack of every project from the registry of the skills and the labels of the canon", async () => {
     for (const locale of LOCALES) {
       state.locale = locale;
       const groups = await $api.skills.fetchGroups();
-      const names = groups.flatMap((group) => group.skills.map((skill) => skill.name));
-      const stack = (await $api.projects.fetchList()).flatMap((project) => project.stack);
+      const skills = groups.flatMap((group) => group.skills);
+      const list = await $api.projects.fetchList();
 
-      expect(stack.length).toBeGreaterThan(0);
-      for (const name of stack) expect(names).toContain(name);
+      expect(list.flatMap((project) => project.stack).length).toBeGreaterThan(0);
+      for (const project of list) {
+        const refs = catalog.find((item) => item.id === project.id)!.stack;
+
+        expect(project.stack).toHaveLength(refs.length);
+        refs.forEach((ref, index) => {
+          if (typeof ref !== "string") {
+            expect(project.stack[index]).toBe(ref.label);
+            return;
+          }
+          const skill = skills.find((item) => item.id === ref);
+
+          expect(skill, `${project.id}: ${ref}`).toBeDefined();
+          expect(project.stack[index]).toBe(skill!.label ?? skill!.name);
+        });
+      }
     }
+  });
+
+  it("takes the label of an object reference of the stack as it is", async () => {
+    const dobro = (await $api.projects.fetchList()).find((project) => project.id === "dobro")!;
+
+    expect(dobro.stack).toEqual(expect.arrayContaining(["Next.js 16", "React 19"]));
   });
 });

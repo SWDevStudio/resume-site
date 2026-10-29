@@ -15,9 +15,10 @@ import type { SkillGroupView } from "~/assets/api/types/catalog";
 import { SKILL_GROUP_IDS } from "~/assets/api/types/resume";
 import Skills from "./Skills.vue";
 import { buildSkillPanels } from "./skillPanels";
+import { skillTileId } from "./skillIds";
 import { skillWaveOrder, skillWaveSwapTime } from "./skillWave";
 import { SKILL_SWAP_PERIOD } from "./useSkillSwap";
-import { buildToolkit } from "./toolkit";
+import { buildToolkit, TOOLKIT_STATIC_COUNT, TOOLKIT_TYPED_COUNT } from "./toolkit";
 import { setTheme } from "../../../../../test/mocks/useTheme";
 import "~/assets/css/fonts.css";
 import "~/assets/css/main.css";
@@ -83,6 +84,25 @@ const additionalOf = (groups: SkillGroupView[]) =>
   groups.find((group) => group.id === "additional")!.skills;
 
 const toolkit = buildToolkit(additionalOf(groupsOf.en));
+
+const TYPE_CHAR_MS = 85;
+const HOLD_MS = 1400;
+const ERASE_CHAR_MS = 45;
+const PAUSE_MS = 300;
+
+const typingSlots = toolkit.typed.reduce<{ typed: number; erased: number; end: number }[]>(
+  (slots, item) => {
+    const start = slots.at(-1)?.end ?? 0;
+    const typed = start + item.text.length * TYPE_CHAR_MS;
+    const erased = typed + HOLD_MS + item.text.length * ERASE_CHAR_MS;
+    return [...slots, { typed, erased, end: erased + PAUSE_MS }];
+  },
+  [],
+);
+
+const typingCycle = typingSlots.at(-1)!.end;
+
+const heldAt = (index: number) => typingSlots[index]!.typed + HOLD_MS / 2;
 
 function createApp(locale: Locale) {
   return createI18n({ legacy: false, locale, messages: { ru, en } });
@@ -265,7 +285,7 @@ function fontSize(screen: Screen, selector: string) {
 
 beforeAll(async () => {
   await page.viewport(1440, 900);
-  await document.fonts.load('400 1em "Righteous"', "My Core Skills 01 Frontend Backend & DevOps");
+  await document.fonts.load('400 1em "Righteous"', "My Core Skills 01 Frontend Backend");
   await document.fonts.load('700 1em "Montserrat Alternates"', "Мои навыки Фронтенд");
   await document.fonts.load('300 1em "Martian Mono"', "02 — SKILLS ALSO IN MY TOOLKIT");
   await document.fonts.load('400 1em "Martian Mono"', "MY PROJECTS React Next.js");
@@ -365,7 +385,7 @@ describe("behavior", () => {
     ).toEqual(
       skillPanels.map((panel) => panel.tiles.map((tile) => SKILL_TILE_META[tile.skill].label)),
     );
-    expect(pickAll(screen, ".skill-tile")).toHaveLength(18);
+    expect(pickAll(screen, ".skill-tile")).toHaveLength(tiles.length);
     expect(pick(screen, ".home-skills-decor").getAttribute("aria-hidden")).toBe("true");
   });
 
@@ -634,7 +654,7 @@ describe("behavior", () => {
         .map((animation) => animation.animationName)
         .sort();
 
-    expect(typedItems(screen)).toHaveLength(29);
+    expect(typedItems(screen)).toHaveLength(toolkit.typed.length);
     expect(strip.parentElement).toBe(view);
     expect(view.parentElement).toBe(typing);
     expect(cursor.parentElement).toBe(typing);
@@ -645,7 +665,7 @@ describe("behavior", () => {
     for (const item of typedItems(screen)) expect(byTarget(item)).toEqual([]);
     const cyclic = animations.filter((item) => item.animationName !== "home-skills-blink");
     for (const animation of cyclic) {
-      expect(Number(animation.effect?.getComputedTiming().duration)).toBeCloseTo(76860, 0);
+      expect(Number(animation.effect?.getComputedTiming().duration)).toBeCloseTo(typingCycle, 0);
       expect(Number(animation.effect?.getComputedTiming().iterations)).toBe(Infinity);
     }
     expect(getComputedStyle(view).overflow).toBe("hidden");
@@ -674,23 +694,23 @@ describe("behavior", () => {
     const anchor = typedRight(screen)!.left;
     near(gap(), Number.parseFloat(getComputedStyle(cursor).marginLeft), 1);
 
-    seekTyping(1000);
-    expect(length(0)).toBe(4);
-    expect(visibleChars(screen)).toEqual(only(0, 4));
+    seekTyping(heldAt(0));
+    expect(visibleChars(screen)).toEqual(only(0, length(0)));
     near(typedRight(screen)!.left, anchor);
-    near(typedRight(screen)!.right - anchor, 4 * ch);
+    near(typedRight(screen)!.right - anchor, length(0) * ch);
     near(gap(), Number.parseFloat(getComputedStyle(cursor).marginLeft), 1);
 
-    seekTyping(2000);
+    seekTyping(typingSlots[0]!.erased + PAUSE_MS / 2);
     expect(visibleChars(screen)).toEqual(only(0, 0));
 
-    seekTyping(3500);
+    seekTyping(heldAt(1));
     expect(visibleChars(screen)).toEqual(only(1, length(1)));
     near(typedRight(screen)!.left, anchor);
     near(gap(), Number.parseFloat(getComputedStyle(cursor).marginLeft), 1);
 
-    seekTyping(76000);
-    expect(visibleChars(screen)).toEqual(only(28, length(28)));
+    const last = toolkit.typed.length - 1;
+    seekTyping(heldAt(last));
+    expect(visibleChars(screen)).toEqual(only(last, length(last)));
     near(typedRight(screen)!.left, anchor);
     near(gap(), Number.parseFloat(getComputedStyle(cursor).marginLeft), 1);
 
@@ -708,7 +728,7 @@ describe("behavior", () => {
       const longest = typed.map(() => 0);
       const order: number[] = [];
 
-      for (let time = 0; time < 76860; time += 60) {
+      for (let time = 0; time < typingCycle; time += 60) {
         seekTyping(time);
         const visible = visibleChars(screen);
         const shown = visible.flatMap((count, index) => (count > 0 ? [index] : []));
@@ -756,15 +776,18 @@ describe("behavior", () => {
     it("draws the panel tiles from the groups of the data", async () => {
       const data = structuredClone(groupsOf.en);
       const backend = data.find((group) => group.id === "backend")!;
-      backend.skills = backend.skills.filter((skill) => skill.id !== "kubernetes");
+      const removed = skillPanels[1]!.tiles[0]!.skill;
+      backend.skills = backend.skills.filter((skill) => skill.id !== skillTileId(removed));
       const screen = await renderCase({ width: 1440, height: 900 }, data);
       const panels = pickAll<HTMLElement>(screen, ".home-skills-panel");
 
-      expect(panels[0]!.querySelectorAll(".skill-tile")).toHaveLength(9);
-      expect(panels[1]!.querySelectorAll(".skill-tile")).toHaveLength(8);
+      expect(panels[0]!.querySelectorAll(".skill-tile")).toHaveLength(skillPanels[0]!.tiles.length);
+      expect(panels[1]!.querySelectorAll(".skill-tile")).toHaveLength(
+        skillPanels[1]!.tiles.length - 1,
+      );
       expect(
         [...panels[1]!.querySelectorAll(".skill-tile-label")].map((label) => label.textContent),
-      ).not.toContain(SKILL_TILE_META.Kubernetes.label);
+      ).not.toContain(SKILL_TILE_META[removed].label);
     });
 
     it("takes the toolkit from the additional group of the data", async () => {
@@ -780,12 +803,30 @@ describe("behavior", () => {
       );
     });
 
-    it("shows only the first 35 skills of the additional group in the toolkit band", async () => {
+    it(`shows only the first ${TOOLKIT_STATIC_COUNT + TOOLKIT_TYPED_COUNT} skills of the additional group in the toolkit band`, async () => {
+      const additional = additionalOf(groupsOf.en);
       const screen = await renderCase({ width: 1440, height: 900 });
 
-      expect(additionalOf(groupsOf.en).length).toBeGreaterThan(35);
-      expect(pickAll(screen, ".home-skills-static")).toHaveLength(6);
-      expect(pickAll(screen, ".home-skills-type")).toHaveLength(29);
+      expect(pickAll(screen, ".home-skills-static")).toHaveLength(TOOLKIT_STATIC_COUNT);
+      expect(pickAll(screen, ".home-skills-type")).toHaveLength(
+        Math.min(TOOLKIT_TYPED_COUNT, additional.length - TOOLKIT_STATIC_COUNT),
+      );
+      screen.unmount();
+
+      const data = structuredClone(groupsOf.en);
+      const extra = Array.from(
+        { length: TOOLKIT_STATIC_COUNT + TOOLKIT_TYPED_COUNT },
+        (_, index) => ({
+          ...additional[0]!,
+          id: `extra-${index}`,
+          name: `Extra ${index}`,
+        }),
+      );
+      additionalOf(data).push(...extra);
+      const long = await renderCase({ width: 1440, height: 900 }, data);
+
+      expect(pickAll(long, ".home-skills-static")).toHaveLength(TOOLKIT_STATIC_COUNT);
+      expect(pickAll(long, ".home-skills-type")).toHaveLength(TOOLKIT_TYPED_COUNT);
     });
   });
 
@@ -1052,6 +1093,7 @@ describe("behavior", () => {
       const expected = walk();
       let previous = 0;
 
+      expect(first.some((label, index) => label !== second[index])).toBe(true);
       expect(expected).toHaveLength(18);
       expect(expected.slice(0, 5)).toEqual([0, 10, 2, 12, 4]);
       expect(expected.slice(9, 14)).toEqual([9, 1, 11, 3, 13]);
@@ -1068,7 +1110,7 @@ describe("behavior", () => {
           const changed = after.flatMap((label, index) => (label === before[index] ? [] : [index]));
           const index = expected[step]!;
 
-          expect(changed).toEqual([index]);
+          expect(changed).toEqual(first[index] === second[index] ? [] : [index]);
           expect(after[index]).toBe(cycle === 0 ? second[index] : first[index]);
         }
         expect(tileLabels(screen)).toEqual(cycle === 0 ? second : first);
@@ -1161,7 +1203,7 @@ describe("behavior", () => {
       expect(vi.getTimerCount()).toBe(before);
       await advance(SKILL_SWAP_PERIOD * 3);
       expect(tileLabels(screen)).toEqual(tiles.map((tile) => SKILL_TILE_META[tile.skill].label));
-      expect(pickAll(screen, ".skill-tile-layer")).toHaveLength(18);
+      expect(pickAll(screen, ".skill-tile-layer")).toHaveLength(tiles.length);
     });
 
     it("returns to the first skill and stops the timers when motion gets reduced", async () => {
@@ -1229,7 +1271,7 @@ describe("behavior", () => {
     expect(html).toContain('id="skills"');
     expect(html).toContain("home-skills-title");
     expect(html).toContain("My Core");
-    expect(html.match(/home-skills-type /g)).toHaveLength(29);
-    expect(html.match(/skill-tile-label/g)).toHaveLength(18);
+    expect(html.match(/home-skills-type /g)).toHaveLength(toolkit.typed.length);
+    expect(html.match(/skill-tile-label/g)).toHaveLength(tiles.length);
   });
 });

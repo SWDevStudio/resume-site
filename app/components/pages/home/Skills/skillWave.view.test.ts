@@ -28,9 +28,10 @@ describe("skill panels", () => {
     expect(skillWaveSteps).toBe(18);
   });
 
-  it("never repeat a skill", () => {
-    const all = skillPanels.flatMap((panel) =>
-      panel.tiles.flatMap((tile) => [tile.skill, tile.swap]),
+  it("never repeat a skill, a tile without its own swap swaps to itself", () => {
+    const tiles = skillPanels.flatMap((panel) => panel.tiles);
+    const all = tiles.flatMap((tile) =>
+      tile.swap === tile.skill ? [tile.skill] : [tile.skill, tile.swap],
     );
 
     expect(new Set(all).size).toBe(all.length);

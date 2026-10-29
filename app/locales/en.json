@@ -5,7 +5,7 @@
   "nav": {
     "catalog": "UI catalog",
     "about": "About",
-    "portfolio": "Portfolio",
+    "resume": "Resume",
     "blog": "Blog",
     "projects": "Projects",
     "contact": "Contact"
@@ -27,7 +27,7 @@
       "label": "01 — About me",
       "greeting": "Hi, I'm",
       "name": "Michael",
-      "description": "[Three or four sentences about you: how you got into development, what you build and for whom, the stack you enjoy most, and how you like to work with clients and teams.]",
+      "description": "{fullstack} developer and team lead with 7+ years of commercial experience. {frontend} on {vue}, {nuxt}, {react} and {next}, {backend} on {laravel}, {nest} and {express}. Since 2024 I have built development around {ai} agents: architecture rules, {skills} and subagent pipelines where tests come before code, and task cost is measured and driven down.",
       "contact": "Contact me",
       "projects": "Projects",
       "status": "Open to projects",
@@ -40,7 +40,7 @@
       "description": "[Two or three sentences about your stack: what you use on the frontend and backend, how you ship and maintain projects, and what you are learning now.]",
       "all": "All skills",
       "frontend": "Frontend",
-      "backend": "Backend & DevOps",
+      "backend": "Backend",
       "toolkit": "Also in my toolkit",
       "modal": {
         "title": "All",
