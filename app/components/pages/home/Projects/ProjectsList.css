@@ -37,10 +37,10 @@
 .home-projects-dots {
   @apply hidden justify-center md:flex;
   gap: --spacing(2.5);
-  margin-top: --spacing(10);
+  margin-top: --spacing(14);
 
   @variant xl {
-    margin-top: --spacing(2);
+    margin-top: --spacing(6);
   }
 }
 
