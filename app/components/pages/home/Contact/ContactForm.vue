@@ -74,6 +74,7 @@ import FormTextarea from "~/components/form/FormTextarea/FormTextarea.vue";
 import UiButton from "~/components/ui/UiButton/UiButton.vue";
 import { useAlert } from "~/composables/useAlert";
 import { $api } from "~/assets/api";
+import { $metrika } from "~/assets/metrika";
 
 const { t } = useI18n();
 const alert = useAlert();
@@ -108,6 +109,7 @@ const onSubmit = handleSubmit(async (values) => {
   toggleSending(true);
   try {
     await $api.contact.send(values);
+    $metrika.contact.send();
     alert.success({
       title: t("home.contact.form.success.title"),
       description: t("home.contact.form.success.description"),

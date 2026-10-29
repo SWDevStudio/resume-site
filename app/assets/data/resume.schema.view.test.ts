@@ -112,5 +112,9 @@ describe("resume data files", () => {
       expect(contact.value).toBe(SOCIAL[key].value);
       expect(contact.href).toBe(SOCIAL[key].href);
     }
+    const linkedin = data.profile.contacts.find((item) => item.id === "linkedin")!;
+
+    expect(linkedin.label).toBe(SOCIAL.linkedin.label);
+    expect(linkedin.href).toBe(SOCIAL.linkedin.href);
   });
 });

@@ -94,4 +94,16 @@ const projects = {
   },
 };
 
-export const $metrika = { init, loadTag, navigate, hit, skills, projects };
+const assistant = {
+  ask(source: "form" | "chip") {
+    reachGoal(MetrikaGoal.assistantAsk, { source });
+  },
+};
+
+const contact = {
+  send() {
+    reachGoal(MetrikaGoal.contactSend);
+  },
+};
+
+export const $metrika = { init, loadTag, navigate, hit, skills, projects, assistant, contact };

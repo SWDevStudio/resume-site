@@ -568,7 +568,6 @@ describe("behavior", () => {
 
   it("pauses the decor while the slide is off the screen", async () => {
     setTheme("torii-synth");
-    document.documentElement.style.scrollSnapType = "none";
     window.scrollTo({ top: 0, behavior: "instant" });
     try {
       const screen = await renderCase({ width: 1440, height: 900 }, 2000);
@@ -584,7 +583,6 @@ describe("behavior", () => {
       window.scrollTo({ top: 0, behavior: "instant" });
       await expect.poll(() => stopped("home-hero-firefly")).toBe(true);
     } finally {
-      document.documentElement.style.scrollSnapType = "";
       window.scrollTo({ top: 0, behavior: "instant" });
     }
   });

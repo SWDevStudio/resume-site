@@ -1,6 +1,7 @@
 import { computed, onScopeDispose, ref, type MaybeRefOrGetter } from "vue";
 import { useIntersectionObserver, useToggle } from "@vueuse/core";
 import { $api } from "~/assets/api";
+import { $metrika } from "~/assets/metrika";
 import type {
   AssistantDoneEvent,
   AssistantEvent,
@@ -42,6 +43,7 @@ export function useWhyChat(root?: MaybeRefOrGetter<HTMLElement | null | undefine
   let lastId = 0;
   let restored = false;
   let active: Exchange | null = null;
+  let chipText: string | null = null;
 
   const busy = computed(() => status.value === "waiting" || status.value === "streaming");
   const fragments = computed(() => messages.value.filter((message) => message.kind === "fragment"));
@@ -109,6 +111,7 @@ export function useWhyChat(root?: MaybeRefOrGetter<HTMLElement | null | undefine
   function fill(text: string) {
     restore();
     draft.value = text.slice(0, maxLength.value);
+    chipText = draft.value.trim();
   }
 
   function returnDraft(text: string) {
@@ -196,7 +199,8 @@ export function useWhyChat(root?: MaybeRefOrGetter<HTMLElement | null | undefine
     return exchange;
   }
 
-  async function ask(text: string, request: string) {
+  async function ask(text: string, request: string, source: "form" | "chip") {
+    $metrika.assistant.ask(source);
     const context = projectContext(messages.value);
     const exchange = startExchange(text, request);
     const { signal } = exchange.controller;
@@ -221,12 +225,14 @@ export function useWhyChat(root?: MaybeRefOrGetter<HTMLElement | null | undefine
     if (!text || locked.value) return;
     cancel();
     draft.value = "";
+    const source = text === chipText ? "chip" : "form";
+    chipText = null;
     const request = mergeFragments(
       fragments.value.map((message) => message.text),
       text,
     );
     if (isShortRequest(request)) holdFragment(text);
-    else await ask(text, request);
+    else await ask(text, request, source);
   }
 
   const { stop: stopRestoreObserver } = useIntersectionObserver(

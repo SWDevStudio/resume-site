@@ -357,7 +357,6 @@ describe("behavior", () => {
     projects.style.cssText = "height:1200px;margin-top:2000px";
     document.body.append(projects);
     document.documentElement.style.scrollBehavior = "auto";
-    document.documentElement.style.scrollSnapType = "none";
     window.scrollTo({ top: 0, behavior: "instant" });
 
     pick<HTMLButtonElement>(screen, ".home-contact-projects").click();
@@ -365,7 +364,6 @@ describe("behavior", () => {
     const top = projects.getBoundingClientRect().top;
     projects.remove();
     document.documentElement.style.scrollBehavior = "";
-    document.documentElement.style.scrollSnapType = "";
     window.scrollTo({ top: 0, behavior: "instant" });
 
     near(top, 0, 2);

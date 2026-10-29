@@ -3,13 +3,10 @@
 .home-slide {
   @apply relative isolate flex flex-col;
   min-height: max(100svh, var(--home-slide-height, --spacing(225)));
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 .home-slide-short {
   min-height: 0;
-  scroll-snap-align: end;
 }
 
 .home-slide-body {
@@ -41,11 +38,5 @@
 
   @variant motion-safe {
     scroll-behavior: smooth;
-  }
-}
-
-@media (width >= theme(--breakpoint-lg)) and (height >= 50rem) {
-  :root:has(.home-slide) {
-    scroll-snap-type: y mandatory;
   }
 }

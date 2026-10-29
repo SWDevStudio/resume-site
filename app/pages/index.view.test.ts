@@ -153,24 +153,19 @@ describe("slides", () => {
     );
   });
 
-  it("makes every slide at least as tall as the screen and snaps it to the start", async () => {
+  it("makes every slide at least as tall as the screen", async () => {
     await renderPage();
 
     for (const id of SLIDES) {
-      const style = getComputedStyle(section(id));
       expect(section(id).getBoundingClientRect().height).toBeGreaterThanOrEqual(900);
-      expect(style.scrollSnapAlign).toBe("start");
-      expect(style.scrollSnapStop).toBe("always");
     }
   });
 
-  it("lets the footer take its own height and snaps it to the end", async () => {
+  it("lets the footer take its own height", async () => {
     await renderPage();
     const footer = section("footer");
 
     expect(footer.getBoundingClientRect().height).toBeLessThan(900);
-    expect(getComputedStyle(footer).scrollSnapAlign).toBe("end");
-    expect(getComputedStyle(footer).scrollSnapStop).toBe("always");
   });
 
   it("keeps the content of a slide inside the container", async () => {
@@ -197,27 +192,12 @@ function near(value: number, expected: number, tolerance = 1) {
   expect(Math.abs(value - expected)).toBeLessThanOrEqual(tolerance);
 }
 
-describe("scroll snap", () => {
-  it.each([
-    { width: 1440, height: 900, snap: true },
-    { width: 1024, height: 800, snap: true },
-    { width: 2560, height: 1440, snap: true },
-    { width: 1023, height: 900, snap: false },
-    { width: 768, height: 900, snap: false },
-    { width: 390, height: 780, snap: false },
-    { width: 1440, height: 780, snap: false },
-    { width: 1280, height: 700, snap: false },
-  ])("at $width x $height is $snap", async ({ width, height, snap }) => {
-    await renderPage(width, height);
-
-    expect(getComputedStyle(root()).scrollSnapType).toBe(snap ? "y mandatory" : "none");
-  });
-
+describe("scroll", () => {
   it.each([
     { width: 1440, height: 900 },
     { width: 800, height: 900 },
     { width: 390, height: 780 },
-  ])("snaps the section start to the top of the screen at $width", async ({ width, height }) => {
+  ])("scrolls the section start to the top of the screen at $width", async ({ width, height }) => {
     await renderPage(width, height);
 
     expect(Number.parseFloat(getComputedStyle(root()).scrollPaddingTop)).toBe(0);
@@ -243,23 +223,6 @@ describe("scroll snap", () => {
     await renderPage();
 
     expect(getComputedStyle(root()).scrollBehavior).toBe("smooth");
-  });
-
-  it("snaps a short scroll back to the hero", async () => {
-    await renderPage();
-
-    window.scrollTo({ top: 300, behavior: "instant" });
-    await poll(() => Math.round(window.scrollY)).toBe(0);
-  });
-
-  it("snaps a longer scroll to a slide that covers the screen below the header", async () => {
-    await renderPage();
-    const top = section("about").offsetTop;
-
-    window.scrollTo({ top: 1100, behavior: "instant" });
-    await new Promise((resolve) => setTimeout(resolve, 300));
-
-    near(window.scrollY, top, 1);
   });
 });
 
