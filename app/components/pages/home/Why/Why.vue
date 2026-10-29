@@ -20,6 +20,8 @@
         <WhyWindow />
         <WhyOwl />
       </div>
+
+      <WhyFeatures />
     </div>
   </HomeSlide>
 </template>
@@ -28,6 +30,7 @@
 import { useI18n } from "vue-i18n";
 import HomeSlide from "~/components/pages/home/HomeSlide/HomeSlide.vue";
 import WhyDecor from "./WhyDecor.vue";
+import WhyFeatures from "./WhyFeatures.vue";
 import WhyOwl from "./WhyOwl.vue";
 import WhyWindow from "./WhyWindow.vue";
 

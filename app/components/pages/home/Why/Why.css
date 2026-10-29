@@ -65,6 +65,12 @@
   @apply overflow-hidden bg-base-100;
 }
 
+.home-why > .home-slide-body {
+  @variant lg {
+    padding-bottom: --spacing(12);
+  }
+}
+
 .home-why-main {
   @apply flex flex-1 flex-col;
   gap: var(--home-why-main-gap);

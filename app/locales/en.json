@@ -73,6 +73,17 @@
           "website": "I need a website for…",
           "optimization": "My site needs optimization…"
         }
+      },
+      "features": {
+        "label": "michael.dev",
+        "autonomy": {
+          "title": "Autonomy & business focus",
+          "prompt": "I build digital products end to end with my own hands. I can analyse a product and its competitors, find the strengths, shape a strategy and ship a product built around its competitive advantages."
+        },
+        "performance": {
+          "title": "Performance first",
+          "prompt": "Speed is a feature. I profile and load-test with Lighthouse, Clinic.js and autocannon, tune Core Web Vitals and SSR/ISR, and keep the stack lean, so your site stays fast as it grows."
+        }
       }
     },
     "projects": {
