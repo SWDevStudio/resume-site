@@ -2,52 +2,62 @@
 
 > Resume and portfolio of Michael Malakhov, Fullstack Developer: project case studies and a blog.
 > The resume is available as Markdown and PDF in Russian (ru) and English (en); the page
-> language is set by the path prefix (/ru, /en).
+> language is set by the path prefix (/ru, /en). Blog posts are written in English only.
 
 ## Resume (machine-readable)
 
-- [Resume, Markdown, English](/resume/en.md): best form for LLMs, plain text
-- [Resume, Markdown, Russian](/resume/ru.md): same content in Russian
-- [Resume, PDF, English](/resume/en.pdf): printable version
-- [Resume, PDF, Russian](/resume/ru.pdf): printable version in Russian
+- [Resume, Markdown, English](https://sowa-dev.duckdns.org/resume/en.md): best form for LLMs, plain text
+- [Resume, Markdown, Russian](https://sowa-dev.duckdns.org/resume/ru.md): same content in Russian
+- [Resume, PDF, English](https://sowa-dev.duckdns.org/resume/en.pdf): printable version
+- [Resume, PDF, Russian](https://sowa-dev.duckdns.org/resume/ru.pdf): printable version in Russian
 
 ## Pages
 
-- [Home, English](/en): about, skills, projects and contacts
-- [Home, Russian](/ru): same content in Russian
-- [Resume page, English](/en/resume): full resume with Markdown and PDF downloads
-- [Resume page, Russian](/ru/resume): same in Russian
-- [Project Qwixit, English](/en/projects/qwixit): case study
-- [Project Qwixit, Russian](/ru/projects/qwixit): case study in Russian
-- [Project Brendmart, English](/en/projects/brendmart): case study
-- [Project Brendmart, Russian](/ru/projects/brendmart): case study in Russian
-- [Project Taobao.at, English](/en/projects/taobao): case study
-- [Project Taobao.at, Russian](/ru/projects/taobao): case study in Russian
-- [Project Pochtoy & Prostobox, English](/en/projects/pochtoy-prostobox): case study
-- [Project Pochtoy & Prostobox, Russian](/ru/projects/pochtoy-prostobox): case study in Russian
-- [Project CDEK.Shopping, English](/en/projects/cdek-shopping): case study
-- [Project CDEK.Shopping, Russian](/ru/projects/cdek-shopping): case study in Russian
-- [Project Fly Post, English](/en/projects/fly-post): case study
-- [Project Fly Post, Russian](/ru/projects/fly-post): case study in Russian
-- [Project Tamriel Codex, English](/en/projects/tamriel-codex): case study
-- [Project Tamriel Codex, Russian](/ru/projects/tamriel-codex): case study in Russian
-- [Blog, English](/en/blog): articles, videos and open-source tools
-- [Blog, Russian](/ru/blog): same in Russian
+- [Home, English](https://sowa-dev.duckdns.org/en): about, skills, projects and contacts
+- [Home, Russian](https://sowa-dev.duckdns.org/ru): same content in Russian
+- [Resume page, English](https://sowa-dev.duckdns.org/en/resume): full resume with Markdown and PDF downloads
+- [Resume page, Russian](https://sowa-dev.duckdns.org/ru/resume): same in Russian
+- [Projects, English](https://sowa-dev.duckdns.org/en/projects): all case studies
+- [Projects, Russian](https://sowa-dev.duckdns.org/ru/projects): same in Russian
+- [Blog, English](https://sowa-dev.duckdns.org/en/blog): articles, videos and open-source tools
+- [Blog, Russian](https://sowa-dev.duckdns.org/ru/blog): same list with a Russian interface
+
+## Projects
+
+- [Dobro.rf, English](https://sowa-dev.duckdns.org/en/projects/dobro): case study, donation platform
+- [Dobro.rf, Russian](https://sowa-dev.duckdns.org/ru/projects/dobro): case study in Russian
+- [Hector, English](https://sowa-dev.duckdns.org/en/projects/hector): case study, personal protection mobile app
+- [Hector, Russian](https://sowa-dev.duckdns.org/ru/projects/hector): case study in Russian
+- [Brendmart, English](https://sowa-dev.duckdns.org/en/projects/brendmart): case study
+- [Brendmart, Russian](https://sowa-dev.duckdns.org/ru/projects/brendmart): case study in Russian
+- [Tamriel Codex, English](https://sowa-dev.duckdns.org/en/projects/tamriel-codex): case study
+- [Tamriel Codex, Russian](https://sowa-dev.duckdns.org/ru/projects/tamriel-codex): case study in Russian
+- [Qwixit, English](https://sowa-dev.duckdns.org/en/projects/qwixit): case study
+- [Qwixit, Russian](https://sowa-dev.duckdns.org/ru/projects/qwixit): case study in Russian
+- [Taobao.at, English](https://sowa-dev.duckdns.org/en/projects/taobao): case study
+- [Taobao.at, Russian](https://sowa-dev.duckdns.org/ru/projects/taobao): case study in Russian
+- [Pochtoy & Prostobox, English](https://sowa-dev.duckdns.org/en/projects/pochtoy-prostobox): case study
+- [Pochtoy & Prostobox, Russian](https://sowa-dev.duckdns.org/ru/projects/pochtoy-prostobox): case study in Russian
+- [CDEK.Shopping, English](https://sowa-dev.duckdns.org/en/projects/cdek-shopping): case study
+- [CDEK.Shopping, Russian](https://sowa-dev.duckdns.org/ru/projects/cdek-shopping): case study in Russian
+- [Fly Post, English](https://sowa-dev.duckdns.org/en/projects/fly-post): case study
+- [Fly Post, Russian](https://sowa-dev.duckdns.org/ru/projects/fly-post): case study in Russian
+- [Someday, English](https://sowa-dev.duckdns.org/en/projects/someday): case study, driver libraries for game electronics
+- [Someday, Russian](https://sowa-dev.duckdns.org/ru/projects/someday): case study in Russian
 
 ## Blog posts
 
-Each post is available under /en/blog/<slug> and /ru/blog/<slug>.
-
-- [Booking calendar in Next.js from scratch](/en/blog/booking-calendar-nextjs): video
-- [llms-txt-gen](/en/blog/llms-txt-gen): CLI tool that builds llms.txt from a sitemap
-- [SEO for LLMs in the AI era](/en/blog/seo-for-llms): article
-- [Lighthouse 100 in 30 minutes](/en/blog/lighthouse-100): video
-- [Headless or classic CMS](/en/blog/headless-or-classic-cms): article
-- [cwv-watch](/en/blog/cwv-watch): GitHub Action that reports Core Web Vitals on pull requests
-- [Core Web Vitals: a checklist for e-commerce](/en/blog/core-web-vitals-checklist): article
+- [Booking calendar in Next.js from scratch](https://sowa-dev.duckdns.org/en/blog/booking-calendar-nextjs): video
+- [llms-txt-gen](https://sowa-dev.duckdns.org/en/blog/llms-txt-gen): CLI tool that builds llms.txt from a sitemap
+- [SEO for LLMs in the AI era](https://sowa-dev.duckdns.org/en/blog/seo-for-llms): article
+- [Lighthouse 100 in 30 minutes](https://sowa-dev.duckdns.org/en/blog/lighthouse-100): video
+- [Headless or classic CMS](https://sowa-dev.duckdns.org/en/blog/headless-or-classic-cms): article
+- [cwv-watch](https://sowa-dev.duckdns.org/en/blog/cwv-watch): GitHub Action that reports Core Web Vitals on pull requests
+- [Core Web Vitals: a checklist for e-commerce](https://sowa-dev.duckdns.org/en/blog/core-web-vitals-checklist): article
 
 ## Optional
 
+- [Sitemap](https://sowa-dev.duckdns.org/sitemap.xml): all indexable pages with language alternates
 - [Telegram](https://t.me/kotaroSWQ): @kotaroSWQ
 - [Email](mailto:swdevstudio@gmail.com): swdevstudio@gmail.com
 - [GitHub](https://github.com/SWDevStudio): source code
