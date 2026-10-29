@@ -37,7 +37,7 @@
       "label": "02 — Skills",
       "titleTop": "My Core",
       "titleAccent": "Skills",
-      "description": "[Two or three sentences about your stack: what you use on the frontend and backend, how you ship and maintain projects, and what you are learning now.]",
+      "description": "Favorite stack: {vue}, {nest} and {tauri} for web, server and desktop. Right now I am going deeper into {rust}.",
       "all": "All skills",
       "frontend": "Frontend",
       "backend": "Backend",

@@ -85,6 +85,17 @@ const additionalOf = (groups: SkillGroupView[]) =>
 
 const toolkit = buildToolkit(additionalOf(groupsOf.en));
 
+const descriptionTerms: Record<string, string> = {
+  vue: "Vue.js",
+  nest: "NestJS",
+  tauri: "Tauri",
+  rust: "Rust",
+};
+
+function description(message: string) {
+  return message.replace(/\{(\w+)\}/g, (_, key: string) => descriptionTerms[key]!);
+}
+
 const TYPE_CHAR_MS = 85;
 const HOLD_MS = 1400;
 const ERASE_CHAR_MS = 45;
@@ -289,7 +300,10 @@ beforeAll(async () => {
   await document.fonts.load('700 1em "Montserrat Alternates"', "Мои навыки Фронтенд");
   await document.fonts.load('300 1em "Martian Mono"', "02 — SKILLS ALSO IN MY TOOLKIT");
   await document.fonts.load('400 1em "Martian Mono"', "MY PROJECTS React Next.js");
-  await document.fonts.load('400 1em "Share Tech Mono"', "[Two or three sentences] Vite Webpack");
+  await document.fonts.load(
+    '400 1em "Share Tech Mono"',
+    "Favorite stack: Vue.js, NestJS and Tauri Vite Webpack",
+  );
   await cdp().send("Emulation.setScrollbarsHidden", { hidden: true });
 });
 
@@ -369,7 +383,9 @@ describe("behavior", () => {
       `${en.home.skills.titleTop} ${en.home.skills.titleAccent}`,
     );
     expect(pick(screen, ".home-skills-accent").textContent).toBe(en.home.skills.titleAccent);
-    expect(pick(screen, ".home-skills-description").textContent).toBe(en.home.skills.description);
+    expect(pick(screen, ".home-skills-description").textContent).toBe(
+      description(en.home.skills.description),
+    );
     expect(pick(screen, ".home-skills-action").textContent?.trim()).toBe(en.home.skills.all);
     expect(pick(screen, ".home-skills-action").classList.contains("btn")).toBe(true);
     expect(panels).toHaveLength(2);
@@ -416,7 +432,9 @@ describe("behavior", () => {
     expect(pick(screen, ".home-skills-title").textContent?.replace(/\s+/g, " ").trim()).toBe(
       `${ru.home.skills.titleTop} ${ru.home.skills.titleAccent}`,
     );
-    expect(pick(screen, ".home-skills-description").textContent).toBe(ru.home.skills.description);
+    expect(pick(screen, ".home-skills-description").textContent).toBe(
+      description(ru.home.skills.description),
+    );
     expect(pick(screen, ".home-skills-action").textContent?.trim()).toBe(ru.home.skills.all);
     expect(panels.map((panel) => panel.querySelector(".card-title")?.textContent?.trim())).toEqual([
       `01 ${ru.home.skills.frontend}`,
