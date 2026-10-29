@@ -64,7 +64,7 @@
 
   @apply flex flex-wrap items-center justify-between;
   gap: --spacing(4) --spacing(10);
-  padding-block: --spacing(6);
+  padding-block: --spacing(3);
 
   @container (width >= theme(--breakpoint-md)) {
     --the-header-tool-size: --spacing(6);

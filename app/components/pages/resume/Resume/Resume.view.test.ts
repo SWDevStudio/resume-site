@@ -762,7 +762,7 @@ describe("layout like the mockup", () => {
     const value = rect(screen, ".resume-contacts-value");
     const label = rect(screen, ".resume-contacts-label");
 
-    near(header, 92);
+    near(header, 68);
     near(nav.left, 20);
     near(nav.width, 350);
     near(nav.top, header + 28);

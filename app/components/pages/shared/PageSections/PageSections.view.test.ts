@@ -422,7 +422,7 @@ describe("anchors and scrolling", () => {
   it.each([
     { name: "desktop", width: 1440, height: 900, header: 70 },
     { name: "tablet", width: 768, height: 900, header: 94 },
-    { name: "mobile", width: 390, height: 780, header: 92 },
+    { name: "mobile", width: 390, height: 780, header: 68 },
   ])("leaves room for the fixed header above anchors on $name", async (item) => {
     const screen = await renderSample(item);
     const header = pick(screen, "header").getBoundingClientRect().height;
@@ -753,7 +753,7 @@ describe("collapsed panel on tablet and mobile", () => {
       .poll(() => Math.round(headingOf(screen, "Design").getBoundingClientRect().top), {
         timeout: 3000,
       })
-      .toBe(124);
+      .toBe(100);
     await expect
       .poll(() => text(pick(screen, ".page-sections-nav-summary")))
       .toBe("Design · 8 sections");

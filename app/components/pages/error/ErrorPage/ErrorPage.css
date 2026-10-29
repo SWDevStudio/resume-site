@@ -19,7 +19,7 @@
 }
 
 .error-page {
-  --error-page-header: --spacing(23);
+  --error-page-header: --spacing(17);
 
   @variant md {
     --error-page-header: --spacing(23.5);

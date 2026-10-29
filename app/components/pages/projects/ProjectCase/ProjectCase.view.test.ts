@@ -659,7 +659,7 @@ describe("layout like the mockup", () => {
     const nav = rect(screen, ".page-sections-nav");
     const cover = rect(screen, ".project-case-cover");
 
-    near(header, 92);
+    near(header, 68);
     near(nav.left, 20);
     near(nav.width, 350);
     near(nav.top, header + 28);

@@ -25,7 +25,7 @@
 
 :root:has(.home-slide) {
   --home-header-height: 0rem;
-  --home-header-offset: --spacing(23);
+  --home-header-offset: --spacing(17);
   scroll-padding-top: var(--home-header-height);
 
   @variant md {

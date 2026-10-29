@@ -1,7 +1,7 @@
 @reference "~/assets/css/main.css";
 
 .page-sections {
-  --page-sections-header: --spacing(23);
+  --page-sections-header: --spacing(17);
   --page-sections-gap: --spacing(8);
   --page-sections-offset: calc(var(--page-sections-header) + var(--page-sections-gap));
   --page-sections-nav-width: --spacing(70);

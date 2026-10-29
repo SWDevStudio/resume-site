@@ -658,7 +658,7 @@ describe("behavior", () => {
   it.each([
     { width: 1440, height: 900, header: 110 },
     { width: 768, height: 900, header: 94 },
-    { width: 390, height: 780, header: 92 },
+    { width: 390, height: 780, header: 68 },
   ])("starts the content below the header at $width", async (item) => {
     const screen = await renderCase(item);
     const head = pick(screen, ".home-why-head").getBoundingClientRect();
