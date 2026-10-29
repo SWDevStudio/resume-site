@@ -11,6 +11,8 @@ export const Route = {
   resume: "/resume",
   resumePdf: (locale: Locale) => `/resume/${locale}.pdf`,
   resumeMarkdown: (locale: Locale) => `/resume/${locale}.md`,
+  sitemap: "/sitemap.xml",
+  robots: "/robots.txt",
   top: "#top",
   anchor: (id: string) => `#${id}`,
 } as const;

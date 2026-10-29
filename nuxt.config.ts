@@ -4,6 +4,7 @@ import { responsiveImages } from "./imagetools.config";
 import { DEFAULT_LOCALE, LOCALE_COOKIE, LOCALES } from "./app/assets/const/locale";
 import { Route } from "./app/assets/const/route";
 
+const SITE_URL = "https://sowa-dev.duckdns.org";
 const FILE_CACHE = "public, max-age=3600, stale-while-revalidate=86400";
 const FONT_CACHE = "public, max-age=31536000, immutable";
 const SKILL_ICON_RE = /\/UiSkillTile\/icons\/[^/]+\.webp$/;
@@ -93,6 +94,7 @@ export default defineNuxtConfig({
   i18n: {
     restructureDir: "app",
     langDir: "locales",
+    baseUrl: SITE_URL,
     locales: LOCALES.map((code) => ({ code, language: code, file: `${code}.json` })),
     defaultLocale: DEFAULT_LOCALE,
     strategy: "prefix",
@@ -107,6 +109,8 @@ export default defineNuxtConfig({
     [Route.home]: { prerender: false },
     ...pageRules,
     ...fileRules,
+    [Route.sitemap]: { prerender: true },
+    [Route.robots]: { prerender: true },
     "/fonts/**": { headers: { "cache-control": FONT_CACHE } },
     "/api/**": { headers: { "cache-control": "no-store" } },
   },
