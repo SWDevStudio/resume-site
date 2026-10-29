@@ -26,12 +26,12 @@
     "about": {
       "label": "01 — About me",
       "greeting": "Hi, I'm",
-      "name": "Michael",
+      "name": "Michael Malakhov",
       "description": "{fullstack} developer and team lead with 7+ years of commercial experience. {frontend} on {vue}, {nuxt}, {react} and {next}, {backend} on {laravel}, {nest} and {express}. Since 2024 I have built development around {ai} agents: architecture rules, {skills} and subagent pipelines where tests come before code, and task cost is measured and driven down.",
       "contact": "Contact me",
       "projects": "Projects",
       "status": "Open to projects",
-      "photoAlt": "Michael"
+      "photoAlt": "Michael Malakhov"
     },
     "skills": {
       "label": "02 — Skills",
@@ -306,7 +306,7 @@
   },
   "footer": {
     "tagline": "fast, thoughtful web products",
-    "copyright": "© {year} Michael · SOWA_DEV. All rights reserved.",
+    "copyright": "© {year} Michael Malakhov · SOWA_DEV. All rights reserved.",
     "top": "Back to top"
   }
 }
